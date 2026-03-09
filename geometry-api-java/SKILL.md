@@ -1,4 +1,7 @@
-# SKILL.md — Esri Geometry API for Java
+---
+name: geometry-api-java
+description: Esri Geometry API for Java 是一个自包含的空间几何计算库，提供对二维和三维几何对象的创建、解析、序列化以及空间关系运算能力。
+---
 
 > **项目地址：** <https://github.com/Esri/geometry-api-java>
 >

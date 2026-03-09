@@ -1,4 +1,7 @@
-# SKILL.md — OpenGIS Utils for .NET (OGU4Net)
+---
+name: opengis-utils-for-net
+description: opengis-utils-for-net 是一个基于 GDAL/OGR 的 .NET GIS 工具包，提供图层读写、几何操作、双引擎架构和坐标参考系统管理等功能。
+---
 
 > **项目地址：** https://github.com/znlgis/opengis-utils-for-net
 > AI-friendly reference for developing with this library.
