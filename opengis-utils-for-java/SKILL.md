@@ -1,10 +1,12 @@
 # OGU4J - AI Development Skill Guide
 
+> **项目地址：** https://github.com/znlgis/opengis-utils-for-java
+> 
 > This document is designed to help AI assistants (and developers) quickly understand and use the OGU4J library for GIS development in Java.
 
 ## Library Overview
 
-**OGU4J** ([OpenGIS Utils for Java](https://github.com/znlgis/opengis-utils-for-java)) is a unified Java GIS toolkit built on GeoTools, JTS, GDAL/OGR, and ESRI Geometry API. It provides:
+**OGU4J** (OpenGIS Utils for Java) is a unified Java GIS toolkit built on GeoTools, JTS, GDAL/OGR, and ESRI Geometry API. It provides:
 
 - A unified layer model (`OguLayer`) for reading/writing GIS data across formats
 - Geometry operations (60+ methods) via `GeometryUtil`
