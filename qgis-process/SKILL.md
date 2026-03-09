@@ -447,8 +447,8 @@ echo "输出文件: $OUTPUT_PATH"
 ### 示例 6：需要 QGIS 项目文件的算法
 
 ```bash
-qgis_process run native:printlayouttopdf -- \
-  --PROJECT_PATH=/path/to/project.qgs \
+qgis_process run native:printlayouttopdf \
+  --project_path=/path/to/project.qgs -- \
   LAYOUT="My Layout" \
   OUTPUT=/output/map.pdf
 ```
@@ -470,11 +470,11 @@ qgis_process run native:printlayouttopdf -- \
 1. **始终使用 `--json` 选项**：JSON 输出结构化、易解析，是 AI 最友好的交互方式。
 2. **先查 help 再构造参数**：每个算法的参数名和类型不同，先用 `help --json` 确认参数定义。
 3. **枚举类型传数字索引**：枚举参数用数字（如 `0`、`1`）而非文字。help 输出的 `available_options` 提供了索引到含义的映射。
-4. **多值参数多次指定**：如 `--LAYERS=a.shp --LAYERS=b.shp`。
+4. **多值参数多次指定**：如 `LAYERS=a.shp LAYERS=b.shp`（在 `--` 之后，参数不带前导 `--`）。
 5. **复杂参数用 STDIN JSON**：字典类型的参数值适合通过 STDIN JSON 方式传入。
 6. **文件路径使用绝对路径**：避免工作目录不确定导致的文件找不到。
 7. **Headless 环境设置 `QT_QPA_PLATFORM=offscreen`**：在无显示器的服务器上必须设置。
-8. **需要项目文件的算法**：某些算法（如打印布局导出）需要通过 `--PROJECT_PATH` 指定项目文件。
+8. **需要项目文件的算法**：某些算法（如打印布局导出）需要通过 `--project_path` 指定项目文件。
 9. **取消正在运行的算法**：使用 `CTRL+C` 可取消执行中的算法。
 10. **`--no-python` 和 `--skip-loading-plugins` 可加速启动**：如果不需要第三方插件提供的算法，使用这两个选项可显著缩短启动时间。
 
