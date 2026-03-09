@@ -1,8 +1,8 @@
-# SKILL.md — OpenGIS Utils for .NET
+# SKILL.md — OpenGIS Utils for .NET (OGU4Net)
 
+> **项目地址：** https://github.com/znlgis/opengis-utils-for-net
 > AI-friendly reference for developing with this library.
 > Package: `OpenGIS.Utils` | Target: .NET Standard 2.0 | Engine: GDAL/OGR
-> [OGU4Net](https://github.com/znlgis/opengis-utils-for-net)
 
 ## Installation
 
