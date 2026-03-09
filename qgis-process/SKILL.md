@@ -1,6 +1,6 @@
 ---
-name: QGIS Processing Executor (`qgis_process`)
-description: `qgis_process` 是 QGIS 自带的命令行工具（QGIS Processing Executor），允许在**不启动 QGIS 桌面应用**的情况下，直接从命令行运行 Processing 算法和模型（内置算法或由插件提供）。它适用于服务器端批量处理、CI/CD 自动化流水线、脚本化 GIS 工作流等场景。
+name: qgis-process
+description: qgis_process 是 QGIS 自带的命令行工具（QGIS Processing Executor），允许在不启动 QGIS 桌面应用的情况下，直接从命令行运行 Processing 算法和模型（内置算法或由插件提供）。它适用于服务器端批量处理、CI/CD 自动化流水线、脚本化 GIS 工作流等场景。
 ---
 
 > **项目地址：** <https://github.com/qgis/QGIS>
