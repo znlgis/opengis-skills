@@ -1,5 +1,5 @@
 ---
-name: GDAL
+name: gdal
 description: GDAL (Geospatial Data Abstraction Library) 是 OSGeo 的开源地理数据处理库，提供了功能强大的命令行工具，用于处理和转换栅格数据（DEM、影像、栅格地图）和矢量数据（点、线、面、GIS 格式文件）。GDAL 工具集适用于批量数据处理、格式转换、地理信息系统分析等场景。
 ---
 
@@ -171,7 +171,7 @@ ogrinfo -json cities.shp | jq '.layers[0].features[0]'
 
 ---
 
-### 2. ogr2ogr - 矢量数据格式转换和转换
+### 2. ogr2ogr - 矢量数据格式转换和处理
 
 **描述**: GDAL 最强大的矢量工具。可在各种格式间转换、重投影、过滤、合并矢量数据。
 
@@ -206,8 +206,8 @@ ogr2ogr output.shp input.shp -spat -10 40 10 50
 # 裁剪到多边形
 ogr2ogr -clipsrc clip_polygon.shp output.shp input.shp
 
-# SQL 转换
-ogr2ogr -sql "SELECT ST_Buffer(geometry, 100) as geom, name FROM input" output.shp
+# SQL 转换（图层名通常为文件名去除扩展名）
+ogr2ogr -f GeoJSON output.geojson input.shp -sql "SELECT ST_Buffer(geometry, 100) as geom, name FROM input"
 
 # 添加字段
 ogr2ogr output.shp input.shp -sql "SELECT *, 'value' as new_field FROM input"
@@ -531,9 +531,6 @@ gdal_contour -p -amin min -amax max dem.tif contour_polygons.shp -i 20
 # 指定特定等高线值
 gdal_contour -fl 100 200 300 dem.tif fixed_contours.shp
 
-# 指数间隔（如 2^n）
-gdal_contour -e 2 dem.tif exponential_contours.shp
-
 # 从特定波段提取
 gdal_contour -b 1 dem.tif contours.shp -i 10
 ```
@@ -547,7 +544,6 @@ gdal_contour -b 1 dem.tif contours.shp -i 10
 | `-amax <name>` | 多边形最大值字段 |
 | `-i <interval>` | 等高线间隔 |
 | `-fl <level>` | 固定高度值（可多个） |
-| `-e <base>` | 指数基数（如 2）生成指数间隔 |
 | `-off <offset>` | 间隔偏移量 |
 | `-p` | 生成多边形而非线 |
 | `-3d` | 输出 3D 矢量 |
@@ -987,11 +983,13 @@ gdaltindex -recursive -of GPKG \
 
 ---
 
-## 参考资源
+## 参考链接
 
-- **官方文档**：https://gdal.org/
-- **开发者指南**：https://gdal.org/development/dev_practices.html
-- **API 文档**：https://gdal.org/api/
-- **问题追踪**：https://github.com/OSGeo/gdal/issues
-- **GDAL 社区**：https://lists.osgeo.org/pipermail/gdal-dev/
+- **GitHub 仓库：** <https://github.com/OSGeo/gdal>
+- **官方文档：** <https://gdal.org/>
+- **命令行工具文档：** <https://gdal.org/en/latest/programs/>
+- **API 文档：** <https://gdal.org/api/>
+- **开发者指南：** <https://gdal.org/development/dev_practices.html>
+- **问题追踪：** <https://github.com/OSGeo/gdal/issues>
+- **GDAL 社区邮件列表：** <https://lists.osgeo.org/pipermail/gdal-dev/>
 
