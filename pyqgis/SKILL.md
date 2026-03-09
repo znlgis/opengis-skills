@@ -407,7 +407,7 @@ if not layer.isValid():
 ### 查询栅格值
 
 ```python
-from qgis.core import QgsPointXY
+from qgis.core import QgsPointXY, QgsRaster
 
 # 在指定坐标获取栅格值
 point = QgsPointXY(116.4, 39.9)
@@ -460,13 +460,11 @@ geom = QgsGeometry.fromWkt("POINT(116.4 39.9)")
 geom = QgsGeometry()
 geom.fromWkb(wkb_bytes)
 
-# 从 GeoJSON 创建
-import json
-geojson = json.dumps({"type": "Point", "coordinates": [116.4, 39.9]})
-geom = QgsGeometry.fromWkt("")  # 使用 ogr 解析
-# 或通过 QgsJsonUtils
+# 从 GeoJSON 创建（通过 QgsJsonUtils）
 from qgis.core import QgsJsonUtils
 features = QgsJsonUtils.stringToFeatureList(geojson_string)
+if features:
+    geom = features[0].geometry()
 ```
 
 ### 格式导出
@@ -863,11 +861,11 @@ result2 = processing.run("native:extractbyattribute", {
 ```python
 import processing
 
-# 按掩膜裁剪 DEM
+# 按掩膜裁剪 DEM（栅格算法使用 TEMPORARY_OUTPUT 生成临时文件）
 result1 = processing.run("gdal:cliprasterbymask", {
     'INPUT': '/data/dem.tif',
     'MASK': '/data/boundary.shp',
-    'OUTPUT': 'TEMPORARY_OUTPUT'
+    'OUTPUT': 'TEMPORARY_OUTPUT'  # 栅格输出不支持 memory:，使用 TEMPORARY_OUTPUT 创建临时文件
 })
 
 # 坡度分析
