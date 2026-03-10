@@ -103,163 +103,20 @@ FY_Layout/
 
 ---
 
-## NuGet 包体系
-
-FY_Layout 将飞扬平台 SDK 封装为 NuGet 包，每个包对应一个架构层，通过分层依赖向上组合。所有 SDK 程序集均放置在包内的 `ref/{tfm}/` 目录下，属于 **编译期引用**（compile-time only）——NuGet 不会将其复制到消费者的输出目录，因此插件开发者无需配置 `Private=false` 或 `ExcludeAssets="runtime"`，飞扬主程序在运行时自动提供这些 DLL。
-
-### NuGet 包一览
-
-| NuGet 包 ID | 架构层 | 包含程序集 | 依赖包 |
-|------------|--------|-----------|--------|
-| `Fs.FY.LightCAD.Core` | 核心层 | `LightCAD.Core`、`LightCAD.MathLib`、`LightCAD.Runtime` | — |
-| `Fs.FY.LightCAD.Render` | 渲染层 | `LightCAD.RenderUtils`、`ThreeJs4Net` | Core |
-| `Fs.FY.LightCAD.Drawing` | 绘图层 | `LightCAD.Drawing`、`LightCAD.Drawing.Actions`、`LightCAD.Component.Actions` | Core |
-| `Fs.FY.LightCAD.Data` | 数据层 | `LightCAD.Model`、`LightCAD.DBUtility`、`LightCAD.DBHelper`、`Dapper`、`System.Data.SQLite` | Core |
-| `Fs.FY.LightCAD.IO` | I/O 层 | `netDxf`、`Newtonsoft.Json`、`Svg`、`LightCAD.ImpExpDwg` | Core |
-| `Fs.FY.LightCAD.UI` | UI/OpenGL 层 | `OpenTK`、`OpenTK.WinForms`、`WinFormsUI`、`Flee` | Core、Render |
-| `Fs.FY.Layout` | 场布插件 | QdLayout 插件主体 | Core、Render、Drawing、Data、IO、UI |
-| `Fs.FY.Layout.Provider` | 场布 Provider | QdLayoutProvider 形状/实体提供者 | Core、Render |
-
-### 包依赖关系
-
-```
-Fs.FY.LightCAD.Core
-├── Fs.FY.LightCAD.Render  (→ Core)
-│   └── Fs.FY.LightCAD.UI  (→ Core + Render)
-├── Fs.FY.LightCAD.Drawing (→ Core)
-├── Fs.FY.LightCAD.Data    (→ Core)
-├── Fs.FY.LightCAD.IO      (→ Core)
-│
-├── Fs.FY.Layout           (→ Core + Render + Drawing + Data + IO + UI)
-└── Fs.FY.Layout.Provider  (→ Core + Render)
-```
-
-### 各包程序集与命名空间
-
-| NuGet 包 | 程序集 / DLL | 命名空间 | 主要用途 |
-|---------|------------|---------|---------|
-| `Fs.FY.LightCAD.Core` | `LightCAD.Core.dll` | `LightCAD.Core` | 元素类型 `ElementType`、文档 `LcDocument`、运行时 `LcRuntime`、组件定义 |
-| `Fs.FY.LightCAD.Core` | `LightCAD.MathLib.dll` | `LightCAD.MathLib` | `Vector2/3`、`Line2d`、`Arc2d`、`Polyline2d`、`Curve2dGroup`、`Curve2dGroupCollection` 等 |
-| `Fs.FY.LightCAD.Core` | `LightCAD.Runtime.dll` | `LightCAD.Runtime` | `CommandClass`、`CommandMethod`、`TabItem`、`TabButton` 等特性和 UI 类 |
-| `Fs.FY.LightCAD.Render` | `LightCAD.RenderUtils.dll` | `LightCAD.RenderUtils` | 渲染工具 |
-| `Fs.FY.LightCAD.Render` | `ThreeJs4Net.dll` | `ThreeJs4Net` | 三维引擎——`Shape`、`Solid3d`、`Surface3d`、`GeometryData` 等 |
-| `Fs.FY.LightCAD.Drawing` | `LightCAD.Drawing.dll` | `LightCAD.Drawing` | 绘图文档——图层、图纸、绘制管理 |
-| `Fs.FY.LightCAD.Drawing` | `LightCAD.Drawing.Actions.dll` | `LightCAD.Drawing.Actions` | 绘图交互动作基类——`IDocumentEditor`、点拾取、线拾取 |
-| `Fs.FY.LightCAD.Drawing` | `LightCAD.Component.Actions.dll` | `LightCAD.Component.Actions` | 通用组件动作 |
-| `Fs.FY.LightCAD.Data` | `LightCAD.Model.dll` | `LightCAD.Model` | 模型管理 |
-| `Fs.FY.LightCAD.Data` | `LightCAD.DBUtility.dll` / `LightCAD.DBHelper.dll` | `LightCAD.DBUtility` | 数据库工具与 SQLite 访问 |
-| `Fs.FY.LightCAD.Data` | `Dapper.dll` | `Dapper` | 轻量 ORM |
-| `Fs.FY.LightCAD.Data` | `System.Data.SQLite.dll` | `System.Data.SQLite` | SQLite 驱动 |
-| `Fs.FY.LightCAD.IO` | `netDxf.dll` | `netDxf` | DXF 格式支持 |
-| `Fs.FY.LightCAD.IO` | `Newtonsoft.Json.dll` | `Newtonsoft.Json` | JSON 序列化 |
-| `Fs.FY.LightCAD.IO` | `Svg.dll` / `LightCAD.ImpExpDwg.dll` | — | SVG 及 DWG 导入导出 |
-| `Fs.FY.LightCAD.UI` | `OpenTK.dll` / `OpenTK.WinForms.dll` | `OpenTK` | OpenGL 绑定与 WinForms 集成 |
-| `Fs.FY.LightCAD.UI` | `WinFormsUI.dll` | — | UI 扩展控件 |
-| `Fs.FY.LightCAD.UI` | `Flee.dll` | `Flee` | 表达式求值器 |
-
-### 在新插件中引用 NuGet 包
-
-以开发一个与 QdLayout 同级的新插件为例（仅需绘图和核心能力）：
-
-```xml
-<!-- MyPlugin/MyPlugin.csproj -->
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-
-    <!-- NuGet 包元数据 -->
-    <PackageId>Fs.FY.MyPlugin</PackageId>
-    <Description>我的飞扬插件</Description>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
-
-  <!--
-    引用飞扬平台 NuGet 包（编译期引用，运行时由主程序提供 DLL）。
-    按需选择所需架构层，未用到的层不必引用。
-  -->
-  <ItemGroup>
-    <!-- 必选：核心层（元素类型、数学库、运行时） -->
-    <PackageReference Include="Fs.FY.LightCAD.Core" Version="1.0.0" />
-    <!-- 按需：二维绘图交互层 -->
-    <PackageReference Include="Fs.FY.LightCAD.Drawing" Version="1.0.0" />
-    <!-- 按需：三维渲染层 -->
-    <PackageReference Include="Fs.FY.LightCAD.Render" Version="1.0.0" />
-    <!-- 按需：UI/OpenGL 层 -->
-    <PackageReference Include="Fs.FY.LightCAD.UI" Version="1.0.0" />
-  </ItemGroup>
-</Project>
-```
-
-如果开发 Provider（形状/实体提供者）插件，只需引用 Core 和 Render：
-
-```xml
-<!-- MyProvider/MyProvider.csproj -->
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <PackageId>Fs.FY.MyPlugin.Provider</PackageId>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Fs.FY.LightCAD.Core" Version="1.0.0" />
-    <PackageReference Include="Fs.FY.LightCAD.Render" Version="1.0.0" />
-  </ItemGroup>
-</Project>
-```
-
-> **注意：** 因为所有 SDK DLL 都放置在包的 `ref/{tfm}/` 目录中，NuGet 只将其作为编译时引用，**不会**将 DLL 复制到插件输出目录。飞扬主程序（`lightcad.EXE`）在运行时负责提供这些程序集，因此插件 DLL 保持轻量。
-
-### 打包与发布
-
-在仓库根目录使用 `dotnet pack` 生成 NuGet 包：
-
-```bash
-# 构建并打包所有层包（输出到 Build/Packages/）
-dotnet pack Fs.FY.LightCAD.Core/Fs.FY.LightCAD.Core.csproj -c Release
-dotnet pack Fs.FY.LightCAD.Render/Fs.FY.LightCAD.Render.csproj -c Release
-dotnet pack Fs.FY.LightCAD.Drawing/Fs.FY.LightCAD.Drawing.csproj -c Release
-dotnet pack Fs.FY.LightCAD.Data/Fs.FY.LightCAD.Data.csproj -c Release
-dotnet pack Fs.FY.LightCAD.IO/Fs.FY.LightCAD.IO.csproj -c Release
-dotnet pack Fs.FY.LightCAD.UI/Fs.FY.LightCAD.UI.csproj -c Release
-
-# 打包场布插件主体（输出到 Build/）
-dotnet pack QdLayout/QdLayout.csproj -c Release
-
-# 打包场布 Provider（输出到 Build/Providers/）
-dotnet pack QdLayoutProvider/QdLayoutProvider.csproj -c Release
-```
-
-全局版本号在 `Directory.Build.props` 中统一维护：
-
-```xml
-<!-- Directory.Build.props -->
-<PropertyGroup>
-  <Version>1.0.0</Version>
-  <Authors>znlgis</Authors>
-  <Company>飞扬集成设计平台</Company>
-  <PackageProjectUrl>https://github.com/znlgis/FY_Layout</PackageProjectUrl>
-  <PackageTags>FeiYang;LightCAD;BIM;CAD;Layout;Construction;Architecture</PackageTags>
-</PropertyGroup>
-```
-
----
-
 ## 核心 SDK 引用一览
 
-| DLL | 所在 NuGet 包 | 命名空间 | 用途 |
-|-----|-------------|---------|------|
-| `LightCAD.Core.dll` | `Fs.FY.LightCAD.Core` | `LightCAD.Core` | ★ 核心——元素类型 `ElementType`、文档 `LcDocument`、运行时 `LcRuntime`、组件定义等 |
-| `LightCAD.Drawing.dll` | `Fs.FY.LightCAD.Drawing` | `LightCAD.Drawing` | 绘图文档——图层、图纸、绘制管理 |
-| `LightCAD.Drawing.Actions.dll` | `Fs.FY.LightCAD.Drawing` | `LightCAD.Drawing.Actions` | 绘图交互动作基类——`IDocumentEditor`、点拾取、线拾取等 |
-| `LightCAD.MathLib.dll` | `Fs.FY.LightCAD.Core` | `LightCAD.MathLib` | 数学库——`Vector2`、`Vector3`、`Line2d`、`Arc2d`、`Polyline2d`、`Color` 等 |
-| `LightCAD.Model.dll` | `Fs.FY.LightCAD.Data` | `LightCAD.Model` | 模型管理 |
-| `LightCAD.Runtime.dll` | `Fs.FY.LightCAD.Core` | `LightCAD.Runtime` | 运行时框架——`CommandClass`、`CommandMethod`、`TabItem`、`TabButton` 等特性和 UI 类 |
-| `LightCAD.RenderUtils.dll` | `Fs.FY.LightCAD.Render` | `LightCAD.RenderUtils` | 渲染工具 |
-| `ThreeJs4Net.dll` | `Fs.FY.LightCAD.Render` | `ThreeJs4Net` | 三维引擎——`Shape`、`Solid3d`、`Surface3d`、`GeometryData` 等 |
-| `OpenTK.dll` | `Fs.FY.LightCAD.UI` | `OpenTK` | OpenGL 绑定 |
-| `Newtonsoft.Json.dll` | `Fs.FY.LightCAD.IO` | `Newtonsoft.Json` | JSON 序列化 |
+| DLL | 命名空间 | 用途 |
+|-----|---------|------|
+| `LightCAD.Core.dll` | `LightCAD.Core` | ★ 核心——元素类型 `ElementType`、文档 `LcDocument`、运行时 `LcRuntime`、组件定义等 |
+| `LightCAD.Drawing.dll` | `LightCAD.Drawing` | 绘图文档——图层、图纸、绘制管理 |
+| `LightCAD.Drawing.Actions.dll` | `LightCAD.Drawing.Actions` | 绘图交互动作基类——`IDocumentEditor`、点拾取、线拾取等 |
+| `LightCAD.MathLib.dll` | `LightCAD.MathLib` | 数学库——`Vector2`、`Vector3`、`Line2d`、`Arc2d`、`Polyline2d`、`Color` 等 |
+| `LightCAD.Model.dll` | `LightCAD.Model` | 模型管理 |
+| `LightCAD.Runtime.dll` | `LightCAD.Runtime` | 运行时框架——`CommandClass`、`CommandMethod`、`TabItem`、`TabButton` 等特性和 UI 类 |
+| `LightCAD.RenderUtils.dll` | `LightCAD.RenderUtils` | 渲染工具 |
+| `ThreeJs4Net.dll` | `ThreeJs4Net` | 三维引擎——`Shape`、`Solid3d`、`Surface3d`、`GeometryData` 等 |
+| `OpenTK.dll` | `OpenTK` | OpenGL 绑定 |
+| `Newtonsoft.Json.dll` | `Newtonsoft.Json` | JSON 序列化 |
 
 ---
 
