@@ -87,8 +87,10 @@ SHP, GEOJSON, FILEGDB, POSTGIS, TXT, GEOPACKAGE, KML, DXF, UNKNOWN
 ### GisEngineType
 
 ```
-GEOTOOLS, GDAL
+GDAL
 ```
+
+> **注意：** .NET 版本仅支持 GDAL 引擎，与 Java 版本不同（Java 版本同时支持 GEOTOOLS 和 GDAL）。
 
 ### TopologyValidationErrorType
 

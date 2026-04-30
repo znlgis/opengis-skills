@@ -412,7 +412,7 @@ using LightCAD.Core.Component;
 using LightCAD.MathLib.Csg;
 using ThreeJs4Net;
 
-namespace QdArchProvider
+namespace QdLayoutProvider
 {
     internal static class QdSiteProvider
     {
@@ -441,7 +441,7 @@ namespace QdArchProvider
 ### 包含三维实体的 Provider 示例（出土道路）
 
 ```csharp
-namespace QdArchProvider
+namespace QdLayoutProvider
 {
     internal static class QdBermProvider
     {

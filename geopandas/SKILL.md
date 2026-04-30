@@ -18,15 +18,15 @@ GeoPandas 是 Python 地理空间矢量数据处理的核心库，在 pandas Dat
 
 | 核心依赖 | 最低版本 | 用途 |
 |----------|---------|------|
-| `pandas` | >= 2.2.0 | DataFrame 基类 |
-| `shapely` | >= 2.1.0 | 几何对象与运算 (GEOS) |
-| `pyproj` | >= 3.7.0 | CRS 处理与坐标变换 |
-| `pyogrio` | >= 0.8 | 默认文件 IO 引擎 (GDAL/OGR) |
-| `numpy` | >= 2 | 数组运算 |
+| `pandas` | >= 2.0.0 | DataFrame 基类 |
+| `shapely` | >= 2.0.0 | 几何对象与运算 (GEOS) |
+| `pyproj` | >= 3.5.0 | CRS 处理与坐标变换 |
+| `pyogrio` | >= 0.7.2 | 默认文件 IO 引擎 (GDAL/OGR) |
+| `numpy` | >= 1.24 | 数组运算 |
 
 | 可选依赖 | 用途 |
 |----------|------|
-| `matplotlib` >= 3.9 | 静态地图绑制 `.plot()` |
+| `matplotlib` >= 3.5 | 静态地图绘制 `.plot()` |
 | `folium` | 交互式地图 `.explore()` |
 | `mapclassify` >= 2.7 | 分级设色分类方案 |
 | `fiona` >= 1.8.21 | 备选文件 IO 引擎 |

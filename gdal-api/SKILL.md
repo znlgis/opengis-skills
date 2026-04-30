@@ -52,7 +52,7 @@ target_link_libraries(myapp PRIVATE GDAL::GDAL)
 
 ```bash
 # pip 安装（需系统已安装 GDAL 库）
-pip install gdal
+pip install GDAL
 
 # Conda 安装（推荐，自动处理 C 库依赖）
 conda install -c conda-forge gdal
@@ -68,13 +68,13 @@ python -c "from osgeo import gdal; print(gdal.VersionInfo())"
 <dependency>
     <groupId>org.gdal</groupId>
     <artifactId>gdal</artifactId>
-    <version>3.10.0</version>
+    <version>3.12.4</version>
 </dependency>
 ```
 
 ```groovy
 // Gradle
-implementation 'org.gdal:gdal:3.10.0'
+implementation 'org.gdal:gdal:3.12.4'
 ```
 
 **注意：** Java 绑定需要在系统 `PATH`（Windows）或 `LD_LIBRARY_PATH`（Linux）中找到 `gdalalljni` 本地库。

@@ -11,7 +11,7 @@ Python library for manipulation and analysis of planar geometric objects, based 
 - **Documentation**: https://shapely.readthedocs.io/
 - **PyPI**: https://pypi.org/project/shapely/
 - **License**: BSD-3-Clause
-- **Requirements**: Python >= 3.11, GEOS >= 3.10, NumPy >= 1.23
+- **Requirements**: Python >= 3.10, GEOS >= 3.9, NumPy >= 1.21
 
 ## Geometry Types
 

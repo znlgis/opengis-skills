@@ -69,7 +69,7 @@ docker run -it osgeo/gdal:latest bash
 某些 GDAL 工具（如 `gdal_calc`, `gdal_merge`, `gdal_grid`, `gdal_polygonize`）是 Python 脚本，需要安装 Python 绑定：
 
 ```bash
-pip install gdal
+pip install GDAL
 # 或
 conda install -c conda-forge gdal
 ```
@@ -78,9 +78,9 @@ conda install -c conda-forge gdal
 
 ## 核心命令结构
 
-### 新式 CLI (GDAL 3.11+)
+### 新式 CLI (GDAL 3.9+)
 
-GDAL 3.11 引入了统一的 CLI 接口：
+GDAL 3.9 引入了统一的 CLI 接口，自 3.12 版本后持续完善：
 
 ```bash
 gdal <command> <subcommand> [options] <inputs>

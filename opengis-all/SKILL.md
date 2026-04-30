@@ -9,8 +9,8 @@ description: 整合 GDAL 命令行、GDAL API、qgis_process、PyQGIS、GeoServe
 > |-----------|----------|------|--------|
 > | GDAL 命令行 | <https://github.com/OSGeo/gdal> | <https://gdal.org/en/latest/programs/> | MIT |
 > | GDAL API (C++/Python/Java/C#) | <https://github.com/OSGeo/gdal> | <https://gdal.org/en/stable/api/index.html> | MIT |
-> | qgis_process | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.40/en/docs/user_manual/processing/standalone.html> | GPL-2.0+ |
-> | PyQGIS | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.40/en/docs/pyqgis_developer_cookbook/> | GPL-2.0+ |
+> | qgis_process | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.44/en/docs/user_manual/processing/standalone.html> | GPL-2.0+ |
+> | PyQGIS | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/> | GPL-2.0+ |
 > | GeoServer REST API | <https://github.com/geoserver/geoserver> | <https://docs.geoserver.org/latest/en/user/rest/index.html> | GPL-2.0+ |
 
 ## 概述
@@ -1331,9 +1331,9 @@ curl -u admin:geoserver -XPUT \
 - **GDAL API 总览：** <https://gdal.org/en/stable/api/index.html>
 - **GDAL Python API：** <https://gdal.org/en/stable/api/python/index.html>
 - **QGIS 源码：** <https://github.com/qgis/QGIS>
-- **qgis_process 文档：** <https://docs.qgis.org/3.40/en/docs/user_manual/processing/standalone.html>
-- **PyQGIS 开发者手册：** <https://docs.qgis.org/3.40/en/docs/pyqgis_developer_cookbook/>
-- **PyQGIS API 参考：** <https://qgis.org/pyqgis/3.40/>
+- **qgis_process 文档：** <https://docs.qgis.org/3.44/en/docs/user_manual/processing/standalone.html>
+- **PyQGIS 开发者手册：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/>
+- **PyQGIS API 参考：** <https://qgis.org/pyqgis/3.44/>
 - **GeoServer 源码：** <https://github.com/geoserver/geoserver>
 - **GeoServer REST API：** <https://docs.geoserver.org/latest/en/user/rest/index.html>
 - **GeoServer API 参考：** <https://docs.geoserver.org/stable/en/user/rest/api/index.html>
