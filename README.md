@@ -12,7 +12,7 @@
 
 ```
 opengis-skills/
-├── gis/        # GIS 类（24 个）
+├── gis/        # GIS 类（23 个）
 ├── cad/        # CAD 类（17 个）
 ├── csharp/     # C# 框架/库（8 个）
 ├── ai/         # AI 智能体/平台（5 个）
