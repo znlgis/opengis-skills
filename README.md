@@ -4,7 +4,66 @@
 >
 > 本仓库与 [znlgis.github.io](https://github.com/znlgis/znlgis.github.io) 上游博客分类完全对齐，便于双向导航与学习。
 
-每个 SKILL 都是一个独立目录，包含一份 `SKILL.md`，可被 Claude / Cursor / Cline / Copilot Chat / VS Code 等 AI 工具按需加载，作为「领域知识」注入到对话中，从而获得更准确的代码生成与问题排查能力。
+---
+
+## 🤖 AI 入口提示
+
+> **对于 AI 编程助手（Claude / Cursor / Cline / Copilot Chat / DeepSeek 等）：**
+>
+> 本仓库的主入口是根目录下的 **[`SKILL.md`](./SKILL.md)**。该文件包含完整的技能索引、标签搜索系统和按需加载指南，是 AI 工具理解和使用本仓库的**第一站**。
+>
+> - 加载 **根 `SKILL.md`** → 获取全局索引、标签导航和加载策略
+> - 加载 **分类 `*/SKILL.md`**（如 `gis/SKILL.md`）→ 获取某个领域的技能概要
+> - 加载 **项目 `*/<project>/SKILL.md`** → 获取单个工具的深度知识
+>
+> 推荐先用 `@SKILL.md` 或 `@gis/gdal/SKILL.md` 等方式按需加载，避免全量注入导致上下文膨胀。
+
+---
+
+## 🚀 快速开始
+
+### AI 工具如何使用本仓库
+
+本仓库采用 **三层索引结构**，AI 工具可根据用户需求灵活选择加载层级：
+
+| 层级 | 文件 | 内容 | 适用场景 |
+|------|------|------|---------|
+| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 56 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
+| **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
+| **L3 项目技能** | `<category>/<project>/SKILL.md` | 单个开源项目的深度知识（API、工作流、FAQ） | 已确定使用哪个工具，需要精准的编码指导 |
+
+### 典型使用流程
+
+```
+用户提问："帮我把 Shapefile 转成 GeoJSON"
+    ↓
+AI 加载 @SKILL.md（根），搜索标签 #conversion #vector
+    ↓ 或直接定位
+AI 加载 @gis/gdal/SKILL.md，获取 GDAL 命令行转换指导
+    ↓
+AI 根据 SKILL.md 中的 API/命令示例生成代码
+```
+
+### 加载方式速查
+
+```bash
+# Claude Code / Claude
+@SKILL.md                    # 加载根入口（推荐首次使用）
+@gis/gdal/SKILL.md           # 加载 GDAL 技能
+@gis/opengis-all/SKILL.md    # 加载 GIS 全流程索引
+
+# Cursor
+在 .cursorrules 中引用或在对话中使用 @file 语法
+
+# Cline / Roo Code
+直接使用 @ 语法或通过 .clinerules 配置
+
+# VS Code Copilot Chat
+通过 /addContext 或 .github/copilot-instructions.md 配置
+
+# DeepSeek Chat
+对话中粘贴 SKILL.md 内容或引用文件路径
+```
 
 ---
 
@@ -12,13 +71,39 @@
 
 ```
 opengis-skills/
-├── gis/        # GIS 类（23 个）
-├── cad/        # CAD 类（17 个）
-├── csharp/     # C# 框架/库（8 个）
-├── ai/         # AI 智能体/平台（5 个）
-├── iot/        # 物联网（1 个）
-└── others/     # 其它（2 个）
+├── SKILL.md         # 🌐 根入口：全局索引 + 标签搜索 + 使用指南
+├── gis/             # GIS 类（23 个）
+│   └── SKILL.md     # GIS 分类索引
+├── cad/             # CAD 类（17 个）
+│   └── SKILL.md     # CAD 分类索引
+├── csharp/          # C# 框架/库（8 个）
+│   └── SKILL.md     # C# 分类索引
+├── ai/              # AI 智能体/平台（5 个）
+│   └── SKILL.md     # AI 分类索引
+├── iot/             # 物联网（1 个）
+│   └── SKILL.md     # IoT 分类索引
+└── others/          # 其它（2 个）
+    └── SKILL.md     # Others 分类索引
 ```
+
+每个 SKILL 都是一个独立目录，包含一份 `SKILL.md`，可被 Claude / Cursor / Cline / Copilot Chat / VS Code 等 AI 工具按需加载，作为「领域知识」注入到对话中，从而获得更准确的代码生成与问题排查能力。
+
+---
+
+## 📑 分类索引文件
+
+除了根目录的 [`SKILL.md`](./SKILL.md) 作为全局入口外，每个分类目录下也设有 **分类索引文件**（`<category>/SKILL.md`），作为该领域的二级入口：
+
+| 分类索引 | 涵盖内容 | 适用场景 |
+|---------|---------|---------|
+| [`gis/SKILL.md`](./gis/SKILL.md) | 23 个 GIS 技能概要（GDAL、QGIS、GeoServer、PostGIS、JTS 等） | 空间数据处理、地图服务、Web GIS |
+| [`cad/SKILL.md`](./cad/SKILL.md) | 17 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
+| [`csharp/SKILL.md`](./csharp/SKILL.md) | 8 个 C#/.NET 技能概要（Furion、NPOI、SqlSugar 等） | .NET Web 开发、ORM、Office 操作 |
+| [`ai/SKILL.md`](./ai/SKILL.md) | 5 个 AI 技能概要（Dify、Agent 框架、提示词工程） | LLM 应用、Agent 编排 |
+| [`iot/SKILL.md`](./iot/SKILL.md) | 1 个 IoT 技能概要（Raspberry Pi Pico） | 嵌入式、传感器 |
+| [`others/SKILL.md`](./others/SKILL.md) | 2 个其它技能概要（邮件平台、Java 脚手架） | 通用工具 |
+
+> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 56 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
 
 ---
 
@@ -132,14 +217,20 @@ LLM 应用、Agent 框架与提示词工程。
 
 每个 `<category>/<project>/SKILL.md` 遵循统一规范，便于 AI 工具与人类阅读：
 
-1. **YAML frontmatter**：
+1. **YAML frontmatter**（必填字段）：
 
    ```yaml
    ---
    name: 项目英文名
    description: 一句话中文简介，说明定位、核心能力与典型用途
+   tags:                 # ← 新增必填字段：用于 AI 工具按标签搜索技能
+     - <语言/平台>
+     - <功能领域>
+     - <...>
    ---
    ```
+
+   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组，列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部 56 个文件。
 
 2. **头部引用块**：项目地址、官方文档、许可证
 

@@ -1,6 +1,15 @@
 ---
 name: opengis-utils-for-net
 description: opengis-utils-for-net 是一个基于 GDAL/OGR 的 .NET GIS 工具包，提供图层读写、几何操作、双引擎架构和坐标参考系统管理等功能。
+tags:
+  - dotnet
+  - csharp
+  - gdal
+  - ogr
+  - geometry
+  - vector
+  - crs
+  - cgcs2000
 ---
 
 > **项目地址：** https://github.com/znlgis/opengis-utils-for-net
@@ -736,6 +745,31 @@ var sorted = SortUtil.NaturalSort(files, f => f);
 ```
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **读取数据**：使用 `OguLayerUtil.ReadLayer()` 统一入口读取各类矢量格式
+2. **几何运算**：使用 `GeometryUtil.Wkt2Geometry()` 转换后操作，或直接用 `*Wkt` 后缀方法
+3. **坐标转换**：使用 `CrsUtil.Transform()` 进行坐标系变换（CGCS2000 系列）
+4. **写出结果**：使用 `OguLayerUtil.WriteLayer()` 写出为目标格式
+5. **格式转换**：使用 `OguLayerUtil.ConvertFormat()` 一步完成
+
+### 关键注意事项
+
+- **GDAL 自动初始化**：无需手动调用 `GdalConfiguration.ConfigureGdal()`
+- **GeoJSON 字符串解析不支持**：`Geojson2Wkt()` 和 `Geojson2Geometry()` 抛出 `NotSupportedException`，需从文件加载
+- **几何以 WKT 存储**：`OguFeature.Wkt` 存储 WKT 字符串；多数 `GeometryUtil` 方法有 `*Wkt` 变体
+- **.NET 仅支持 GDAL 引擎**：与 Java 版本不同，无 GeoTools 引擎
+- **线程安全**：GDAL 初始化线程安全，但单个 GDAL 几何对象非线程安全
+
+## 相关技能
+
+- **nettopologysuite** — .NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **geometry-api-net** — Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
+- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
 
 ## Important Notes
 

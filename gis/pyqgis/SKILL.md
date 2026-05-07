@@ -1,6 +1,15 @@
 ---
 name: pyqgis
 description: PyQGIS 是 QGIS 的 Python 绑定，提供对 QGIS 核心 C++ 库的完整 Python 访问能力。通过 PyQGIS，可在 Python 脚本、QGIS 控制台、独立应用或插件中执行矢量/栅格图层管理、几何操作、坐标变换、空间分析、Processing 算法调用、地图渲染与导出等 GIS 任务。
+tags:
+  - python
+  - qgis
+  - gis
+  - processing
+  - vector
+  - raster
+  - rendering
+  - plugin
 ---
 
 > **项目地址：** <https://github.com/qgis/QGIS>
@@ -976,6 +985,14 @@ if not layer.commitChanges():
 ```
 
 ---
+
+## 相关技能
+
+- **qgis-process** — QGIS 命令行处理工具：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **geopandas** — Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **shapely** — Python 几何计算核心：[../shapely/SKILL.md](../shapely/SKILL.md)
+- **geopipe-agent** — AI 原生分析流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
 
 ## 参考链接
 

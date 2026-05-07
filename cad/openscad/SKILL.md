@@ -1,6 +1,7 @@
 ---
 name: openscad
 description: OpenSCAD 是面向程序员的开源 3D CAD 软件，用声明式脚本语言定义参数化模型，配合 CSG（构造实体几何）原语和函数模块构造复杂几何，特别适合机械零件、3D 打印模型与教育用途。
+tags: [3d, parametric, csg, scripting, stl, openscad]
 ---
 
 > **项目地址：** <https://github.com/openscad/openscad>
@@ -223,6 +224,43 @@ openscad -o preview.png --camera=0,0,0,55,0,25,150 --imgsize=800,600 part.scad
 | 中文文字 | `font = "Noto Sans CJK SC"` |
 | `import("a.stl")` 慢 | 转换为 OFF 或预先 mesh decimation |
 | 装配线性挤出失真 | `convexity` 参数加大 |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应将 OpenSCAD 模型组织为「全局参数 → 模块定义 → 主模型组合」的结构，利用 `module` 封装可复用组件。参数化面板用 `/* [ParamGroup] */` 注释格式暴露变量给 GUI Customizer。批处理使用 CLI `openscad -o out.stl model.scad -D 'param=value'`。
+- **关键注意事项**：① `$fn` 不要全局设过高，仅对需要圆滑的对象单独设置；② 开发版启用 Manifold 内核（比 CGAL 快 10×+）；③ `import("a.stl")` 场景避免频繁重导入，应缓存为模块；④ 中文字体使用 `font = "Noto Sans CJK SC"`。
+- **常用代码模式**：基础体：`cube([l,w,h])` / `cylinder(h, r, $fn=N)` / `sphere(r, $fn=N)`。布尔：`difference() { ... }`。变换：`translate([x,y,z]) rotate([ax,ay,az])`。参数暴露：`/* [Section] */ variable = default; // [min:step:max]`。
+
+---
+
+## 相关技能
+
+- **cadquery** — Python 参数化 CAD（BREP 内核，适合工业零件）：[../cadquery/SKILL.md](../cadquery/SKILL.md)
+- **freecad** — 桌面参数化 CAD，含 GUI + Python 脚本：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **solvespace** — 轻量约束求解器建模，互补性工具：[../solvespace/SKILL.md](../solvespace/SKILL.md)
+
+---
+
+## 典型工作流
+
+### 工作流一：参数化机械零件设计
+
+1. 定义全局变量：`length=50; width=30; height=10; hole_r=2;`
+2. 编写基础几何模块：`module base() { cube([length, width, height]); }`
+3. 编写特征模块：`module holes() { translate(...) cylinder(h=height+1, r=hole_r); }`
+4. 在主模型中用 CSG 组合：`difference() { base(); holes(); }`
+5. 添加 Customizer 注释暴露参数：`/* [Dimensions] */ length = 50; // [10:1:200]`
+6. 渲染预览（F6），导出 STL（F7）
+
+### 工作流二：CI 批量导出参数化模型
+
+1. 编写参数化 `.scad` 文件，用 `-D` 传递参数
+2. CI 脚本中安装 OpenSCAD 或使用 Docker 镜像
+3. 遍历参数组合：`openscad -o out_${variant}.stl model.scad -D "length=${L}" -D "width=${W}"`
+4. 选项：导出 PNG 预览 `openscad -o preview.png --camera=... --imgsize=800,600 model.scad`
+5. 将输出 STL/PNG 上传为构建产物
 
 ---
 

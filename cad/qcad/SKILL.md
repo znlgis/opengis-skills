@@ -1,6 +1,7 @@
 ---
 name: qcad
 description: QCAD 是基于 Qt 的开源 2D CAD 应用与 SDK，专注 DWG/DXF 二维制图，提供 ECMAScript（JavaScript）扩展与脚本控制台、命令行工具 dxf2*/转换器，适合机械、建筑、测绘的二维出图与自动化处理。
+tags: [2d, cad, dxf, dwg, qt, javascript, ecmascript]
 ---
 
 > **项目地址：** <https://github.com/qcad/qcad>
@@ -210,6 +211,44 @@ doc.applyOperation(op);
 | 字体缺失 | 复制 .shx/.ttf 到 `fonts/` 目录或安装到系统 |
 | 中文显示乱 | 设置图层使用支持 CJK 的字体（如 simhei） |
 | 脚本路径错 | 使用绝对路径或 `documentInterface.getDocument()` |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应根据场景选择 QCAD 接口——交互式操作使用 GUI 命令，批处理使用 `qcad -no-gui -autostart script.js` 无界面运行。ECMAScript 脚本遵循「获取文档 → 构建操作（RAddObjectsOperation 等）→ applyOperation」的模式。DWG 文件需 ODA File Converter 支持。
+- **关键注意事项**：① DWG 支持依赖 ODA File Converter（免费），需在 Preferences 中配置路径；② 脚本需 `include("scripts/EAction.js")` 继承 EAction；③ 批量操作使用 `RAddObjectsOperation.addObject(obj, false)` 不立即更新空间索引，最后统一 `applyOperation`；④ 中文字体使用 CJK 支持的 TTF（如 simhei）。
+- **常用代码模式**：简单的几何添加：`var line = new RLineEntity(doc, new RLineData(new RVector(0,0), new RVector(100,50)))` → `var op = new RAddObjectsOperation()` → `op.addObject(line)` → `doc.applyOperation(op)`。CLI 转换：`dxf2pdf -o out.pdf input.dxf` / `dxf2svg -o out.svg input.dxf`。
+
+---
+
+## 相关技能
+
+- **librecad** — 开源 2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **libredwg** — DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
+- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发框架（类似的插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
+
+---
+
+## 典型工作流
+
+### 工作流一：ECMAScript 脚本自动绘图
+
+1. 创建 `.js` 脚本文件，`include("scripts/EAction.js")` 引入基础类
+2. 继承 `EAction`，在 `beginEvent()` 中通过 `this.getDocument()` 获取文档
+3. 构建 `RLineEntity`/`RCircleEntity` 等实体对象
+4. 使用 `RAddObjectsOperation` 批量添加实体
+5. `doc.applyOperation(op)` 提交操作
+6. 通过 `Misc → Run script` 运行，或 `qcad -no-gui -autostart script.js` 无界面执行
+
+### 工作流二：命令行批量格式转换
+
+1. `dxf2pdf -o out.pdf input.dxf` DXF 转 PDF
+2. `dxf2svg -o out.svg input.dxf` DXF 转 SVG
+3. `dxf2bmp -a -o out.png input.dxf` DXF 转 PNG 位图
+4. `dwg2dxf -outversion=2018 input.dwg` DWG 转 DXF（需 ODA File Converter）
+5. 编写 Shell 脚本批量处理多个文件
 
 ---
 

@@ -1,6 +1,17 @@
 ---
 name: superpowers-zh
 description: superpowers-zh 是面向中文场景的开源 AI 提示词/能力工程库，提供精心调优的中文提示词、技能（Skill）模板与可复用的 LLM 工作流，覆盖写作、编程、翻译、研究、办公自动化、Agent 等场景，可直接在 ChatGPT/Claude/Cursor/Cline 等客户端使用，也可通过 SDK 嵌入应用。
+tags:
+  - prompt
+  - skill
+  - chinese
+  - writing
+  - coding
+  - translation
+  - agent
+  - workflow
+  - llm
+  - template
 ---
 
 > **项目地址：** <https://github.com/znlgis/superpowers-zh>（如位置变动请以 znlgis.github.io 为准）
@@ -188,6 +199,85 @@ description: 给定主题进行多轮搜索 → 大纲 → 写作 → 审校
 
 ---
 
+## 典型工作流
+
+### 场景一：用 Skill 辅助公文写作
+
+```markdown
+# 1. 选择 Skill 文件 (prompts/writing/notice.md)
+
+# 2. 在 Cursor 中配置
+# .cursor/rules/government-notice.mdc
+---
+description: 公文写作-通报
+globs: ["**/*.md"]
+alwaysApply: false
+---
+（粘贴 notice.md 全文）
+
+# 3. 在聊天中引用
+用户: @government-notice 写一份关于安全生产隐患排查的通报
+
+# 4. 可搭配 Claude Project
+# 新建 Project → System Prompt 粘贴 Skill 内容 → 上传相关知识文档
+```
+
+### 场景二：组合工作流做深度研究
+
+```markdown
+# 使用 deep-research.md 工作流
+
+用户输入：主题 = "中国新能源汽车出口趋势2025"
+
+步骤 1 - 澄清：列出 5 个关键问题
+  ① 2024年出口总量及同比？
+  ② 主要出口目的地？
+  ③ 品牌分布（比亚迪/特斯拉/蔚来...）？
+  ④ 关税/政策影响？
+  ⑤ 与日德车企对比？
+
+步骤 2 - 检索计划：10 条搜索查询
+
+步骤 3 - 检索与摘要：每条标注来源 URL
+
+步骤 4 - 大纲：4 章结构
+
+步骤 5 - 正文：含数据引用 [1][2]...
+
+步骤 6 - 自评：列出数据来源偏差与不确定性
+```
+
+---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **选 Skill**：根据任务类型从 `prompts/` 目录匹配最相关的 Skill
+2. **客户端适配**：ChatGPT → Custom Instructions，Cursor → `.cursor/rules/`，Cline → `.clinerules`
+3. **组合使用**：复杂任务可将多个 Skill 串成工作流模板（先分析 → 再写作 → 后审校）
+4. **迭代优化**：用 Skill 生成初稿后，再对话微调细节
+5. **团队共享**：将验证过的 Skill 提交到仓库，全员统一使用
+
+### 关键模式与常见陷阱
+
+- **Prompt 长度控制**：超过 4K token 后 LLM 注意力下降，不常用规则放工具层或外部知识库
+- **结构化输出**：要求 JSON Schema 或 Markdown 表格输出时，务必加「严格按以下格式输出」并给出示例
+- **温度设置**：写作 0.7-1.0（创意），编程 0.0-0.3（精确），工具调用 0.0
+- **避免啰嗦**：system prompt 末尾加「直接给出结果，不要解释自己」
+- **模型选择**：中文写作 → GPT-4o / Claude Opus，编程 → Claude Sonnet / DeepSeek-Coder，翻译润色 → GPT-4o-mini
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 单次任务（写作/翻译） | superpowers-zh Skill + ChatGPT/Claude |
+| 持续编程辅助 | Cursor Rules + superpowers-zh coding/ Skill |
+| 可视化 AI 应用 | Dify + superpowers-zh 提示词模板 |
+| 自动化 Agent | oh-my-openagent / hermes-agent + 提示词注入 |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -196,6 +286,13 @@ description: 给定主题进行多轮搜索 → 大纲 → 写作 → 审校
 | 输出太啰嗦 | 限定字数或要点数；结尾加「不要解释自己」 |
 | 重复套话 | 调高 frequency_penalty / presence_penalty |
 | 客户端不读取 rules | 检查路径与文件名，重启客户端 |
+
+---
+
+## 相关技能
+
+- **dify** — 可视化 LLM 应用平台，可将 superpowers-zh 的提示词模板导入 Dify 应用：[../dify/SKILL.md](../dify/SKILL.md)
+- **oh-my-openagent** — AI Agent 模板集合，Agent 的 system prompt 可直接使用本库的 Skill：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
 
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: dotnet-reactor
 description: .NET Reactor 是商业的 .NET 程序集保护工具（Eziriz 出品），提供混淆、控制流加密、字符串加密、IL/Native 代码加密、防调试、序列号 / 试用授权、合并程序集、压缩与许可证管理，广泛用于 .NET 商业软件的版权保护。
+tags: dotnet, obfuscation, protection, licensing, security
 ---
 
 > **官网：** <https://www.eziriz.com/dotnet_reactor.htm>
@@ -195,6 +196,36 @@ GUI → Advanced：
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **先确定保护目标**：反编译防护 → Necrobit + Obfuscation，授权管理 → License Manager，分发简化 → Merge Assemblies
+2. **GUI 先调参**：在 GUI 中逐项测试保护效果，保存 `.nrproj` 配置文件
+3. **CI 集成**：将 `.nrproj` 加入仓库，MSBuild AfterTarget 自动保护
+4. **排除反射类型**：扫描项目中所有 `Type.GetType()` / `Assembly.Load()` 调用，加入 Exclude 列表
+5. **测试验证**：对保护后的程序集跑完整回归测试
+
+### 关键模式与常见陷阱
+
+- **反射失效**：混淆后 `Type.GetType("全名")` 会失败，必须排除被反射的类型
+- **序列化字段丢失**：JSON/XML/Protobuf 序列化的属性名改变后反序列化失败，需 `[Obfuscation(Exclude=true)]`
+- **WPF XAML 绑定断裂**：XAML 中 `{Binding Path=Name}` 依赖属性名，必须排除被绑定的类型
+- **DI 容器扫描失败**：`ITransient`/`IScoped` 接口按名称匹配的服务可能失效
+- **强签名失效**：合并程序集后强签名会丢失，需在保护后重新签名
+- **AV 误报**：Necrobit 加密壳可能被杀软标记，建议联系厂商加白；可选择 Mild 模式降低误报
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 商业软件防破解 | .NET Reactor（Necrobit + 授权） |
+| 开源项目基础混淆 | Obfuscar（免费，仅重命名） |
+| 无需混淆（API 已鉴权） | 不保护，靠服务端鉴权 |
+| 单文件分发 | Merge Assemblies + 保护 |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -205,6 +236,12 @@ GUI → Advanced：
 | 启动慢 | Necrobit 解密成本；可关闭部分保护项 |
 | 被 AV 误报 | 联系杀软厂商加白；选择「Anti Debug = Mild」 |
 | Linux 运行报错 | Necrobit 当前对 Linux/.NET Core 支持，需用对应版本 |
+
+---
+
+## 相关技能
+
+- **furion** — .NET Web 框架，dotnet-reactor 可保护 Furion 构建的 API/桌面应用：[../furion/SKILL.md](../furion/SKILL.md)
 
 ---
 

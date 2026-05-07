@@ -1,6 +1,17 @@
 ---
 name: geoserver
 description: GeoServer 是基于 Java 的开源地图服务器，遵循 OGC 标准（WMS/WMTS/WFS/WCS/WPS），用于发布矢量、栅格、瓦片地图服务，支持 Shapefile、PostGIS、Oracle、GeoTIFF 等数据源，是开源 SDI 的核心组件之一。
+tags:
+  - java
+  - server
+  - wms
+  - wfs
+  - wmts
+  - wcs
+  - wps
+  - ogc
+  - map
+  - web
 ---
 
 > **项目地址：** <https://github.com/geoserver/geoserver>
@@ -177,6 +188,42 @@ curl -u admin:geoserver -XPOST \
 | 跨域 | 配置 CORS 过滤器 |
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **部署 GeoServer**：优先使用 Docker 镜像 `docker.osgeo.org/geoserver:2.25.0`
+2. **创建 Workspace**：为每个项目创建独立工作空间实现命名隔离
+3. **添加数据存储**：根据数据类型选择 PostGIS（矢量）、Shapefile（文件矢量）、GeoTIFF（栅格）
+4. **发布图层**：设置 SRS（坐标参考系）、计算 Native Bounds、配置样式
+5. **验证服务**：通过 Layer Preview 或直接构造 WMS/WFS 请求测试
+6. **优化性能**：启用 GeoWebCache 预切片、PostGIS 建空间索引、调整 JVM 参数
+
+### 关键注意事项
+
+- **数据源编码**：Shapefile 中文乱码时在 Store 设置 `charset=UTF-8` 或 `GBK`
+- **Native Bounds**：必须正确计算图层的原始范围，否则 WMS 请求可能返回空白
+- **级联删除**：删除 Workspace/Store 时添加 `?recurse=true` 参数
+- **JVM 调优**：生产环境建议 `-Xms2g -Xmx4g -XX:+UseG1GC`
+- **CORS 配置**：跨域访问需在 `web.xml` 中配置 CORS 过滤器
+- **SLD 样式**：使用 SLD Cookbook 快速参考常用样式模板
+
+### 常见配置模式
+
+```
+工作空间(Workspace)
+  ├── 数据存储(Store) ─→ PostGIS / Shapefile / GeoTIFF
+  │    └── 图层(Layer) ─→ 设置 SRS + 绑定样式(Style)
+  └── 图层组(LayerGroup) ─→ 组合多个图层统一发布
+```
+
+## 相关技能
+
+- **geoserver-rest-api** — REST API 自动化管理：[../geoserver-rest-api/SKILL.md](../geoserver-rest-api/SKILL.md)
+- **geoserver-cloud** — 云原生微服务版本：[../geoserver-cloud/SKILL.md](../geoserver-cloud/SKILL.md)
+- **postgis** — 空间数据库（GeoServer 最常见数据源）：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **geotools** — GeoServer 底层 Java GIS 库：[../geotools/SKILL.md](../geotools/SKILL.md)
 
 ## 参考资源
 

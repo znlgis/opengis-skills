@@ -1,6 +1,7 @@
 ---
 name: astral3d
 description: Astral3D 是开源的 3D 工业可视化与编辑框架，提供基于 Web 的轻量三维场景搭建、模型导入（glTF/OBJ/FBX/STEP）、设备孪生、动画与交互编辑能力，常用于工业 IoT、数字孪生、智慧园区、CAD/BIM 轻量化展示。
+tags: [web, 3d, visualization, threejs, digital-twin, gltf, step]
 ---
 
 > **项目地址：** <https://github.com/AstralEngine/astral3d>（如仓库迁移请以 znlgis.github.io 链接为准）
@@ -180,6 +181,27 @@ viewer.timeline
 
 ---
 
+## 典型工作流
+
+### 工作流一：IoT 数字孪生场景搭建
+
+1. 使用 Astral3D 编辑器新建场景，拖入厂房模型（glTF），布置灯光与 HDR 背景
+2. 为设备节点命名（如 `sensor_A1`），配置交互弹窗模板
+3. 导出 `factory.json` 场景文件
+4. 在前端页面实例化 `Viewer`，加载场景文件
+5. 通过 `MqttBridge` 连接 MQTT Broker，订阅设备遥测主题
+6. 在回调中根据设备 ID 更新对应节点的颜色/透明度/标签
+
+### 工作流二：Web 端轻量化 CAD 预览
+
+1. 从服务端获取 STEP/IFC 文件 URL
+2. 使用 `ModelLoader.load()` 加载模型（底层调用 OCCT.js 解析）
+3. 将模型加入场景，调整位置、缩放
+4. 添加 OrbitControls 供用户旋转/缩放查看
+5. 可选：添加剖面裁剪（clipping plane）查看内部结构
+
+---
+
 ## 性能优化
 
 1. **glTF Draco 压缩 + KTX2 纹理** 减小加载体积
@@ -201,6 +223,22 @@ viewer.timeline
 | 实时推送延迟 | MQTT QoS 0；服务器 → 浏览器 WebSocket 直连 |
 | 移动端发热 | 关闭实时阴影、降低分辨率 `viewer.setPixelRatio(1)` |
 | 相机穿透 | 启用碰撞或限制 minDistance |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应优先使用编辑器导出的 `.json` 场景文件作为基础，再通过 API 动态注入数据和交互——避免在代码中手动构造复杂场景树。
+- **关键注意事项**：① MQTT/WebSocket 连接需处理断线重连；② 模型路径需确保 CORS 配置正确；③ glTF  Draco 压缩后的模型需要 DRACOLoader 支持；④ 移动端需主动降低 `pixelRatio` 与关闭阴影。
+- **常用代码模式**：场景加载 → 数据源接入 → `viewer.scene.findById()` 定位节点 → 更新节点属性（颜色/位置/可见性）。对于新模型，优先使用 `ModelLoader.load()` 而非底层 Three.js API。
+
+---
+
+## 相关技能
+
+- **chili3d** — Web CAD 参数化建模与 OCCT.js 集成：[../chili3d/SKILL.md](../chili3d/SKILL.md)
+- **lightcad** — 轻量 Web 2D CAD 框架与 DXF 编辑：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **occt** — 底层 OCCT 几何内核（STEP/IGES/BREP）：[../occt/SKILL.md](../occt/SKILL.md)
 
 ---
 

@@ -1,6 +1,15 @@
 ---
 name: qgis-process
 description: qgis_process 是 QGIS 自带的命令行工具（QGIS Processing Executor），允许在不启动 QGIS 桌面应用的情况下，直接从命令行运行 Processing 算法和模型（内置算法或由插件提供）。它适用于服务器端批量处理、CI/CD 自动化流水线、脚本化 GIS 工作流等场景。
+tags:
+  - cli
+  - qgis
+  - processing
+  - automation
+  - batch
+  - ci-cd
+  - json
+  - shell
 ---
 
 > **项目地址：** <https://github.com/qgis/QGIS>
@@ -506,6 +515,13 @@ qgis_process run native:printlayouttopdf \
 | 其他 | 第三方插件 Provider | 各插件提供 |
 
 ---
+
+## 相关技能
+
+- **pyqgis** — QGIS Python 绑定：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **geopipe-agent** — AI 原生分析流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
+- **geoserver-rest-api** — REST API 自动化：[../geoserver-rest-api/SKILL.md](../geoserver-rest-api/SKILL.md)
 
 ## 源码结构参考
 

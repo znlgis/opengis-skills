@@ -1,6 +1,16 @@
 ---
 name: opengis-utils-for-java
 description: opengis-utils-for-java 是一个基于 GeoTools、JTS、GDAL/OGR 和 ESRI Geometry API 的统一 Java GIS 工具包，提供图层读写、几何操作、双引擎架构和坐标参考系统管理等功能。
+tags:
+  - java
+  - gis
+  - geotools
+  - jts
+  - gdal
+  - geometry
+  - vector
+  - crs
+  - cgcs2000
 ---
 
 > **项目地址：** https://github.com/znlgis/opengis-utils-for-java
@@ -605,6 +615,25 @@ RuntimeException
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **选择引擎**：`GisEngineType.AUTO` 自动选择最优引擎（GDAL 优先）
+2. **读取数据**：使用 `OguLayerUtil.readLayer()` 统一入口读取各类矢量格式
+3. **空间分析**：JTS Geometry 对象用 `GeometryUtil`（60+ 方法），WKT 字符串用 `*Wkt` 后缀方法
+4. **坐标转换**：使用 `CrsUtil.transform()` 进行 CGCS2000 系列坐标系变换
+5. **写出结果**：使用 `OguLayerUtil.writeLayer()` 写出为目标格式
+
+### 关键注意事项
+
+- **始终使用 `OguLayerUtil` 作为主入口**：自动处理引擎选择和格式路由
+- **几何以 WKT 存储**：`OguFeature.geometry` 存储 WKT 字符串；空间运算时转为 JTS Geometry
+- **引擎选择**：`GEOTOOLS`（纯 Java，无原生依赖）vs `GDAL`（需本地库，支持 FileGDB）
+- **CGCS2000 坐标系**：EPSG:4490 为默认地理 CRS，投影 CRS 范围 EPSG:4502-4554
+- **Shapefile 字段名限 10 字符**：使用 `ShpUtil.formatFieldName()` 自动截断
+- **资源释放**：`DataStore` 和 OGR `DataSource` 必须在 finally 块中释放
+
 ## Important Notes for AI Developers
 
 1. **Always use `OguLayerUtil` as the primary entry point** for reading/writing GIS data. It handles engine selection and format routing.
@@ -646,6 +675,14 @@ RuntimeException
     ```
 
 ---
+
+## 相关技能
+
+- **geotools** — Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
+- **jts** — JTS Topology Suite：[../jts/SKILL.md](../jts/SKILL.md)
+- **geometry-api-java** — Esri Geometry API：[../geometry-api-java/SKILL.md](../geometry-api-java/SKILL.md)
+- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
 
 ## Typical Workflow Example
 

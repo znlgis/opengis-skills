@@ -1,6 +1,7 @@
 ---
 name: librecad
 description: LibreCAD 是基于 Qt 的开源 2D CAD 软件，专注 DXF 编辑（R12/R2007），界面与 AutoCAD 经典版相似，适合机械制图、建筑施工图、教育与小型工程团队作为免费替代方案。
+tags: [2d, cad, dxf, dwg, qt, drafting]
 ---
 
 > **项目地址：** <https://github.com/LibreCAD/LibreCAD>
@@ -168,6 +169,44 @@ doc.saveas('out.dxf')   # LibreCAD 可直接打开
 | 标注比例小看不见 | Drawing Preferences → Dimensions → General Scale |
 | 打开崩溃 | 删除 `~/.config/LibreCAD/LibreCAD.conf` 重置 |
 | 无法填充 | 闭合多段线后再 hatch；检查孔/外边界顺序 |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应优先使用 DXF 作为中间交换格式——DWG 文件先通过 ODA File Converter 或 LibreDWG 转为 DXF，再用 LibreCAD 编辑。批处理场景用 `ezdxf`（Python 库）配合 CLI 工具完成。
+- **关键注意事项**：① DWG 原生支持有限，应以 DXF 为主交换格式；② 中文文字需使用 TTF 字体（`Noto Sans CJK SC` / `SimHei`），SHX 需放入 `fonts/` 目录；③ 大图应分图层管理、关闭不必要 OSNAP；④ 命令缩写（`li`/`ci`/`pl`/`tr`/`mi`）与 AutoCAD 相似但不完全相同。
+- **常用代码模式**：GUI 交互：按 `:` 唤出命令行 → 输入命令缩写 → 坐标输入（`@100,50` 相对笛卡尔，`@100<30` 相对极坐标）。Python 批处理：`ezdxf.new('R2010')` → `msp.add_line/add_circle` → `doc.saveas('out.dxf')`。
+
+---
+
+## 相关技能
+
+- **qcad** — 2D CAD 软件，ECMAScript 脚本扩展与 DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **libredwg** — DWG/DXF 文件格式读写库（C 语言）：[../libredwg/SKILL.md](../libredwg/SKILL.md)
+- **lightcad** — Web 2D CAD 框架，DXF 导入导出：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发框架：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
+
+---
+
+## 典型工作流
+
+### 工作流一：绘制建筑平面图
+
+1. 新建文件，设置绘图单位（Drawing Preferences → Units → mm）
+2. 创建图层（墙体/门窗/标注/文字），设置颜色与线型
+3. 使用 `li` 命令绘制轴线，`re` 绘制矩形墙体，`ci` 绘制圆形柱
+4. `tr` 修剪交叉线，`pl` 绘制多段线轮廓
+5. 添加线性/对齐标注（`dimlinear`/`dimaligned`）
+6. 导出 PDF 用于打印，或保存 DXF R2007 用于 AutoCAD 交换
+
+### 工作流二：批量转换 DWG → DXF
+
+1. 安装 ODA File Converter 或 LibreDWG 工具（`dwg2dxf`）
+2. `ODAFileConverter input.dwg . ACAD2010 DXF 1 0` 或 `dwg2dxf -y input.dwg`
+3. 在 LibreCAD 中打开生成的 DXF，检查中文文字和图层
+4. 必要时用 `ezdxf` Python 脚本修复格式问题
+5. 保存为 R2007 DXF，确保兼容性
 
 ---
 

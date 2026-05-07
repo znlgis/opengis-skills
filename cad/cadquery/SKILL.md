@@ -1,6 +1,7 @@
 ---
 name: cadquery
 description: CadQuery 是基于 Python 的开源参数化 CAD 库，构建于 OCCT 几何内核之上，提供流畅的 fluent API 来描述工业级 BREP 模型，支持装配、CAM、STEP/IGES/STL/glTF 输出，特别适合可编程设计、批量参数化、CI 流水线与教育。
+tags: [python, 3d, parametric, brep, step, stl, occ, cad]
 ---
 
 > **项目地址：** <https://github.com/CadQuery/cadquery>
@@ -210,6 +211,28 @@ cq.exporters.export(result, "out.svg")
 
 ---
 
+## 典型工作流
+
+### 工作流一：从草图到 STEP 的完整零件建模
+
+1. 确定零件几何参数（长宽高、孔径、圆角半径等），封装为 Python 函数参数
+2. 使用 `cq.Workplane("XY")` 创建基准面
+3. 绘制 2D 草图轮廓（`rect`/`circle`/`polyline` 等）
+4. `extrude(length)` 生成 3D 实体
+5. 通过 Selector（`.faces(">Z")` / `.edges("|Z")`）定位特征面/边
+6. 添加修饰：`fillet()` / `chamfer()` / `shell()`
+7. `cq.exporters.export(result, "out.step")` 导出 STEP 用于下游加工
+
+### 工作流二：CI 流水线批量参数化生成
+
+1. 编写参数化模型函数（接受尺寸参数，返回 Workplane 对象）
+2. 在 GitHub Actions / Jenkins 中安装 `cadquery`（conda-forge）
+3. 脚本遍历参数矩阵，调用模型函数，导出 STL/STEP
+4. 将输出文件上传为构建产物（Artifacts），或直接在 CI 中对比几何差异
+5. 对于复杂装配，使用 `cq.Assembly` 组合多个零件并添加约束
+
+---
+
 ## 性能优化
 
 1. 使用 **Sketch API** 比逐边 lineTo 更高效
@@ -229,6 +252,23 @@ cq.exporters.export(result, "out.svg")
 | 圆角失败 | 减小半径或拆分到边集合后逐一加 |
 | Conda 安装慢 | 使用 mamba |
 | `cq.Assembly` 求解失败 | 减少冲突约束、给定初始 `Location` |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应将几何逻辑封装为可复用的 Python 函数，利用 CadQuery 的 fluent API 链式描述几何操作序列——遵循「基准面 → 2D 草图 → 拉伸/扫掠 → Selector 定位 → 修饰 → 导出」的模式。
+- **关键注意事项**：① Selector 表达式需要调试，`result.faces().vals()` 可列出所有面供排查；② 圆角/倒角失败通常意味着半径过大或边不连续，可逐一添加而非批量；③ 布尔运算前确保实体无退化几何；④ Assembly 求解是数值优化，减少约束数量可提高成功率。
+- **常用代码模式**：`cq.Workplane("XY").rect(...).extrude(...).faces(">Z").workplane().hole(...)` 是最经典的模式；多零件建模用 `cq.Assembly().add(...).constrain(...).solve()` 装配。
+
+---
+
+## 相关技能
+
+- **occt** — 底层 OCCT 几何内核 API（C++/PythonOCC）：[../occt/SKILL.md](../occt/SKILL.md)
+- **freecad** — 桌面参数化 CAD，含 Sketcher/PartDesign/BIM：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **openscad** — 声明式脚本建模（CSG 风格），适合对比选型：[../openscad/SKILL.md](../openscad/SKILL.md)
+- **solvespace** — 轻量约束求解器建模，适合快速概念设计：[../solvespace/SKILL.md](../solvespace/SKILL.md)
 
 ---
 

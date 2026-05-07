@@ -1,6 +1,7 @@
 ---
 name: chili3d
 description: Chili3D 是基于 Web 的开源 CAD 软件，使用 TypeScript + WebAssembly（封装 OCCT）实现，可在浏览器中完成参数化 3D 建模、装配、布尔运算与 STEP/IGES/STL 导入导出，目标是打造无需安装的工业级开源 Web CAD。
+tags: [web, 3d, typescript, wasm, occ, parametric, step, stl]
 ---
 
 > **项目地址：** <https://github.com/xiangechen/chili3d>
@@ -138,6 +139,28 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
 ---
 
+## 典型工作流
+
+### 工作流一：在线参数化建模与导出
+
+1. 打开 <https://chili3d.com/> 或本地部署实例
+2. 新建项目，使用 Sketch 工具绘制 2D 轮廓
+3. 通过 Extrude/Revolve 将草图转为 3D 实体
+4. 添加圆角、倒角等修饰特征
+5. 使用布尔运算（Union/Cut/Intersect）组合多个实体
+6. 导出为 STEP/STL 用于下游加工或 3D 打印
+
+### 工作流二：嵌入业务系统作为 Web CAD 组件
+
+1. 在项目中安装 `@chili3d/web` 包
+2. 在页面中创建容器 `<div>`，实例化 `Application`
+3. 通过 Command 系统注册自定义绘图命令
+4. 监听文档变更事件，同步模型数据到后端
+5. 利用 OCCT.js 直接构造几何进行批量参数化生成
+6. 构建为静态资源部署到生产环境
+
+---
+
 ## 性能要点
 
 1. WebAssembly OCCT 单线程（除非启用 pthreads + COOP/COEP）
@@ -164,6 +187,23 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
 ✅ 教育、Web 演示、轻量 3D 建模、定制配置器、嵌入业务系统
 ❌ 大型工业装配、复杂曲面（仍推荐 FreeCAD/OCCT 桌面）
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应区分两种使用场景——在线建模（引导用户通过 GUI 操作）与二次开发（通过 TypeScript SDK 嵌入）。对后者，优先使用 `@chili3d/occ` 直接调用 OCCT.js 进行几何构造，而非通过 UI 层间接操作。
+- **关键注意事项**：① WebAssembly OCCT 需要 COOP/COEP 头，部署时必须正确配置；② `SharedArrayBuffer` 依赖 HTTPS 或 localhost；③ OCCT.js 加载较慢（首次约 5-15s），需显示加载进度；④ 浏览器内存有限，大模型应考虑服务端处理。
+- **常用代码模式**：`occt()` 初始化 → `BRepPrimAPI_MakeBox` 等构造几何 → `chili-core` 的 Visual/Document 包装 → 渲染显示。自定义命令继承 `Command` 类，通过 `app.input.getPoint()` 获取用户交互。
+
+---
+
+## 相关技能
+
+- **astral3d** — Web 3D 可视化与数字孪生框架：[../astral3d/SKILL.md](../astral3d/SKILL.md)
+- **lightcad** — 轻量 Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **occt** — 底层 OCCT 几何内核（C++/PythonOCC）：[../occt/SKILL.md](../occt/SKILL.md)
+- **freecad** — 桌面参数化 CAD（同基于 OCCT）：[../freecad/SKILL.md](../freecad/SKILL.md)
 
 ---
 

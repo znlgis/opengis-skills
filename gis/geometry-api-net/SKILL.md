@@ -1,6 +1,16 @@
 ---
 name: geometry-api-net
 description: geometry-api-net 是一个 .NET Standard 2.0 的空间几何计算库，提供对二维和三维几何对象的创建、解析、序列化以及空间关系运算能力。
+tags:
+  - dotnet
+  - geometry
+  - esri
+  - spatial
+  - wkt
+  - wkb
+  - geojson
+  - geodesic
+  - csharp
 ---
 
 > **项目地址：** https://github.com/znlgis/geometry-api-net
@@ -520,6 +530,31 @@ dotnet run --project samples/OpenGIS.Esri.Geometry.Samples
 ```
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建几何对象**：使用 `Point`、`Polyline`、`Polygon` 等构造函数创建几何
+2. **空间运算**：优先使用 `GeometryEngine` 静态方法（API 最简洁）；需要精细控制时使用 `Operator.Instance` 单例模式
+3. **格式转换**：使用 `GeometryEngine.GeometryToGeoJson()` / `GeometryFromWkt()` 等方法进行 WKT、WKB、GeoJSON、Esri JSON 互转
+4. **大地测量**：对地理坐标的距离/面积计算，使用 `GeometryEngine.GeodesicDistance()` / `GeodesicArea()`
+5. **序列化集成**：使用 `OpenGIS.Esri.Geometry.Json.Converters` 命名空间的 `System.Text.Json` 转换器
+
+### 关键注意事项
+
+- **Polygon 环必须闭合**：首尾点必须相同
+- **返回类型需转换**：集合运算返回 `Geometry` 基类，需根据实际类型做类型转换
+- **大地测量基于 WGS84**：`GeodesicDistance` 使用 Vincenty 公式
+- **GeoJSON 导出规则**：单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`
+- **Operator 使用 Lazy 单例**：所有 Operator 类通过 `Instance` 属性获取单例实例
+
+## 相关技能
+
+- **nettopologysuite** — .NET JTS 移植（几何计算核心）：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **opengis-utils-for-net** — .NET GIS 统一工具包：[../opengis-utils-for-net/SKILL.md](../opengis-utils-for-net/SKILL.md)
+- **geometry-api-java** — Java 版本 Esri Geometry API：[../geometry-api-java/SKILL.md](../geometry-api-java/SKILL.md)
+- **jts** — JTS Topology Suite：[../jts/SKILL.md](../jts/SKILL.md)
 
 ## 注意事项
 

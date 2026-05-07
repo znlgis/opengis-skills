@@ -1,6 +1,17 @@
 ---
 name: postgis
 description: PostGIS 是 PostgreSQL 数据库的空间扩展，为关系型数据库添加地理对象支持，提供完整的空间数据类型、空间索引（GiST/SP-GiST/BRIN）、空间关系判断和 1000+ 空间函数，是事实上的开源空间数据库标准。
+tags:
+  - postgresql
+  - database
+  - sql
+  - spatial
+  - geometry
+  - geography
+  - raster
+  - vector
+  - wkt
+  - wkb
 ---
 
 > **项目地址：** <https://github.com/postgis/postgis>
@@ -204,6 +215,33 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 | 多边形无效 | `ST_MakeValid` 修复，`ST_IsValidReason` 诊断 |
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **安装扩展**：`CREATE EXTENSION postgis;` 启用空间功能
+2. **建表**：包含 `geometry(Point, 4326)` 或 `geography(Point, 4326)` 类型的几何列
+3. **建索引**：`CREATE INDEX ON table USING GIST(geom)` —— 必建空间索引
+4. **导入数据**：使用 `shp2pgsql`（Shapefile）、`ogr2ogr`（通用）、`raster2pgsql`（栅格）
+5. **空间查询**：用 `&&` 先做包围盒粗筛（走 GiST 索引），再用 `ST_Within`/`ST_Intersects` 精筛
+6. **验证结果**：`EXPLAIN ANALYZE` 查看查询计划，确认索引被使用
+
+### 关键注意事项
+
+- **geometry vs geography**：`geometry`（平面计算，速度快）vs `geography`（球面计算，距离单位为米）
+- **SRID 必须一致**：跨 SRID 运算必须先 `ST_Transform`，否则报 `Operation on mixed SRID`
+- **用 `&&` 让查询走索引**：`WHERE geom && ST_MakeEnvelope(...)` 粗筛 + `ST_Within` 精筛
+- **KNN 用 `<->`**：`ORDER BY geom <-> point LIMIT 10` 走 GiST 索引，比 `ST_Distance` 快几个数量级
+- **大几何优化**：使用 `ST_Subdivide` 切分大面几何加速空间连接
+- **导入后 ANALYZE**：大批量数据导入后执行 `VACUUM ANALYZE` 更新统计信息
+
+## 相关技能
+
+- **geoserver** — 地图服务发布（PostGIS 是最常见数据源）：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **geotools** — Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
+- **geopandas** — Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **gdal** — 命令行数据导入导出：[../gdal/SKILL.md](../gdal/SKILL.md)
 
 ## 参考资源
 

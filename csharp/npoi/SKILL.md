@@ -1,6 +1,7 @@
 ---
 name: npoi
 description: NPOI 是 Apache POI 的 .NET 移植，开源、免费，可在不依赖 Office 的情况下读写 Excel（.xls / .xlsx）、Word（.doc）、PowerPoint 等文档格式，是 .NET 生态中处理 Excel 的事实标准。
+tags: dotnet, excel, word, office, npoi
 ---
 
 > **项目地址：** <https://github.com/nissl-lab/npoi>
@@ -224,6 +225,37 @@ doc.Write(fs);
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **确定格式**：`.xls` 用 HSSFWorkbook，`.xlsx` 用 XSSFWorkbook，不确定用 `WorkbookFactory.Create()` 自动识别
+2. **读文件**：`FileStream` → `WorkbookFactory.Create()` → `GetSheetAt(0)` → 遍历 Row/Cell → 根据 `CellType` 取值
+3. **写文件**：`new XSSFWorkbook()` → `CreateSheet()` → `CreateRow()` → `CreateCell()` → `SetCellValue()` → `FileStream` 写出
+4. **样式后设**：先写数据，再设样式（复用 `ICellStyle` 实例，避免 64000 限制）
+5. **大文件处理**：写用 SXSSFWorkbook（流式），读用 EventModel（SAX 事件驱动）
+
+### 关键模式与常见陷阱
+
+- **日期变数字**：日期单元格必须设置带日期 DataFormat 的 `ICellStyle`，否则显示为数字
+- **样式 64000 限制**：`ICellStyle` 实例总数不能超过 64000，必须在循环外 `CreateCellStyle()` 并复用
+- **中文不乱码的前提**：xlsx 默认 UTF-8 不会乱码；xls 需要检查 Excel 打开时自动识别
+- **公式需要求值**：`wb.GetCreationHelper().CreateFormulaEvaluator().EvaluateAll()` 在写出前调用
+- **SXSSF 记得 Dispose**：流式写入后必须 `Dispose()` 清理临时文件
+- **不要用 COM/Interop**：NPOI 纯托管，不依赖 Office 安装，服务器环境友好
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 简单导入导出（< 10 万行） | NPOI XSSFWorkbook |
+| 百万级写入 | NPOI SXSSFWorkbook |
+| 百万级读取 | NPOI EventModel（SAX） |
+| WinForms/WPF 内嵌表格 | ReoGrid（底层用 NPOI 读写文件） |
+| 纯数据交换（无格式） | MiniExcel / CsvHelper |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -233,6 +265,13 @@ doc.Write(fs);
 | 出现「This Workbook contains an invalid」 | 风格数超限或公式错误，减少样式 / 修正公式 |
 | 内存溢出 | 改用 SXSSF / EventModel |
 | Office 打开提示损坏 | 写完后 `wb.Write(fs)` 必须在文件流之前不要 Close 流 |
+
+---
+
+## 相关技能
+
+- **reogrid** — .NET 电子表格控件，内嵌可编辑表格，底层依赖 NPOI 读写 Excel 文件：[../reogrid/SKILL.md](../reogrid/SKILL.md)
+- **sqlsugar** — .NET ORM，可与 NPOI 配合：从数据库查询后批量导出 Excel：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
 
 ---
 

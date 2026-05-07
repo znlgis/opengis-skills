@@ -1,6 +1,17 @@
 ---
 name: opengis-all
 description: 整合 GDAL 命令行、GDAL API、qgis_process、PyQGIS、GeoServer REST API 五大工具/接口，覆盖 GIS 数据生成、格式转换、空间分析、地图服务发布全流程。通过本文件即可一站式解决从原始数据到地图服务的完整 GIS 数据处理链路。
+
+tags:
+  - gis
+  - entrypoint
+  - workflow
+  - fullstack
+  - gdal
+  - qgis
+  - geoserver
+  - pyqgis
+  - tutorial
 ---
 
 > **涵盖工具与项目：**
@@ -1322,6 +1333,15 @@ curl -u admin:geoserver -XPUT \
 10. **始终备份**：GDAL 可就地修改文件（如 `gdal_edit.py`），操作前做好备份。
 
 ---
+
+## 相关技能
+
+- **gdal** — GDAL 命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
+- **pyqgis** — QGIS Python 开发：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **qgis-process** — QGIS 命令行批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+- **geoserver-rest-api** — GeoServer REST API：[../geoserver-rest-api/SKILL.md](../geoserver-rest-api/SKILL.md)
+- **geopipe-agent** — AI 驱动的 GIS 流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
 
 ## 参考链接
 

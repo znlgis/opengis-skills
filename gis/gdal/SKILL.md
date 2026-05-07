@@ -1,6 +1,17 @@
 ---
 name: gdal
 description: GDAL (Geospatial Data Abstraction Library) 是 OSGeo 的开源地理数据处理库，提供了功能强大的命令行工具，用于处理和转换栅格数据（DEM、影像、栅格地图）和矢量数据（点、线、面、GIS 格式文件）。GDAL 工具集适用于批量数据处理、格式转换、地理信息系统分析等场景。
+
+tags:
+  - gdal
+  - ogr
+  - cli
+  - raster
+  - vector
+  - conversion
+  - reprojection
+  - gis
+  - geospatial
 ---
 
 > **项目地址：** <https://github.com/OSGeo/gdal>
@@ -982,6 +993,14 @@ gdaltindex -recursive -of GPKG \
 - **环境变量**：设置适当的 `GDAL_CACHEMAX` 和 `GDAL_NUM_THREADS`
 
 ---
+
+## 相关技能
+
+- **gdal-api** — GDAL 编程 API（C/C++/Python/.NET）：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
+- **qgis-process** — QGIS 命令行批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+- **pyqgis** — QGIS Python 二次开发：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **postgis** — PostgreSQL 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **opengis-all** — 一站式 GIS 全流程：[../opengis-all/SKILL.md](../opengis-all/SKILL.md)
 
 ## 参考链接
 

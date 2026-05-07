@@ -1,6 +1,7 @@
 ---
 name: sod
 description: SOD（PWMIS Data Development Framework）是国产开源 .NET 数据开发框架，提供 ORM、SQL-MAP、实体查询表达式（OQL）、多数据库适配（SQL Server / Oracle / MySQL / PostgreSQL / SQLite / Access / DM 达梦 / KingbaseES）、读写分离与缓存等能力，长期用于政企项目。
+tags: dotnet, orm, database, sql-mapping, oql
 ---
 
 > **项目地址：** <https://github.com/znlgis/SOD>（社区主仓库见 <https://gitee.com/znlgis/SOD>）
@@ -246,6 +247,35 @@ db.UseTransaction(() => {
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **建实体类**：继承 `EntityBase`，设置 `TableName`、`IdentityName`、`PrimaryKeys`，属性用 `getProperty<T>()` / `setProperty()` 
+2. **选查询方式**：简单 CRUD → `EntityQuery<T>`；复杂条件 → OQL 链式 API；固定 SQL → SQL-MAP XML
+3. **多数据库切换**：仅改连接字符串的 `providerName`（SqlServer / MySql / PostgreSQL / DaMeng 等）
+4. **读写分离**：配置主从连接字符串，写走 master，读走 slave
+5. **事务**：同一 `AdoHelper` 实例内 `BeginTransaction()` → 操作 → `Commit()` / `Rollback()`
+
+### 关键模式与常见陷阱
+
+- **实体属性声明**：必须用 `getProperty<T>(name)` / `setProperty(name, value, size)`，不能用自动属性
+- **自增主键回填**：`IdentityName` 必须设置正确，否则 INSERT 后 `Id` 不更新
+- **脏字段跟踪**：`Update()` 只提交变更字段（调用 `setProperty` 的字段），性能优于全量更新
+- **OQL 分页**：用 `oql.Limit(pageSize, pageIndex)` 分页，不要 ToList 后手动分页
+- **SQL-MAP 工具链**：用 SOD 的 SqlMapTool 从 XML 生成强类型 DAL，手写 XML 容易拼错
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 政企项目（达梦/金仓/神通） | SOD（多数据库支持最全） |
+| 追求开发效率 | SqlSugar（链式查询更现代） |
+| MyBatis 用户迁移 | SOD SQL-MAP 模式 |
+| 新项目 | 评估 SqlSugar vs SOD 的数据库支持列表 |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -254,6 +284,13 @@ db.UseTransaction(() => {
 | 自增主键未填回 | `IdentityName` 设置正确 |
 | 中文乱码 | 数据库用 utf8mb4 / NVARCHAR |
 | 事务跨连接失败 | 使用同一 `AdoHelper` 实例 |
+
+---
+
+## 相关技能
+
+- **sqlsugar** — 同为 .NET ORM，链式查询更现代化，生态更活跃：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
+- **furion** — .NET Web 框架，Furion 内置 SqlSugar 集成，SOD 亦可配合使用：[../furion/SKILL.md](../furion/SKILL.md)
 
 ---
 

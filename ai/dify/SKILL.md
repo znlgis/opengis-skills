@@ -1,6 +1,7 @@
 ---
 name: dify
 description: Dify 是开源 LLM 应用开发平台，集成 RAG 引擎、工作流编排、Agent、可视化提示词、模型管理（OpenAI/Claude/Gemini/Ollama/通义千问/智谱/百川 等）与 API 网关，让团队能在数小时内构建并上线生成式 AI 应用，支持私有化部署。
+tags: llm, workflow, rag, agent, platform
 ---
 
 > **项目地址：** <https://github.com/langgenius/dify>
@@ -175,6 +176,87 @@ curl -X POST 'https://your-dify/v1/chat-messages' \
 
 ---
 
+## 典型工作流
+
+### 场景一：搭建企业知识库问答机器人
+
+```yaml
+# 整体步骤
+1. 准备知识库文档（PDF/Markdown/网页）
+2. 知识库 → 上传文档 → 选择嵌入模型（bge-m3）→ 启用混合检索 + Rerank
+3. 创建 Chatbot 应用 → 绑定知识库
+4. 配置系统提示词："你是企业内部助手，仅基于知识库回答..."
+5. 配置模型（GPT-4o-mini 或 DeepSeek-V3）
+6. 测试 → 发布 → 获取 API Key
+7. 通过 iframe 嵌入官网或对接飞书/钉钉/企微
+```
+
+```bash
+# API 调用示例
+curl -X POST 'https://dify.example.com/v1/chat-messages' \
+  -H 'Authorization: Bearer app-xxxxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "inputs": {},
+    "query": "公司年假政策是什么？",
+    "user": "employee-001",
+    "response_mode": "streaming"
+  }'
+```
+
+### 场景二：构建多步骤审批工作流
+
+```yaml
+# Workflow 节点编排
+Start → 用户提交申请
+  → Question Classifier（判断申请类型：请假/报销/采购）
+  → IF/ELSE 分支
+    → 请假分支：
+      → Code 节点（Python 计算剩余年假）
+      → HTTP Request（调 HR 系统校验）
+      → LLM 节点（生成审批意见）
+    → 报销分支：
+      → Parameter Extractor（抽取金额/事由）
+      → Knowledge Retrieval（查报销政策）
+      → LLM 节点（合规判断）
+  → Variable Aggregator（汇总分支结果）
+  → Template Transform（生成审批通知）
+  → End（返回审批结果 + 通知）
+```
+
+---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **先选应用类型**：简单问答 → Chatbot，需要工具调用 → Agent，复杂流程 → Workflow/Chatflow
+2. **调试提示词**：在「提示词编排」中先用 GPT-4o-mini 快速迭代，确认效果后换大模型
+3. **知识库先行**：先上传小批量文档验证切分/检索效果，确认检索质量后再全量导入
+4. **节点逐步调试**：Workflow 每加一个节点就运行测试，避免排错困难
+5. **监控上线**：启用「日志与标注」，收集真实用户反馈后持续优化
+
+### 关键模式与常见陷阱
+
+- **RAG 检索质量**：中文场景务必选中文嵌入模型（bge-m3 / text2vec），并启用 Rerank
+- **模型选择**：Agent 场景必须用支持 Function Calling 的模型（GPT-4o/Claude/DeepSeek-V3），国产小模型可能不支持
+- **变量引用**：Workflow 中 `{{#节点名.字段#}}` 语法容易写错，复制节点 ID 粘贴
+- **Code 节点限制**：Python/JS 沙箱无网络访问，如需调外部 API 请用 HTTP Request 节点
+- **流式响应**：前端对接务必用 SSE（`response_mode: streaming`），否则长回复体验差
+- **Token 消耗**：别把所有文档塞进上下文，善用 Knowledge Retrieval 节点的 top_k 限制
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 简单 FAQ 问答 | Chatbot + 知识库 |
+| 需要查数据库/调 API | Agent + 自定义工具 |
+| 多步骤审批/数据流转 | Workflow |
+| 对话式多步骤 | Chatflow |
+| 纯文本生成（无对话） | Text Generator |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -184,6 +266,14 @@ curl -X POST 'https://your-dify/v1/chat-messages' \
 | 私有 Ollama 不通 | Docker 网络：`host.docker.internal` 或自定义网络 |
 | 响应慢 | 启用 streaming；缩短 prompt；减少检索 topK |
 | 中文检索差 | 使用 `bge-m3` / `text2vec` 等中文嵌入 + jieba 关键词 |
+
+---
+
+## 相关技能
+
+- **hermes-agent** — 轻量级 LLM Agent 框架，适合需要自建后端 Agent 的场景：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **oh-my-openagent** — AI Agent 工程化模板集合，覆盖 ReAct/Plan-Execute/Multi-Agent 模式：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
+- **superpowers-zh** — 中文提示词/Skill 工程库，可与 Dify 的提示词编排结合使用：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 
 ---
 

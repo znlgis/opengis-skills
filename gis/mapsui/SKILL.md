@@ -1,6 +1,17 @@
 ---
 name: mapsui
 description: Mapsui 是面向现代 .NET 的开源跨平台地图组件库，支持 WPF、WinUI、MAUI、Avalonia、Uno、Blazor、WinForms 等几乎所有 .NET UI 框架，主打高性能（基于 SkiaSharp）、易用 API 和丰富的图层/瓦片源支持。
+tags:
+  - dotnet
+  - csharp
+  - map
+  - wpf
+  - maui
+  - avalonia
+  - blazor
+  - skia
+  - wms
+  - tiles
 ---
 
 > **项目地址：** <https://github.com/Mapsui/Mapsui>
@@ -186,6 +197,80 @@ MapControl.Info += (s, e) => {
 | Shapefile 中文乱码 | 指定 Encoding |
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **选择 UI 框架**：Mapsui 支持 WPF/WinUI/MAUI/Avalonia/Uno/Blazor/WinForms，根据需要选择对应的 NuGet 包
+2. **创建 Map**：实例化 `Map`，添加图层（`TileLayer` 作为底图 + `MemoryLayer` 作为矢量覆盖层）
+3. **数据转换**：通过 `SphericalMercator.FromLonLat()` 将经纬度转为 Web Mercator 坐标
+4. **绑定控件**：将 `MapControl.Map` 设置为创建的 Map 对象
+5. **添加交互**：通过 `MapControl.Info` 事件处理点击拾取，`Navigator` 控制视图
+
+### 关键注意事项
+
+- **NuGet 包完整**：确保安装了 `Mapsui.<UI框架>`、`Mapsui.Tiling`、`Mapsui.Nts` 三个包
+- **投影转换**：WGS84 经纬度必须通过 `SphericalMercator.FromLonLat()` 转换后才能用于 Mapsui 定位
+- **Shapefile 编码**：中文 Shapefile 需指定 `Encoding`（如 `Encoding.UTF8` 或 `Encoding.GetEncoding("GBK")`）
+- **样式共享**：共享 `Brush`/`Pen`/`VectorStyle` 实例可提升性能
+- **海量点优化**：使用 `RasterizingTileLayer` 包装海量点图层，按瓦片预渲染
+
+## 典型工作流
+
+### 工作流 1：加载底图 + GeoJSON 矢量数据
+
+```csharp
+using Mapsui;
+using Mapsui.Tiling;
+using Mapsui.Nts;
+using Mapsui.Styles;
+using NetTopologySuite.IO;
+
+var map = new Map();
+
+// 1. 添加 OSM 底图
+map.Layers.Add(OpenStreetMap.CreateTileLayer());
+
+// 2. 读取 GeoJSON 并添加为矢量图层
+var gjReader = new GeoJsonReader();
+var features = new List<IFeature>();
+foreach (var f in geojsonFeatures)
+{
+    features.Add(new GeometryFeature(f.Geometry)
+    {
+        Styles = { new VectorStyle { Fill = new Brush(Color.Red) } }
+    });
+}
+map.Layers.Add(new MemoryLayer("Data") { Features = features });
+
+// 3. 定位
+var center = SphericalMercator.FromLonLat(116.4, 39.9).ToMPoint();
+map.Navigator.CenterOnAndZoomTo(center, map.Navigator.Resolutions[10]);
+
+MapControl.Map = map;
+```
+
+### 工作流 2：Shapefile + WMS 叠加
+
+```csharp
+// Shapefile 图层
+var shpProvider = new ShapeFile("china.shp", true);
+map.Layers.Add(new Layer("China") { DataSource = shpProvider });
+
+// WMS 图层（叠加）
+var wmsProvider = new WmsProvider("https://geo.example.com/wms?", new[] { "rivers" });
+map.Layers.Add(new ImageLayer("Rivers") { DataSource = wmsProvider });
+
+map.ZoomToExtents();
+```
+
+## 相关技能
+
+- **openlayers** — Web 二维地图库（JavaScript）：[../openlayers/SKILL.md](../openlayers/SKILL.md)
+- **sharpmap** — .NET 传统地图渲染引擎：[../sharpmap/SKILL.md](../sharpmap/SKILL.md)
+- **nettopologysuite** — .NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **geoserver** — 地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
 
 ## 参考资源
 

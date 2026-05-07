@@ -1,6 +1,17 @@
 ---
 name: geotools
 description: GeoTools 是一个开源的 Java GIS 工具库，提供符合 OGC 标准的矢量/栅格数据访问、坐标参考系统转换、空间查询过滤、地图渲染及 OGC Web 服务客户端等全栈地理空间开发能力。
+tags:
+  - java
+  - gis
+  - ogc
+  - wms
+  - wfs
+  - vector
+  - raster
+  - crs
+  - rendering
+  - jts
 ---
 
 > **项目地址：** <https://github.com/geotools/geotools>
@@ -571,6 +582,34 @@ byte[] wkb = new WKBWriter().write(geom);
 9. **中文属性**：Shapefile 中文乱码时，创建 `ShapefileDataStore` 后调用 `store.setCharset(Charset.forName("GBK"))` 设置编码。
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **配置 Maven 仓库**：在 `pom.xml` 中添加 OSGeo 仓库（`https://repo.osgeo.org/repository/release/`）
+2. **引入必要模块**：`gt-main`（核心）、`gt-shapefile` / `gt-geopkg`（数据源）、`gt-epsg-hsql`（CRS）、`gt-cql`（查询）、`gt-render`（渲染）
+3. **打开数据源**：使用 `FileDataStoreFinder.getDataStore()`（文件）或 `DataStoreFinder.getDataStore(params)`（数据库）
+4. **执行查询**：使用 `CQL.toFilter()` 构建过滤器 → `featureSource.getFeatures(filter)`
+5. **处理结果**：遍历 `SimpleFeatureIterator`，使用 JTS 几何方法进行空间运算
+6. **释放资源**：`store.dispose()`、关闭 `SimpleFeatureIterator`
+
+### 关键注意事项
+
+- **Maven 仓库必需**：GeoTools 不在 Maven Central，必须配置 OSGeo 仓库
+- **EPSG 数据库**：使用 CRS 功能需引入 `gt-epsg-hsql`，否则 `CRS.decode()` 抛出异常
+- **资源释放**：`DataStore`、`Reader`、`Writer`、`MapContent` 使用后必须调用 `dispose()`
+- **坐标轴顺序**：GeoTools 默认遵循 EPSG 规范（纬度在前），使用 `CRS.decode("EPSG:4326", true)` 强制经度在前
+- **线程安全**：`DataStore` 线程安全可共享；`SimpleFeatureIterator` 非线程安全
+- **JTS 包名**：GeoTools 28+ 使用 `org.locationtech.jts`（非旧版 `com.vividsolutions.jts`）
+
+## 相关技能
+
+- **jts** — JTS Topology Suite（GeoTools 几何计算核心）：[../jts/SKILL.md](../jts/SKILL.md)
+- **geoserver** — 基于 GeoTools 的地图服务器：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **postgis** — 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **opengis-utils-for-java** — Java GIS 统一工具包：[../opengis-utils-for-java/SKILL.md](../opengis-utils-for-java/SKILL.md)
+- **geometry-api-java** — Esri Geometry API：[../geometry-api-java/SKILL.md](../geometry-api-java/SKILL.md)
 
 ## 参考链接
 

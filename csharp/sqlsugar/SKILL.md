@@ -1,6 +1,7 @@
 ---
 name: sqlsugar
 description: SqlSugar 是国产开源高性能 .NET ORM，支持 SQL Server / MySQL / Oracle / PostgreSQL / SQLite / 达梦 / 人大金仓 / 神通 / OceanBase 等近 20 种数据库，提供链式 LINQ-like 查询、Code First、读写分离、分库分表、事务、主键雪花算法、AOT 等丰富特性，是 Furion / Admin.NET 等框架默认 ORM。
+tags: dotnet, orm, database, code-first, sql
 ---
 
 > **项目地址：** <https://github.com/DotNetNext/SqlSugar>
@@ -236,6 +237,37 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建客户端**：DI 注入用 `SqlSugarScope`（线程安全），单次使用用 `SqlSugarClient`（记得 `IsAutoCloseConnection = true`）
+2. **定义实体**：`[SugarTable("表名")]` + `[SugarColumn(IsPrimaryKey = true)]` 标注特性
+3. **Code First 建表**：`db.CodeFirst.InitTables<T>()` 自动创建/更新表结构
+4. **CRUD**：`Insertable`/`Updateable`/`Deletable`/`Queryable` 链式 API
+5. **高级特性**：读写分离（`SlaveConnectionConfigs`）、分表（`[SplitTable]`）、AOP 日志（`db.Aop.OnLogExecuting`）
+
+### 关键模式与常见陷阱
+
+- **线程安全**：多线程场景务必用 `SqlSugarScope`（内部连接池），`SqlSugarClient` 非线程安全
+- **实体特性**：主键用 `[SugarColumn(IsPrimaryKey = true)]`，自增用 `IsIdentity = true`，雪花 ID 不要设 `IsIdentity`
+- **批量操作**：大批量插入用 `Insertable(list).UseSqlBulkCopy()` 比逐条快 10-100 倍
+- **分页查询**：用 `ToPageList(pageNumber, pageSize, ref total)` 而不是 `ToList()` 后手动分页
+- **中文乱码**：MySQL 连接字符串加 `Charset=utf8mb4`，列类型用 `utf8mb4`
+- **AOP 最佳实践**：`OnLogExecuting` 异步写日志，避免阻塞主查询流程
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 新项目快速开发 | SqlSugar（Code First + 链式查询） |
+| 政企项目（达梦/金仓） | SqlSugar 或 SOD（两者都支持国产库） |
+| 已有数据库（DB First） | SqlSugar（自动生成实体） |
+| 高性能批量处理 | SqlSugar + SqlBulkCopy |
+| MyBatis 风格 XML | SOD SQL-MAP |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -245,6 +277,15 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 | 多线程异常 | 使用 `SqlSugarScope`（线程安全） |
 | 中文乱码 | MySQL 用 `utf8mb4`，连接字符串加 `Charset=utf8mb4` |
 | 时间精度丢失 | 列改 `datetime(3)` 或 `datetime2` |
+
+---
+
+## 相关技能
+
+- **furion** — .NET Web 框架，默认集成 SqlSugar：[../furion/SKILL.md](../furion/SKILL.md)
+- **admin-net-backend** — 基于 Furion + SqlSugar 的完整后台框架：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
+- **sod** — 同为国产 .NET ORM，多数据库适配见长：[../sod/SKILL.md](../sod/SKILL.md)
+- **npoi** — Excel 读写库，配合 SqlSugar 实现数据库→Excel 导出：[../npoi/SKILL.md](../npoi/SKILL.md)
 
 ---
 

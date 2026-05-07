@@ -1,6 +1,7 @@
 ---
 name: FY_Layout
 description: FY_Layout 是飞扬集成设计平台的场地布置二次开发插件示例，基于 LightCAD 框架和 C# 语言，提供围栏、草坪、基坑、道路、板房、场地、硬化地面、土方回填等建筑工程场布元素的二维绘制与三维建模能力。
+tags: [2d, 3d, cad, dotnet, csharp, bim, construction, dwg, dxf]
 ---
 
 > **项目地址：** <https://github.com/znlgis/FY_Layout>
@@ -569,6 +570,27 @@ startPoint.Similarity(endPoint, 0);
 
 ---
 
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手开发飞扬插件应遵循「ElementType 定义 → ILcPlugin 注册 → Command 声明 → Action 实现 → Provider 生成」的五步模式。新元素先参考 `Lawn`/`Fence` 的完整实现作为模板。
+- **关键注意事项**：① 每个 `ElementType` 和 Provider UUID 必须全局唯一，使用 `Guid.ParseExact(..., "B")` 格式；② 几何对象变换前必须 `Clone()`，避免修改原始数据；③ `TabItem` 在 `Completed()` 中注册，不可在 `Loaded()` 中操作 UI；④ Provider 项目与插件主体分离部署，输出到 `Build/Providers`。
+- **常用代码模式**：插件骨架 = `ILcPlugin.Loaded()` 注册元素类型和 Action + `Completed()` 注册 UI 菜单。2D Action 模式 = `ExecCreatePoly`（交互式点拾取）/ `ExecCreateRec`（矩形）/ `ExecCreate`（多段线转换）。Provider 模式 = `ConvertToProviders` 注册 Shape → `ConvertToProvider` 注册 Solid → 几何生成方法返回 `Curve2dGroupCollection`/`Solid3dCollection`。
+
+---
+
+## 相关技能
+
+- **lightcad** — 飞扬基础平台（LightCAD）的 Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发框架（类似的 CAD 插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
+- **xbim** — .NET BIM/IFC 框架（与建筑场布互补）：[../xbim/SKILL.md](../xbim/SKILL.md)
+
+---
+
+## 参考资源
+
+- **FY_Layout 项目地址：** <https://github.com/znlgis/FY_Layout>
+- **飞扬集成设计平台：** 面向建筑设计行业的开源 BIM 正向设计软件
+- **技术服务：** 微信 qishou003
 ## 参考链接
 
 - **FY_Layout 项目地址：** <https://github.com/znlgis/FY_Layout>

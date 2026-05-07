@@ -1,6 +1,7 @@
 ---
 name: billionmail
 description: BillionMail 是开源自托管邮件营销与事务邮件平台，提供 SMTP 中转、模板编辑、订阅者管理、批量发送、退订处理、送达率分析与 API 集成，适合企业自建营销邮件 / 通知 / Newsletter 系统，替代 Mailchimp / SendGrid 等商业方案。
+tags: email, smtp, self-hosted, newsletter, marketing
 ---
 
 > **项目地址：** <https://github.com/aaPanel/BillionMail>
@@ -176,6 +177,90 @@ mail-tester.com   # 免费送达率打分
 
 ---
 
+## 典型工作流
+
+### 场景一：搭建企业 Newsletter 系统
+
+```bash
+# 1. 部署
+git clone https://github.com/aaPanel/BillionMail
+cd BillionMail
+cp .env.example .env
+# 编辑 .env：DOMAIN=mail.example.com, 数据库密码
+docker compose up -d
+
+# 2. DNS 配置（在域名管理后台）
+# A     mail  →  <服务器IP>
+# MX    @     →  mail.example.com
+# TXT   @     →  "v=spf1 mx ip4:<IP> ~all"
+# TXT   default._domainkey → "v=DKIM1;k=rsa;p=..." (管理后台生成)
+# TXT   _dmarc → "v=DMARC1;p=quarantine;rua=mailto:admin@..."
+
+# 3. 控制台操作
+#   ① 添加发件域 → 生成 DKIM → 配置 DNS
+#   ② 导入订阅者 CSV（邮箱,姓名,标签）
+#   ③ 创建模板（HTML + 变量 {{name}}, {{unsubscribe_url}}）
+#   ④ 新建发送任务 → 选择分组 → 限速 100封/小时（预热期）
+#   ⑤ 查看统计：到达率/打开率/点击率/退订率
+
+# 4. 验证送达率
+# mail-tester.com → 目标 ≥ 9/10
+
+# 5. API 触发事务邮件
+curl -X POST https://mail.example.com/api/v1/mail/send \
+  -H 'Authorization: Bearer <API_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "from": "noreply@example.com",
+    "to": ["user@x.com"],
+    "subject": "欢迎注册",
+    "template_id": 12,
+    "variables": {"name": "张三"}
+  }'
+```
+
+### 场景二：从 Mailchimp 迁移到自建
+
+```markdown
+1. **导出 Mailchimp 数据**：Audience → Export CSV（含邮箱/姓名/标签/状态）
+2. **导入 BillionMail**：订阅者 → 导入 CSV，映射字段
+3. **重建模板**：复制 Mailchimp 模板 HTML，替换变量为 `{{name}}` 格式
+4. **保留退订列表**：将 Mailchimp 退订名单导入黑名单
+5. **IP 预热**：从 50/day 起，每 2-3 天翻倍，直到目标量
+6. **并行运行 1-2 周**：新旧系统同时发，确认送达率一致后切换 DNS
+```
+
+---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **先配 DNS 三件套**：SPF + DKIM + DMARC 全配且验证通过，再开始发信
+2. **IP 预热是必须的**：新 IP 从低量开始，不要一次性大批量发送
+3. **模板先测试**：用 `mail-tester.com` 打分，目标是 ≥ 9/10
+4. **分批限速**：每分钟/每小时限速，避免被收件方 throttling 或标记垃圾
+5. **监控退信**：硬退信立刻加入黑名单，软退信重试最多 3 次
+
+### 关键模式与常见陷阱
+
+- **25 端口被封**：云厂商默认封锁，需提交工单解封；或使用 587 + Relay 中转
+- **Gmail 进垃圾箱**：SPF/DKIM/DMARC 缺一不可 + 反向 DNS + IP 预热 + 内容质量
+- **退订合规**：模板必须包含 `{{unsubscribe_url}}`，否则违反 CAN-SPAM/GDPR
+- **多 IP 池**：营销邮件和事务邮件分开 IP，避免营销被投诉影响事务送达
+- **内容质量**：去除垃圾词（免费/促销/点击领）、图文比例适中、HTML/纯文本双版本
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 少量事务邮件（<100/天） | 第三方 API（SendGrid/Mailgun 免费额度） |
+| 企业自建 Newsletter | BillionMail |
+| 超大规模（百万级） | BillionMail + 多 IP 池 + 专业 ESP |
+| 仅需 SMTP 中转 | Postfix + Dovecot，无需 BillionMail |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -185,6 +270,12 @@ mail-tester.com   # 免费送达率打分
 | 退订链接无效 | 检查 `UNSUBSCRIBE_BASE_URL`；TLS 证书 |
 | WebMail 无法登录 | 检查 Dovecot 与账号密码；查看容器日志 |
 | 大文件附件失败 | 调整 `message_size_limit` |
+
+---
+
+## 相关技能
+
+- BillionMail 是独立的邮件平台，与其它技能无直接技术依赖。如需前端界面定制，可参考 Admin.NET 前后端框架。
 
 ---
 

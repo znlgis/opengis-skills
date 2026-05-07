@@ -1,6 +1,7 @@
 ---
 name: solvespace
 description: SolveSpace 是一款轻量、开源的参数化 2D/3D CAD，专注约束求解器驱动的草图与简单装配，原生跨平台（Windows/macOS/Linux），文件体积小、启动快，适合快速参数化建模、3D 打印零件与教学。
+tags: [3d, 2d, parametric, cad, constraint-solver, step, dxf]
 ---
 
 > **项目地址：** <https://github.com/solvespace/solvespace>
@@ -168,6 +169,44 @@ solvespace-cli export-view out.svg  input.slvs --view top
 
 ✅ 适用：3D 打印件、机构原理验证、教学、参数化小工具
 ❌ 不适用：复杂工业机械、汽车曲面、大型装配、PCB（用 KiCad）
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应引导用户按 SolveSpace 的自然约束流程建模——在 Workplane 上绘草图 → 添加几何约束（距离/角度/平行/等长）→ 拉伸/旋转生成 3D。约束状态用颜色判断：黑色=完全约束，红色=过约束（删除冗余），蓝色=欠约束（继续添加）。CLI 批处理使用 `solvespace-cli`。
+- **关键注意事项**：① 草图变红表示过约束，需删除冗余约束；② 草图蓝色表示欠约束，需添加距离/角度等；③ 导出 STEP 前确保 Active workplane = none（3D 实体可见）；④ 复杂工业模型不适用 SolveSpace（几千实体为上限），建议用 FreeCAD。
+- **常用代码模式**：GUI：S→L 画线，D 添加距离约束，A 添加角度约束 → New Group → Extrude 拉伸。CLI：`solvespace-cli regenerate input.slvs` / `solvespace-cli export-mesh out.stl input.slvs`。
+
+---
+
+## 相关技能
+
+- **freecad** — 桌面参数化 CAD（更复杂的工业建模）：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **openscad** — 声明式 CSG 脚本建模：[../openscad/SKILL.md](../openscad/SKILL.md)
+- **cadquery** — Python BREP 建模库：[../cadquery/SKILL.md](../cadquery/SKILL.md)
+- **occt** — OCCT 几何内核（SolveSpace 的几何引擎可互补使用）：[../occt/SKILL.md](../occt/SKILL.md)
+
+---
+
+## 典型工作流
+
+### 工作流一：3D 打印零件快速建模
+
+1. 新建文件（.slvs），在 XY Workplane 上用 S→L 画轮廓线
+2. D 键添加距离约束，A 键添加角度约束，P 键添加平行约束，直到草图全黑（完全约束）
+3. New Group → Extrude 拉伸为 3D 实体
+4. 在新面上继续草图（Sketch in New Workplane），绘制减材特征
+5. 通过布尔差集（Subtract）去除材料
+6. 导出为 STL，用于 3D 打印切片软件
+
+### 工作流二：简单机构装配与验证
+
+1. 创建各零件独立 .slvs 文件
+2. 创建主装配文件，New Group → Linked/Imported file 导入各零件
+3. 使用 3D 草图约束（距离、同轴、点重合）固定零件相对位置
+4. 移动驱动零件，观察约束驱动的从动件运动
+5. Analyze → Trace Point 跟踪关键点轨迹，验证机构运动范围
 
 ---
 

@@ -1,6 +1,16 @@
 ---
 name: cesiumjs
 description: CesiumJS 是开源的 JavaScript 三维地球与地图库，基于 WebGL，无插件即可在浏览器中呈现高精度的 3D 全球地形、影像、3D Tiles、glTF 模型与时序动画，是 Web 端三维 GIS 的事实标准。
+tags:
+  - javascript
+  - webgl
+  - 3d
+  - 3d-tiles
+  - gltf
+  - earth
+  - map
+  - web
+  - visualization
 ---
 
 > **项目地址：** <https://github.com/CesiumGS/cesium>
@@ -238,6 +248,33 @@ viewer.trackedEntity = entity;
 | Token 过期 | 不需要 ion 时不设置 token；或自托管 |
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **初始化 Viewer**：使用 `Cesium.Viewer` 创建三维地球，设置地形和影像提供者
+2. **加载数据**：根据数据类型选择合适 API——GeoJSON/CZML 用 `DataSource`，3D 瓦片用 `Cesium3DTileset`，单模型用 `Entity.model`
+3. **设置相机**：使用 `camera.flyTo()` 定位到目标区域
+4. **添加交互**：通过 `ScreenSpaceEventHandler` 处理点击拾取
+5. **性能优化**：根据场景复杂度启用 `requestRenderMode`、调整 `maximumScreenSpaceError`
+
+### 关键注意事项
+
+- **Ion Token**：使用 Cesium ion 服务需要设置 `Cesium.Ion.defaultAccessToken`；自托管数据则无需
+- **坐标转换**：Cesium 内部使用 Cartesian3（地心地固坐标），通过 `Cesium.Cartesian3.fromDegrees(lon, lat, height)` 将经纬度转为内部坐标
+- **Entity vs Primitive**：少量动态要素用 Entity API（简洁），大量静态要素用 Primitive API（高性能）
+- **贴地（clampToGround）**：在三维地形上，需要明确设置 `clampToGround: true` 或 `HeightReference.CLAMP_TO_GROUND`
+- **资源释放**：不再使用的 `DataSource` 调用 `viewer.dataSources.remove(ds)`，3D Tileset 调用 `tileset.destroy()`
+- **静态资源部署**：使用 Webpack/Vite 时，确保 `Assets`、`Workers`、`Widgets` 目录正确复制到输出目录
+
+## 相关技能
+
+- **openlayers** — 二维 Web 地图库：[../openlayers/SKILL.md](../openlayers/SKILL.md)
+- **geoserver** — 地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **geoserver-rest-api** — REST 自动化管理：[../geoserver-rest-api/SKILL.md](../geoserver-rest-api/SKILL.md)
+- **postgis** — 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **mapsui** — .NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
 
 ## 参考资源
 

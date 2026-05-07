@@ -1,6 +1,15 @@
 ---
 name: openlayers
 description: OpenLayers 是高性能、功能丰富的开源 Web 地图 JavaScript 库，支持几乎所有主流地图服务（XYZ/WMS/WMTS/WFS/Vector Tiles/GeoJSON），提供完整的矢量绘制、样式与交互能力，是 Web 二维 GIS 的事实标准之一。
+tags:
+  - javascript
+  - web
+  - map
+  - wms
+  - wmts
+  - vector-tiles
+  - geojson
+  - drawing
 ---
 
 > **项目地址：** <https://github.com/openlayers/openlayers>
@@ -232,6 +241,32 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 | MVT 字段缺失 | 使用 `MVT({ featureClass: Feature })` |
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建 Map**：`new Map({ target, layers, view })` → 设置投影和初始中心
+2. **添加底图**：`TileLayer` + `OSM`/`XYZ`/`TileWMS` Source
+3. **加载矢量数据**：`VectorLayer` + `VectorSource` + `GeoJSON`/`MVT` Format
+4. **应用样式**：使用 `Style` 函数按属性动态渲染
+5. **添加交互**：`Draw`/`Modify`/`Select`/`Snap` Interaction
+6. **性能优化**：`declutter` 避让标注、`renderMode: 'image'` 静态图层
+
+### 关键注意事项
+
+- **投影一致**：经纬度需 `fromLonLat()` 转为 EPSG:3857；自定义投影需注册 proj4
+- **WMS 参数**：`LAYERS` 参数需使用完整名称（如 `workspace:layer`），检查 CORS
+- **矢量瓦片字段**：MVT 格式需设置 `featureClass: Feature` 保留属性
+- **样式缓存**：使用函数式 Style 时，缓存 Style 实例避免重复创建
+- **批量添加**：使用 `addFeatures([])` 而非循环 `addFeature`，显著提升性能
+
+## 相关技能
+
+- **cesiumjs** — 三维地球与地图库：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
+- **geoserver** — 地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **postgis** — 空间数据库（MVT 数据源）：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **mapsui** — .NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
 
 ## 参考资源
 

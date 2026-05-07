@@ -1,6 +1,7 @@
 ---
 name: Admin.NET-backend
 description: Admin.NET 是基于 .NET8/10 (Furion/SqlSugar) 实现的通用权限开发框架后端，提供多租户、RBAC 鉴权、动态 API、缓存、任务调度、代码生成、文件管理、微信对接等企业级功能，支持插件式扩展。
+tags: dotnet, webapi, rbac, multitentant, furion, sqlsugar
 ---
 
 > **项目地址：** <https://github.com/znlgis/Admin.NET>
@@ -502,6 +503,36 @@ public class MyPluginService : IDynamicApiController, ITransient
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **快速搭建**：克隆仓库 → 配置数据库连接 → `dotnet run` → 自动建库建表 + 种子数据
+2. **新增业务模块**：参考 `Admin.NET.Application` 结构，新建实体 → 新建 Service（继承 `BaseService<T>` 或实现 `IDynamicApiController`）→ 新建 DTO
+3. **代码生成**：在 Swagger 或管理界面选表 → 配置字段控件 → 一键生成后端 Service/Entity/DTO + 前端 Vue 页面
+4. **插件开发**：`Plugins/` 下新建类库 → 引用 `Admin.NET.Core` → 实现 `IDynamicApiController` → 被主项目引用即自动注册
+5. **部署**：配置 `appsettings.json`（数据库/Redis/JWT）→ `dotnet publish` → Docker 或 IIS/Nginx 部署
+
+### 关键模式与常见陷阱
+
+- **实体继承链**：`EntityBase`（仅 Id）→ `EntityBaseData`（+审计字段/软删除）→ `EntityTenant`（+租户隔离），按需选择
+- **雪花 ID**：主键使用 `Yitter.IdGenerator` 生成 long 型雪花 ID，不要设置数据库自增
+- **软删除**：继承 `EntityBaseData` 的实体 `Delete` 默认是软删除（设 `IsDelete = true`），物理删除用 `DeleteByIdAsync`
+- **动态 API 分组**：`[ApiDescriptionSettings("GroupName", Order = 100)]` 控制 Swagger 分组
+- **权限控制**：`[DisplayName("操作名")]` 自动注册为权限标识，前端配合 `v-auth` 指令使用
+- **多租户**：实体继承 `EntityTenant` 后自动按 `TenantId` 隔离，切换租户用 `_rep.Context.AsTenant().GetConnection(tenantDbConfigId)`
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 从零搭建后台 | Admin.NET（Furion + SqlSugar 全家桶） |
+| 已有 Furion 项目加权限 | 参考 Admin.NET 的 Auth/User/Role/Menu 模块 |
+| 仅需 ORM | 直接用 SqlSugar，不引入 Admin.NET |
+| 微服务架构 | RuoYi-Cloud（Java 生态） |
+
+---
+
 ## 注意事项
 
 1. **数据库自动迁移**：首次启动会自动创建数据库和种子数据，无需手动执行 SQL
@@ -512,6 +543,14 @@ public class MyPluginService : IDynamicApiController, ITransient
 6. **权限控制**：方法上 `[DisplayName("操作名")]` 会注册为权限标识，搭配 `[Authorize]` 使用
 7. **国密支持**：通过 `BouncyCastle.Cryptography` 和 `sm-crypto` 实现 SM2/SM3/SM4 算法
 8. **Docker 部署**：后端目录包含 `.dockerignore`，可直接用 Dockerfile 容器化部署
+
+---
+
+## 相关技能
+
+- **furion** — Admin.NET 后端核心依赖的 Web 框架：[../furion/SKILL.md](../furion/SKILL.md)
+- **sqlsugar** — Admin.NET 后端核心依赖的 ORM：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
+- **admin-net-frontend** — Admin.NET 配套前端（Vue3 + Element Plus）：[../admin-net-frontend/SKILL.md](../admin-net-frontend/SKILL.md)
 
 ---
 

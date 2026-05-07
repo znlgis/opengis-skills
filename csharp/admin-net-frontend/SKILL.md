@@ -1,6 +1,7 @@
 ---
 name: Admin.NET-frontend
 description: Admin.NET 前端基于 Vue3 + Element Plus + Vite5 + TypeScript 构建的企业级中后台管理界面，提供完整的权限管理、动态路由、国际化、主题切换、代码生成、表单构建器等功能模块。
+tags: vue3, typescript, element-plus, vite, admin, frontend
 ---
 
 > **项目地址：** <https://github.com/znlgis/Admin.NET>
@@ -487,6 +488,36 @@ server {
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **环境准备**：Node.js >= 18 + pnpm → `pnpm install` → `pnpm run dev`
+2. **新增页面**：`src/views/` 下新建目录和 `.vue` 文件 → 后端管理界面配菜单（路由路径 + 组件路径）→ 前端自动加载
+3. **API 对接**：后端 Swagger 更新后运行 `api_build` 脚本自动生成 TypeScript API 客户端 → 用 `getAPI(XxxApi)` 调用
+4. **权限控制**：后端菜单配置按钮权限标识 → 前端用 `v-auth="'xxx:action'"` 指令控制按钮显示
+5. **构建部署**：`pnpm run build` → `dist/` 产物 → Nginx 部署（SPA try_files + API 代理 + WebSocket /hubs）
+
+### 关键模式与常见陷阱
+
+- **包管理器**：必须用 `pnpm`，项目依赖 `pnpm-workspace.yaml`，npm/yarn 可能失败
+- **环境变量前缀**：Vite 项目中自定义环境变量必须以 `VITE_` 开头，否则 `import.meta.env` 读不到
+- **路由组件路径**：后端菜单配置的组件路径对应 `src/views/` 下的文件路径（不含 `.vue` 后缀），大小写敏感
+- **权限标识一致性**：前端 `v-auth` 指令中的标识必须与后端菜单配置中的按钮权限标识完全一致
+- **API 自动生成**：修改后端接口后务必重新运行 `api_build` 脚本，否则类型定义过期
+- **SignalR 代理**：Nginx 需配置 WebSocket 代理（`/hubs` 路径），否则实时通知不工作
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 配合 Admin.NET 后端 | Admin.NET 前端（开箱即用） |
+| 独立 Vue3 后台项目 | 直接用 vue-next-admin 模板 + Element Plus |
+| 仅需简单管理界面 | vue-pure-admin / naive-ui-admin |
+| 移动端/小程序 | uni-app / Taro |
+
+---
+
 ## 注意事项
 
 1. **包管理器**：务必使用 `pnpm`，项目使用 `pnpm-workspace.yaml` 管理
@@ -497,6 +528,13 @@ server {
 6. **国密加密**：登录密码等敏感数据前端使用 `sm-crypto-v2` 做 SM2 加密后传输
 7. **SignalR 连接**：需正确配置 Nginx 代理 WebSocket（`/hubs` 路径）
 8. **Node 版本**：要求 Node.js >= 18.0.0
+
+---
+
+## 相关技能
+
+- **admin-net-backend** — Admin.NET 配套后端（.NET + Furion + SqlSugar）：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
+- **furion** — 后端使用的 .NET Web 框架，前端通过其动态 API 自动生成接口：[../furion/SKILL.md](../furion/SKILL.md)
 
 ---
 

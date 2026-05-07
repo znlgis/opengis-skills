@@ -1,6 +1,7 @@
 ---
 name: lightcad
 description: LightCAD 是开源的轻量级 Web CAD 框架/应用，定位类似 AutoCAD 的二维制图但完全运行在浏览器中，提供命令行、图层、块、DWG/DXF 兼容、绘图与编辑命令，并暴露 JS API 供二次开发与嵌入业务系统。
+tags: [web, 2d, cad, dxf, typescript, drafting]
 ---
 
 > **项目地址：** <https://github.com/light-CAD/lightcad>（如仓库迁移请以 znlgis.github.io 为准）
@@ -205,6 +206,44 @@ app.view.rotate(15);
 | 中文乱码 | DXF 文件编码为 UTF-8；字体配置 `Noto Sans CJK SC` |
 | 标注比例小 | 设置 `dimstyle.scale` |
 | 与业务集成 | 监听 `app.on('entityModified', ...)` 同步到后端 |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应区分「在线使用」（用户直接操作 GUI）和「SDK 嵌入」（`LightCAD` 类实例化）。SDK 模式按「app.init() → app.exec(command) 或 app.add(entity) → app.io.exportDXF()」的流程操作。批量添加实体用 `app.batch(() => {...})` 包装。
+- **关键注意事项**：① DWG 不支持直接读写，需先用 ODA/LibreDWG 转 DXF；② DXF 文件编码保持 UTF-8，中文文字配置 `Noto Sans CJK SC` 字体；③ 大文件 DXF 导入建议用 Web Worker 解析；④ 标注比例通过 `dimstyle.scale` 设置。
+- **常用代码模式**：SDK 初始化：`new LightCAD({ container: '#cad', locale: 'zh-CN' })` → `app.init()` → `app.exec('line 0,0 100,100')`。自定义命令：`app.commands.register({ name, handler: async (ctx) => { const p = await ctx.input.getPoint('...'); ... } })`。
+
+---
+
+## 相关技能
+
+- **librecad** — 开源桌面 2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **qcad** — 2D CAD 软件，ECMAScript 脚本扩展：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **chili3d** — Web 3D CAD，类似的前端架构模式：[../chili3d/SKILL.md](../chili3d/SKILL.md)
+- **astral3d** — Web 3D 可视化框架，可配合展示 LightCAD 模型：[../astral3d/SKILL.md](../astral3d/SKILL.md)
+
+---
+
+## 典型工作流
+
+### 工作流一：嵌入业务系统作为在线绘图组件
+
+1. `pnpm install @lightcad/sdk` 或使用 iframe 嵌入
+2. 在页面中创建容器 `<div>`，实例化 `LightCAD` 并初始化
+3. 注册自定义命令（如绘制特殊符号/标注）
+4. 监听 `entityModified`/`selectionChanged` 事件同步数据到后端
+5. 提供 DXF 导入/导出按钮，调用 `app.io.importDXF()`/`app.io.exportDXF()`
+6. 可选：导出 SVG/PNG 用于报表或预览
+
+### 工作流二：命令行驱动快速绘图
+
+1. 初始化 LightCAD 实例后，通过 `app.exec()` 发送 AutoCAD 风格命令
+2. `app.exec('line 0,0 100,100')` 绘制直线
+3. `app.exec('circle 50,50 r 20')` 绘制圆
+4. `app.exec('rect 0,0 100,50')` 绘制矩形
+5. `app.io.exportDXF()` 导出为 DXF 文件
 
 ---
 

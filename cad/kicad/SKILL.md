@@ -1,6 +1,7 @@
 ---
 name: kicad
 description: KiCad 是开源跨平台 EDA（电子设计自动化）套件，集成 Eeschema 原理图、Pcbnew PCB 布线、3D 查看、Gerber 输出与器件库管理，是 PCB 设计领域的开源旗舰，广泛用于工业、教育与开源硬件项目。
+tags: [eda, pcb, electronics, schematic, gerber, python]
 ---
 
 > **项目地址：** <https://gitlab.com/kicad/code/kicad>
@@ -193,6 +194,44 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 | Gerber 不全 | 板厂常需要 `F.Mask/B.Mask/F.Silk/B.Silk/Edge.Cuts/F.Cu/B.Cu` + 钻孔 |
 | 覆铜失效 | 重新 Refill；检查热焊盘连接 |
 | 嘉立创不识别 | 输出格式选 X2；勾选 `Plot pad on silk` 关闭 |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应遵循 KiCad 标准设计流程：原理图（Eeschema）→ 封装分配 → PCB（Pcbnew）→ DRC → 制造输出。自动化批处理使用 `kicad-cli` 命令行工具，Python 脚本使用 `pcbnew` 模块。
+- **关键注意事项**：① ERC/DRC 必须在每次重要修改后运行，红色错误不可忽略；② 元件封装需在原理图阶段绑定，否则同步到 PCB 时会丢失；③ Gerber 输出需包含完整层栈（F.Cu/B.Cu/F.Mask/B.Mask/Edge.Cuts/Silk + Drill）；④ 覆铜后需 Refill Zones 检查热焊盘连接。
+- **常用代码模式**：CLI 自动化：`kicad-cli sch export pdf` / `kicad-cli pcb export gerbers` / `kicad-cli pcb export drill`。Python：`pcbnew.LoadBoard("board.kicad_pcb")` → 遍历 footprints/tracks → 修改 → `pcbnew.SaveBoard()`。
+
+---
+
+## 相关技能
+
+- **freecad** — 3D 参数化 CAD，可与 KiCad 3D 模型协同：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **occt** — OCCT 几何内核（KiCad 3D Viewer 底层依赖）：[../occt/SKILL.md](../occt/SKILL.md)
+
+---
+
+## 典型工作流
+
+### 工作流一：从原理图到 PCB 的完整设计
+
+1. 新建项目（`.kicad_pro`），在 Eeschema 中放置元件符号并联线
+2. 运行 ERC 检查电气错误，Annotate 注释元件编号
+3. 使用 CvPcb 为每个元件分配封装（Footprint）
+4. Update PCB from Schematic 同步网表到 Pcbnew
+5. 在 Pcbnew 中布局（摆件）、布线（走线）、覆铜
+6. 运行 DRC 检查设计规则，修复所有错误
+7. 导出 Gerber + Drill + Pick & Place + BOM 用于制造
+
+### 工作流二：CI 自动化 Gerber 生成
+
+1. 在 CI 环境安装 `kicad`（含 `kicad-cli`）
+2. `kicad-cli sch export netlist project/main.kicad_sch -o net.net`
+3. `kicad-cli pcb export gerbers project/board.kicad_pcb -o gerber/`
+4. `kicad-cli pcb export drill project/board.kicad_pcb -o gerber/`
+5. `kicad-cli pcb export pos project/board.kicad_pcb --format csv -o pos.csv`
+6. 打包 Gerber + Drill 为 ZIP 上传至构建产物
 
 ---
 

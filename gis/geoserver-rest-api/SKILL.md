@@ -1,6 +1,17 @@
 ---
 name: geoserver-rest-api
 description: GeoServer REST API 是 GeoServer 提供的 RESTful 配置接口，允许通过 HTTP 请求以 JSON 或 XML 格式对工作空间、数据存储、图层、样式、图层组、服务设置及安全等资源进行增删改查管理，适用于自动化运维、CI/CD 和 AI 智能体集成场景。
+tags:
+  - rest
+  - api
+  - http
+  - server
+  - wms
+  - wfs
+  - automation
+  - curl
+  - geoserver
+  - json
 ---
 
 > **项目地址：** <https://github.com/geoserver/geoserver>
@@ -421,6 +432,33 @@ curl -u admin:geoserver -XDELETE \
 7. **GeoWebCache**：通过 REST API 修改图层后，可能需要手动清空该图层的 GWC 缓存才能看到更新效果。
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **确认 GeoServer 运行**：先验证 `http://localhost:8080/geoserver/rest/about/version.json` 可访问
+2. **创建工作空间**：POST `/rest/workspaces` → 创建命名空间
+3. **添加数据存储**：根据数据类型 POST datastores（矢量）或 coveragestores（栅格）
+4. **发布图层**：POST featuretypes（矢量）或 coverages（栅格）
+5. **配置样式**：POST styles + PUT SLD 文件 → PUT layers 绑定样式
+6. **验证发布**：GET `/rest/layers.json` 确认图层列表，访问 WMS GetMap 测试
+
+### 关键注意事项
+
+- **JSON 包装结构**：GeoServer REST API 的 JSON 请求/响应使用单层包装（如 `{"workspace":{...}}`）
+- **recurse 参数**：删除 Workspace/Store 时务必添加 `?recurse=true` 级联删除
+- **Shapefile 上传**：必须打包为 ZIP（含 .shp/.shx/.dbf/.prj），用 PUT 方式上传
+- **URL 后缀**：可用 `.json` / `.xml` 后缀替代 `Accept` 头指定响应格式
+- **Content-Type**：样式上传使用 `application/vnd.ogc.sld+xml`，栅格上传使用 `image/tiff`
+- **认证**：所有 POST/PUT/DELETE 操作需要 HTTP Basic Auth（默认 admin:geoserver）
+
+## 相关技能
+
+- **geoserver** — GeoServer 服务器运维配置：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **geoserver-cloud** — 云原生微服务版本：[../geoserver-cloud/SKILL.md](../geoserver-cloud/SKILL.md)
+- **gdal** — 命令行数据预处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **postgis** — 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
 
 ## 参考链接
 

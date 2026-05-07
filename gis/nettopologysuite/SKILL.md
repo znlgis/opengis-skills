@@ -1,6 +1,16 @@
 ---
 name: nettopologysuite
 description: NetTopologySuite (NTS) 是 JTS Topology Suite 的 .NET 移植版本，是 .NET 平台上功能最完整的开源二维矢量几何计算库，提供几何模型、空间关系、集合运算、空间索引、WKT/WKB/GeoJSON 读写等能力，被 EF Core、Npgsql 等广泛集成。
+tags:
+  - dotnet
+  - csharp
+  - geometry
+  - spatial
+  - wkt
+  - wkb
+  - geojson
+  - ef-core
+  - npgsql
 ---
 
 > **项目地址：** <https://github.com/NetTopologySuite/NetTopologySuite>
@@ -209,6 +219,32 @@ foreach (var p in points) if (prep.Contains(p)) ...
 | Buffer 慢 | 减小 quadrantSegments、并行处理 |
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建几何工厂**：使用 `new GeometryFactory(new PrecisionModel(), 4326)` 创建工厂，SRID 指定坐标系
+2. **创建几何对象**：通过工厂方法 `CreatePoint()`、`CreateLineString()`、`CreatePolygon()` 创建几何
+3. **空间运算**：直接调用几何对象方法 `Intersects()`、`Intersection()`、`Buffer()` 等
+4. **格式读写**：使用 `WKTReader`/`WKTWriter`、`GeoJsonConverterFactory` 进行序列化
+5. **EF Core 集成**：`UseNetTopologySuite()` 启用空间查询翻译为 SQL
+
+### 关键注意事项
+
+- **GeometryFactory 共享**：固定 SRID，复用 `GeometryFactory` 实例
+- **拓扑异常修复**：无效几何使用 `GeometryFixer.Fix()` 修复
+- **PreparedGeometry**：重复空间关系判断时使用 `PreparedGeometryFactory.Prepare()` 大幅提速
+- **STRtree 批量查询**：先 `Build()` 再 `Query()`，大数据量场景优于逐几何判断
+- **WKB vs WKT**：WKB 比 WKT 更快更紧凑，数据库交互优先使用 WKB
+- **Z/M 坐标**：`WKBWriter` 需配置 `HandleOrdinates` 保留 Z/M 坐标
+
+## 相关技能
+
+- **jts** — JTS Topology Suite（Java 原版）：[../jts/SKILL.md](../jts/SKILL.md)
+- **geometry-api-net** — Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
+- **mapsui** — .NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
+- **opengis-utils-for-net** — .NET GIS 统一工具包：[../opengis-utils-for-net/SKILL.md](../opengis-utils-for-net/SKILL.md)
 
 ## 参考资源
 

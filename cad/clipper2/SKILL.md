@@ -1,6 +1,7 @@
 ---
 name: clipper2
 description: Clipper2 是 Angus Johnson 编写的高性能开源多边形裁剪/偏移库的最新一代实现（C++/C#/Delphi 三语言），支持布尔运算（并/交/差/异或）、多边形偏移（Inflate/Outset/Mitre/Square/Round）、最小封闭矩形等，是 CAD/GIS/CNC/3D 打印领域的核心几何算法库。
+tags: [2d, geometry, boolean, offset, polygon, csharp, cpp, delphi]
 ---
 
 > **项目地址：** <https://github.com/AngusJohnson/Clipper2>
@@ -162,6 +163,27 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 
 ---
 
+## 典型工作流
+
+### 工作流一：2D 轮廓布尔运算（C#）
+
+1. 通过 `Clipper.MakePath` 或手工构造 `PathD`/`Path64` 列表
+2. 选择 FillRule（一般用 `NonZero`）
+3. 直接调用静态函数 `Clipper.Union(a, b, FillRule.NonZero)`
+4. 如需 PolyTree（孔洞层级），使用 `ClipperD` 类 + `PolyTreeD`
+5. 对结果进行 `SimplifyPaths` 或 `TrimCollinear` 清理
+6. 导出结果，转换为下游格式（如转回 DXF polyline）
+
+### 工作流二：多边形膨胀与缩进（CAM 刀路补偿）
+
+1. 从 CAD 文件读取零件轮廓多边形
+2. 使用 `Clipper.InflatePaths(paths, offset, JoinType.Round, EndType.Polygon)` 生成刀路偏置
+3. 正值外扩（粗加工），负值内缩（精加工）
+4. 对偏移结果做 `SimplifyPaths`，去除多余顶点
+5. 输出为 G-code 或 CAM 系统格式
+
+---
+
 ## 性能要点
 
 1. **优先 Path64 + 适当 scale**：浮点版内部仍用整数实现，避免精度问题
@@ -192,6 +214,22 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 | **CGAL Boolean** | C++ | 精确算术，复杂但慢 |
 | **JTS / NTS** | Java/.NET | 完整空间分析，速度中等 |
 | **Boost.Polygon** | C++ | 仅整数，高性能 |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：新项目优先使用 Clipper2 的静态顶层函数（`Union`/`Intersect`/`Difference`/`Xor`/`InflatePaths`），比 Clipper1 的类实例方式更简洁。浮点模式直接用 `PathsD`，整数模式用 `Paths64`（指定 scale）。
+- **关键注意事项**：① `FillRule` 默认用 `NonZero`；② `InflatePaths` 的 `JoinType` 和 `MiterLimit` 影响偏移质量——圆形连接（Round）最稳健；③ 浮点模式下 `ClipperD(precision)` 的 precision 参数控制内部整数转换精度；④ `PolyTree` 保留孔洞层级。
+- **常用代码模式**：`Clipper.Union(pathsA, pathsB, FillRule.NonZero)` → `Clipper.InflatePaths(result, offset, JoinType.Round, EndType.Polygon)` → `Clipper.SimplifyPaths(result, tolerance)`。
+
+---
+
+## 相关技能
+
+- **clipper1** — 一代 Clipper 库（遗留代码维护参考）：[../clipper1/SKILL.md](../clipper1/SKILL.md)
+- **qcad** — 2D CAD 软件，DXF 多边形编辑：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **librecad** — 开源 2D CAD，配合 Clipper 做几何处理：[../librecad/SKILL.md](../librecad/SKILL.md)
 
 ---
 

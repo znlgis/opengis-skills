@@ -1,6 +1,7 @@
 ---
 name: ifoxcad
 description: IFoxCAD 是一个开源的 AutoCAD .NET 二次开发框架（基于 ObjectARX/AutoCAD .NET API），通过事务管理、扩展方法、链式 API 极大简化 AutoCAD 插件开发，支持 AutoCAD、ZWCAD、GstarCAD、BricsCAD 等主流国产/国际 CAD。
+tags: [autocad, dotnet, csharp, cad, dxf, dwg, plugin]
 ---
 
 > **项目地址：** <https://gitee.com/inspirefunction/ifoxcad>
@@ -233,6 +234,25 @@ IFoxCAD 通过条件编译支持：
 
 ---
 
+## 典型工作流
+
+### 工作流一：新建 AutoCAD 插件项目
+
+1. `dotnet new classlib` 创建 .NET 类库项目
+2. 通过 NuGet 添加 `IFoxCAD.Cad` 包，添加 AutoCAD 依赖 DLL 引用（`Copy Local=false`）
+3. 创建 `IExtensionApplication` 实现类，添加 `[assembly: ExtensionApplication]` 和 `[assembly: CommandClass]` 特性
+4. 在 `[CommandMethod]` 方法中编写业务逻辑：`using var tr = new DBTrans()` → 创建/修改实体 → `tr.Commit()`
+5. 编译后通过 NETLOAD 加载到 AutoCAD 中运行
+
+### 工作流二：批量处理 DWG 文件
+
+1. 使用 `new DBTrans()` 或 `HostMgd` 无界面打开 DWG 文件
+2. 遍历 `tr.CurrentSpace` 中的实体，`tr.GetObject<T>(id)` 获取强类型对象
+3. 根据实体类型（Line/Circle/Polyline/...）执行批量修改
+4. `tr.Commit()` 保存，输出到新 DWG
+
+---
+
 ## 性能优化
 
 1. **批量操作必用事务**，不要在循环里频繁开关事务
@@ -251,6 +271,23 @@ IFoxCAD 通过条件编译支持：
 | 修改后界面不刷新 | `ent.RecordGraphicsModified(true)` 或 `Editor.Regen()` |
 | 引用 `acdbmgd` 报错 | 设置 `Copy Local=false` |
 | 脱离 CAD 单元测试 | 用 `HostMgd` Mock 或 IFoxCAD 提供的测试基类 |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应遵循「命令定义 → DBTrans 事务 → 实体创建/修改 → Commit」的标准模式。`using var tr = new DBTrans()` 是几乎所有操作的起点，自动管理 Database 和 Transaction。
+- **关键注意事项**：① 实体必须先加入 BlockTableRecord 再访问 Id，否则报 `eNotInDatabase`；② 引用 AutoCAD 依赖 DLL 时必须设置 `Copy Local=false`；③ 条件编译宏（`IFOX_CAD2025`/`ZWCAD` 等）用于多 CAD 兼容；④ `TabItem` 注册在 `Completed()` 中，不在 `Loaded()`。
+- **常用代码模式**：`using var tr = new DBTrans()` → `tr.CurrentSpace.AddEntity(...)` 或 `tr.LayerTable.GetOrCreate("name")` → `tr.Commit()`。选择集操作：`ed.SelectAll(new SelectionFilter(...))` → `tr.GetObject<T>(id)` → 修改 → `tr.Commit()`。
+
+---
+
+## 相关技能
+
+- **qcad** — 2D CAD 软件，ECMAScript 扩展与 DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **librecad** — 开源 2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **libredwg** — DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
+- **lightcad** — Web 2D CAD 框架（类似二次开发场景）：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 
 ---
 

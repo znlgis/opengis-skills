@@ -1,6 +1,15 @@
 ---
 name: geometry-api-java
 description: Esri Geometry API for Java 是一个自包含的空间几何计算库，提供对二维和三维几何对象的创建、解析、序列化以及空间关系运算能力。
+tags:
+  - java
+  - geometry
+  - esri
+  - spatial
+  - wkt
+  - wkb
+  - geojson
+  - geodesic
 ---
 
 > **项目地址：** <https://github.com/Esri/geometry-api-java>
@@ -325,6 +334,31 @@ geometry.addAttribute(VertexDescription.Semantics.M);
 5. **线程安全**：`GeometryEngine` 的静态方法是线程安全的。
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建几何对象**：使用 `Point`、`Polyline`、`Polygon` 等构造函数创建几何
+2. **设置空间参考**：通过 `SpatialReference.create(wkid)` 指定坐标系
+3. **空间运算**：优先使用 `GeometryEngine` 静态方法（线程安全、API 简洁）；批量处理使用 `OperatorFactoryLocal` + `GeometryCursor`
+4. **格式转换**：使用 `GeometryEngine.geometryToGeoJson()` / `geometryFromWkt()` 等方法进行 WKT、WKB、GeoJSON、Esri JSON 互转
+5. **大地测量**：对地理坐标（经纬度）的面积/长度计算，使用 `geodesicArea()` / `geodesicLength()` / `geodesicBuffer()` 获得椭球面精确结果
+
+### 关键注意事项
+
+- **坐标系一致**：进行空间运算前，确保所有几何对象使用相同的 `SpatialReference`
+- **简化几何**：导入外部数据后，使用 `GeometryEngine.simplify()` 确保拓扑正确
+- **大地测量 vs 平面**：地理坐标系下距离/面积计算优先使用大地测量方法
+- **性能优化**：批量操作使用 `OperatorFactoryLocal` + `GeometryCursor`，而非逐个调用 `GeometryEngine` 静态方法
+- **线程安全**：`GeometryEngine` 静态方法是线程安全的；`Operator` 实例非线程安全
+
+## 相关技能
+
+- **jts** — JTS Topology Suite（Java 几何计算标准）：[../jts/SKILL.md](../jts/SKILL.md)
+- **geotools** — Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
+- **opengis-utils-for-java** — Java GIS 统一工具包：[../opengis-utils-for-java/SKILL.md](../opengis-utils-for-java/SKILL.md)
+- **geometry-api-net** — .NET 版本 Esri Geometry API：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
 
 ## 参考链接
 

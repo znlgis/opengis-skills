@@ -1,6 +1,7 @@
 ---
 name: openclaw
 description: OpenClaw 是开源的 AI 编程/操作 Agent，类似 Anthropic Claude Computer Use 与 OpenInterpreter，能在本地控制鼠标键盘、读取屏幕、运行命令、读写文件，并通过 LLM 推理完成端到端的自动化任务，适合 RPA、桌面自动化、研究与教学场景。
+tags: llm, agent, automation, rpa, computer-use
 ---
 
 > **项目地址：** <https://github.com/znlgis/openclaw>（如位置变动请以 znlgis.github.io 为准）
@@ -198,6 +199,82 @@ llm:
 
 ---
 
+## 典型工作流
+
+### 场景一：自动化数据处理任务
+
+```bash
+# 一次性执行
+python -m openclaw run "读取 ./data/*.csv 合并去重后输出 merged.parquet"
+```
+
+```python
+# OpenClaw 会自动调用 python_exec 执行：
+import pandas as pd, glob
+df = pd.concat([pd.read_csv(f) for f in glob.glob("./data/*.csv")])
+df.drop_duplicates().to_parquet("merged.parquet")
+```
+
+### 场景二：桌面 GUI 自动化
+
+```bash
+# 启动 CLI 交互模式
+python -m openclaw chat
+```
+
+```
+# 对话示例
+用户: 打开 Excel，把 Sheet1 的 A 列数据乘以 1.1 后保存
+
+OpenClaw 内部循环:
+  1. screenshot → 识别桌面图标
+  2. mouse_click → 双击 Excel 图标
+  3. screenshot → 等待 Excel 启动
+  4. keyboard_hotkey → Ctrl+O 打开文件
+  5. keyboard_type → 输入文件路径
+  6. ... (选中 A 列 → 输入公式 → 保存)
+  7. finish → 任务完成
+```
+
+### 场景三：Web 自动化
+
+```bash
+python -m openclaw run \
+  "登录 GitHub，star 'znlgis/opengis-skills' 仓库，然后截图保存"
+```
+
+---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **评估风险**：先在 Docker/VM 沙箱中测试，确认无误后再在真实环境运行
+2. **拆分子任务**：复杂任务拆成多个短链子任务，逐个验证，避免长链失败
+3. **截图验证**：关键步骤后截图确认，不要依赖 LLM 的"记忆"
+4. **失败兜底**：图标识别失败时回退键盘快捷键（如 Ctrl+O 代替点击菜单）
+5. **限制资源**：设置最大步骤数、时长上限、Shell 黑名单
+
+### 关键模式与常见陷阱
+
+- **沙箱隔离**：务必用 Docker/VM 运行，禁止在宿主机直接执行危险命令
+- **HITL（人在环）**：对 `rm`/`sudo`/`format`/支付类操作启用二次确认
+- **截图技巧**：JPEG 80% 质量、1280×800 分辨率通常够用；DPI 缩放 100% 避免识别偏差
+- **鼠标权限**：Linux 需 X11/Wayland 权限，macOS 需「辅助功能」授权
+- **慢操作处理**：减少截图频率、批量操作、提高并发
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| GUI 桌面自动化 | openclaw |
+| Web 浏览器自动化 | openclaw (Playwright) |
+| 纯 API/代码工具调用 | hermes-agent / Dify Agent |
+| 可视化工作流编排 | Dify Workflow |
+| 代码生成/编程 | Cursor / Cline + superpowers-zh |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -207,6 +284,13 @@ llm:
 | 误删文件 | 启用沙箱 + 文件白名单 + HITL |
 | 命令被防火墙拦截 | 配置白名单或放入容器内执行 |
 | 执行很慢 | 减少截图次数；批量操作；提高并发 |
+
+---
+
+## 相关技能
+
+- **hermes-agent** — 后端 Agent 框架，适合 API/工具调用为主的场景：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **oh-my-openagent** — AI Agent 工程化模板，提供 ReAct/Plan-Execute 等模式的参考实现：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
 
 ---
 

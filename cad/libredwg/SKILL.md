@@ -1,6 +1,7 @@
 ---
 name: libredwg
 description: LibreDWG 是 GNU 项目下的开源 DWG/DXF 读写库（C 语言），支持 R13–R2018 多个 AutoCAD 版本，提供 C/C++/Python/Lisp 等多语言绑定与一组命令行工具（dwgread/dwgwrite/dwg2dxf/dxf2dwg），是开源 CAD 互操作的关键基础。
+tags: [dwg, dxf, cad, c, python, conversion]
 ---
 
 > **项目地址：** <https://github.com/LibreDWG/libredwg>
@@ -188,6 +189,44 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 | 写入失真 | 启用 `--enable-write` 编译；优先使用 DXF 出口 |
 | 中文文字乱码 | DWG 编码为 ANSI/CP936；`dwgread -c utf8` 切换 |
 | 引用块缺失 | 解析 `INSERT` 时跟随 `BLOCK_HEADER` 引用 |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应根据场景选择 LibreDWG 的使用层级——简单转换用 CLI（`dwg2dxf`/`dwgread`），数据提取用 JSON/GeoJSON 输出，复杂处理用 C API 或 Python 绑定。写入功能仍在完善，写 DWG 前考虑先写 DXF 再转换。
+- **关键注意事项**：① 高版本 DWG（R2021+）不被支持，先用 ODA File Converter 转为 R2010/R2018；② 中文文字编码默认为 ANSI/CP936，读取时可用 `dwgread -c utf8`；③ 写入需编译时启用 `--enable-write`；④ 大文件用 `--no-check` 加速读取。
+- **常用代码模式**：CLI 转换：`dwg2dxf -y input.dwg` / `dwgread -O JSON input.dwg -o out.json` / `dwg2SVG input.dwg > out.svg`。C API：`dwg_read_file("input.dwg", &dwg)` → `dwg_get_first_object(&dwg, DWG_TYPE_BLOCK_HEADER)` → 遍历实体 → `dwg_free(&dwg)`。
+
+---
+
+## 相关技能
+
+- **librecad** — 开源 2D CAD，DXF 编辑与 LibreDWG 协同使用：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **qcad** — 2D CAD 软件，DXF/DWG 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发框架（DWG 读写高层封装）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
+- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+
+---
+
+## 典型工作流
+
+### 工作流一：DWG 数据提取与格式转换
+
+1. `dwg2dxf -y input.dwg` 将 DWG 转为 DXF ASCII 格式
+2. `dwgread -O JSON input.dwg -o out.json` 提取结构化数据
+3. 解析 JSON，遍历模型空间实体（LINE/CIRCLE/INSERT/TEXT 等）
+4. 将提取的几何数据转入下游系统（GIS/数据库/可视化）
+5. 对于 GIS 用途：`dwgread -O GeoJSON input.dwg -o out.geojson` 直接生成 GeoJSON
+
+### 工作流二：以 C 程序读写 DWG 文件
+
+1. 引入 `<dwg.h>` 和 `<dwg_api.h>`，链接 `libredwg`
+2. `dwg_read_file("input.dwg", &dwg)` 读取文件
+3. 通过 `dwg_get_first_object(&dwg, DWG_TYPE_BLOCK_HEADER)` 获取模型空间
+4. 使用 `dwg_block_header_get_entities()` 获取实体引用列表
+5. 遍历实体，按 `fixedtype` 分派处理（DWG_TYPE_LINE / CIRCLE / TEXT 等）
+6. `dwg_free(&dwg)` 释放内存
 
 ---
 

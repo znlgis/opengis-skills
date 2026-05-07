@@ -1,6 +1,7 @@
 ---
 name: ruoyi-cloud
 description: RuoYi-Cloud 是 RuoYi 系列开源 Java 微服务版后台管理系统脚手架，基于 Spring Boot 3 + Spring Cloud + Spring Cloud Alibaba（Nacos/Sentinel/Seata）+ MyBatis Plus + Vue 3，提供完整 RBAC、网关、认证、配置中心、链路追踪、定时任务与代码生成，是国内 Java 微服务最流行的脚手架之一。
+tags: java, spring-cloud, microservices, rbac, nacos
 ---
 
 > **项目地址：** <https://gitee.com/y_project/RuoYi-Cloud>
@@ -267,6 +268,36 @@ sh deploy.sh web        # 前端
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **启动基础设施**：Nacos + MySQL + Redis → Docker Compose 一键启动
+2. **导入配置**：将 Nacos 配置导入到 Nacos 控制台（SQL 或 ZIP 导入）
+3. **启动微服务**：按顺序启动 gateway → auth → system → gen → job → file
+4. **新增业务模块**：`ruoyi-modules/` 下新建模块 → 注册到 Nacos → 网关配置路由
+5. **代码生成**：设计表 → 代码生成工具 → 一键生成 Entity/Mapper/Service/Controller + Vue 页面
+
+### 关键模式与常见陷阱
+
+- **启动顺序**：必须先启 Nacos，再启 Gateway → Auth → 业务模块，否则服务发现失败
+- **Nacos 命名空间**：确保所有微服务的 `namespace` 与 `group` 一致，否则无法发现
+- **Token 过期**：Redis 中 token TTL 与 JWT 过期时间要保持一致；时间不同步会导致 401
+- **分布式事务**：Seata `tx-service-group` 必须与 Nacos 配置一致，否则不回滚
+- **新建模块隔离**：新建业务模块 `ruoyi-modules-mybiz`，不要直接修改 system 模块，方便升级
+- **性能优化**：网关连接池调优 + Redis 缓存权限 + SkyWalking 全链路追踪
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| Java 微服务后台 | RuoYi-Cloud |
+| .NET 微服务后台 | Admin.NET（单体/插件式） |
+| 简单单体应用 | RuoYi（单体版） |
+| 前端定制 | RuoYi-Cloud 自带 Vue3 前端，也可替换为 React/Angular |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -276,6 +307,12 @@ sh deploy.sh web        # 前端
 | 前端 401 反复 | 检查 axios 拦截器与刷新机制 |
 | 分布式事务不回滚 | Seata `tx-service-group` 与配置中心一致 |
 | 性能问题 | 网关 + 业务服务横向扩容；启用本地缓存 |
+
+---
+
+## 相关技能
+
+- RuoYi-Cloud 是 Java 生态的独立技能。如需 .NET 生态的类似框架，可参考 Admin.NET 后端（Furion + SqlSugar），它在架构思想上与 RuoYi 类似但技术栈不同。
 
 ---
 

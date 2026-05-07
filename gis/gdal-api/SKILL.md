@@ -1,6 +1,18 @@
 ---
 name: gdal-api
 description: GDAL (Geospatial Data Abstraction Library) 是 OSGeo 基金会的核心开源地理数据处理库，提供 C++ 原生 API 以及基于 SWIG 的 Python、Java、C# 语言绑定，支持 200+ 种栅格与矢量数据格式的读写、坐标变换、栅格分析和矢量空间操作。本文件旨在帮助 AI 使用 GDAL API 进行地理空间数据编程开发。
+
+tags:
+  - gdal
+  - api
+  - python
+  - cpp
+  - dotnet
+  - java
+  - raster
+  - vector
+  - gis
+  - geospatial
 ---
 
 > **项目地址：** <https://github.com/OSGeo/gdal>
@@ -1412,6 +1424,43 @@ readDs.Dispose();
 14. **字符串编码**：C# 绑定中字符串参数默认使用 UTF-8 编码，处理中文路径时注意编码一致性。
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **语言选择**：Python 优先（NumPy 集成、语法简洁），性能敏感用 C++，.NET 项目用 C#，Java 项目用 Java
+2. **驱动注册**：任何 GDAL 操作前先调用注册函数（C++: `GDALAllRegister()`, Python 默认已注册）
+3. **探索数据**：先 `gdalinfo`/`ogrinfo` 命令行查数据结构，再编写 API 代码
+4. **异常处理**：Python 脚本开头加 `gdal.UseExceptions()` 启用异常模式
+5. **分块读写**：大栅格使用 `RasterIO` 指定窗口，避免全量加载到内存
+
+### 关键注意事项
+
+- **资源释放**：C++ 用 `GDALClose()`，Python 赋值 `None`，Java 用 `.delete()`，C# 用 `.Dispose()`
+- **坐标轴顺序**：GDAL 3.0+ 默认纬度在前，可用 `SetAxisMappingStrategy` 切换
+- **Python NumPy 集成**：`ReadAsArray()` 直接返回 NumPy 数组，是 Python 最大优势
+- **CS 平台依赖**：C# 需安装对应平台运行时包（Linux/Windows）
+- **JA 本地库**：Java 需确保 `gdalalljni` 在 `java.library.path` 中
+
+### 各语言适用场景
+
+| 场景 | Python | C++ | Java | C# |
+|------|--------|-----|------|-----|
+| 数据处理脚本 | ★ 首选 | | | |
+| 生产级服务 | | ★ 首选 | ★ | ★ |
+| GIS 桌面插件 | ★ | | | |
+| .NET 企业应用 | | | | ★ |
+| Android GIS | | | ★ | |
+| 嵌入式系统 | | ★ | | |
+
+## 相关技能
+
+- **gdal** — GDAL 命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **jts** — Java 几何引擎（比 OGR 几何更丰富）：[../jts/SKILL.md](../jts/SKILL.md)
+- **pyqgis** — QGIS Python 开发（内部使用 GDAL）：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **postgis** — PostgreSQL 空间数据库（与 GDAL 配合导入导出）：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **opengis-all** — 一站式 GIS 全流程：[../opengis-all/SKILL.md](../opengis-all/SKILL.md)
 
 ## 参考链接
 

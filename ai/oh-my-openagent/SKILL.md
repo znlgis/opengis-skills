@@ -1,6 +1,7 @@
 ---
 name: oh-my-openagent
 description: oh-my-openagent 是开源的 AI Agent 工程化模板/框架集合，封装常用 Agent 模式（ReAct、Plan-Execute、Multi-Agent、Tool Use、RAG）的最佳实践，提供配置化提示词、工具、向量检索与 LLM 适配，便于快速搭建可控、可观测、可上线的智能体应用。
+tags: llm, agent, rag, tool-calling, pattern
 ---
 
 > **项目地址：** <https://github.com/znlgis/oh-my-openagent>（如位置变动请以 znlgis.github.io 为准）
@@ -214,6 +215,37 @@ report.save_html("eval/report.html")
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **选 Agent 模式**：简单任务 → ReAct，多步骤 → Plan-Execute，多角色 → Multi-Agent，代码生成 → CodeAct
+2. **配工具**：函数式工具用 `@tool` 装饰器，外部 API 用 OpenAPIToolset，MCP 服务器用 MCPClient
+3. **搭 RAG**：先选嵌入模型（bge-m3）→ 选向量库（Qdrant/Chroma/FAISS）→ 文档切分 → 灌入 → 绑定检索器为工具
+4. **配记忆**：短期用 SessionMemory（max_turns），长期用 VectorMemory
+5. **评估上线**：用 AgentEvalSuite 回归测试 → 部署为 FastAPI SSE 端点
+
+### 关键模式与常见陷阱
+
+- **模型 function-calling 不稳定**：国产模型切换到 ReAct 文本协议（`tool_protocol: react`）
+- **工具结果截断**：长 JSON 在工具层先摘要再喂给 LLM，避免 token 超限
+- **max_iter 死循环**：ReAct 建议 5-8 轮，Plan-Execute 建议 3-5 轮总计划
+- **RAG 检索不准**：中文场景用 bge-m3 嵌入 + bge-reranker 重排，调整切分 chunk_size
+- **多 Agent 死锁**：设定全局最大轮次 + 超时，引入 critic 早停
+- **Token 省成本**：缓存 LLM 调用（输入哈希相同则命中），流式输出减少首字节时间
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 快速可视化搭建 | Dify Workflow / Agent |
+| 轻量级单 Agent 后端 | hermes-agent |
+| 需要完整 Agent 工程模板 | oh-my-openagent |
+| 桌面/GUI 自动化 | openclaw |
+| 提示词/Skill 管理 | superpowers-zh |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -223,6 +255,15 @@ report.save_html("eval/report.html")
 | RAG 检索不准 | 选更好的中文嵌入；启用 rerank；调整切分 |
 | token 超长 | 摘要历史；裁剪上下文；用 sliding window |
 | 多 Agent 死锁 | 限制最大轮次；引入 critic 早停 |
+
+---
+
+## 相关技能
+
+- **hermes-agent** — 轻量级 Agent 后端框架，适合快速部署单个 Agent：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **dify** — 可视化 LLM 应用平台，适合非开发人员构建 AI 应用：[../dify/SKILL.md](../dify/SKILL.md)
+- **openclaw** — 桌面/GUI 自动化 Agent，适合 RPA 场景：[../openclaw/SKILL.md](../openclaw/SKILL.md)
+- **superpowers-zh** — 中文提示词工程库，其 Skill 可作为 Agent 的 system prompt：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 
 ---
 

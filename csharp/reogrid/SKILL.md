@@ -1,6 +1,7 @@
 ---
 name: reogrid
 description: ReoGrid 是开源的 .NET 电子表格控件，提供类 Excel 的 WinForms / WPF 表格控件，支持单元格样式、合并、公式计算、图表、冻结、批注、多工作表与 Excel 文件读写，适合在 .NET 桌面应用中嵌入电子表格能力。
+tags: dotnet, spreadsheet, winforms, wpf, excel
 ---
 
 > **项目地址：** <https://github.com/unvell/ReoGrid>
@@ -235,6 +236,99 @@ grid.Save("report.pdf", FileFormat.PDF);
 
 ---
 
+## 典型工作流
+
+### 场景一：在 WinForms 应用中嵌入数据报表
+
+```csharp
+// 1. 创建控件并加载数据
+var grid = new ReoGridControl { Dock = DockStyle.Fill };
+this.Controls.Add(grid);
+var sheet = grid.CurrentWorksheet;
+
+// 2. 设置标题行样式
+sheet.SetRangeStyles("A1:D1", new WorksheetRangeStyle {
+    Flag = PlainStyleFlag.All,
+    Bold = true,
+    BackColor = Color.LightGray,
+    HorizontalAlign = ReoGridHorAlign.Center,
+});
+
+// 3. 批量填充数据
+sheet["A1:D1"] = new object[] { "ID", "姓名", "部门", "薪资" };
+sheet.SetRangeData("A2:D100", dataArray);   // 大批量用 SetRangeData
+
+// 4. 添加汇总公式
+sheet["D101"] = "=SUM(D2:D100)";
+sheet["A101"] = "合计：";
+sheet.MergeRange("A101:C101");
+
+// 5. 冻结标题行 + 自动筛选
+sheet.FreezeToCell("A2");
+sheet.CreateAutoFilter("A1:D100");
+
+// 6. 导出
+grid.Save("report.xlsx", FileFormat.Excel2007);
+```
+
+### 场景二：构建交互式数据录入表格
+
+```csharp
+// 1. 创建带验证的模板
+sheet["A1:C1"] = new object[] { "日期", "项目", "金额" };
+sheet.SetRangeStyles("A1:C1", new WorksheetRangeStyle { Bold = true });
+
+// 2. 设置日期列格式
+sheet.SetRangeDataFormat("A2:A100", CellDataFormatFlag.DateTime,
+    new DateTimeDataFormatter.DateTimeFormatArgs { Format = "yyyy-MM-dd" });
+
+// 3. 金额列添加数据验证（0-100000）
+sheet.AddRangeDataValidation(new DataValidation(
+    new RangePosition("C2:C100"),
+    DataValidationType.Decimal, 0, 100000));
+
+// 4. 监听数据变更做实时计算
+sheet.CellDataChanged += (s, e) => {
+    if (e.Cell.Column == 2)  // C 列变更时重算合计
+        sheet["C101"] = "=SUM(C2:C100)";
+};
+
+// 5. 提供保存按钮
+btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
+```
+
+---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **明确需求**：确认是 WinForms 还是 WPF 项目，需要哪些功能（只读展示/可编辑/公式/图表）
+2. **快速搭建原型**：先创建一个最小可用控件，用 `sheet["A1"] = ...` 方式快速填充测试数据
+3. **优化性能**：大批量数据改用 `SetRangeData()` + `SuspendUIUpdates()`
+4. **样式完善**：复用 `WorksheetRangeStyle` 实例，避免在循环内创建
+5. **集成导出**：对接 NPOI 处理复杂 Excel 格式（ReoGrid 的 Excel 读写底层依赖 NPOI）
+
+### 关键模式与常见陷阱
+
+- **批量赋值优先**：逐格赋值 (`sheet["A1"] = val`) 在千行以上会很慢，必须改用 `SetRangeData()`
+- **UI 更新暂停**：大量数据填充期间务必 `SuspendUIUpdates()` / `ResumeUIUpdates()`
+- **公式不会自动触发**：设置了公式后需要调用 `Recalculate()`，或在 `CellDataChanged` 事件中手动触发
+- **样式限制**：ReoGrid 仅支持核心 Excel 样式，复杂条件格式/图表建议直接用 NPOI 生成后导入
+- **商业授权**：GPL-3.0 限制，商业闭源产品需购买商业许可
+- **DPI 适配**：WPF 高 DPI 环境需启用 `PerMonitorV2`，否则控件模糊
+
+### 如何选择正确方案
+
+| 场景 | 推荐方案 |
+|------|---------|
+| 简单数据展示/导出 | 直接用 NPOI，无需 ReoGrid |
+| WinForms/WPF 内嵌可编辑表格 | ReoGrid |
+| 纯 Excel 文件处理（无 UI） | NPOI |
+| 复杂图表/数据透视表 | 商业控件（Spread.NET / Aspose.Cells） |
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -243,6 +337,12 @@ grid.Save("report.pdf", FileFormat.PDF);
 | WPF 高 DPI 模糊 | 启用 `PerMonitorV2` DPI |
 | 公式不计算 | 调用 `sh.Recalculate()` |
 | Excel 打开样式丢失 | 仅支持核心样式，复杂样式建议直接 NPOI 处理 |
+
+---
+
+## 相关技能
+
+- **npoi** — .NET Excel/Word 读写库，ReoGrid 的 Excel 导入导出底层依赖：[../npoi/SKILL.md](../npoi/SKILL.md)
 
 ---
 

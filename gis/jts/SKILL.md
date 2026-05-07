@@ -1,6 +1,17 @@
 ---
 name: jts
 description: JTS Topology Suite 是 Java 平台上功能最全面的开源二维矢量几何计算库，提供几何对象建模、空间关系判断、集合运算、线性参考、空间索引及多种格式读写能力。
+
+tags:
+  - java
+  - geometry
+  - topology
+  - spatial
+  - de9im
+  - wkt
+  - wkb
+  - geojson
+  - gis
 ---
 
 > **项目地址：** <https://github.com/locationtech/jts>
@@ -506,6 +517,32 @@ Geometry result = combo.transform(geometry);
 9. **OverlayNG**：对于叠加运算（intersection / union / difference），推荐使用 `OverlayNGRobust`，它比传统叠加引擎更加鲁棒，能处理更多边界情况。
 
 ---
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建几何对象**：始终通过 `GeometryFactory` 工厂方法创建，不要直接 `new`
+2. **格式解析**：从 WKT/WKB/GeoJSON 读入外部数据，使用对应的 Reader
+3. **空间运算**：用 `PreparedGeometry` 加速批量 contains/intersects 判断
+4. **批量查询**：用 `STRtree` 建空间索引后查询
+5. **结果导出**：用 Writer 输出为 WKT/WKB/GeoJSON
+
+### 关键注意事项
+
+- **坐标顺序**：JTS 使用 `(x, y)` 即 `(经度, 纬度)`，注意与部分 GIS 系统的 `(y, x)` 区分
+- **SRID 不参与计算**：JTS 所有计算在笛卡尔平面进行，不处理地球曲率
+- **OverlayNG 优先**：叠加运算优先使用 `OverlayNGRobust.overlay()`，比传统方法更鲁棒
+- **线程安全**：`GeometryFactory` 和 `Geometry` 线程安全；Reader/Writer 非线程安全
+- **有效性检查**：外部导入的几何用 `isValid()` 检查后用 `GeometryFixer.fix()` 修复
+
+## 相关技能
+
+- **nettopologysuite** — JTS 的 .NET 移植：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **shapely** — Python 几何运算库（GEOS 绑定）：[../shapely/SKILL.md](../shapely/SKILL.md)
+- **geotools** — Java GIS 工具集（基于 JTS）：[../geotools/SKILL.md](../geotools/SKILL.md)
+- **geometry-api-java** — Esri Geometry API for Java：[../geometry-api-java/SKILL.md](../geometry-api-java/SKILL.md)
+- **geoserver** — 基于 JTS 的地图服务器：[../geoserver/SKILL.md](../geoserver/SKILL.md)
 
 ## 参考链接
 
