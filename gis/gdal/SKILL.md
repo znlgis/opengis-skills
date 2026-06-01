@@ -91,7 +91,7 @@ conda install -c conda-forge gdal
 
 ### 新式 CLI (GDAL 3.9+)
 
-GDAL 3.9 引入了统一的 CLI 接口，自 3.12 版本后持续完善：
+GDAL 3.9 引入了统一的 CLI 接口，并在后续版本（最新稳定版 3.13，2026-05）持续完善，新增 `gdal vector concave-hull/convex-hull/dissolve/sort`、`gdal dataset check` 等子命令：
 
 ```bash
 gdal <command> <subcommand> [options] <inputs>

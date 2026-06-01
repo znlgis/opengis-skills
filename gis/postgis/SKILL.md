@@ -30,7 +30,7 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 - **坐标参考系**：内置 6000+ EPSG 投影，自动 ST_Transform
 - **数据导入导出**：与 GDAL/ogr2ogr/shp2pgsql 无缝集成
 
-**版本要求：** PostgreSQL 12+ 配合 PostGIS 3.0+
+**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.3，2026-04）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
 
 ---
 
@@ -40,16 +40,16 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 
 ```bash
 # Debian/Ubuntu
-sudo apt install postgresql-15-postgis-3 postgresql-15-postgis-3-scripts
+sudo apt install postgresql-17-postgis-3 postgresql-17-postgis-3-scripts
 
 # CentOS/RHEL
-sudo yum install postgis33_15
+sudo yum install postgis34_17
 
 # macOS
 brew install postgis
 
-# Docker（推荐）
-docker run --name pg -e POSTGRES_PASSWORD=pg -p 5432:5432 -d postgis/postgis:16-3.4
+# Docker（推荐，标签格式 <PG 主版本>-<PostGIS 主版本>）
+docker run --name pg -e POSTGRES_PASSWORD=pg -p 5432:5432 -d postgis/postgis:17-3.6
 ```
 
 ### 启用扩展

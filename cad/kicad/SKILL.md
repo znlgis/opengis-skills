@@ -30,7 +30,7 @@ KiCad 主要程序：
 | BOM 工具 | 物料清单 |
 | CLI（KiCad 7+） | 自动化（`kicad-cli`） |
 
-新版本（7/8）改进：
+新版本改进（KiCad 7/8/9/10，当前稳定版 10.0.x，2026）：
 
 - 全新原生 Python API（`pcbnew`），支持脚本扩展
 - 标准 IPC-2581 输出
@@ -43,7 +43,7 @@ KiCad 主要程序：
 
 ```bash
 # Linux
-sudo add-apt-repository --yes ppa:kicad/kicad-8.0-releases
+sudo add-apt-repository --yes ppa:kicad/kicad-10.0-releases
 sudo apt install kicad
 
 # macOS
@@ -190,7 +190,7 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 | 问题 | 解决 |
 |------|------|
 | 元件找不到 footprint | 在 Symbol 属性中绑定 footprint，或用 CvPcb 重新分配 |
-| 中文丝印 | 选支持中文的 TTF（KiCad 8+ 支持 TTF）；旧版本仅 stroke 字体 |
+| 中文丝印 | 选支持中文的 TTF（KiCad 6+ 起支持 TTF/OTF）；更早版本仅 stroke 字体 |
 | Gerber 不全 | 板厂常需要 `F.Mask/B.Mask/F.Silk/B.Silk/Edge.Cuts/F.Cu/B.Cu` + 钻孔 |
 | 覆铜失效 | 重新 Refill；检查热焊盘连接 |
 | 嘉立创不识别 | 输出格式选 X2；勾选 `Plot pad on silk` 关闭 |

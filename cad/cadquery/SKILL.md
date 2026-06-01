@@ -38,7 +38,7 @@ pip install cadquery
 pip install cq-editor
 ```
 
-> Python 3.10/3.11 推荐。`cadquery-ocp` 提供新版本 OCCT 绑定。
+> 当前稳定版 **CadQuery 2.7.0**（2026-02），支持 **Python 3.9–3.14**（经由 `cadquery-ocp` 7.9.3.x，基于 OCCT 7.9.3）。2.7.0 新增 STEP 导入/导出单位处理（`unit`/`outputUnit` 参数）与 `offset2D` 方法。
 
 ---
 

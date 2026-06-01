@@ -16,12 +16,13 @@ tags: [dwg, dxf, cad, c, python, conversion]
 
 LibreDWG 解决 DWG 二进制格式的开源读写：
 
-- **支持版本**：DWG R13、R14、R2000、R2004、R2007、R2010、R2013、R2018
+- **读取版本**：DWG R1.4 – R2018+（R13、R14、R2000、R2004、R2007、R2010、R2013、R2018）
+- **写入版本**：稳定支持 R1.4 – R2004（R2007+ 写入仍试验性）
 - **读写**：DWG ↔ DXF（ASCII/Binary），并能转 JSON/XML/SVG
 - **命令行工具**：`dwgread`、`dwgwrite`、`dwg2dxf`、`dxf2dwg`、`dwg2SVG`、`dwgrewrite`
 - **绑定**：C API、Python（`libredwg.python`）、Common Lisp、Perl
 
-> 与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、写入支持仍在完善。
+> 当前稳定版 **0.13.3**（2024-02）。与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。
 
 ---
 

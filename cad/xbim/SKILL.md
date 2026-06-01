@@ -21,7 +21,7 @@ xBIM 模块矩阵：
 | 包 | 用途 |
 |----|------|
 | `Xbim.Common` | 基础接口 |
-| `Xbim.Ifc` / `Xbim.Ifc2x3` / `Xbim.Ifc4` | IFC 实体类与读写 |
+| `Xbim.Ifc` / `Xbim.Ifc2x3` / `Xbim.Ifc4` / `Xbim.Ifc4x3` | IFC 实体类与读写（最新 Essentials v6.0.x 支持 IFC4x3_ADD2） |
 | `Xbim.IO.Esent` / `Xbim.IO.MemoryModel` | 磁盘 / 内存模型 |
 | `Xbim.Geometry.Engine` | 基于 OCCT 的几何引擎（C++/CLI） |
 | `Xbim.ModelGeometry.Scene` | 几何场景生成（用于可视化） |
@@ -39,7 +39,7 @@ dotnet add package Xbim.Geometry           # 含 C++/CLI，仅 Windows x64 直�
 dotnet add package Xbim.WindowsUI          # WPF 控件（可选）
 ```
 
-> Linux/macOS：使用 `Xbim.Geometry` 受限；可改用 `Xbim.Essentials` 仅做模型解析。
+> Linux/macOS：使用 `Xbim.Geometry` 受限；可改用 `Xbim.Essentials` 仅做模型解析。`Xbim.Essentials`（当前 v6.0.x）多目标 **.NET 6 / .NET 8**。
 
 ---
 
