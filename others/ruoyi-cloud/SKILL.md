@@ -1,6 +1,6 @@
 ---
 name: ruoyi-cloud
-description: RuoYi-Cloud 是 RuoYi 系列开源 Java 微服务版后台管理系统脚手架，基于 Spring Boot 3 + Spring Cloud + Spring Cloud Alibaba（Nacos/Sentinel/Seata）+ MyBatis Plus + Vue 3，提供完整 RBAC、网关、认证、配置中心、链路追踪、定时任务与代码生成，是国内 Java 微服务最流行的脚手架之一。
+description: RuoYi-Cloud 是 RuoYi 系列开源 Java 微服务版后台管理系统脚手架，基于 Spring Boot（主分支已升级至 Spring Boot 4，另有 Spring Boot 3 分支）+ Spring Cloud + Spring Cloud Alibaba（Nacos/Sentinel/Seata）+ MyBatis Plus + Vue 3，提供完整 RBAC、网关、认证、配置中心、链路追踪、定时任务与代码生成，是国内 Java 微服务最流行的脚手架之一。
 tags: [java, spring-cloud, microservices, rbac, nacos]
 ---
 
@@ -53,8 +53,12 @@ RuoYi-Cloud
 
 | 组件 | 版本 |
 |------|------|
-| JDK | 17+（最新版）/ 8（老分支） |
-| Maven | 3.9+ |
+| RuoYi-Cloud | 3.6.8（最新，2026-04） |
+| Spring Boot | 4.0.x（主分支）/ 3.x（springboot3 分支） |
+| Spring Cloud | 2025.1.0 |
+| Spring Cloud Alibaba | 2025.1.0.0 |
+| JDK | 17+（Spring Boot 4 要求 17+） / 8（老分支） |
+| Maven | 3.9+（官方使用 3.11） |
 | MySQL | 5.7+ / 8.0 |
 | Redis | 5.0+ |
 | Nacos | 2.x |

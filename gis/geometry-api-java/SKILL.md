@@ -44,6 +44,8 @@ implementation 'com.esri.geometry:esri-geometry-api:2.2.4'
 
 **环境要求：** JDK 1.7+；运行时依赖 `jackson-core`（JSON 处理）。
 
+> **维护状态提示：** `esri-geometry-api` 最新版本仍为 **2.2.4（2020-09）**，已多年未更新。若需活跃维护的几何库，新项目建议优先选用 JTS（Java）或 NetTopologySuite（.NET）。
+
 ---
 
 ## 核心类一览
