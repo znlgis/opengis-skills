@@ -1,7 +1,7 @@
 ---
 name: hermes-agent
 description: hermes-agent 是开源的 LLM Agent 框架/产品，专注于消息编排、工具调用与多智能体协作，支持函数调用、ReAct、流式响应、记忆与监控，可作为后端服务接入聊天、客服、办公自动化等场景。
-tags: llm, agent, tool-calling, multi-agent, backend
+tags: [llm, agent, tool-calling, multi-agent, backend]
 ---
 
 > **项目地址：** <https://github.com/znlgis/hermes-agent>（如位置变动请以 znlgis.github.io 为准）

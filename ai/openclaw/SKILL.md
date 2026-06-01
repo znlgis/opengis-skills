@@ -1,7 +1,7 @@
 ---
 name: openclaw
 description: OpenClaw 是开源的 AI 编程/操作 Agent，类似 Anthropic Claude Computer Use 与 OpenInterpreter，能在本地控制鼠标键盘、读取屏幕、运行命令、读写文件，并通过 LLM 推理完成端到端的自动化任务，适合 RPA、桌面自动化、研究与教学场景。
-tags: llm, agent, automation, rpa, computer-use
+tags: [llm, agent, automation, rpa, computer-use]
 ---
 
 > **项目地址：** <https://github.com/znlgis/openclaw>（如位置变动请以 znlgis.github.io 为准）

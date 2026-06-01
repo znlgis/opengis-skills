@@ -1,7 +1,7 @@
 ---
 name: ke3036-keyes-pico
 description: KE3036 是 Keyes 推出的基于 Raspberry Pi Pico（RP2040）的开源学习套件配套主板/开发板，集成 LED、按键、蜂鸣器、OLED、传感器接口与扩展座，配合 MicroPython / C SDK 适合 IoT、机器人与 STEM 教学。
-tags: micropython, rp2040, sensor, iot, pico
+tags: [micropython, rp2040, sensor, iot, pico]
 ---
 
 > **项目地址（资料/示例）：** <https://github.com/keyestudio/ke3036>（具体仓库请以 znlgis.github.io 与 keyestudio 官方为准）

@@ -42,8 +42,10 @@ brew install opencascade
 # Conda（含 PythonOCC）
 conda install -c conda-forge pythonocc-core
 
-# 源码：CMake 构建
+# 源码：CMake 构建（OCCT 8.0.0 起要求 C++17、CMake ≥ 3.10；VTK 默认关闭，需 -DUSE_VTK=ON 开启）
 ```
+
+> **版本提示：** 当前稳定版为 **OCCT 8.0.0**（2026-05），是多年来最大改动：`Standard_Failure` 改为继承 `std::exception`；`Raise()`/`Throw()`/`Instance()` 静态助手被移除（改用 `throw` 关键字）；`Standard_Mutex` 等退役，改用 `std::mutex`/`std::lock_guard`。从 7.x 升级需留意这些破坏性变更。
 
 ---
 

@@ -42,8 +42,8 @@ GeoServer 提供：
 ### 二进制
 
 ```bash
-wget https://sourceforge.net/projects/geoserver/files/GeoServer/2.25.0/geoserver-2.25.0-bin.zip
-unzip geoserver-2.25.0-bin.zip && cd geoserver-2.25.0
+wget https://sourceforge.net/projects/geoserver/files/GeoServer/2.28.4/geoserver-2.28.4-bin.zip
+unzip geoserver-2.28.4-bin.zip && cd geoserver-2.28.4
 sh bin/startup.sh         # http://localhost:8080/geoserver  (admin/geoserver)
 ```
 
