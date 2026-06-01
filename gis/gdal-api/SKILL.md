@@ -80,13 +80,13 @@ python -c "from osgeo import gdal; print(gdal.VersionInfo())"
 <dependency>
     <groupId>org.gdal</groupId>
     <artifactId>gdal</artifactId>
-    <version>3.12.4</version>
+    <version>3.12.0</version>
 </dependency>
 ```
 
 ```groovy
 // Gradle
-implementation 'org.gdal:gdal:3.12.4'
+implementation 'org.gdal:gdal:3.12.0'
 ```
 
 **注意：** Java 绑定需要在系统 `PATH`（Windows）或 `LD_LIBRARY_PATH`（Linux）中找到 `gdalalljni` 本地库。
