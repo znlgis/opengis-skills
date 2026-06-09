@@ -12,7 +12,7 @@ tags:
   - webmapping
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 56 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 59 技能总索引
 
 ## 概述
 
@@ -123,4 +123,5 @@ tags:
 - **[cad/](../cad/SKILL.md)** — CAD 参数化建模、几何运算、BIM/PCB
 - **[csharp/](../csharp/SKILL.md)** — .NET 框架、ORM、Office 操作
 - **[ai/](../ai/SKILL.md)** — LLM 应用、Agent 框架
+- **[3d/](../3d/SKILL.md)** — 3D 高斯泼溅与 Web 三维可视化
 - **[iot/](../iot/SKILL.md)** — 物联网与嵌入式
