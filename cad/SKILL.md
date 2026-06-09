@@ -12,7 +12,7 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 56 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 59 技能总索引
 
 ## 概述
 
@@ -112,3 +112,4 @@ tags:
 - **[gis/](../gis/SKILL.md)** — 空间数据处理、地图服务、Web GIS
 - **[csharp/](../csharp/SKILL.md)** — .NET 框架、ORM、Office 操作
 - **[ai/](../ai/SKILL.md)** — LLM 应用、Agent 框架
+- **[3d/](../3d/SKILL.md)** — 3D 高斯泼溅与 Web 三维可视化

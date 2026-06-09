@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT 技能集合。覆盖 56 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C# 领域获得更准确的代码生成与问题排查能力。
+description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 59 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
 tags:
   - gis
   - cad
@@ -27,7 +27,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT 五大领域共 56 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 59 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -116,10 +116,11 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [dify](./ai/dify/SKILL.md) | 开源 LLM 应用开发平台 | `llm` `rag` `workflow` `agent` |
-| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | 中文 AI Agent 工程化模板集合 | `agent` `template` `chinese` |
-| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文优化提示词与 Skill 库 | `prompt` `chinese` `skill` |
-| [hermes-agent](./ai/hermes-agent/SKILL.md) | LLM Agent 编排与工具调用框架 | `agent` `toolcalling` `orchestration` |
-| [openclaw](./ai/openclaw/SKILL.md) | 开源 Computer Use/桌面操作 Agent | `agent` `computeruse` `desktop` |
+| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） | `agent` `opencode` `orchestration` |
+| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 | `methodology` `chinese` `skill` |
+| [hermes-agent](./ai/hermes-agent/SKILL.md) | 自学习通用型 AI 智能体（终端优先） | `agent` `self-improving` `terminal` |
+| [openclaw](./ai/openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway | `agent` `gateway` `assistant` |
+| [opencode](./ai/opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码） | `agent` `coding-agent` `terminal` `mcp` |
 
 ### 📡 IoT — 物联网（1 个）
 
@@ -127,12 +128,19 @@ tags:
 |------|------|---------|
 | [ke3036-keyes-pico](./iot/ke3036-keyes-pico/SKILL.md) | Keyes Raspberry Pi Pico 学习套件 | `micropython` `rp2040` `sensor` |
 
-### 🗂️ Others — 其它（2 个）
+### 🧊 3D — 三维/高斯泼溅（1 个）
+
+| 技能 | 简介 | 关键标签 |
+|------|------|---------|
+| [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） | `3dgs` `webgl` `typescript` `editor` |
+
+### 🗂️ Others — 其它（3 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [billionmail](./others/billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `selfhosted` `marketing` |
 | [ruoyi-cloud](./others/ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `springcloud` `scaffold` |
+| [acme.sh](./others/acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
 
 ---
 
@@ -158,10 +166,10 @@ tags:
 | `raster` | gdal, gdal-api, qgis-process |
 | `vector` | gdal, gdal-api, geopandas, geotools |
 | `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api |
-| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d |
+| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, supersplat |
 | `2d` | openlayers, qcad, librecad, sharpmap, lightcad |
 | `orm` / `database` | sod, sqlsugar, postgis |
-| `agent` / `llm` | dify, hermes-agent, openclaw, oh-my-openagent, geopipe-agent |
+| `agent` / `llm` | dify, hermes-agent, openclaw, opencode, oh-my-openagent, geopipe-agent |
 | `pipeline` / `workflow` | dify, geopipe-agent, qgis-process |
 
 ---

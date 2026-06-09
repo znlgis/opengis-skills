@@ -28,8 +28,8 @@
 
 | 层级 | 文件 | 内容 | 适用场景 |
 |------|------|------|---------|
-| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 56 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
-| **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
+| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 59 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
+| **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`3d/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
 | **L3 项目技能** | `<category>/<project>/SKILL.md` | 单个开源项目的深度知识（API、工作流、FAQ） | 已确定使用哪个工具，需要精准的编码指导 |
 
 ### 典型使用流程
@@ -78,11 +78,13 @@ opengis-skills/
 │   └── SKILL.md     # CAD 分类索引
 ├── csharp/          # C# 框架/库（8 个）
 │   └── SKILL.md     # C# 分类索引
-├── ai/              # AI 智能体/平台（5 个）
+├── ai/              # AI 智能体/平台（6 个）
 │   └── SKILL.md     # AI 分类索引
 ├── iot/             # 物联网（1 个）
 │   └── SKILL.md     # IoT 分类索引
-└── others/          # 其它（2 个）
+├── 3d/              # 3D / 高斯泼溅（1 个）
+│   └── SKILL.md     # 3D 分类索引
+└── others/          # 其它（3 个）
     └── SKILL.md     # Others 分类索引
 ```
 
@@ -99,11 +101,12 @@ opengis-skills/
 | [`gis/SKILL.md`](./gis/SKILL.md) | 23 个 GIS 技能概要（GDAL、QGIS、GeoServer、PostGIS、JTS 等） | 空间数据处理、地图服务、Web GIS |
 | [`cad/SKILL.md`](./cad/SKILL.md) | 17 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
 | [`csharp/SKILL.md`](./csharp/SKILL.md) | 8 个 C#/.NET 技能概要（Furion、NPOI、SqlSugar 等） | .NET Web 开发、ORM、Office 操作 |
-| [`ai/SKILL.md`](./ai/SKILL.md) | 5 个 AI 技能概要（Dify、Agent 框架、提示词工程） | LLM 应用、Agent 编排 |
+| [`ai/SKILL.md`](./ai/SKILL.md) | 6 个 AI 技能概要（Dify、智能体、OpenCode、AI 编程方法论） | LLM 应用、智能体、终端编码代理 |
 | [`iot/SKILL.md`](./iot/SKILL.md) | 1 个 IoT 技能概要（Raspberry Pi Pico） | 嵌入式、传感器 |
-| [`others/SKILL.md`](./others/SKILL.md) | 2 个其它技能概要（邮件平台、Java 脚手架） | 通用工具 |
+| [`3d/SKILL.md`](./3d/SKILL.md) | 1 个 3D 技能概要（SuperSplat 高斯泼溅编辑器） | 3D 高斯泼溅清理/压缩/发布 |
+| [`others/SKILL.md`](./others/SKILL.md) | 3 个其它技能概要（邮件平台、Java 脚手架、acme.sh） | 通用工具、SSL 证书自动化 |
 
-> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 56 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
+> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 59 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
 
 ---
 
@@ -184,15 +187,16 @@ opengis-skills/
 
 ## 🤖 AI 类（ai/）
 
-LLM 应用、Agent 框架与提示词工程。
+LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 
 | SKILL | 简介 |
 |-------|------|
 | [dify](./ai/dify/SKILL.md) | 开源 LLM 应用开发平台（RAG + 工作流 + Agent） |
-| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | 中文 AI Agent 工程化模板集合 |
-| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文优化提示词与 Skill 库 |
-| [hermes-agent](./ai/hermes-agent/SKILL.md) | LLM Agent 编排与工具调用框架 |
-| [openclaw](./ai/openclaw/SKILL.md) | 开源 Computer Use / 桌面操作 Agent |
+| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） |
+| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 |
+| [hermes-agent](./ai/hermes-agent/SKILL.md) | 自学习通用型 AI 智能体（终端优先） |
+| [openclaw](./ai/openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway |
+| [opencode](./ai/opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码、Token 优化） |
 
 ---
 
@@ -204,12 +208,23 @@ LLM 应用、Agent 框架与提示词工程。
 
 ---
 
+## 🧊 3D 类（3d/）
+
+3D 高斯泼溅（3DGS）、Web 三维可视化与编辑。
+
+| SKILL | 简介 |
+|-------|------|
+| [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） |
+
+---
+
 ## 🗂️ 其它（others/）
 
 | SKILL | 简介 |
 |-------|------|
 | [billionmail](./others/billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 |
 | [ruoyi-cloud](./others/ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 |
+| [acme.sh](./others/acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 |
 
 ---
 
@@ -230,7 +245,7 @@ LLM 应用、Agent 框架与提示词工程。
    ---
    ```
 
-   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组，列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部 56 个文件。
+   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组，列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部 59 个文件。
 
 2. **头部引用块**：项目地址、官方文档、许可证
 

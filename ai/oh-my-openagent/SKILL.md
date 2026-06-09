@@ -1,273 +1,106 @@
 ---
 name: oh-my-openagent
-description: oh-my-openagent 是开源的 AI Agent 工程化模板/框架集合，封装常用 Agent 模式（ReAct、Plan-Execute、Multi-Agent、Tool Use、RAG）的最佳实践，提供配置化提示词、工具、向量检索与 LLM 适配，便于快速搭建可控、可观测、可上线的智能体应用。
-tags: [llm, agent, rag, tool-calling, pattern]
+description: oh-my-openagent（code-yeongyu/oh-my-openagent，曾用名 oh-my-opencode，简称 OmO）是面向 OpenCode 的「电池全包」多模型智能体编排插件（Agent Harness），把 OpenCode 武装成协同作战的开发团队——用 Claude Opus 编排、GPT 深度推理、Kimi 加速、Gemini 处理前端视觉、Grok 做代码检索，并内置并行后台智能体与 LSP/AST 工具，追求产出与资深工程师无异的代码。
+tags: [ai, agent, opencode, orchestration, multi-model, lsp, ast, harness]
 ---
 
-> **项目地址：** <https://github.com/znlgis/oh-my-openagent>（如位置变动请以 znlgis.github.io 为准）
+> **项目地址：** <https://github.com/code-yeongyu/oh-my-openagent>
 >
-> **许可证：** MIT / Apache-2.0（视仓库声明）
+> **安装文档：** <https://github.com/code-yeongyu/oh-my-openagent/blob/dev/docs/guide/installation.md>
+>
+> **许可证：** SUL-1.0（Sustainable Use License，商用前请阅读条款）｜ **npm 包：** `oh-my-opencode` ｜ **作者：** YeonGyu-Kim
+
+> 说明：项目以 npm 包 **`oh-my-opencode`** 发布，CLI 别名包含 `oh-my-opencode` / `oh-my-openagent` / `omo` / `lazycodex`。它是 **OpenCode 的插件**，使用前需先安装 [OpenCode](../opencode/SKILL.md)。
 
 ## 概述
 
-oh-my-openagent 通常包含：
+OmO 不是新模型，也不是 Cursor/Claude Code 的克隆，而是把开源 AI 编程客户端 **OpenCode** 升级成一个**多模型协同的开发团队**：
 
-- **Agent 框架**：ReAct、Plan-Execute、Reflective、CodeAct
-- **工具适配**：函数式工具 + OpenAPI 工具 + MCP 工具
-- **多 LLM**：OpenAI / Claude / Gemini / 通义 / 智谱 / DeepSeek / Ollama
-- **RAG**：可插拔向量库（FAISS/Chroma/Qdrant/Milvus/PGVector）
-- **记忆 Memory**：会话短记忆 + 长期向量记忆
-- **可观测**：日志 / Tracing（OpenTelemetry / LangSmith）
-- **示例 Agent**：客服、数据分析、代码助手、网页自动化
-
-> 不同发行版结构有所差异，本 SKILL 给出通用 Agent 工程模式。
+- **多模型编排**：不同模型各司其职并行运转——Claude Opus 做总指挥（编排）、GPT 深度推理、Kimi 加速、Gemini 处理前端/视觉、Grok Code Fast 做代码检索。
+- **并行后台智能体**：把任务分派给多个后台 agent 并行处理。
+- **精心打造的 LSP / AST 工具**：基于 `ast-grep` 与 LSP 的结构化代码检索与编辑（比纯文本 grep 更准），内置 MCP（ast-grep-mcp、git-bash-mcp、lsp-tools-mcp）。
+- **电池全包**：开箱即用的 agents、commands、skills、rules-engine、comment-checker 等。
+- **跨平台**：随包提供 darwin/linux/windows 各架构二进制。
 
 ---
 
-## 安装与运行
+## 安装
+
+前置：先安装 OpenCode，并确认可用：
 
 ```bash
-git clone https://github.com/znlgis/oh-my-openagent
-cd oh-my-openagent
-cp .env.example .env       # 配置 LLM API Key、向量库、日志
-pip install -r requirements.txt   # 或 pnpm install
-python main.py             # 或 pnpm dev
+opencode --version    # 确认 OpenCode 已安装
 ```
 
-`.env` 关键项：
+用 bun 一键安装（推荐，带交互 TUI）：
 
+```bash
+bunx oh-my-opencode install
 ```
-OPENAI_API_KEY=sk-...
-OPENAI_BASE_URL=https://api.openai.com/v1
-LLM_MODEL=gpt-4o-mini
-EMBEDDING_MODEL=text-embedding-3-small
-VECTOR_STORE=qdrant
-QDRANT_URL=http://localhost:6333
-LOG_LEVEL=INFO
+
+非交互安装（CI / 脚本，可显式带标志）：
+
+```bash
+bunx oh-my-opencode install --no-tui \
+  # 例如 --openai / --subscription / --max20 等模型与订阅相关标志
+```
+
+> ⚠️ 官方安装手册特别提示：让 Agent 获取安装文档时务必用 `curl` 而非 WebFetch——WebFetch 会做摘要，丢掉 `--openai`、subscription、`max20` 等关键标志：
+>
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/heads/dev/docs/guide/installation.md
+> ```
+
+---
+
+## 核心理念与组成
+
+| 组成 | 作用 |
+|------|------|
+| 多模型编排 | 按「编排/推理/加速/视觉/检索」角色分配不同模型并行协作 |
+| 并行后台智能体 | 同时跑多个 agent，缩短端到端时延 |
+| LSP / AST 工具 | `ast-grep` + LSP 做结构化检索与重构，配套 MCP server |
+| Skills / Commands / Agents | OpenCode 插件形态下的可复用技能、命令与子代理 |
+| rules-engine / comment-checker | 规则约束与注释质量检查，提升产出工程质量 |
+
+---
+
+## 典型工作流
+
+```text
+1. 安装 OpenCode 并接入多个模型 Provider（Claude / GPT / Gemini / Kimi / Grok 等）
+2. bunx oh-my-opencode install        # 安装 OmO 插件到 OpenCode
+3. 在 OpenCode 中发起任务，OmO 自动按角色编排多模型 + 并行后台 agent
+4. 借助 LSP/AST 工具做精准的跨文件检索与重构
+5. 由 rules-engine / comment-checker 等把关产出质量
 ```
 
 ---
 
-## 项目结构（典型）
+## 常见问题（FAQ）
 
-```
-oh-my-openagent/
-├── agents/             # 预置 Agent
-├── tools/              # 工具实现
-├── prompts/            # 模板提示词（YAML/Jinja2）
-├── retrievers/         # RAG 检索器
-├── memory/             # 长短期记忆
-├── llm/                # LLM 适配器
-├── observability/      # 日志、tracing、指标
-├── apps/               # 上层应用（CLI / Web / API）
-└── examples/           # 示例
-```
-
----
-
-## 核心 Agent 模式
-
-### ReAct
-
-```python
-from oh_my_openagent import ReActAgent
-
-agent = ReActAgent(
-    llm="gpt-4o-mini",
-    tools=[search, calculator, sql_runner],
-    max_iter=8,
-    system_prompt=open("prompts/react.zh.md").read(),
-)
-print(agent.run("北京今天 PM2.5？给出 RTI 等级"))
-```
-
-### Plan-Execute
-
-```python
-from oh_my_openagent import PlanExecuteAgent
-
-agent = PlanExecuteAgent(
-    planner_llm="gpt-4o", executor_llm="gpt-4o-mini",
-    tools=[...], replan_on_failure=True
-)
-agent.run("帮我把 ./data/*.csv 合并并按月汇总写到 report.xlsx")
-```
-
-### Multi-Agent（角色协作）
-
-```yaml
-# agents.yaml
-- name: planner
-  role: 任务规划
-  llm: gpt-4o
-- name: coder
-  role: 代码执行
-  llm: gpt-4o-mini
-  tools: [run_python, fs]
-- name: critic
-  role: 评审
-  llm: gpt-4o
-```
-
-```python
-from oh_my_openagent import MultiAgentTeam
-team = MultiAgentTeam.from_yaml("agents.yaml")
-team.run("生成一个 NPS 调查报告")
-```
-
----
-
-## 工具开发
-
-```python
-from oh_my_openagent.tools import tool
-
-@tool(name="get_weather", description="查询城市天气，参数 city")
-def get_weather(city: str) -> dict:
-    import requests
-    return requests.get("https://wttr.in/" + city + "?format=j1").json()
-```
-
-OpenAPI 工具：
-
-```python
-from oh_my_openagent.tools.openapi import OpenAPIToolset
-ts = OpenAPIToolset.from_url("https://api.example.com/openapi.json",
-                             auth=("user", "pwd"))
-agent = ReActAgent(llm="gpt-4o-mini", tools=ts.tools())
-```
-
-MCP 工具（与 Claude / IDE Agents 互通）：
-
-```python
-from oh_my_openagent.tools.mcp import MCPClient
-client = await MCPClient.connect("stdio:///path/to/mcp-server")
-agent.tools += client.list_tools()
-```
-
----
-
-## RAG 集成
-
-```python
-from oh_my_openagent.retrievers import VectorRetriever
-
-retriever = VectorRetriever(
-    store="qdrant",
-    collection="kb",
-    embedder="bge-m3",
-    top_k=5,
-    rerank="bge-reranker-base"
-)
-retriever.ingest_dir("./docs")
-
-agent = ReActAgent(
-    llm="gpt-4o-mini",
-    tools=[retriever.as_tool()],
-    system_prompt="先用 retrieve 工具检索相关资料再回答。"
-)
-```
-
----
-
-## 记忆 Memory
-
-```python
-from oh_my_openagent.memory import VectorMemory, SessionMemory
-
-session = SessionMemory(max_turns=20)
-long_term = VectorMemory(store="qdrant", collection="memory")
-
-agent = ReActAgent(llm="gpt-4o-mini",
-                   memory=[session, long_term])
-```
-
----
-
-## 评估与回归
-
-```python
-from oh_my_openagent.eval import AgentEvalSuite, ToolUseScorer, GroundednessScorer
-
-suite = AgentEvalSuite.from_jsonl("eval/qa.jsonl")
-report = suite.run(agent, scorers=[ToolUseScorer(), GroundednessScorer()])
-report.save_html("eval/report.html")
-```
-
----
-
-## 部署
-
-- **CLI**：`python -m oh_my_openagent.cli run agents/customer.yaml`
-- **API**：FastAPI + SSE 输出 `/agents/{name}/run`
-- **容器**：Dockerfile 自带；可与 Dify / Langfuse / Helicone 对接观测
-
----
-
-## 性能与最佳实践
-
-1. **限制 max_iter**，防止死循环
-2. **工具结果摘要**：长 JSON 在工具层先摘要再喂给 LLM
-3. **缓存 LLM 调用**（输入哈希）
-4. **流式输出**：UI 端 SSE
-5. **监控**：每次工具调用、token 用量、延迟、错误率
-6. **失败重试 + 退避**
+| 问题 | 解决 |
+|------|------|
+| 它是独立工具吗 | 不是，OmO 是 **OpenCode 的插件**，必须先装 OpenCode |
+| npm 包叫什么 | `oh-my-opencode`（CLI 别名含 `omo` / `oh-my-openagent` / `lazycodex`） |
+| 安装命令丢了标志 | 不要用 WebFetch 取安装文档，用 `curl` 原文，保留 `--openai`/subscription/`max20` 等 |
+| 需要哪些模型 | 多模型协作场景建议至少接入编排(Claude Opus)+推理(GPT)+视觉(Gemini)+检索(Grok) |
+| 许可证能商用吗 | SUL-1.0（Sustainable Use License），商用前阅读条款 |
+| 与 OpenCode 关系 | OmO 复用 OpenCode 的配置/权限/Provider 体系，在其上叠加编排与工具 |
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作流
-
-1. **选 Agent 模式**：简单任务 → ReAct，多步骤 → Plan-Execute，多角色 → Multi-Agent，代码生成 → CodeAct
-2. **配工具**：函数式工具用 `@tool` 装饰器，外部 API 用 OpenAPIToolset，MCP 服务器用 MCPClient
-3. **搭 RAG**：先选嵌入模型（bge-m3）→ 选向量库（Qdrant/Chroma/FAISS）→ 文档切分 → 灌入 → 绑定检索器为工具
-4. **配记忆**：短期用 SessionMemory（max_turns），长期用 VectorMemory
-5. **评估上线**：用 AgentEvalSuite 回归测试 → 部署为 FastAPI SSE 端点
-
-### 关键模式与常见陷阱
-
-- **模型 function-calling 不稳定**：国产模型切换到 ReAct 文本协议（`tool_protocol: react`）
-- **工具结果截断**：长 JSON 在工具层先摘要再喂给 LLM，避免 token 超限
-- **max_iter 死循环**：ReAct 建议 5-8 轮，Plan-Execute 建议 3-5 轮总计划
-- **RAG 检索不准**：中文场景用 bge-m3 嵌入 + bge-reranker 重排，调整切分 chunk_size
-- **多 Agent 死锁**：设定全局最大轮次 + 超时，引入 critic 早停
-- **Token 省成本**：缓存 LLM 调用（输入哈希相同则命中），流式输出减少首字节时间
-
-### 如何选择正确方案
-
-| 场景 | 推荐方案 |
-|------|---------|
-| 快速可视化搭建 | Dify Workflow / Agent |
-| 轻量级单 Agent 后端 | hermes-agent |
-| 需要完整 Agent 工程模板 | oh-my-openagent |
-| 桌面/GUI 自动化 | openclaw |
-| 提示词/Skill 管理 | superpowers-zh |
-
----
-
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 工具调用 JSON 解析失败 | 启用 function-calling / structured-output；或加严格 system prompt |
-| 国产模型 tool-call 不稳定 | 改用 ReAct 文本协议；或选支持 function-call 的模型 |
-| RAG 检索不准 | 选更好的中文嵌入；启用 rerank；调整切分 |
-| token 超长 | 摘要历史；裁剪上下文；用 sliding window |
-| 多 Agent 死锁 | 限制最大轮次；引入 critic 早停 |
-
----
-
-## 相关技能
-
-- **hermes-agent** — 轻量级 Agent 后端框架，适合快速部署单个 Agent：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
-- **dify** — 可视化 LLM 应用平台，适合非开发人员构建 AI 应用：[../dify/SKILL.md](../dify/SKILL.md)
-- **openclaw** — 桌面/GUI 自动化 Agent，适合 RPA 场景：[../openclaw/SKILL.md](../openclaw/SKILL.md)
-- **superpowers-zh** — 中文提示词工程库，其 Skill 可作为 Agent 的 system prompt：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
+- 用户提到「OpenCode 多模型编排」「oh-my-opencode / OmO / lazycodex」「并行后台智能体 + AST/LSP 工具」时加载本技能。
+- 始终先确认 **OpenCode 已安装**，再 `bunx oh-my-opencode install`；可同时加载 [opencode](../opencode/SKILL.md) 技能。
+- 获取/复述安装命令时保留全部标志，不要摘要化（按官方提示用 `curl`）。
+- 强调它是「插件 + 编排层」，价值在多模型分工与结构化代码工具，而非又一个模型。
 
 ---
 
 ## 参考资源
 
-- 仓库：<https://github.com/znlgis/oh-my-openagent>
-- 中文教程（znlgis）：<https://znlgis.github.io/ai/tutorial/oh-my-openagent/>
+- 安装文档：<https://github.com/code-yeongyu/oh-my-openagent/blob/dev/docs/guide/installation.md>
+- OpenCode：<https://opencode.ai> ｜ 本仓 [ai/opencode](../opencode/SKILL.md)
+- 上游中文教程：<https://znlgis.github.io/>（ai/oh-my-openagent 系列）
