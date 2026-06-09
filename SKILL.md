@@ -116,10 +116,10 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [dify](./ai/dify/SKILL.md) | 开源 LLM 应用开发平台 | `llm` `rag` `workflow` `agent` |
-| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | 中文 AI Agent 工程化模板集合 | `agent` `template` `chinese` |
-| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文优化提示词与 Skill 库 | `prompt` `chinese` `skill` |
-| [hermes-agent](./ai/hermes-agent/SKILL.md) | LLM Agent 编排与工具调用框架 | `agent` `toolcalling` `orchestration` |
-| [openclaw](./ai/openclaw/SKILL.md) | 开源 Computer Use/桌面操作 Agent | `agent` `computeruse` `desktop` |
+| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） | `agent` `opencode` `orchestration` |
+| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 | `methodology` `chinese` `skill` |
+| [hermes-agent](./ai/hermes-agent/SKILL.md) | 自学习通用型 AI 智能体（终端优先） | `agent` `self-improving` `terminal` |
+| [openclaw](./ai/openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway | `agent` `gateway` `assistant` |
 | [opencode](./ai/opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码） | `agent` `coding-agent` `terminal` `mcp` |
 
 ### 📡 IoT — 物联网（1 个）

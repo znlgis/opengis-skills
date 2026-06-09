@@ -101,7 +101,7 @@ opengis-skills/
 | [`gis/SKILL.md`](./gis/SKILL.md) | 23 个 GIS 技能概要（GDAL、QGIS、GeoServer、PostGIS、JTS 等） | 空间数据处理、地图服务、Web GIS |
 | [`cad/SKILL.md`](./cad/SKILL.md) | 17 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
 | [`csharp/SKILL.md`](./csharp/SKILL.md) | 8 个 C#/.NET 技能概要（Furion、NPOI、SqlSugar 等） | .NET Web 开发、ORM、Office 操作 |
-| [`ai/SKILL.md`](./ai/SKILL.md) | 6 个 AI 技能概要（Dify、Agent 框架、OpenCode、提示词工程） | LLM 应用、Agent 编排、终端编码代理 |
+| [`ai/SKILL.md`](./ai/SKILL.md) | 6 个 AI 技能概要（Dify、智能体、OpenCode、AI 编程方法论） | LLM 应用、智能体、终端编码代理 |
 | [`iot/SKILL.md`](./iot/SKILL.md) | 1 个 IoT 技能概要（Raspberry Pi Pico） | 嵌入式、传感器 |
 | [`3d/SKILL.md`](./3d/SKILL.md) | 1 个 3D 技能概要（SuperSplat 高斯泼溅编辑器） | 3D 高斯泼溅清理/压缩/发布 |
 | [`others/SKILL.md`](./others/SKILL.md) | 3 个其它技能概要（邮件平台、Java 脚手架、acme.sh） | 通用工具、SSL 证书自动化 |
@@ -187,15 +187,15 @@ opengis-skills/
 
 ## 🤖 AI 类（ai/）
 
-LLM 应用、Agent 框架与提示词工程。
+LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 
 | SKILL | 简介 |
 |-------|------|
 | [dify](./ai/dify/SKILL.md) | 开源 LLM 应用开发平台（RAG + 工作流 + Agent） |
-| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | 中文 AI Agent 工程化模板集合 |
-| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文优化提示词与 Skill 库 |
-| [hermes-agent](./ai/hermes-agent/SKILL.md) | LLM Agent 编排与工具调用框架 |
-| [openclaw](./ai/openclaw/SKILL.md) | 开源 Computer Use / 桌面操作 Agent |
+| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） |
+| [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 |
+| [hermes-agent](./ai/hermes-agent/SKILL.md) | 自学习通用型 AI 智能体（终端优先） |
+| [openclaw](./ai/openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway |
 | [opencode](./ai/opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码、Token 优化） |
 
 ---

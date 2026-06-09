@@ -1,6 +1,6 @@
 ---
 name: ai-skills
-description: AI/LLM 技能分类索引，覆盖 LLM 应用开发平台、Agent 框架、提示词工程、终端编码代理、桌面操作 Agent 等领域共 6 个开源项目，按需加载即可获得 Dify、Hermes Agent、OpenClaw、OpenCode 等工具的精准 AI 辅助。
+description: AI/LLM 技能分类索引，覆盖 LLM 应用开发平台、自学习智能体、个人 AI 助手 Gateway、终端编码代理、多模型编排插件、AI 编程方法论等领域共 6 个开源项目，按需加载即可获得 Dify、Hermes Agent、OpenClaw、OpenCode 等工具的精准 AI 辅助。
 tags:
   - ai
   - llm
@@ -19,9 +19,9 @@ tags:
 本分类涵盖 **6 个 AI/LLM 开源项目**的技能文件：
 
 - **LLM 应用平台**：Dify（RAG + 工作流 + Agent 一站式）
-- **Agent 框架**：Hermes Agent（工具调用编排）、OpenClaw（桌面操作）
+- **智能体 / 助手**：Hermes Agent（自学习通用智能体）、OpenClaw（多通道个人 AI 助手 Gateway）
 - **终端编码代理**：OpenCode（模型无关、配置即代码的 AI coding agent）
-- **提示词与 Skill 库**：Superpowers-zh、Oh-My-OpenAgent
+- **编排与方法论**：Oh-My-OpenAgent（OpenCode 多模型编排插件）、Superpowers-zh（中文 AI 编程方法论 Skills）
 
 ### 何时加载此索引？
 
@@ -36,11 +36,11 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [dify](./dify/SKILL.md) | 开源 LLM 应用开发平台（RAG + 工作流 + Agent） | `llm` `rag` `workflow` `agent` |
-| [hermes-agent](./hermes-agent/SKILL.md) | LLM Agent 编排与工具调用框架 | `agent` `toolcalling` `orchestration` |
-| [openclaw](./openclaw/SKILL.md) | 开源 Computer Use/桌面操作 Agent | `agent` `computeruse` `desktop` |
+| [hermes-agent](./hermes-agent/SKILL.md) | 自学习通用型 AI 智能体（终端优先） | `agent` `self-improving` `terminal` |
+| [openclaw](./openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway | `agent` `gateway` `assistant` |
 | [opencode](./opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码） | `agent` `coding-agent` `terminal` `mcp` |
-| [oh-my-openagent](./oh-my-openagent/SKILL.md) | 中文 AI Agent 工程化模板集合 | `agent` `template` `chinese` |
-| [superpowers-zh](./superpowers-zh/SKILL.md) | 中文优化提示词与 Skill 库 | `prompt` `chinese` `skill` |
+| [oh-my-openagent](./oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） | `agent` `opencode` `orchestration` |
+| [superpowers-zh](./superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 | `methodology` `chinese` `skill` |
 
 ---
 
@@ -50,12 +50,12 @@ tags:
 |---------|---------|
 | "搭建 LLM 聊天应用" | `dify/SKILL.md` |
 | "做 RAG 知识库问答" | `dify/SKILL.md` |
-| "开发调用工具的 AI Agent" | `hermes-agent/SKILL.md` |
-| "让 AI 操作桌面应用" | `openclaw/SKILL.md` |
+| "开发能自学习/调用工具的 AI Agent" | `hermes-agent/SKILL.md` |
+| "搭建多通道个人 AI 助手 / Gateway" | `openclaw/SKILL.md` |
 | "在终端用 AI 自主改代码 / 跑命令" | `opencode/SKILL.md` |
 | "配置 opencode.json / 省 Token" | `opencode/SKILL.md` |
-| "优化中文提示词" | `superpowers-zh/SKILL.md` |
-| "Agent 工程化模板" | `oh-my-openagent/SKILL.md` |
+| "用中文 TDD/审查方法论约束 AI" | `superpowers-zh/SKILL.md` |
+| "OpenCode 多模型编排 / Agent Harness" | `oh-my-openagent/SKILL.md` |
 
 ---
 
