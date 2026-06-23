@@ -20,7 +20,7 @@ SqlSugar 主要特性：
 - **Code First / DB First** 双模式
 - **链式查询**：`Queryable<T>().Where(...).Select(...).ToList()`
 - **Lambda 表达式 → SQL**
-- **批量操作**：`Insertable / Updateable / Deletable.ExecuteCommand()`
+- **批量操作**：`Insertable / Updateable / Deleteable.ExecuteCommand()`
 - **多种主键策略**：自增、Guid、雪花 ID
 - **读写分离 / 分库分表**
 - **AOT 友好**（高级版）
@@ -108,8 +108,8 @@ db.Updateable<User>().SetColumns(u => new User { Age = u.Age + 1 })
                      .Where(u => u.Id == 1).ExecuteCommand();
 
 // 删除
-db.Deletable<User>().Where(u => u.Id == 1).ExecuteCommand();
-db.Deletable<User>(new[] { 1, 2, 3 }).ExecuteCommand();
+db.Deleteable<User>().Where(u => u.Id == 1).ExecuteCommand();
+db.Deleteable<User>(new[] { 1, 2, 3 }).ExecuteCommand();
 ```
 
 ---
@@ -244,7 +244,7 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 1. **创建客户端**：DI 注入用 `SqlSugarScope`（线程安全），单次使用用 `SqlSugarClient`（记得 `IsAutoCloseConnection = true`）
 2. **定义实体**：`[SugarTable("表名")]` + `[SugarColumn(IsPrimaryKey = true)]` 标注特性
 3. **Code First 建表**：`db.CodeFirst.InitTables<T>()` 自动创建/更新表结构
-4. **CRUD**：`Insertable`/`Updateable`/`Deletable`/`Queryable` 链式 API
+4. **CRUD**：`Insertable`/`Updateable`/`Deleteable`/`Queryable` 链式 API
 5. **高级特性**：读写分离（`SlaveConnectionConfigs`）、分表（`[SplitTable]`）、AOP 日志（`db.Aop.OnLogExecuting`）
 
 ### 关键模式与常见陷阱

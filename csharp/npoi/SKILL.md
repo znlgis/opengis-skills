@@ -21,7 +21,7 @@ NPOI 主要能力：
 - **样式**：字体、边框、对齐、数据格式、条件格式
 - **图表 / 图片 / 批注**
 - **Word `.doc`（HWPF）** / Word `.docx`（XWPF）
-- **PowerPoint `.ppt`/.pptx`**
+- **PowerPoint `.ppt`/`.pptx`**
 - **跨平台**：.NET Framework / .NET 6+ / Linux / macOS
 
 > 大文件写入推荐 SXSSF（流式），可处理百万行 Excel；大文件读取推荐 EventModel（XSSF SAX）。

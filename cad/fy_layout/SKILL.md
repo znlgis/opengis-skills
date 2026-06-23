@@ -1,5 +1,5 @@
 ---
-name: FY_Layout
+name: fy_layout
 description: FY_Layout 是飞扬集成设计平台的场地布置二次开发插件示例，基于 LightCAD 框架和 C# 语言，提供围栏、草坪、基坑、道路、板房、场地、硬化地面、土方回填等建筑工程场布元素的二维绘制与三维建模能力。
 tags: [2d, 3d, cad, dotnet, csharp, bim, construction, dwg, dxf]
 ---
@@ -587,11 +587,6 @@ startPoint.Similarity(endPoint, 0);
 ---
 
 ## 参考资源
-
-- **FY_Layout 项目地址：** <https://github.com/znlgis/FY_Layout>
-- **飞扬集成设计平台：** 面向建筑设计行业的开源 BIM 正向设计软件
-- **技术服务：** 微信 qishou003
-## 参考链接
 
 - **FY_Layout 项目地址：** <https://github.com/znlgis/FY_Layout>
 - **飞扬集成设计平台：** 面向建筑设计行业的开源 BIM 正向设计软件

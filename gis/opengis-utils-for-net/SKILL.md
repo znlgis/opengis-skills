@@ -12,9 +12,13 @@ tags:
   - cgcs2000
 ---
 
-> **项目地址：** https://github.com/znlgis/opengis-utils-for-net
-> AI-friendly reference for developing with this library.
-> Package: `OpenGIS.Utils` | Target: .NET Standard 2.0 | Engine: GDAL/OGR
+> **项目地址：** <https://github.com/znlgis/opengis-utils-for-net>
+>
+> **NuGet 包：** `OpenGIS.Utils`
+>
+> **许可证：** Apache-2.0
+>
+> AI-friendly reference for developing with this library. Target: .NET Standard 2.0 | Engine: GDAL/OGR
 
 ## Installation
 

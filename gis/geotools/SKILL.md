@@ -58,7 +58,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 
 ```xml
 <properties>
-    <geotools.version>34.4</geotools.version>
+    <geotools.version>35.0</geotools.version>
 </properties>
 
 <dependencies>

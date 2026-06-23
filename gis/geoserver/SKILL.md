@@ -42,8 +42,8 @@ GeoServer 提供：
 ### 二进制
 
 ```bash
-wget https://sourceforge.net/projects/geoserver/files/GeoServer/2.28.4/geoserver-2.28.4-bin.zip
-unzip geoserver-2.28.4-bin.zip && cd geoserver-2.28.4
+wget https://sourceforge.net/projects/geoserver/files/GeoServer/3.0.0/geoserver-3.0.0-bin.zip
+unzip geoserver-3.0.0-bin.zip && cd geoserver-3.0.0
 sh bin/startup.sh         # http://localhost:8080/geoserver  (admin/geoserver)
 ```
 
@@ -54,7 +54,7 @@ docker run --name gs -p 8080:8080 \
   -e SKIP_DEMO_DATA=true \
   -e EXTRA_JAVA_OPTS="-Xms512m -Xmx2g" \
   -v $PWD/data:/opt/geoserver_data \
-  docker.osgeo.org/geoserver:2.28.4
+  docker.osgeo.org/geoserver:3.0.0
 ```
 
 ### 数据目录
@@ -193,7 +193,7 @@ curl -u admin:geoserver -XPOST \
 
 ### 推荐工作流
 
-1. **部署 GeoServer**：优先使用 Docker 镜像 `docker.osgeo.org/geoserver:2.28.4`
+1. **部署 GeoServer**：优先使用 Docker 镜像 `docker.osgeo.org/geoserver:3.0.0`
 2. **创建 Workspace**：为每个项目创建独立工作空间实现命名隔离
 3. **添加数据存储**：根据数据类型选择 PostGIS（矢量）、Shapefile（文件矢量）、GeoTIFF（栅格）
 4. **发布图层**：设置 SRS（坐标参考系）、计算 Native Bounds、配置样式

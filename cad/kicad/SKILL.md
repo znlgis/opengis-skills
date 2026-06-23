@@ -128,7 +128,7 @@ File → Plot
 
 ---
 
-## CLI 自动化（KiCad 7/8）
+## CLI 自动化（KiCad 7+）
 
 ```bash
 # 原理图导出 PDF

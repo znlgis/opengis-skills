@@ -1,6 +1,6 @@
 ---
 name: cad-skills
-description: CAD（计算机辅助设计）技能分类索引，覆盖参数化建模、2D 制图、3D CAD/CAM、几何内核、BIM、PCB 设计等领域共 17 个开源工具，按需加载即可获得 FreeCAD、OpenSCAD、OCCT、KiCad 等工具的精准 AI 辅助。
+description: CAD（计算机辅助设计）技能分类索引，覆盖参数化建模、2D 制图、3D CAD/CAM、几何内核、BIM、PCB 设计、建筑围护深化设计等领域共 18 个工具，按需加载即可获得 FreeCAD、OpenSCAD、OCCT、KiCad 等工具的精准 AI 辅助。
 tags:
   - cad
   - 3d-modeling
@@ -12,11 +12,11 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 59 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 62 技能总索引
 
 ## 概述
 
-本分类涵盖 **17 个 CAD 开源项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
+本分类涵盖 **18 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
 
 ```
 几何内核 → 参数化建模 → CAD 应用 → 数据交换 → 可视化
@@ -78,6 +78,7 @@ tags:
 |------|------|---------|
 | [ifoxcad](./ifoxcad/SKILL.md) | AutoCAD .NET 二次开发框架 | `autocad` `dotnet` `plugin` |
 | [fy_layout](./fy_layout/SKILL.md) | AutoCAD 自动布图工具 | `autocad` `layout` `automation` |
+| [lightningcad](./lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） | `autocad` `zwcad` `panel-layout` |
 
 ### 🔄 数据交换与可视化
 
@@ -99,6 +100,7 @@ tags:
 | "编辑 DXF 图纸" | `qcad/SKILL.md` 或 `librecad/SKILL.md` |
 | "Python 脚本建模" | `cadquery/SKILL.md` |
 | "AutoCAD .NET 插件" | `ifoxcad/SKILL.md` |
+| "建筑围护板材排布/深化设计" | `lightningcad/SKILL.md` |
 | "PCB 电路板设计" | `kicad/SKILL.md` |
 | "BIM/IFC 数据处理" | `xbim/SKILL.md` |
 | "2D 多边形布尔运算" | `clipper2/SKILL.md` |

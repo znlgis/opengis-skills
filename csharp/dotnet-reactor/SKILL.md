@@ -23,7 +23,7 @@ tags: [dotnet, obfuscation, protection, licensing, security]
 - **反调试 / 反篡改 / Anti-ILdasm**
 - **许可证系统**：序列号 / 硬件绑定 / 试用期 / 黑名单
 - **合并程序集**：将依赖 dll 合并入主可执行文件
-- **支持目标**：.NET Framework 2.0 – 4.8、.NET Core / .NET 5/6/7/8、Mono、Xamarin、Unity
+- **支持目标**：.NET Framework 2.0 – 4.8、.NET Core / .NET 5-10、Mono、Xamarin、Unity
 
 ---
 

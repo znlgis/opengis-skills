@@ -12,7 +12,7 @@ tags:
   - webmapping
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 59 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 62 技能总索引
 
 ## 概述
 
@@ -53,7 +53,6 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [jts](./jts/SKILL.md) | Java Topology Suite 几何引擎 | `java` `geometry` `spatial` |
-| [nettopologysuite](./nettopologysuite/SKILL.md) | JTS 的 .NET 移植 | `dotnet` `geometry` `nuget` |
 | [geometry-api-java](./geometry-api-java/SKILL.md) | Esri Geometry API for Java | `java` `esri` `geometry` |
 | [geometry-api-net](./geometry-api-net/SKILL.md) | Esri Geometry API for .NET | `dotnet` `esri` `geometry` |
 | [shapely](./shapely/SKILL.md) | Python 几何对象与运算 | `python` `geometry` `analysis` |

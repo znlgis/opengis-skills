@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 59 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
+description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 62 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
 tags:
   - gis
   - cad
@@ -27,7 +27,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 59 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 62 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -76,7 +76,7 @@ tags:
 | [opengis-utils-for-net](./gis/opengis-utils-for-net/SKILL.md) | OpenGIS .NET 实用工具集 | `dotnet` `utils` `toolkit` |
 | [geopipe-agent](./gis/geopipe-agent/SKILL.md) | GIS 数据流水线 Agent（YAML 驱动） | `agent` `pipeline` `yaml` `qc` |
 
-### 📐 CAD — 计算机辅助设计（17 个）
+### 📐 CAD — 计算机辅助设计（18 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -97,6 +97,7 @@ tags:
 | [openscad](./cad/openscad/SKILL.md) | 脚本式 3D CAD（CSG） | `scripting` `csg` `programmatic` |
 | [xbim](./cad/xbim/SKILL.md) | .NET BIM/IFC 工具集 | `dotnet` `bim` `ifc` |
 | [lightcad](./cad/lightcad/SKILL.md) | 轻量级 Web 2D CAD 框架 | `web` `2d` `lightweight` |
+| [lightningcad](./cad/lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） | `autocad` `zwcad` `panel-layout` |
 
 ### 🛠️ C# — .NET 生态（8 个）
 
@@ -111,7 +112,7 @@ tags:
 | [sqlsugar](./csharp/sqlsugar/SKILL.md) | 国产高性能多数据库 ORM | `orm` `dotnet` `database` |
 | [dotnet-reactor](./csharp/dotnet-reactor/SKILL.md) | .NET 商业级混淆/加壳/授权 | `dotnet` `obfuscation` `security` |
 
-### 🤖 AI — LLM/Agent（5 个）
+### 🤖 AI — LLM/Agent（6 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -134,13 +135,15 @@ tags:
 |------|------|---------|
 | [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） | `3dgs` `webgl` `typescript` `editor` |
 
-### 🗂️ Others — 其它（3 个）
+### 🗂️ Others — 其它（5 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [billionmail](./others/billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `selfhosted` `marketing` |
 | [ruoyi-cloud](./others/ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `springcloud` `scaffold` |
 | [acme.sh](./others/acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
+| [go](./others/go/SKILL.md) | Go 语言核心语法与工程实践 | `go` `golang` `backend` `concurrency` |
+| [robotgo](./others/robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 | `go` `rpa` `automation` `desktop` |
 
 ---
 
@@ -157,12 +160,13 @@ tags:
 | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, ifoxcad, xbim, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend |
 | `javascript` / `typescript` | cesiumjs, openlayers, chili3d, admin-net-frontend |
 | `cpp` / `c` | gdal-api, occt, librecad, libredwg |
+| `go` | go, robotgo |
 
 ### 按功能领域
 
 | 标签 | 相关技能 |
 |------|---------|
-| `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, clipper1, clipper2 |
+| `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, clipper1, clipper2, opengis-utils-for-java |
 | `raster` | gdal, gdal-api, qgis-process |
 | `vector` | gdal, gdal-api, geopandas, geotools |
 | `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api |
@@ -171,6 +175,8 @@ tags:
 | `orm` / `database` | sod, sqlsugar, postgis |
 | `agent` / `llm` | dify, hermes-agent, openclaw, opencode, oh-my-openagent, geopipe-agent |
 | `pipeline` / `workflow` | dify, geopipe-agent, qgis-process |
+| `automation` / `rpa` | robotgo |
+| `autocad` | ifoxcad, fy_layout, lightningcad |
 
 ---
 

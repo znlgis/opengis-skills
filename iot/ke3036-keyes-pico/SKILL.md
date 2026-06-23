@@ -248,6 +248,7 @@ while True:
 
 from machine import Pin, PWM
 from time import sleep_us, sleep
+import time
 
 trig = Pin(8, Pin.OUT)
 echo = Pin(9, Pin.IN)

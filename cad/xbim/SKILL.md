@@ -26,7 +26,7 @@ xBIM 模块矩阵：
 | `Xbim.Geometry.Engine` | 基于 OCCT 的几何引擎（C++/CLI） |
 | `Xbim.ModelGeometry.Scene` | 几何场景生成（用于可视化） |
 | `Xbim.WeXplorer` (`WexBIM` 文件) | WebGL 查看器格式 |
-| `Xbim.COBieLite` | COBie 数据交换 |
+| `Xbim.CobieLiteUk` | COBie 数据交换 |
 | `Xbim.Presentation` | WPF 三维展示 |
 
 ---

@@ -277,7 +277,7 @@ IFoxCAD 通过条件编译支持：
 ## AI 使用建议
 
 - **推荐工作流模式**：AI 助手应遵循「命令定义 → DBTrans 事务 → 实体创建/修改 → Commit」的标准模式。`using var tr = new DBTrans()` 是几乎所有操作的起点，自动管理 Database 和 Transaction。
-- **关键注意事项**：① 实体必须先加入 BlockTableRecord 再访问 Id，否则报 `eNotInDatabase`；② 引用 AutoCAD 依赖 DLL 时必须设置 `Copy Local=false`；③ 条件编译宏（`IFOX_CAD2025`/`ZWCAD` 等）用于多 CAD 兼容；④ `TabItem` 注册在 `Completed()` 中，不在 `Loaded()`。
+- **关键注意事项**：① 实体必须先加入 BlockTableRecord 再访问 Id，否则报 `eNotInDatabase`；② 引用 AutoCAD 依赖 DLL 时必须设置 `Copy Local=false`；③ 条件编译宏（`IFOX_CAD2025`/`ZWCAD` 等）用于多 CAD 兼容；④ 插件入口需实现 `IExtensionApplication`，在 `Initialize()` 中执行初始化、`Terminate()` 中执行清理，命令通过 `[CommandMethod]` 特性声明式注册。
 - **常用代码模式**：`using var tr = new DBTrans()` → `tr.CurrentSpace.AddEntity(...)` 或 `tr.LayerTable.GetOrCreate("name")` → `tr.Commit()`。选择集操作：`ed.SelectAll(new SelectionFilter(...))` → `tr.GetObject<T>(id)` → 修改 → `tr.Commit()`。
 
 ---

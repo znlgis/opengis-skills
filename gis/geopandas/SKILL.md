@@ -14,10 +14,13 @@ tags:
 
 # GeoPandas
 
-- **项目地址**: https://github.com/geopandas/geopandas
-- **官方文档**: https://geopandas.readthedocs.io
-- **官网**: https://geopandas.org
-- **许可证**: BSD-3-Clause
+> **项目地址：** <https://github.com/geopandas/geopandas>
+>
+> **官方文档：** <https://geopandas.readthedocs.io>
+>
+> **官网：** <https://geopandas.org>
+>
+> **许可证：** BSD-3-Clause
 
 ## 概述
 

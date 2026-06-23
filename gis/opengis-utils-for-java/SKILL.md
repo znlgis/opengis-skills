@@ -13,8 +13,12 @@ tags:
   - cgcs2000
 ---
 
-> **项目地址：** https://github.com/znlgis/opengis-utils-for-java
-> 
+> **项目地址：** <https://github.com/znlgis/opengis-utils-for-java>
+>
+> **Maven 坐标：** `com.znlgis.ogu4j:ogu4j:1.0.0`
+>
+> **许可证：** LGPL-2.1-or-later
+>
 > This document is designed to help AI assistants (and developers) quickly understand and use the OGU4J library for GIS development in Java.
 
 ## Library Overview
