@@ -12,7 +12,7 @@ tags:
   - security
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 62 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 63 技能总索引
 
 ## 概述
 
