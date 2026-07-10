@@ -1,6 +1,6 @@
 ---
 name: others-skills
-description: Others（其它）技能分类索引，覆盖 Go 语言核心语法与工程实践、RobotGo 跨平台桌面自动化（RPA）库、自托管邮件营销平台 BillionMail、Java 微服务后台脚手架 RuoYi-Cloud 与 SSL 证书自动化客户端 acme.sh，按需加载即可获得邮件系统搭建、Spring Cloud 微服务开发、SSL/TLS 证书自动签发续期、Go 语言后端开发、GUI 自动化等通用工具的精准 AI 辅助。
+description: Others（其它）技能分类索引，覆盖 Go 语言核心语法与工程实践、RobotGo 跨平台桌面自动化（RPA）库、robotgo-flow 基于 YAML 的 Windows RPA 框架、自托管邮件营销平台 BillionMail、Java 微服务后台脚手架 RuoYi-Cloud 与 SSL 证书自动化客户端 acme.sh，按需加载即可获得邮件系统搭建、Spring Cloud 微服务开发、SSL/TLS 证书自动签发续期、Go 语言后端开发、GUI 自动化等通用工具的精准 AI 辅助。
 tags:
   - email
   - self-hosted
@@ -15,18 +15,20 @@ tags:
   - golang
   - rpa
   - automation
+  - yaml
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 63 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 65 技能总索引
 
 ## 概述
 
-本分类当前涵盖 **5 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 的通用工具与编程语言。
+本分类当前涵盖 **6 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 的通用工具与编程语言。
 
 ### 何时加载此索引？
 
 - 需要 Go 语言后端开发指导（并发、Web、数据库、测试、工程化）
 - 需要 Go 语言桌面自动化 / RPA（鼠标键盘控制、截图、图像识别）
+- 需要用 YAML 声明式编排 Windows RPA 工作流（robotgo-flow）
 - 需要自建邮件营销 / 事务邮件 / Newsletter 系统
 - 需要 Java 微服务后台管理脚手架（Spring Boot 3 + Spring Cloud）
 - 需要自动申请 / 部署 / 续期免费 SSL/TLS 证书（Let's Encrypt 等）
@@ -40,6 +42,7 @@ tags:
 |------|------|---------|
 | [go](./go/SKILL.md) | Go 语言核心语法与工程实践 | `go` `golang` `backend` `concurrency` |
 | [robotgo](./robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 | `go` `rpa` `automation` `desktop` |
+| [robotgo-flow](./robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 | `go` `rpa` `yaml` `windows` |
 | [billionmail](./billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `selfhosted` `marketing` |
 | [ruoyi-cloud](./ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `springcloud` `scaffold` |
 | [acme.sh](./acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
@@ -57,6 +60,8 @@ tags:
 | "Go 语言桌面自动化 / 鼠标键盘控制" | `robotgo/SKILL.md` |
 | "屏幕截图 / 图像识别 / 位图查找" | `robotgo/SKILL.md` |
 | "全局热键 / 事件监听（gohook）" | `robotgo/SKILL.md` |
+| "用 YAML 编排 Windows RPA 工作流" | `robotgo-flow/SKILL.md` |
+| "图像模板匹配 / 交互式录制 RPA" | `robotgo-flow/SKILL.md` |
 | "自建邮件群发 / Newsletter 平台" | `billionmail/SKILL.md` |
 | "配置 SMTP 中转与送达率分析" | `billionmail/SKILL.md` |
 | "搭建 Spring Cloud 微服务后台" | `ruoyi-cloud/SKILL.md` |
