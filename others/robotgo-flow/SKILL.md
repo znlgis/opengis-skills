@@ -10,7 +10,7 @@ tags: [go, golang, rpa, automation, desktop, windows, yaml, image-matching, wpf]
 >
 > **上游中文教程：** <https://znlgis.github.io/others/robotgo-flow/>（共 19 章）
 >
-> **许可证：** 见仓库 LICENSE
+> **许可证：** MIT License
 
 ## 概述
 

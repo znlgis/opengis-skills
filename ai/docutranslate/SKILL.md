@@ -12,7 +12,7 @@ tags: [ai, llm, translation, document, pdf, mineru, mcp, python, cli]
 >
 > **最新发布：** `v1.7.7`（以 [Releases](https://github.com/xunbu/docutranslate/releases) 为准）
 >
-> **许可证：** 见仓库 LICENSE
+> **许可证：** Mozilla Public License 2.0 (MPL-2.0)
 
 ## 概述
 

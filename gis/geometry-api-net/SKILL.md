@@ -13,7 +13,7 @@ tags:
   - csharp
 ---
 
-> **项目地址：** https://github.com/znlgis/geometry-api-net
+> **项目地址：** <https://github.com/znlgis/geometry-api-net>
 > 
 > 本文件旨在帮助 AI 快速理解并使用 geometry-api-net 库进行空间几何开发。
 
