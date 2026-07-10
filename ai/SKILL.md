@@ -1,6 +1,6 @@
 ---
 name: ai-skills
-description: AI/LLM 技能分类索引，覆盖 LLM 应用开发平台、自学习智能体、个人 AI 助手 Gateway、终端编码代理、多模型编排插件、AI 编程方法论等领域共 7 个开源项目，按需加载即可获得 Dify、Hermes Agent、OpenClaw、OpenCode 等工具的精准 AI 辅助。
+description: AI/LLM 技能分类索引，覆盖 LLM 应用开发平台、自学习智能体、个人 AI 助手 Gateway、终端编码代理、多模型编排插件、文件翻译工具、AI 编程方法论等领域共 8 个开源项目，按需加载即可获得 Dify、Hermes Agent、OpenClaw、OpenCode、DocuTranslate 等工具的精准 AI 辅助。
 tags:
   - ai
   - llm
@@ -12,15 +12,16 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 63 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 65 技能总索引
 
 ## 概述
 
-本分类涵盖 **7 个 AI/LLM 开源项目**的技能文件：
+本分类涵盖 **8 个 AI/LLM 开源项目**的技能文件：
 
 - **LLM 应用平台**：Dify（RAG + 工作流 + Agent 一站式）
 - **智能体 / 助手**：Hermes Agent（自学习通用智能体）、OpenClaw（多通道个人 AI 助手 Gateway）
 - **终端编码代理**：Pi（极简 Agent Harness）、OpenCode（模型无关、配置即代码的 AI coding agent）
+- **文件翻译**：DocuTranslate（基于 LLM 的本地多格式文件翻译工具）
 - **编排与方法论**：Oh-My-OpenAgent（OpenCode 多模型编排插件）、Superpowers-zh（中文 AI 编程方法论 Skills）
 
 ### 何时加载此索引？
@@ -40,6 +41,7 @@ tags:
 | [openclaw](./openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway | `agent` `gateway` `assistant` |
 | [pi](./pi/SKILL.md) | 极简可扩展终端 AI 编码代理（Agent Harness） | `agent` `coding-agent` `terminal` `typescript` |
 | [opencode](./opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码） | `agent` `coding-agent` `terminal` `mcp` |
+| [docutranslate](./docutranslate/SKILL.md) | 基于 LLM 的本地多格式文件翻译工具 | `llm` `translation` `pdf` `mcp` |
 | [oh-my-openagent](./oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） | `agent` `opencode` `orchestration` |
 | [superpowers-zh](./superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 | `methodology` `chinese` `skill` |
 
@@ -56,6 +58,7 @@ tags:
 | "在终端用极简 Agent Harness 编码" | `pi/SKILL.md` |
 | "在终端用 AI 自主改代码 / 跑命令" | `opencode/SKILL.md` |
 | "配置 opencode.json / 省 Token" | `opencode/SKILL.md` |
+| "翻译 PDF/Word/Excel/字幕等文件" | `docutranslate/SKILL.md` |
 | "用中文 TDD/审查方法论约束 AI" | `superpowers-zh/SKILL.md` |
 | "OpenCode 多模型编排 / Agent Harness" | `oh-my-openagent/SKILL.md` |
 

@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 63 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
+description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 65 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
 tags:
   - gis
   - cad
@@ -27,7 +27,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 63 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 65 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -112,7 +112,7 @@ tags:
 | [sqlsugar](./csharp/sqlsugar/SKILL.md) | 国产高性能多数据库 ORM | `orm` `dotnet` `database` |
 | [dotnet-reactor](./csharp/dotnet-reactor/SKILL.md) | .NET 商业级混淆/加壳/授权 | `dotnet` `obfuscation` `security` |
 
-### 🤖 AI — LLM/Agent（7 个）
+### 🤖 AI — LLM/Agent（8 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -123,6 +123,7 @@ tags:
 | [openclaw](./ai/openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway | `agent` `gateway` `assistant` |
 | [pi](./ai/pi/SKILL.md) | 极简可扩展终端 AI 编码代理（Agent Harness） | `agent` `coding-agent` `terminal` `typescript` |
 | [opencode](./ai/opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码） | `agent` `coding-agent` `terminal` `mcp` |
+| [docutranslate](./ai/docutranslate/SKILL.md) | 基于 LLM 的本地多格式文件翻译工具 | `llm` `translation` `pdf` `mcp` |
 
 ### 📡 IoT — 物联网（1 个）
 
@@ -136,7 +137,7 @@ tags:
 |------|------|---------|
 | [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） | `3dgs` `webgl` `typescript` `editor` |
 
-### 🗂️ Others — 其它（5 个）
+### 🗂️ Others — 其它（6 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -145,6 +146,7 @@ tags:
 | [acme.sh](./others/acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
 | [go](./others/go/SKILL.md) | Go 语言核心语法与工程实践 | `go` `golang` `backend` `concurrency` |
 | [robotgo](./others/robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 | `go` `rpa` `automation` `desktop` |
+| [robotgo-flow](./others/robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 | `go` `rpa` `yaml` `windows` |
 
 ---
 
@@ -156,12 +158,12 @@ tags:
 
 | 标签 | 相关技能 |
 |------|---------|
-| `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, freecad |
+| `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, freecad, docutranslate |
 | `java` | geotools, jts, geometry-api-java, opengis-utils-for-java, ruoyi-cloud |
 | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, ifoxcad, xbim, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend |
 | `javascript` / `typescript` | cesiumjs, openlayers, chili3d, admin-net-frontend |
 | `cpp` / `c` | gdal-api, occt, librecad, libredwg |
-| `go` | go, robotgo |
+| `go` | go, robotgo, robotgo-flow |
 
 ### 按功能领域
 
@@ -174,9 +176,9 @@ tags:
 | `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, supersplat |
 | `2d` | openlayers, qcad, librecad, sharpmap, lightcad |
 | `orm` / `database` | sod, sqlsugar, postgis |
-| `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent |
-| `pipeline` / `workflow` | dify, geopipe-agent, qgis-process |
-| `automation` / `rpa` | robotgo |
+| `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate |
+| `pipeline` / `workflow` | dify, geopipe-agent, qgis-process, robotgo-flow |
+| `automation` / `rpa` | robotgo, robotgo-flow |
 | `autocad` | ifoxcad, fy_layout, lightningcad |
 
 ---
