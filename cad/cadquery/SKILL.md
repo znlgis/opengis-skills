@@ -1,6 +1,6 @@
 ---
 name: cadquery
-description: CadQuery 是基于 Python 的开源参数化 CAD 库，构建于 OCCT 几何内核之上，提供流畅的 fluent API 来描述工业级 BREP 模型，支持装配、CAM、STEP/IGES/STL/glTF 输出，特别适合可编程设计、批量参数化、CI 流水线与教育。
+description: Use when scripting parametric 3D CAD models in Python — programmatic part generation, parametric design optimization, STEP export. CadQuery: Python-based parametric CAD built on OCCT kernel with a fluent API.
 tags: [python, 3d, parametric, brep, step, stl, occ, cad]
 ---
 
@@ -38,7 +38,7 @@ pip install cadquery
 pip install cq-editor
 ```
 
-> 当前稳定版 **CadQuery 2.7.0**（2026-02），支持 **Python 3.9–3.14**（经由 `cadquery-ocp` 7.9.3.x，基于 OCCT 7.9.3）。2.7.0 新增 STEP 导入/导出单位处理（`unit`/`outputUnit` 参数）与 `offset2D` 方法。
+> 当前稳定版参见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)，支持 **Python 3.9–3.14**（经由 `cadquery-ocp`，基于 OCCT）。
 
 ---
 

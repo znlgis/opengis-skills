@@ -1,6 +1,6 @@
 ---
 name: clipper1
-description: Clipper（一代）是 Angus Johnson 的开源整数多边形裁剪/偏移库，遵循 Vatti 算法，提供布尔运算（并/交/差/异或）、多边形偏移与简化能力，长期作为 CAD/GIS/CNC 行业的事实标准；目前已被 Clipper2 取代但仍在大量遗留代码中使用。
+description: Use when maintaining legacy code that depends on Clipper 1.x API for polygon clipping and offsetting. Clipper1: the original widely-deployed polygon boolean library. Prefer Clipper2 for new projects.
 tags: [2d, geometry, boolean, offset, polygon, csharp, python, cpp]
 ---
 

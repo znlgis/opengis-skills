@@ -1,6 +1,6 @@
 ---
 name: xbim
-description: xBIM Toolkit 是 .NET 平台开源 BIM（建筑信息模型）开发框架，提供 IFC2x3/IFC4 读写、几何处理（基于 OCCT）、COBie 数据交换、Web 可视化（xbim-viewer / WexBIM），是 .NET 生态中最完整的开源 BIM 解决方案。
+description: Use when processing BIM/IFC data in .NET/C# — IFC reading/writing, model validation, quantity takeoff, geometry extraction. xBIM: .NET BIM/IFC toolkit for building information modeling workflows.
 tags: [bim, ifc, dotnet, csharp, geometry, occ]
 ---
 

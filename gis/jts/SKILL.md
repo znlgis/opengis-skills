@@ -1,6 +1,6 @@
 ---
 name: jts
-description: JTS Topology Suite 是 Java 平台上功能最全面的开源二维矢量几何计算库，提供几何对象建模、空间关系判断、集合运算、线性参考、空间索引及多种格式读写能力。
+description: Use when performing precise 2D computational geometry in Java — spatial predicates (contains, intersects), overlay operations, buffering, triangulation. JTS (Java Topology Suite): the canonical geometry engine used as blueprint for GEOS, Shapely, and NetTopologySuite.
 
 tags:
   - java
@@ -44,7 +44,7 @@ JTS Topology Suite（简称 JTS）是 LocationTech 项目组下的开源 Java �
 
 ```xml
 <properties>
-    <jts.version>1.20.0</jts.version>
+    <jts.version><!-- 请查看 Maven Central 获取最新版：https://central.sonatype.com/artifact/org.locationtech.jts/jts-core --></jts.version>
 </properties>
 
 <dependency>

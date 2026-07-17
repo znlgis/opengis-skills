@@ -1,6 +1,6 @@
 ---
 name: geopipe-agent
-description: GeoPipeAgent 是 AI 原生的 GIS 数据分析流水线框架，支持通过 YAML 声明式定义 GIS 分析流程（数据读取、矢量/栅格分析、网络分析、空间聚类、数据质检），由 AI 生成管道配置后自动执行并返回结构化 JSON 报告。
+description: Use when building AI-driven GIS data pipelines with YAML-defined steps — format conversion, spatial validation, QC reporting, PostGIS loading, WMS publishing. GeoPipe Agent: YAML-driven GIS ETL pipeline agent with quality control.
 tags:
   - gis
   - agent

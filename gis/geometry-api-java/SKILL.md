@@ -1,6 +1,6 @@
 ---
 name: geometry-api-java
-description: Esri Geometry API for Java 是一个自包含的空间几何计算库，提供对二维和三维几何对象的创建、解析、序列化以及空间关系运算能力。
+description: Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in Java — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for Java.
 tags:
   - java
   - geometry
@@ -32,7 +32,7 @@ Esri Geometry API for Java 是一个自包含的空间几何计算库，提供�
 <dependency>
   <groupId>com.esri.geometry</groupId>
   <artifactId>esri-geometry-api</artifactId>
-  <version>2.2.4</version>
+  <version><!-- 请查看 Maven Central 获取最新版：https://central.sonatype.com/artifact/com.esri.geometry/esri-geometry-api --></version>
 </dependency>
 ```
 

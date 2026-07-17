@@ -1,6 +1,6 @@
 ---
 name: lightcad
-description: LightCAD 是开源的轻量级 Web CAD 框架/应用，定位类似 AutoCAD 的二维制图但完全运行在浏览器中，提供命令行、图层、块、DWG/DXF 兼容、绘图与编辑命令，并暴露 JS API 供二次开发与嵌入业务系统。
+description: Use when embedding lightweight 2D CAD features in web applications — basic drawing, layer management, snapping, DXF import. LightCAD: lightweight Web 2D CAD framework for browser-based drafting.
 tags: [web, 2d, cad, dxf, typescript, drafting]
 ---
 

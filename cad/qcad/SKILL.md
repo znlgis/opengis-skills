@@ -1,6 +1,6 @@
 ---
 name: qcad
-description: QCAD 是基于 Qt 的开源 2D CAD 应用与 SDK，专注 DWG/DXF 二维制图，提供 ECMAScript（JavaScript）扩展与脚本控制台、命令行工具 dxf2*/转换器，适合机械、建筑、测绘的二维出图与自动化处理。
+description: Use when editing DXF files with a professional open-source 2D CAD application — CAM output, part libraries, isometric projection. QCAD: open-source 2D CAD with DXF as native format, scriptable via ECMAScript.
 tags: [2d, cad, dxf, dwg, qt, javascript, ecmascript]
 ---
 

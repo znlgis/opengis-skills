@@ -1,6 +1,6 @@
 ---
 name: gis-skills
-description: GIS（地理信息系统）技能分类索引，覆盖空间数据处理、地图服务、几何运算、Web 可视化等领域共 23 个开源工具，按需加载即可获得 GDAL、QGIS、GeoServer、PostGIS、JTS 等工具的精准 AI 辅助。
+description: Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, or building web map applications. Index of 23 skills: GDAL, GeoServer, QGIS, PostGIS, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, NetTopologySuite and more.
 tags:
   - gis
   - geospatial

@@ -1,6 +1,6 @@
 ---
 name: ara3d-sdk
-description: Ara3D-SDK（ara3d/ara3d-sdk）是 Ara 3D Inc. 开源（MIT）、面向 AEC（建筑/工程/施工）行业的高性能 C# 库集合，基于 .NET 8，用于海量三维几何与 BIM 数据的加载、生成、变换、导出，可独立使用，也可通过 Ara3D.Studio.API 扩展 Ara 3D Studio 桌面应用。核心库零/少外部依赖，提供 SIMD 数学（F8/AVX）、不可变几何内核、BIM 开放模式（BOS）与多格式 I/O（BFAST/G3D/PLY/glTF/VIM/STEP/GeoJSON/IFC）。
+description: Use when processing AEC/BIM 3D data in .NET 8 — mesh generation and transformation, SIMD-accelerated math, IFC/STEP/PLY to glTF/GLB/VIM conversion, plugin development. Ara3D-SDK: high-performance .NET 3D geometry and BIM library suite.
 tags:
   - 3d
   - bim

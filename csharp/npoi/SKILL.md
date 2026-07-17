@@ -1,6 +1,6 @@
 ---
 name: npoi
-description: NPOI 是 Apache POI 的 .NET 移植，开源、免费，可在不依赖 Office 的情况下读写 Excel（.xls / .xlsx）、Word（.doc）、PowerPoint 等文档格式，是 .NET 生态中处理 Excel 的事实标准。
+description: Use when reading/writing Excel (.xls/.xlsx) or Word (.doc/.docx) files in .NET without Microsoft Office — data import/export, report generation, template filling. NPOI: .NET port of Apache POI for Office file I/O in server environments.
 tags: [dotnet, excel, word, office, npoi]
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: docutranslate
-description: DocuTranslate（xunbu/docutranslate）是基于大语言模型的轻量级本地文件翻译工具，支持 PDF/Word/Excel/Markdown/EPUB/字幕/JSON 等多格式翻译，内置 MinerU PDF 解析、术语表自动生成、Web UI、REST API、Client SDK 与 MCP 接入。
+description: Use when translating documents locally via LLM — PDF, Word, Excel, Markdown, SRT subtitles with format preservation. DocuTranslate: LLM-powered multi-format local file translation tool with MCP server support.
 tags: [ai, llm, translation, document, pdf, mineru, mcp, python, cli]
 ---
 
@@ -10,7 +10,7 @@ tags: [ai, llm, translation, document, pdf, mineru, mcp, python, cli]
 >
 > **官方文档：** README（中/英/日/越）｜启动服务后 `http://127.0.0.1:8010/docs`（Swagger UI）
 >
-> **最新发布：** `v1.7.7`（以 [Releases](https://github.com/xunbu/docutranslate/releases) 为准）
+> **最新发布：** 参见 [GitHub Releases](https://github.com/xunbu/docutranslate/releases) |
 >
 > **许可证：** Mozilla Public License 2.0 (MPL-2.0)
 
@@ -62,7 +62,8 @@ uv sync --no-dev            # uv sync --no-dev --extra mcp / --all-extras
 
 ```bash
 docker run -d -p 8010:8010 xunbu/docutranslate:latest
-# 固定版本： docker run -it -p 8010:8010 xunbu/docutranslate:v1.7.7
+# 请从 GitHub Releases 获取最新标签：https://github.com/xunbu/docutranslate/releases
+docker run -it -p 8010:8010 xunbu/docutranslate:latest
 ```
 
 **便携整合包：** 从 [GitHub Releases](https://github.com/xunbu/docutranslate/releases) 下载 Windows/Mac 整合包，解压后填入 API-Key 即可使用。

@@ -1,6 +1,6 @@
 ---
 name: iot-skills
-description: IoT（物联网）技能分类索引，覆盖 Raspberry Pi Pico 微控制器开发，支持 MicroPython 与 C/C++ SDK，按需加载即可获得 GPIO、I²C、Wi-Fi、MQTT 等嵌入式开发的精准 AI 辅助。
+description: Use when developing with Raspberry Pi Pico (RP2040) for GPIO, I2C, Wi-Fi, MQTT, or sensor integration using MicroPython. Index of 1 skill: KE3036 Keyes Pico learning kit.
 tags:
   - iot
   - embedded

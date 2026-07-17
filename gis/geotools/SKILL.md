@@ -1,6 +1,6 @@
 ---
 name: geotools
-description: GeoTools 是一个开源的 Java GIS 工具库，提供符合 OGC 标准的矢量/栅格数据访问、坐标参考系统转换、空间查询过滤、地图渲染及 OGC Web 服务客户端等全栈地理空间开发能力。
+description: Use when building Java GIS applications — feature reading/writing, coordinate transformations, map styling, spatial filters, WMS/WFS clients. GeoTools: the Java GIS toolkit and OGC standards reference implementation.
 tags:
   - java
   - gis
@@ -58,7 +58,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 
 ```xml
 <properties>
-    <geotools.version>35.0</geotools.version>
+    <geotools.version><!-- 请查看 https://geotools.org/download.html 获取最新版 --></geotools.version>
 </properties>
 
 <dependencies>

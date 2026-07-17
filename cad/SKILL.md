@@ -1,6 +1,6 @@
 ---
 name: cad-skills
-description: CAD（计算机辅助设计）技能分类索引，覆盖参数化建模、2D 制图、3D CAD/CAM、几何内核、BIM、PCB 设计、建筑围护深化设计等领域共 18 个工具，按需加载即可获得 FreeCAD、OpenSCAD、OCCT、KiCad 等工具的精准 AI 辅助。
+description: Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 18 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, KiCad, SolveSpace, QCAD, xBIM, Clipper2 and more.
 tags:
   - cad
   - 3d-modeling

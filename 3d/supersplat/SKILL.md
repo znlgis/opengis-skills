@@ -1,6 +1,6 @@
 ---
 name: supersplat
-description: SuperSplat（playcanvas/supersplat）是 PlayCanvas 团队开发、运行于浏览器的免费开源 3D 高斯泼溅（3DGS）编辑器，用于对 .ply 高斯模型进行检查、清理、裁剪、变换、调色、动画与发布，支持 PLY/压缩 PLY/Splat/KSplat/SOG 等导出格式，基于 TypeScript + PlayCanvas 引擎 + WebGL2/WebGPU。
+description: Use when editing 3D Gaussian Splatting (3DGS) .ply models in browser — cleanup noise/floaters, crop, transform, color-adjust, animate camera, publish online. SuperSplat: open-source browser-based 3DGS editor by PlayCanvas with PLY/compressed PLY/Splat/KSplat/SOG export.
 tags: [3d, gaussian-splatting, 3dgs, webgl, webgpu, typescript, playcanvas, editor]
 ---
 
@@ -8,7 +8,7 @@ tags: [3d, gaussian-splatting, 3dgs, webgl, webgpu, typescript, playcanvas, edit
 >
 > **在线编辑器：** <https://superspl.at/editor> ｜ **用户手册：** <https://developer.playcanvas.com/user-manual/gaussian-splatting/editing/supersplat/>
 >
-> **许可证：** MIT ｜ **最新版本：** v2.27.4（2026-06）｜ **默认分支：** `main`
+> **许可证：** MIT ｜ **最新版本：** 参见 [GitHub Releases](https://github.com/playcanvas/supersplat/releases)｜ **默认分支：** `main`
 
 ## 概述
 

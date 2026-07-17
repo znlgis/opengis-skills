@@ -1,6 +1,6 @@
 ---
 name: others-skills
-description: Others（其它）技能分类索引，覆盖 Go 语言核心语法与工程实践、RobotGo 跨平台桌面自动化（RPA）库、robotgo-flow 基于 YAML 的 Windows RPA 框架、自托管邮件营销平台 BillionMail、Java 微服务后台脚手架 RuoYi-Cloud 与 SSL 证书自动化客户端 acme.sh，按需加载即可获得邮件系统搭建、Spring Cloud 微服务开发、SSL/TLS 证书自动签发续期、Go 语言后端开发、GUI 自动化等通用工具的精准 AI 辅助。
+description: Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, or SSL/TLS certificate automation. Index of 6 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh.
 tags:
   - email
   - self-hosted

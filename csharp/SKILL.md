@@ -1,6 +1,6 @@
 ---
 name: csharp-skills
-description: C#/.NET 生态技能分类索引，覆盖 Web 框架、ORM、Office 文件操作、电子表格控件、代码保护等领域共 8 个开源库/框架，按需加载即可获得 Furion、SqlSugar、NPOI、SOD 等工具的精准 AI 辅助。
+description: Use when developing with .NET/C# for Web APIs, ORM data access, Excel/Word file I/O, spreadsheet controls, or .NET code protection. Index of 8 skills: Furion, SqlSugar, NPOI, SOD, ReoGrid, Admin.NET, DotNet Reactor.
 tags:
   - dotnet
   - csharp

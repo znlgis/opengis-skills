@@ -1,6 +1,6 @@
 ---
 name: gdal-api
-description: GDAL (Geospatial Data Abstraction Library) 是 OSGeo 基金会的核心开源地理数据处理库，提供 C++ 原生 API 以及基于 SWIG 的 Python、Java、C# 语言绑定，支持 200+ 种栅格与矢量数据格式的读写、坐标变换、栅格分析和矢量空间操作。本文件旨在帮助 AI 使用 GDAL API 进行地理空间数据编程开发。
+description: Use when programming against GDAL/OGR in C, C++, Python, or .NET for raster/vector I/O, coordinate transformation, or custom geospatial algorithms. GDAL API: low-level programming interface for reading/writing 70+ geospatial formats.
 
 tags:
   - gdal
@@ -80,7 +80,7 @@ python -c "from osgeo import gdal; print(gdal.VersionInfo())"
 <dependency>
     <groupId>org.gdal</groupId>
     <artifactId>gdal</artifactId>
-    <version>3.13.0</version>
+    <version><!-- 请查看 Maven Central 获取最新版：https://central.sonatype.com/artifact/org.gdal/gdal --></version>
 </dependency>
 ```
 

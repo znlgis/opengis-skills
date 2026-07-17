@@ -1,6 +1,6 @@
 ---
 name: libredwg
-description: LibreDWG 是 GNU 项目下的开源 DWG/DXF 读写库（C 语言），支持 R13–R2018 多个 AutoCAD 版本，提供 C/C++/Python/Lisp 等多语言绑定与一组命令行工具（dwgread/dwgwrite/dwg2dxf/dxf2dwg），是开源 CAD 互操作的关键基础。
+description: Use when reading or writing AutoCAD DWG files programmatically in C — DWG version conversion, entity extraction, DWG to DXF. LibreDWG: free C library for reading/writing AutoCAD DWG format.
 tags: [dwg, dxf, cad, c, python, conversion]
 ---
 

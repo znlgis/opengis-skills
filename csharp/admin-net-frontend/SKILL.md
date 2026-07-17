@@ -1,6 +1,6 @@
 ---
 name: Admin.NET-frontend
-description: Admin.NET 前端基于 Vue3 + Element Plus + Vite5 + TypeScript 构建的企业级中后台管理界面，提供完整的权限管理、动态路由、国际化、主题切换、代码生成、表单构建器等功能模块。
+description: Use when building Vue 3 admin dashboard frontends with dynamic routing, permission-based menus, and CRUD page generation. Admin.NET Frontend: Vue 3 + Vite + TypeScript admin UI for Admin.NET backend.
 tags: [vue3, typescript, element-plus, vite, admin, frontend]
 ---
 

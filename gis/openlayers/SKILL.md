@@ -1,6 +1,6 @@
 ---
 name: openlayers
-description: OpenLayers 是高性能、功能丰富的开源 Web 地图 JavaScript 库，支持几乎所有主流地图服务（XYZ/WMS/WMTS/WFS/Vector Tiles/GeoJSON），提供完整的矢量绘制、样式与交互能力，是 Web 二维 GIS 的事实标准之一。
+description: Use when adding interactive 2D maps to web applications — WMS/WFS/WMTS layers, vector styling, map controls, popups. OpenLayers: the most full-featured open-source JavaScript web mapping library.
 tags:
   - javascript
   - web

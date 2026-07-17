@@ -1,6 +1,6 @@
 ---
 name: astral3d
-description: Astral3D 是开源的 3D 工业可视化与编辑框架，提供基于 Web 的轻量三维场景搭建、模型导入（glTF/OBJ/FBX/STEP）、设备孪生、动画与交互编辑能力，常用于工业 IoT、数字孪生、智慧园区、CAD/BIM 轻量化展示。
+description: Use when building industrial 3D visualization and editing applications — large model rendering, STEP/B-Rep viewing, measurement, markup. Astral3D: industrial 3D visualization and editing framework.
 tags: [web, 3d, visualization, threejs, digital-twin, gltf, step]
 ---
 

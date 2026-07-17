@@ -1,6 +1,6 @@
 ---
 name: acme.sh
-description: acme.sh 是纯 Shell 编写、零依赖的 ACME（RFC 8555）协议客户端，用于从 Let's Encrypt、ZeroSSL、BuyPass、Google Trust Services 等 CA 自动申请、部署与续期免费 SSL/TLS 证书，支持 HTTP-01、DNS-01、通配符证书与 150+ DNS 服务商 API。
+description: Use when automating SSL/TLS certificate issuance and renewal from Let's Encrypt, ZeroSSL, or BuyPass — wildcard certs, DNS API mode for 150+ providers, Nginx/Apache auto-reload. acme.sh: pure Shell ACME client, zero dependencies, crontab-friendly auto-renewal.
 tags: [ssl, tls, acme, lets-encrypt, shell, certificate, devops, automation]
 ---
 

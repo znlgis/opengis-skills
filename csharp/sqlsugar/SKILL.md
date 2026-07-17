@@ -1,6 +1,6 @@
 ---
 name: sqlsugar
-description: SqlSugar 是国产开源高性能 .NET ORM，支持 SQL Server / MySQL / Oracle / PostgreSQL / SQLite / 达梦 / 人大金仓 / 神通 / OceanBase 等近 20 种数据库，提供链式 LINQ-like 查询、Code First、读写分离、分库分表、事务、主键雪花算法、AOT 等丰富特性，是 Furion / Admin.NET 等框架默认 ORM。
+description: Use when doing multi-database ORM operations in .NET — SQL Server, MySQL, PostgreSQL, SQLite, Oracle with fluent API, code-first, and LINQ. SqlSugar: high-performance .NET ORM supporting 10+ databases.
 tags: [dotnet, orm, database, code-first, sql]
 ---
 

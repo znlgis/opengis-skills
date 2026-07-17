@@ -1,6 +1,6 @@
 ---
 name: go
-description: Go（Golang）是 Google 开发的静态类型、编译型、垃圾回收的通用编程语言，以简洁语法、内置并发（goroutine + channel）、快速编译、丰富标准库和高效工具链著称，适用于后端服务、云原生（Docker/Kubernetes）、CLI 工具、网络编程、微服务与 DevOps 等场景。
+description: Use when writing Go/Golang code — goroutines/channels concurrency, net/http web servers, database/sql, generics (1.18+), module management, testing and benchmarking. Go: the language powering Docker, Kubernetes, and cloud-native infrastructure.
 tags: [go, golang, backend, concurrency, cloud-native, compiled, static-typed, server, cli]
 ---
 
@@ -14,7 +14,7 @@ tags: [go, golang, backend, concurrency, cloud-native, compiled, static-typed, s
 >
 > **Effective Go：** <https://go.dev/doc/effective_go>
 >
-> **许可证：** BSD-3-Clause ｜ **最新稳定版：** Go 1.26.4（2026-06）｜ **RC：** Go 1.27rc1
+> **许可证：** BSD-3-Clause ｜ **最新稳定版：** 参见 [go.dev/dl](https://go.dev/dl/)
 
 ## 概述
 

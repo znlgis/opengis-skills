@@ -1,6 +1,6 @@
 ---
 name: openclaw
-description: OpenClaw（openclaw/openclaw）是开源、本地优先的个人 AI 助手 Gateway（控制平面），把 WhatsApp、Telegram、Slack、Discord、iMessage、Signal、Matrix、飞书、微信、QQ 等 20+ 聊天通道接入同一个 AI 助手，统一管理会话、模型、工具、节点、技能、插件与安全沙箱，并提供 Control UI、节点设备、Canvas 与语音能力。
+description: Use when setting up a multi-channel personal AI assistant gateway bridging chat platforms (Telegram, Discord, WhatsApp, WeChat) with LLM backends. OpenClaw: multi-channel AI assistant gateway for unified personal AI access.
 tags: [ai, assistant, gateway, self-hosted, multi-channel, typescript, agent]
 ---
 

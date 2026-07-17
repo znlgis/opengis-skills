@@ -1,6 +1,6 @@
 ---
 name: chili3d
-description: Chili3D 是基于 Web 的开源 CAD 软件，使用 TypeScript + WebAssembly（封装 OCCT）实现，可在浏览器中完成参数化 3D 建模、装配、布尔运算与 STEP/IGES/STL 导入导出，目标是打造无需安装的工业级开源 Web CAD。
+description: Use when building browser-based 3D CAD applications with WebAssembly — STEP/B-Rep visualization, measurement tools, sectioning. Chili3D: pure Web 3D CAD built on OCCT.js compiled to WASM with TypeScript API.
 tags: [web, 3d, typescript, wasm, occ, parametric, step, stl]
 ---
 

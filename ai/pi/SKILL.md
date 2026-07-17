@@ -1,6 +1,6 @@
 ---
 name: pi
-description: Pi（earendil-works/pi）是开源、可扩展、终端优先的 AI 编码 Agent Harness，提供 coding-agent CLI、统一多模型 API、Agent 运行时与 TUI 组件，支持 Anthropic/OpenAI/Google 等多提供商、Extensions/Skills 扩展与容器化隔离部署。
+description: Use when needing a minimal, extensible terminal AI coding agent harness in TypeScript with plugin architecture. Pi: minimalist terminal AI coding agent emphasizing simplicity and composability.
 tags: [ai, agent, coding-agent, terminal, llm, typescript, extension, pi]
 ---
 
@@ -8,7 +8,7 @@ tags: [ai, agent, coding-agent, terminal, llm, typescript, extension, pi]
 >
 > **官网 / 文档：** <https://pi.dev> ｜ <https://pi.dev/docs/latest>
 >
-> **最新发布：** `v0.80.3`（以 Releases 为准）
+> **最新发布：** 参见 [GitHub Releases](https://github.com/earendil-works/pi/releases)
 >
 > **许可证：** MIT
 

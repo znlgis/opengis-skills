@@ -1,6 +1,6 @@
 ---
 name: fy_layout
-description: FY_Layout 是飞扬集成设计平台的场地布置二次开发插件示例，基于 LightCAD 框架和 C# 语言，提供围栏、草坪、基坑、道路、板房、场地、硬化地面、土方回填等建筑工程场布元素的二维绘制与三维建模能力。
+description: Use when doing construction site layout planning with the FeiYang LightCAD platform — fence, lawn, foundation pit, road, prefab house 2D/3D modeling. FY_Layout: construction site layout secondary development plugin for LightCAD/LightBIM.
 tags: [2d, 3d, cad, dotnet, csharp, bim, construction, dwg, dxf]
 ---
 

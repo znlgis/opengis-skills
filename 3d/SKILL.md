@@ -1,6 +1,6 @@
 ---
 name: 3d-skills
-description: 3D 技能分类索引，覆盖 3D 高斯泼溅（3DGS）编辑、Web 三维可视化与高性能 AEC/BIM 三维数据处理领域，收录浏览器端开源高斯泼溅编辑器 SuperSplat 与 .NET 高性能三维/BIM SDK Ara3D-SDK，按需加载即可获得 .ply 高斯模型清理/压缩/发布，以及三维网格建模、格式转换、BIM/IFC 处理的精准 AI 辅助。
+description: Use when working with 3D Gaussian Splatting (3DGS), .ply model cleanup/compression/publishing, WebGL/WebGPU 3D visualization, or AEC/BIM 3D data processing. Index of 2 skills: SuperSplat and Ara3D-SDK.
 tags:
   - 3d
   - gaussian-splatting

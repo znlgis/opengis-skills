@@ -1,6 +1,6 @@
 ---
 name: geoserver-rest-api
-description: GeoServer REST API 是 GeoServer 提供的 RESTful 配置接口，允许通过 HTTP 请求以 JSON 或 XML 格式对工作空间、数据存储、图层、样式、图层组、服务设置及安全等资源进行增删改查管理，适用于自动化运维、CI/CD 和 AI 智能体集成场景。
+description: Use when automating GeoServer management — programmatic workspace, datastore, and layer creation, style upload, service configuration via REST API. GeoServer REST API: manage GeoServer without GUI using curl, Python, or any HTTP client.
 tags:
   - rest
   - api

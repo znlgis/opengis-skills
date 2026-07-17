@@ -1,6 +1,6 @@
 ---
 name: hermes-agent
-description: Hermes Agent（NousResearch/hermes-agent）是 Nous Research 出品的开源、自学习通用型 AI 智能体，内置完整学习闭环——从经验中创建并改进技能、把重要事实写入持久化记忆、检索自身历史会话、跨会话建立用户画像；终端优先（CLI/TUI），支持多模型 Provider、工具系统、MCP、多平台消息网关、定时任务与子代理协作，可跑在 VPS、GPU 集群或 Serverless 上。
+description: Use when building self-learning AI agents that improve through experience — terminal-first interface, tool calling, memory persistence, autonomous task execution. Hermes Agent: self-improving general-purpose AI agent with local-first architecture.
 tags: [ai, agent, self-improving, memory, terminal, mcp, python, nous-research]
 ---
 

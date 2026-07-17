@@ -1,6 +1,6 @@
 ---
 name: lightningcad
-description: LightningCAD（闪电围护）是面向建筑围护结构深化设计的 AutoCAD/ZWCAD 插件，基于 .NET Framework 4.8 + C# + WPF 开发，涵盖板材排布、节点线、收边、洞口与屋面、图纸校验、CAD 工具包及桌面客户端七大模块，适用于装配式建筑 PC/外墙板/屋面板的施工图深化设计。
+description: Use when doing architectural facade panel layout and detailing in AutoCAD or ZWCAD — panel numbering, shop drawing generation, material optimization. LightningCAD: building envelope detailing plugin for AutoCAD/ZWCAD.
 tags: [autocad, zwcad, cad, dotnet, wpf, panel-layout, bim, envelope, commercial, plugin]
 ---
 

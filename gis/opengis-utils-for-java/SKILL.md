@@ -1,6 +1,6 @@
 ---
 name: opengis-utils-for-java
-description: opengis-utils-for-java 是一个基于 GeoTools、JTS、GDAL/OGR 和 ESRI Geometry API 的统一 Java GIS 工具包，提供图层读写、几何操作、双引擎架构和坐标参考系统管理等功能。
+description: Use when needing common GIS utility functions in Java — CRS utilities, geometry helpers, format converters, spatial validation. OpenGIS Utils for Java: convenience toolkit for Java GIS projects.
 tags:
   - java
   - gis

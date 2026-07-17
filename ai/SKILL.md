@@ -1,6 +1,6 @@
 ---
 name: ai-skills
-description: AI/LLM 技能分类索引，覆盖 LLM 应用开发平台、自学习智能体、个人 AI 助手 Gateway、终端编码代理、多模型编排插件、文件翻译工具、AI 编程方法论等领域共 8 个开源项目，按需加载即可获得 Dify、Hermes Agent、OpenClaw、OpenCode、DocuTranslate 等工具的精准 AI 辅助。
+description: Use when building LLM applications, RAG knowledge bases, AI agents, terminal coding agents, multi-model orchestration, or file translation. Index of 8 skills: Dify, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, Oh-My-OpenAgent, Superpowers-zh.
 tags:
   - ai
   - llm

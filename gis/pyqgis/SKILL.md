@@ -1,6 +1,6 @@
 ---
 name: pyqgis
-description: PyQGIS 是 QGIS 的 Python 绑定，提供对 QGIS 核心 C++ 库的完整 Python 访问能力。通过 PyQGIS，可在 Python 脚本、QGIS 控制台、独立应用或插件中执行矢量/栅格图层管理、几何操作、坐标变换、空间分析、Processing 算法调用、地图渲染与导出等 GIS 任务。
+description: Use when extending QGIS with Python plugins, automating map composition, or scripting QGIS processing algorithms. PyQGIS: QGIS Python API for custom tools, processing scripts, and plugin development.
 tags:
   - python
   - qgis
@@ -48,7 +48,7 @@ PyQGIS 主要包含以下模块：
 
 ### 前置条件
 
-- 安装 QGIS 3.16+（**3.40 为当前 LTR**；3.44 为最新 3.x 发行版；QGIS 4.0 已于 2026 发布）
+- 安装 QGIS 3.16+（[查看 QGIS LTR/最新版](https://qgis.org/download/)）
 - Python 3.9+（QGIS 自带 Python 环境）
 
 ### 在 QGIS Python 控制台中使用
@@ -961,7 +961,7 @@ qgs.exitQgis()
 7. **文件路径使用绝对路径**：避免工作目录不确定导致文件找不到。
 8. **大数据量优化**：使用 `QgsSpatialIndex` 加速空间查询；使用 `QgsFeatureRequest` 限制返回字段和范围。
 9. **表达式语法**：字段名用双引号 `"field"`，字符串值用单引号 `'value'`。
-10. **QGIS 版本兼容**：部分 API 在不同版本间有变化，建议使用 LTR 版本（当前 3.40 LTR）以获得稳定接口；注意 QGIS 4.0（2026）为新主版本，部分 API 有调整。
+10. **QGIS 版本兼容**：部分 API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；注意 QGIS 4.0（2026）为新主版本，部分 API 有调整。
 
 ### 错误处理
 

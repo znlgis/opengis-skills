@@ -1,6 +1,6 @@
 ---
 name: sod
-description: SOD（PWMIS Data Development Framework）是国产开源 .NET 数据开发框架，提供 ORM、SQL-MAP、实体查询表达式（OQL）、多数据库适配（SQL Server / Oracle / MySQL / PostgreSQL / SQLite / Access / DM 达梦 / KingbaseES）、读写分离与缓存等能力，长期用于政企项目。
+description: Use when needing a multi-paradigm .NET ORM with SQL-MAP (MyBatis-style XML mapping), OQL (Object Query Language), and traditional ORM. PDF.NET SOD: combines ORM + SQL-MAP + OQL for flexible .NET data access.
 tags: [dotnet, orm, database, sql-mapping, oql]
 ---
 

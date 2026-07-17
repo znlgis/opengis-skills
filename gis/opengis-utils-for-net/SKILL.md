@@ -1,6 +1,6 @@
 ---
 name: opengis-utils-for-net
-description: opengis-utils-for-net 是一个基于 GDAL/OGR 的 .NET GIS 工具包，提供图层读写、几何操作、双引擎架构和坐标参考系统管理等功能。
+description: Use when needing common GIS utility functions in .NET/C# — CRS utilities, geometry helpers, format converters, spatial validation. OpenGIS Utils for .NET: convenience toolkit for .NET GIS projects.
 tags:
   - dotnet
   - csharp

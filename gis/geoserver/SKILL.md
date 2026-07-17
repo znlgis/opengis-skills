@@ -1,6 +1,6 @@
 ---
 name: geoserver
-description: GeoServer 是基于 Java 的开源地图服务器，遵循 OGC 标准（WMS/WMTS/WFS/WCS/WPS），用于发布矢量、栅格、瓦片地图服务，支持 Shapefile、PostGIS、Oracle、GeoTIFF 等数据源，是开源 SDI 的核心组件之一。
+description: Use when deploying OGC-compliant map services (WMS, WFS, WMTS, WCS) or configuring SLD styling, security, and tile caching. GeoServer: the leading open-source Java map server for publishing spatial data to the web.
 tags:
   - java
   - server

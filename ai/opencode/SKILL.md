@@ -1,6 +1,6 @@
 ---
 name: opencode
-description: OpenCode 是开源、模型无关、终端优先的 AI 编码代理（AI coding agent），通过 AI SDK + Models.dev 支持 75+ LLM 提供商（Claude/GPT/Gemini/本地模型），以 opencode.json 配置即代码、细粒度权限、上下文压缩与 Token 优化、自定义 Agent/命令/MCP 扩展为核心，可在终端读改代码、跑命令、自主完成多步开发任务。
+description: Use when working with a model-agnostic terminal AI coding agent that uses opencode.json for declarative configuration — MCP servers, custom commands, agent routing, skills. OpenCode: configuration-as-code terminal AI coding agent with multi-model support.
 tags: [ai, agent, coding-agent, llm, terminal, tui, mcp, opencode]
 ---
 

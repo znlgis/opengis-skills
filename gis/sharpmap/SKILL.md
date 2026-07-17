@@ -1,6 +1,6 @@
 ---
 name: sharpmap
-description: SharpMap 是.NET 平台上的开源地图渲染引擎，支持 WinForms / WPF / ASP.NET / WMS 等多种宿主，提供矢量与栅格数据访问、样式渲染、坐标变换、专题图与图例输出能力，适合构建 .NET 桌面/Web GIS 应用。
+description: Use when rendering 2D maps in legacy .NET WinForms or ASP.NET WebForms applications. SharpMap: an older .NET 2D mapping library. For new projects, prefer Mapsui.
 tags:
   - dotnet
   - csharp

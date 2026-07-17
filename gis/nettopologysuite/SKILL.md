@@ -1,6 +1,6 @@
 ---
 name: nettopologysuite
-description: NetTopologySuite (NTS) 是 JTS Topology Suite 的 .NET 移植版本，是 .NET 平台上功能最完整的开源二维矢量几何计算库，提供几何模型、空间关系、集合运算、空间索引、WKT/WKB/GeoJSON 读写等能力，被 EF Core、Npgsql 等广泛集成。
+description: Use when performing 2D computational geometry in .NET — spatial predicates, overlay operations, buffering, WKT/WKB I/O. NetTopologySuite: the .NET port of JTS, available via NuGet for spatial analysis in C# applications.
 tags:
   - dotnet
   - csharp

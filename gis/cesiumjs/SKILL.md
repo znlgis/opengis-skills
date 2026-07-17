@@ -1,6 +1,6 @@
 ---
 name: cesiumjs
-description: CesiumJS 是开源的 JavaScript 三维地球与地图库，基于 WebGL，无插件即可在浏览器中呈现高精度的 3D 全球地形、影像、3D Tiles、glTF 模型与时序动画，是 Web 端三维 GIS 的事实标准。
+description: Use when building browser-based 3D globes, 3D Tiles visualization, time-dynamic geospatial data, or virtual globe applications. CesiumJS: high-performance WebGL 3D geospatial engine for interactive earth visualization.
 tags:
   - javascript
   - webgl

@@ -1,6 +1,6 @@
 ---
 name: oh-my-openagent
-description: oh-my-openagent（code-yeongyu/oh-my-openagent，曾用名 oh-my-opencode，简称 OmO）是面向 OpenCode 的「电池全包」多模型智能体编排插件（Agent Harness），把 OpenCode 武装成协同作战的开发团队——用 Claude Opus 编排、GPT 深度推理、Kimi 加速、Gemini 处理前端视觉、Grok 做代码检索，并内置并行后台智能体与 LSP/AST 工具，追求产出与资深工程师无异的代码。
+description: Use when configuring OpenCode for multi-model orchestration, Agent Harness patterns, CI/automation integration, or token cost optimization. Oh-My-OpenAgent: curated OpenCode agent configurations and prompt engineering patterns.
 tags: [ai, agent, opencode, orchestration, multi-model, lsp, ast, harness]
 ---
 

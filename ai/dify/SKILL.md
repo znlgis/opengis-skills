@@ -1,6 +1,6 @@
 ---
 name: dify
-description: Dify 是开源 LLM 应用开发平台，集成 RAG 引擎、工作流编排、Agent、可视化提示词、模型管理（OpenAI/Claude/Gemini/Ollama/通义千问/智谱/百川 等）与 API 网关，让团队能在数小时内构建并上线生成式 AI 应用，支持私有化部署。
+description: Use when building LLM applications with visual workflow — RAG knowledge bases, AI agents, chatbots with drag-and-drop orchestration. Dify: open-source LLM app platform supporting 30+ models (OpenAI, Claude, DeepSeek, Ollama, Qwen, GLM) with Docker deployment.
 tags: [llm, workflow, rag, agent, platform]
 ---
 

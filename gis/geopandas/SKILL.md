@@ -1,6 +1,6 @@
 ---
 name: geopandas
-description: GeoPandas 是 Python 地理空间矢量数据处理的核心库，在 pandas DataFrame 基础上扩展了几何列支持，提供文件读写（Shapefile/GeoJSON/GeoPackage/GeoParquet）、空间连接、叠加分析、裁剪、缓冲区、CRS 变换以及基于 matplotlib/folium 的地图可视化能力。
+description: Use when performing vector spatial data analysis in Python — reading/writing shapefiles, spatial joins, overlay operations, choropleth maps. GeoPandas: extends pandas DataFrames with geometry columns for Pythonic spatial analysis.
 tags:
   - python
   - pandas

@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 66 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
+description: Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 66+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more.
 tags:
   - gis
   - cad

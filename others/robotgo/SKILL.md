@@ -1,6 +1,6 @@
 ---
 name: robotgo
-description: RobotGo 是 Go 语言跨平台桌面自动化（RPA）库，提供鼠标控制、键盘输入、屏幕截图、位图查找、剪贴板读写、进程/窗口管理与全局事件监听等能力，支持 macOS、Windows、Linux 三平台 x86-amd64 与 arm64 架构，适用于 GUI 自动化测试、RPA 流程编排与 AI Computer Use 场景。
+description: Use when automating desktop GUI operations in Go — mouse/keyboard control, screen capture, image recognition via OpenCV, global hotkeys via gohook. RobotGo: cross-platform Go desktop automation (RPA) library for macOS, Windows, and Linux.
 tags: [go, golang, rpa, automation, desktop, screen-capture, mouse, keyboard, clipboard, gui, testing]
 ---
 
@@ -8,7 +8,7 @@ tags: [go, golang, rpa, automation, desktop, screen-capture, mouse, keyboard, cl
 >
 > **官方文档：** <https://github.com/go-vgo/robotgo#documentation>
 >
-> **许可证：** Apache-2.0 ｜ **最新版本：** v1.0.2（2026-03）｜ **默认分支：** `master`
+> **许可证：** Apache-2.0 ｜ **最新版本：** 参见 [GitHub Releases](https://github.com/go-vgo/robotgo/releases)｜ **默认分支：** `master`
 >
 > **生态子库：**
 >

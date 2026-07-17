@@ -1,6 +1,6 @@
 ---
 name: superpowers-zh
-description: superpowers-zh（jnMetaCode/superpowers-zh）是 jnMetaCode 基于英文上游 obra/superpowers 打造的中文增强版「AI 编程方法论」Skills 集合，把需求澄清、方案设计、计划编写、TDD、系统化调试、完成前验证、代码审查、分支收尾等工程实践写成可被 AI 助手加载的技能，让 AI「先想清楚再动手、用工程纪律工作」，并补充中文代码审查/提交规范/国内 Git 流程等本土化能力，支持 Claude Code、Copilot CLI、Cursor、OpenCode、Hermes Agent 等 18 款工具。
+description: Use when constraining AI coding with Chinese TDD methodology, systematic debugging, code review, and verification workflows. Superpowers-zh: Chinese adaptation of the Superpowers AI-assisted programming skills and methodologies.
 tags: [ai, skill, methodology, chinese, tdd, code-review, prompt, claude-code]
 ---
 
@@ -8,7 +8,7 @@ tags: [ai, skill, methodology, chinese, tdd, code-review, prompt, claude-code]
 >
 > **英文上游：** <https://github.com/obra/superpowers>
 >
-> **许可证：** MIT ｜ **npm 包：** `superpowers-zh`（v1.5.0）｜ **运行要求：** Node.js ≥ 20
+> **许可证：** MIT ｜ **npm 包：** 参见 [npm](https://www.npmjs.com/package/superpowers-zh)｜ **运行要求：** Node.js ≥ 20
 
 ## 概述
 

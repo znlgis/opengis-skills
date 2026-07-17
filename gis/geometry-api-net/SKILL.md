@@ -1,6 +1,6 @@
 ---
 name: geometry-api-net
-description: geometry-api-net 是一个 .NET Standard 2.0 的空间几何计算库，提供对二维和三维几何对象的创建、解析、序列化以及空间关系运算能力。
+description: Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in .NET/C# — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for .NET.
 tags:
   - dotnet
   - geometry

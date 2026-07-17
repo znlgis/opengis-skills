@@ -1,6 +1,6 @@
 ---
 name: postgis
-description: PostGIS 是 PostgreSQL 数据库的空间扩展，为关系型数据库添加地理对象支持，提供完整的空间数据类型、空间索引（GiST/SP-GiST/BRIN）、空间关系判断和 1000+ 空间函数，是事实上的开源空间数据库标准。
+description: Use when extending PostgreSQL with spatial data types, spatial indexes (GiST/SP-GiST), geometry functions (ST_Intersects, ST_Buffer, ST_Transform), and spatial queries. PostGIS: the most widely used open-source spatial database extension.
 tags:
   - postgresql
   - database

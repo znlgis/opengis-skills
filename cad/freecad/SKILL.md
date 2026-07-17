@@ -1,6 +1,6 @@
 ---
 name: freecad
-description: FreeCAD 是开源参数化 3D CAD 建模软件，基于 OCCT 几何内核与 Coin3D 显示引擎，提供 Sketcher、Part、PartDesign、Assembly、Draft、Arch（BIM）、CAM、FEM 等专业模块，支持 Python 脚本与插件扩展，适合机械设计、建筑 BIM、产品原型与教学。
+description: Use when doing parametric 3D CAD modeling, BIM/architectural design, FEM simulation, CAM toolpath generation, or robot simulation with Python scripting. FreeCAD: the leading open-source parametric 3D CAD with Sketcher, Part, PartDesign, Arch, CAM, and FEM workbenches.
 tags: [3d, parametric, cad, python, brep, step, cam, bim, ifc, freecad]
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: kicad
-description: KiCad 是开源跨平台 EDA（电子设计自动化）套件，集成 Eeschema 原理图、Pcbnew PCB 布线、3D 查看、Gerber 输出与器件库管理，是 PCB 设计领域的开源旗舰，广泛用于工业、教育与开源硬件项目。
+description: Use when designing electronic circuits and PCBs — schematic capture, PCB layout, 3D viewer, SPICE simulation, Gerber export. KiCad: the leading open-source EDA/PCB design suite.
 tags: [eda, pcb, electronics, schematic, gerber, python]
 ---
 

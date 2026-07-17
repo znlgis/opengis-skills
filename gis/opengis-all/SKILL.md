@@ -1,6 +1,6 @@
 ---
 name: opengis-all
-description: 整合 GDAL 命令行、GDAL API、qgis_process、PyQGIS、GeoServer REST API 五大工具/接口，覆盖 GIS 数据生成、格式转换、空间分析、地图服务发布全流程。通过本文件即可一站式解决从原始数据到地图服务的完整 GIS 数据处理链路。
+description: Use when navigating end-to-end GIS workflows — discover the full toolchain from GDAL data processing through GeoServer publishing to CesiumJS/OpenLayers visualization. One-stop index covering the complete open-source GIS data pipeline.
 
 tags:
   - gis

@@ -1,6 +1,6 @@
 ---
 name: mapsui
-description: Mapsui 是面向现代 .NET 的开源跨平台地图组件库，支持 WPF、WinUI、MAUI、Avalonia、Uno、Blazor、WinForms 等几乎所有 .NET UI 框架，主打高性能（基于 SkiaSharp）、易用 API 和丰富的图层/瓦片源支持。
+description: Use when embedding interactive 2D maps in .NET desktop (WinForms/WPF) or mobile (MAUI) applications — tile layers, vector features, map controls. Mapsui: cross-platform .NET map component library.
 tags:
   - dotnet
   - csharp

@@ -1,6 +1,6 @@
 ---
 name: openscad
-description: OpenSCAD 是面向程序员的开源 3D CAD 软件，用声明式脚本语言定义参数化模型，配合 CSG（构造实体几何）原语和函数模块构造复杂几何，特别适合机械零件、3D 打印模型与教育用途。
+description: Use when creating 3D models programmatically via CSG (Constructive Solid Geometry) scripting — parametric parts, customizable designs for 3D printing. OpenSCAD: script-based 3D CAD using a declarative language rather than GUI modeling.
 tags: [3d, parametric, csg, scripting, stl, openscad]
 ---
 
