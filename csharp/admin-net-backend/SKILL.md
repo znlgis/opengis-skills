@@ -1,93 +1,93 @@
 ---
 name: Admin.NET-backend
-description: "Use when building .NET admin/backend management systems with Furion framework  -- ?user/role/permission management, CRUD code generation, API documentation. Admin.NET: Furion-based enterprise admin backend scaffold."
+description: "Use when building .NET admin/backend management systems with Furion framework — user/role/permission management, CRUD code generation, API documentation. Admin.NET: Furion-based enterprise admin backend scaffold."
 tags: [dotnet, webapi, rbac, multitenant, furion, sqlsugar]
 ---
 
-> **项目地址 -- ?* <https://github.com/znlgis/Admin.NET>
+> **项目地址：** <https://github.com/znlgis/Admin.NET>
 >
-> **后端代码目录 -- ?* `Admin.NET/` -- ?NET 解决方案 -- ?
+> **后端代码目录：** `Admin.NET/`（.NET 解决方案）
 >
-> **在线文档 -- ?* <https://adminnet.top/>
+> **在线文档：** <https://adminnet.top/>
 >
-> **演示环境 -- ?* <https://demo.adminnet.top>（账号：superAdmin.NET / 密码：Admin.NET++010101 -- ?
+> **演示环境：** <https://demo.adminnet.top>（账号：superAdmin.NET / 密码：Admin.NET++010101）
 >
 > **许可证：** MIT + Apache 2.0
 
 ## 概述
 
-Admin.NET 后端基于 **.NET 8 / .NET 10** 构建，核心依 -- ?**Furion** 框架（动 -- ?API、依赖注入、事件总线、远程请求等）和 **SqlSugar** ORM（自动建库建表、多租户、多数据库支持）。框架采用分层架 -- ?+ 插件式开发，适用于中小企业快速搭建权限管理系统 -- ?
+Admin.NET 后端基于 **.NET 8 / .NET 10** 构建，核心依赖 **Furion** 框架（动态 API、依赖注入、事件总线、远程请求等）和 **SqlSugar** ORM（自动建库建表、多租户、多数据库支持）。框架采用分层架构 + 插件式开发，适用于中小企业快速搭建权限管理系统。
 
-**核心技术栈 -- ?*
+**核心技术栈：**
 - **运行时：** .NET 8.0 / .NET 10.0
-- **Web 框架 -- ?* ASP.NET Core + Furion
-- **ORM -- ?* SqlSugar（支 -- ?MySQL、SQL Server、PostgreSQL、Oracle、SQLite、达梦等 -- ?
-- **缓存 -- ?* NewLife.Redis / MemoryCache
-- **认证 -- ?* JWT Bearer（Furion.Extras.Authentication.JwtBearer -- ?
-- **实时通讯 -- ?* SignalR（支 -- ?Redis 背板 -- ?
-- **任务调度 -- ?* Sundial
-- **日志 -- ?* log4net / Elasticsearch
-- **对象映射 -- ?* Mapster
+- **Web 框架：** ASP.NET Core + Furion
+- **ORM：** SqlSugar（支持 MySQL、SQL Server、PostgreSQL、Oracle、SQLite、达梦等）
+- **缓存：** NewLife.Redis / MemoryCache
+- **认证：** JWT Bearer（Furion.Extras.Authentication.JwtBearer）
+- **实时通讯：** SignalR（支持 Redis 背板）
+- **任务调度：** Sundial
+- **日志：** log4net / Elasticsearch
+- **对象映射：** Mapster
 
 ---
 
 ## 项目结构
 
 ```
-Admin.NET/                         # 后端解决方案根目 -- ?
+Admin.NET/                         # 后端解决方案根目录
 ├── Admin.NET.sln                  # Visual Studio 解决方案文件
-├── Admin.NET.Core/                # 核心框架 -- ?
- -- ?  ├── Attribute/                 # 自定义特 -- ?
- -- ?  ├── Cache/                     # 缓存工具
- -- ?  ├── Const/                     # 常量定义
- -- ?  ├── Entity/                    # 核心实体（EntityBase 等基类）
- -- ?  ├── Enum/                      # 枚举定义
- -- ?  ├── EventBus/                  # 事件总线
- -- ?  ├── Extension/                 # 扩展方法
- -- ?  ├── Hub/                       # SignalR Hub
- -- ?  ├── Job/                       # 定时任务
- -- ?  ├── Logging/                   # 日志组件
- -- ?  ├── Option/                    # 配置选项 -- ?
- -- ?  ├── SeedData/                  # 种子数据
- -- ?  ├── Service/                   # 核心服务（见下方服务模块表）
- -- ?  ├── SignalR/                   # SignalR 配置
- -- ?  ├── SignatureAuth/             # 签名认证
- -- ?  ├── SqlSugar/                  # SqlSugar 配置与仓 -- ?
- -- ?  ├── ElasticSearch/             # ES 日志集成
- -- ?  ├── Update/                    # 数据库更新脚 -- ?
- -- ?  └── Utils/                     # 工具 -- ?
-├── Admin.NET.Application/         # 应用层（业务示例 -- ?
- -- ?  ├── Configuration/             # 应用配置
- -- ?  ├── Const/                     # 应用常量
- -- ?  ├── Entity/                    # 业务实体
- -- ?  ├── EventBus/                  # 业务事件
- -- ?  ├── OpenApi/                   # 开 -- ?API
- -- ?  ├── Startup.cs                 # 应用层启动配 -- ?
- -- ?  └── GlobalUsings.cs            # 全局 using
+├── Admin.NET.Core/                # 核心框架层
+│   ├── Attribute/                 # 自定义特性
+│   ├── Cache/                     # 缓存工具
+│   ├── Const/                     # 常量定义
+│   ├── Entity/                    # 核心实体（EntityBase 等基类）
+│   ├── Enum/                      # 枚举定义
+│   ├── EventBus/                  # 事件总线
+│   ├── Extension/                 # 扩展方法
+│   ├── Hub/                       # SignalR Hub
+│   ├── Job/                       # 定时任务
+│   ├── Logging/                   # 日志组件
+│   ├── Option/                    # 配置选项类
+│   ├── SeedData/                  # 种子数据
+│   ├── Service/                   # 核心服务（见下方服务模块表）
+│   ├── SignalR/                   # SignalR 配置
+│   ├── SignatureAuth/             # 签名认证
+│   ├── SqlSugar/                  # SqlSugar 配置与仓储
+│   ├── ElasticSearch/             # ES 日志集成
+│   ├── Update/                    # 数据库更新脚本
+│   └── Utils/                     # 工具类
+├── Admin.NET.Application/         # 应用层（业务示例）
+│   ├── Configuration/             # 应用配置
+│   ├── Const/                     # 应用常量
+│   ├── Entity/                    # 业务实体
+│   ├── EventBus/                  # 业务事件
+│   ├── OpenApi/                   # 开放 API
+│   ├── Startup.cs                 # 应用层启动配置
+│   └── GlobalUsings.cs            # 全局 using
 ├── Admin.NET.Web.Core/            # Web 中间件与配置
 ├── Admin.NET.Web.Entry/           # 启动入口
- -- ?  ├── Controllers/               # 控制 -- ?
- -- ?  ├── appsettings.json           # 配置文件
- -- ?  └── wwwroot/                   # 静态资 -- ?
+│   ├── Controllers/               # 控制器
+│   ├── appsettings.json           # 配置文件
+│   └── wwwroot/                   # 静态资源
 ├── Admin.NET.Test/                # 单元测试
 └── Plugins/                       # 插件目录
     ├── Admin.NET.Plugin.GoView/          # GoView 数据大屏
     ├── Admin.NET.Plugin.DingTalk/        # 钉钉集成
     ├── Admin.NET.Plugin.ApprovalFlow/    # 审批流程
     ├── Admin.NET.Plugin.K3Cloud/         # 金蝶 K3 Cloud
-    ├── Admin.NET.Plugin.ReZero/          # ReZero 零代 -- ?
+    ├── Admin.NET.Plugin.ReZero/          # ReZero 零代码
     └── Admin.NET.Plugin.WorkWeixin/      # 企业微信
 ```
 
 ---
 
-## 环境准备与运 -- ?
+## 环境准备与运行
 
 ### 前置要求
 
-- .NET 8 SDK  -- ?.NET 10 SDK
+- .NET 8 SDK 或 .NET 10 SDK
 - 数据库（SQLite 默认 / MySQL / SQL Server / PostgreSQL / Oracle / 达梦等）
-- Redis（可选，用于缓存 -- ?SignalR 背板 -- ?
+- Redis（可选，用于缓存和 SignalR 背板）
 
 ### 运行后端
 
@@ -97,7 +97,7 @@ dotnet restore Admin.NET.sln
 dotnet run --project Admin.NET.Web.Entry
 ```
 
-启动后默认访 -- ?`https://localhost:5005`，Swagger 文档地址：`https://localhost:5005/api`
+启动后默认访问 `https://localhost:5005`，Swagger 文档地址：`https://localhost:5005/api`
 
 ### 配置文件
 
@@ -126,33 +126,33 @@ dotnet run --project Admin.NET.Web.Entry
 
 ## 核心服务模块
 
-`Admin.NET.Core/Service/` 目录下按业务领域划分服务模块 -- ?
+`Admin.NET.Core/Service/` 目录下按业务领域划分服务模块：
 
-| 服务目录 | 说明 | 关键 -- ?|
+| 服务目录 | 说明 | 关键类 |
 |---------|------|--------|
 | `Auth/` | 登录认证、Token 管理 | `SysAuthService` |
 | `User/` | 用户管理 | `SysUserService` |
-| `Role/` | 角色管理、权限分 -- ?| `SysRoleService` |
+| `Role/` | 角色管理、权限分配 | `SysRoleService` |
 | `Org/` | 机构 / 组织架构管理 | `SysOrgService` |
-| `Menu/` | 菜单与按钮权限管 -- ?| `SysMenuService` |
+| `Menu/` | 菜单与按钮权限管理 | `SysMenuService` |
 | `Pos/` | 职位管理 | `SysPosService` |
 | `Dict/` | 数据字典管理 | `SysDictTypeService` / `SysDictDataService` |
 | `Config/` | 系统参数配置 | `SysConfigService` |
-| `Tenant/` | 多租户管 -- ?| `SysTenantService` |
+| `Tenant/` | 多租户管理 | `SysTenantService` |
 | `Log/` | 访问日志 / 操作日志 | `SysLogVisService` / `SysLogOpService` |
 | `File/` | 文件上传下载管理 | `SysFileService` |
 | `Job/` | 任务调度管理 | `SysJobService` |
 | `Notice/` | 通知公告（SignalR 推送） | `SysNoticeService` |
-| `OnlineUser/` | 在线用户管理（SignalR -- ?| `SysOnlineUserService` |
+| `OnlineUser/` | 在线用户管理（SignalR） | `SysOnlineUserService` |
 | `Message/` | 站内消息 | `SysMessageService` |
-| `CodeGen/` | 代码生成 -- ?| `SysCodeGenService` |
+| `CodeGen/` | 代码生成器 | `SysCodeGenService` |
 | `Cache/` | 缓存管理 | `SysCacheService` |
-| `Server/` | 服务器监 -- ?| `SysServerService` |
-| `DataBase/` | 数据库管 -- ?| `SysDatabaseService` |
-| `Wechat/` | 微信小程 -- ?/ 支付 | `SysWechatService` |
-| `Alipay/` | 支付宝支 -- ?| `SysAlipayService` |
-| `OAuth/` | 第三 -- ?OAuth 登录 | `SysOAuthService` |
-| `OpenAccess/` | 开放接口签名认 -- ?| `SysOpenAccessService` |
+| `Server/` | 服务器监控 | `SysServerService` |
+| `DataBase/` | 数据库管理 | `SysDatabaseService` |
+| `Wechat/` | 微信小程序 / 支付 | `SysWechatService` |
+| `Alipay/` | 支付宝支付 | `SysAlipayService` |
+| `OAuth/` | 第三方 OAuth 登录 | `SysOAuthService` |
+| `OpenAccess/` | 开放接口签名认证 | `SysOpenAccessService` |
 | `Print/` | 打印模板管理 | `SysPrintService` |
 | `Region/` | 行政区域 | `SysRegionService` |
 | `APIJSON/` | APIJSON 协议支持 | `ApiJsonService` |
@@ -168,10 +168,10 @@ dotnet run --project Admin.NET.Web.Entry
 
 ## 实体基类
 
-所有业务实体继承自 `EntityBase` 或其变体 -- ?
+所有业务实体继承自 `EntityBase` 或其变体：
 
 ```csharp
-/// 实体基类 - 含主 -- ?Id
+/// 实体基类 - 含主键 Id
 [SugarTable(null)]
 public abstract class EntityBase
 {
@@ -186,7 +186,7 @@ public abstract class EntityBaseData : EntityBase
     public virtual DateTime? CreateTime { get; set; }
     public virtual long? UpdateUserId { get; set; }
     public virtual DateTime? UpdateTime { get; set; }
-    public virtual bool IsDelete { get; set; }  // 软删 -- ?
+    public virtual bool IsDelete { get; set; }  // 软删除
 }
 
 /// 带租户的实体基类
@@ -198,9 +198,9 @@ public abstract class EntityTenant : EntityBaseData
 
 ---
 
-## 服务开发模 -- ?
+## 服务开发模式
 
-### 继承 BaseService（泛 -- ?CRUD -- ?
+### 继承 BaseService（泛型 CRUD）
 
 ```csharp
 // BaseService<T> 自动提供 GetDetail / GetList / Add / Update / Delete 接口
@@ -211,11 +211,11 @@ public class MyBusinessService : BaseService<MyEntity>
 }
 ```
 
-### 自定义服务（推荐方式 -- ?
+### 自定义服务（推荐方式）
 
 ```csharp
 /// <summary>
-/// 自定义业务服 -- ?🏷 -- ?
+/// 自定义业务服务 🏷️
 /// </summary>
 [ApiDescriptionSettings(Order = 200)]
 public class MyCustomService : IDynamicApiController, ITransient
@@ -270,7 +270,7 @@ public class MyCustomService : IDynamicApiController, ITransient
     [DisplayName("删除")]
     public async Task Delete(DeleteMyEntityInput input)
     {
-        await _rep.FakeDeleteAsync(input.Adapt<MyEntity>());  // 软删 -- ?
+        await _rep.FakeDeleteAsync(input.Adapt<MyEntity>());  // 软删除
     }
 }
 ```
@@ -314,11 +314,11 @@ public class MyEntityOutput
 
 ---
 
-## 关键模式与约 -- ?
+## 关键模式与约定
 
-### Furion 动 -- ?API
+### Furion 动态 API
 
-实现 `IDynamicApiController` 接口即自动暴露为 API，方法名约定映射 HTTP 动词 -- ?
+实现 `IDynamicApiController` 接口即自动暴露为 API，方法名约定映射 HTTP 动词：
 
 | 方法名前缀 | HTTP 动词 | 示例 |
 |-----------|----------|------|
@@ -328,7 +328,7 @@ public class MyEntityOutput
 | `Delete` / `Remove` / `Clear` | DELETE | `Delete(long id)` |
 | `Page` | POST（分页） | `Page(PageInput input)` |
 
-可通过 `[HttpPost]` / `[HttpGet]` 强制覆盖，通过 `[ApiDescriptionSettings(Name = "xxx")]` 自定义路由段 -- ?
+可通过 `[HttpPost]` / `[HttpGet]` 强制覆盖，通过 `[ApiDescriptionSettings(Name = "xxx")]` 自定义路由段。
 
 ### SqlSugar 仓储
 
@@ -340,17 +340,17 @@ private readonly SqlSugarRepository<TEntity> _rep;
 await _rep.InsertAsync(entity);                           // 新增
 await _rep.AsUpdateable(entity).IgnoreColumns(true)
     .ExecuteCommandAsync();                               // 更新（忽略空列）
-await _rep.FakeDeleteAsync(entity);                       // 软删 -- ?
+await _rep.FakeDeleteAsync(entity);                       // 软删除
 await _rep.DeleteByIdAsync(id);                           // 物理删除
-await _rep.GetByIdAsync(id);                              //  -- ?ID  -- ?
-await _rep.GetListAsync();                                // 查全 -- ?
+await _rep.GetByIdAsync(id);                              // 按 ID 查
+await _rep.GetListAsync();                                // 查全部
 await _rep.AsQueryable()                                  // 条件查询
     .WhereIF(condition, u => u.Field == value)
     .OrderBy(u => u.CreateTime, OrderByType.Desc)
     .Select<OutputDto>()
     .ToPagedListAsync(page, pageSize);                    // 分页
 
-// 切换数据库上下文（多租户 -- ?
+// 切换数据库上下文（多租户）
 _rep.Context.AsTenant().GetConnection(tenantDbConfigId);
 ```
 
@@ -360,7 +360,7 @@ _rep.Context.AsTenant().GetConnection(tenantDbConfigId);
 // 瞬态（每次请求新实例）
 public class MyService : ITransient { }
 
-// 作用域（每次请求共享 -- ?
+// 作用域（每次请求共享）
 public class MyService : IScoped { }
 
 // 单例
@@ -396,7 +396,7 @@ await _cache.RemoveAsync(key);
 
 ---
 
-## 认证与鉴 -- ?
+## 认证与鉴权
 
 ### JWT 登录流程
 
@@ -420,9 +420,9 @@ Authorization: Bearer {accessToken}
 
 ### 权限控制
 
-- **菜单权限**：通过角色绑定菜单控制页面可见 -- ?
-- **按钮权限**：通过菜单上的按钮权限标识（如 `sysUser:add`）做细粒度控 -- ?
-- **数据权限**：角色可绑定数据范围（全 -- ?/ 本部 -- ?/ 本部门及以下 / 仅本 -- ?/ 自定义）
+- **菜单权限**：通过角色绑定菜单控制页面可见性
+- **按钮权限**：通过菜单上的按钮权限标识（如 `sysUser:add`）做细粒度控制
+- **数据权限**：角色可绑定数据范围（全部 / 本部门 / 本部门及以下 / 仅本人 / 自定义）
 
 ---
 
@@ -433,27 +433,27 @@ Authorization: Bearer {accessToken}
 POST /api/sysFile/uploadFile
 Content-Type: multipart/form-data
 
-// 文件存储支持 -- ?
+// 文件存储支持：
 // - Local（本地存储）
-// - Aliyun（阿里云 OSS -- ?
-// - Tencent（腾讯云 COS -- ?
+// - Aliyun（阿里云 OSS）
+// - Tencent（腾讯云 COS）
 // - Minio
-// - QiNiu（七牛云 -- ?
+// - QiNiu（七牛云）
 ```
 
 ---
 
 ## 代码生成
 
-代码生成器根据数据库表结构自动生成前后端代码 -- ?
+代码生成器根据数据库表结构自动生成前后端代码：
 
-1.  -- ?Swagger 或管理界面中选择数据库表
-2. 配置字段对应的前端控件类 -- ?
+1. 在 Swagger 或管理界面中选择数据库表
+2. 配置字段对应的前端控件类型
 3. 一键生成：后端 Service / Entity / DTO + 前端 Vue 页面
 
 ---
 
-## 插件开 -- ?
+## 插件开发
 
 新建类库项目引用 `Admin.NET.Core`，在 `Plugins/` 目录下组织：
 
@@ -467,37 +467,37 @@ public class MyPluginService : IDynamicApiController, ITransient
     // 业务代码
 }
 
-// 4.  -- ?Admin.NET.Web.Entry 中引用该插件项目即可自动注册
+// 4. 在 Admin.NET.Web.Entry 中引用该插件项目即可自动注册
 ```
 
 ---
 
-## 常用第三方集 -- ?
+## 常用第三方集成
 
-| 功能 | NuGet  -- ?| 用 -- ?|
+| 功能 | NuGet 包 | 用途 |
 |------|---------|------|
-| 微信小程 -- ?支付 | `SKIT.FlurlHttpClient.Wechat.*` | 微信 API 对接 |
-| 支付宝支 -- ?| `AlipaySDKNet.Standard` | 支付 -- ?API 对接 |
+| 微信小程序/支付 | `SKIT.FlurlHttpClient.Wechat.*` | 微信 API 对接 |
+| 支付宝支付 | `AlipaySDKNet.Standard` | 支付宝 API 对接 |
 | 导入导出 | `Magicodes.IE.Excel` / `MiniExcel` | Excel/Word/PDF 导入导出 |
-| 二维 -- ?| `QRCoder` | 二维码生 -- ?|
+| 二维码 | `QRCoder` | 二维码生成 |
 | 国密算法 | `BouncyCastle.Cryptography` | SM2/SM3/SM4 加密 |
-| LDAP | `Novell.Directory.Ldap.NETStandard` | LDAP/AD 域认 -- ?|
-| 短信 | `AlibabaCloud.SDK.Dysmsapi20170525` | 阿里云短 -- ?|
-| 邮件 | `MailKit` / `NETCore.MailKit` | 邮件发 -- ?|
+| LDAP | `Novell.Directory.Ldap.NETStandard` | LDAP/AD 域认证 |
+| 短信 | `AlibabaCloud.SDK.Dysmsapi20170525` | 阿里云短信 |
+| 邮件 | `MailKit` / `NETCore.MailKit` | 邮件发送 |
 | IP 定位 | `IPTools.China` / `IPTools.International` | IP 地址解析 |
 | 限流 | `AspNetCoreRateLimit` | API 访问限流 |
 | ES 日志 | `Elastic.Clients.Elasticsearch` | Elasticsearch 日志 |
-| OAuth | `AspNet.Security.OAuth.*` | 第三方登录（微信/Gitee -- ?|
+| OAuth | `AspNet.Security.OAuth.*` | 第三方登录（微信/Gitee） |
 
 ---
 
-## 开发流程最佳实 -- ?
+## 开发流程最佳实践
 
 ```
-1. 建议每个业务系统单独创建一个工程（参 -- ?Admin.NET.Application 层的结构 -- ?
-2. 自建应用层引 -- ?Admin.NET.Core 层（不修改核心工程名 -- ?
+1. 建议每个业务系统单独创建一个工程（参考 Admin.NET.Application 层的结构）
+2. 自建应用层引用 Admin.NET.Core 层（不修改核心工程名）
 3. Admin.NET.Web.Entry 引用新建的应用层工程
-4. 接口 / 服务 / 控制器采用合并模式，不影响自建应用层的使 -- ?
+4. 接口 / 服务 / 控制器采用合并模式，不影响自建应用层的使用
 5. 可随主仓库升级而升级，避免冲突
 ```
 
@@ -505,62 +505,62 @@ public class MyPluginService : IDynamicApiController, ITransient
 
 ## AI 使用建议
 
-### 推荐工作 -- ?
+### 推荐工作流
 
-1. **快速搭 -- ?*：克隆仓 -- ? -- ?配置数据库连 -- ? -- ?`dotnet run`  -- ?自动建库建表 + 种子数据
-2. **新增业务模块**：参 -- ?`Admin.NET.Application` 结构，新建实 -- ? -- ?新建 Service（继 -- ?`BaseService<T>` 或实 -- ?`IDynamicApiController`）→ 新建 DTO
-3. **代码生成**：在 Swagger 或管理界面选表  -- ?配置字段控件  -- ?一键生成后 -- ?Service/Entity/DTO + 前端 Vue 页面
-4. **插件开 -- ?*：`Plugins/` 下新建类 -- ? -- ?引用 `Admin.NET.Core`  -- ?实现 `IDynamicApiController`  -- ?被主项目引用即自动注 -- ?
-5. **部署**：配 -- ?`appsettings.json`（数据库/Redis/JWT）→ `dotnet publish`  -- ?Docker  -- ?IIS/Nginx 部署
+1. **快速搭建**：克隆仓库 → 配置数据库连接 → `dotnet run` → 自动建库建表 + 种子数据
+2. **新增业务模块**：参考 `Admin.NET.Application` 结构，新建实体 → 新建 Service（继承 `BaseService<T>` 或实现 `IDynamicApiController`）→ 新建 DTO
+3. **代码生成**：在 Swagger 或管理界面选表 → 配置字段控件 → 一键生成后端 Service/Entity/DTO + 前端 Vue 页面
+4. **插件开发**：`Plugins/` 下新建类库 → 引用 `Admin.NET.Core` → 实现 `IDynamicApiController` → 被主项目引用即自动注册
+5. **部署**：配置 `appsettings.json`（数据库/Redis/JWT）→ `dotnet publish` → Docker 或 IIS/Nginx 部署
 
-### 关键模式与常见陷 -- ?
+### 关键模式与常见陷阱
 
-- **实体继承 -- ?*：`EntityBase`（仅 Id）→ `EntityBaseData` -- ?审计字段/软删除） -- ?`EntityTenant` -- ?租户隔离），按需选择
-- **雪花 ID**：主键使 -- ?`Yitter.IdGenerator` 生成 long 型雪 -- ?ID，不要设置数据库自增
-- **软删 -- ?*：继 -- ?`EntityBaseData` 的实 -- ?`Delete` 默认是软删除（设 `IsDelete = true`），物理删除 -- ?`DeleteByIdAsync`
-- **动 -- ?API 分组**：`[ApiDescriptionSettings("GroupName", Order = 100)]` 控制 Swagger 分组
-- **权限控制**：`[DisplayName("操作 -- ?)]` 自动注册为权限标识，前端配合 `v-auth` 指令使用
-- **多租 -- ?*：实体继 -- ?`EntityTenant` 后自动按 `TenantId` 隔离，切换租户用 `_rep.Context.AsTenant().GetConnection(tenantDbConfigId)`
+- **实体继承链**：`EntityBase`（仅 Id）→ `EntityBaseData`（+审计字段/软删除）→ `EntityTenant`（+租户隔离），按需选择
+- **雪花 ID**：主键使用 `Yitter.IdGenerator` 生成 long 型雪花 ID，不要设置数据库自增
+- **软删除**：继承 `EntityBaseData` 的实体 `Delete` 默认是软删除（设 `IsDelete = true`），物理删除用 `DeleteByIdAsync`
+- **动态 API 分组**：`[ApiDescriptionSettings("GroupName", Order = 100)]` 控制 Swagger 分组
+- **权限控制**：`[DisplayName("操作名")]` 自动注册为权限标识，前端配合 `v-auth` 指令使用
+- **多租户**：实体继承 `EntityTenant` 后自动按 `TenantId` 隔离，切换租户用 `_rep.Context.AsTenant().GetConnection(tenantDbConfigId)`
 
 ### 如何选择正确方案
 
 | 场景 | 推荐方案 |
 |------|---------|
 | 从零搭建后台 | Admin.NET（Furion + SqlSugar 全家桶） |
-| 已有 Furion 项目加权 -- ?| 参 -- ?Admin.NET  -- ?Auth/User/Role/Menu 模块 |
-| 仅需 ORM | 直接 -- ?SqlSugar，不引入 Admin.NET |
-| 微服务架 -- ?| RuoYi-Cloud（Java 生态） |
+| 已有 Furion 项目加权限 | 参考 Admin.NET 的 Auth/User/Role/Menu 模块 |
+| 仅需 ORM | 直接用 SqlSugar，不引入 Admin.NET |
+| 微服务架构 | RuoYi-Cloud（Java 生态） |
 
 ---
 
 ## 注意事项
 
-1. **数据库自动迁 -- ?*：首次启动会自动创建数据库和种子数据，无需手动执行 SQL
-2. **雪花 ID**：主键使 -- ?`Yitter.IdGenerator` 生成雪花 ID（long 类型 -- ?
-3. **软删 -- ?*：继 -- ?`EntityBaseData` 的实体默认使用软删除（`IsDelete` 字段 -- ?
-4. **多租 -- ?*：实体继 -- ?`EntityTenant` 自动 -- ?`TenantId` 隔离数据
-5. **API 分组**：通过 `[ApiDescriptionSettings("GroupName")]`  -- ?Swagger 接口分组
-6. **权限控制**：方法上 `[DisplayName("操作 -- ?)]` 会注册为权限标识，搭 -- ?`[Authorize]` 使用
-7. **国密支持**：通过 `BouncyCastle.Cryptography`  -- ?`sm-crypto` 实现 SM2/SM3/SM4 算法
-8. **Docker 部署**：后端目录包 -- ?`.dockerignore`，可直接 -- ?Dockerfile 容器化部 -- ?
+1. **数据库自动迁移**：首次启动会自动创建数据库和种子数据，无需手动执行 SQL
+2. **雪花 ID**：主键使用 `Yitter.IdGenerator` 生成雪花 ID（long 类型）
+3. **软删除**：继承 `EntityBaseData` 的实体默认使用软删除（`IsDelete` 字段）
+4. **多租户**：实体继承 `EntityTenant` 自动按 `TenantId` 隔离数据
+5. **API 分组**：通过 `[ApiDescriptionSettings("GroupName")]` 对 Swagger 接口分组
+6. **权限控制**：方法上 `[DisplayName("操作名")]` 会注册为权限标识，搭配 `[Authorize]` 使用
+7. **国密支持**：通过 `BouncyCastle.Cryptography` 和 `sm-crypto` 实现 SM2/SM3/SM4 算法
+8. **Docker 部署**：后端目录包含 `.dockerignore`，可直接用 Dockerfile 容器化部署
 
 ---
 
-## 相关技 -- ?
+## 相关技能
 
-- **furion**  -- ?Admin.NET 后端核心依赖 -- ?Web 框架：[../furion/SKILL.md](../furion/SKILL.md)
-- **sqlsugar**  -- ?Admin.NET 后端核心依赖 -- ?ORM：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
-- **admin-net-frontend**  -- ?Admin.NET 配套前端（Vue3 + Element Plus）：[../admin-net-frontend/SKILL.md](../admin-net-frontend/SKILL.md)
+- **furion** — Admin.NET 后端核心依赖的 Web 框架：[../furion/SKILL.md](../furion/SKILL.md)
+- **sqlsugar** — Admin.NET 后端核心依赖的 ORM：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
+- **admin-net-frontend** — Admin.NET 配套前端（Vue3 + Element Plus）：[../admin-net-frontend/SKILL.md](../admin-net-frontend/SKILL.md)
 
 ---
 
-## 参考链 -- ?
+## 参考链接
 
-- **GitHub -- ?* <https://github.com/znlgis/Admin.NET>
-- **GitHub 镜像 -- ?* <https://github.com/zuohuaijun/Admin.NET>
-- **Gitee 镜像 -- ?* <https://gitee.com/zuohuaijun/Admin.NET>
-- **GitCode 镜像 -- ?* <https://gitcode.com/zuohuaijun/Admin.NET>
-- **在线文档 -- ?* <https://adminnet.top/>
-- **Furion 框架 -- ?* <https://gitee.com/dotnetchina/Furion>
-- **SqlSugar 文档 -- ?* <https://www.donet5.com/Home/Doc>
-- **vue-next-admin -- ?* <https://lyt-top.gitee.io/vue-next-admin-doc-preview/>
+- **GitHub：** <https://github.com/znlgis/Admin.NET>
+- **GitHub 镜像：** <https://github.com/zuohuaijun/Admin.NET>
+- **Gitee 镜像：** <https://gitee.com/zuohuaijun/Admin.NET>
+- **GitCode 镜像：** <https://gitcode.com/zuohuaijun/Admin.NET>
+- **在线文档：** <https://adminnet.top/>
+- **Furion 框架：** <https://gitee.com/dotnetchina/Furion>
+- **SqlSugar 文档：** <https://www.donet5.com/Home/Doc>
+- **vue-next-admin：** <https://lyt-top.gitee.io/vue-next-admin-doc-preview/>
