@@ -1,6 +1,6 @@
 ---
 name: mapsui
-description: "Use when embedding interactive 2D maps in .NET desktop (WinForms/WPF) or mobile (MAUI) applications  -- ?tile layers, vector features, map controls. Mapsui: cross-platform .NET map component library."
+description: "Use when embedding interactive 2D maps in .NET desktop (WinForms/WPF) or mobile (MAUI) applications — tile layers, vector features, map controls. Mapsui: cross-platform .NET map component library."
 tags:
   - dotnet
   - csharp
@@ -14,27 +14,27 @@ tags:
   - tiles
 ---
 
-> **项目地址 -- ?* <https://github.com/Mapsui/Mapsui>
+> **项目地址：** <https://github.com/Mapsui/Mapsui>
 >
-> **官方文档 -- ?* <https://mapsui.com/documentation/>
+> **官方文档：** <https://mapsui.com/documentation/>
 >
 > **许可证：** LGPL-2.1+
 
 ## 概述
 
--  -- ?UI 框架：WPF / WinUI / MAUI / Avalonia / Uno / Blazor / WinForms
+- 跨 UI 框架：WPF / WinUI / MAUI / Avalonia / Uno / Blazor / WinForms
 - SkiaSharp 渲染，性能优于 GDI+
 - 数据源：OSM / WMS / WMTS / TMS / XYZ / Shapefile / GeoJSON / MBTiles / PostGIS
 - 几何基于 NetTopologySuite
 - 投影：`ProjNet` / `Mapsui.Projections`
-- 内置交互：拖动、缩放、旋转、捏合、命 -- ?
+- 内置交互：拖动、缩放、旋转、捏合、命中
 
 ---
 
 ## 安装
 
 ```bash
-dotnet add package Mapsui.Wpf            #  -- ?Mapsui.Maui / Mapsui.Avalonia / ...
+dotnet add package Mapsui.Wpf            # 或 Mapsui.Maui / Mapsui.Avalonia / ...
 dotnet add package Mapsui.Tiling
 dotnet add package Mapsui.Nts
 ```
@@ -71,8 +71,8 @@ MapControl.Map = map;
 |------|------|
 | `Map` | 地图 |
 | `Layer` / `MemoryLayer` / `ImageLayer` / `TileLayer` | 图层 |
-| `IProvider` | 数据提供 -- ?|
-| `IFeature` / `GeometryFeature` | 要素（NTS 几何 -- ?|
+| `IProvider` | 数据提供者 |
+| `IFeature` / `GeometryFeature` | 要素（NTS 几何） |
 | `IStyle` / `VectorStyle` / `LabelStyle` / `SymbolStyle` | 样式 |
 | `Navigator` | 视图操作 |
 
@@ -179,7 +179,7 @@ MapControl.Info += (s, e) => {
 
 ## 性能优化
 
-1. 海量 -- ? -- ?`RasterizingTileLayer` 包一层（按瓦片预渲染 -- ?
+1. 海量点 → `RasterizingTileLayer` 包一层（按瓦片预渲染）
 2. 优先 `MemoryLayer` + 缓存 Feature
 3. 异步加载 + `await Layer.WaitForFinishedRefresh()`
 4. 共享 Brush/Pen/Style 实例
@@ -191,18 +191,18 @@ MapControl.Info += (s, e) => {
 
 | 问题 | 解决 |
 |------|------|
-| WPF 无图 | NuGet  -- ?`Mapsui.Wpf` 或没设置 `MapControl.Map` |
+| WPF 无图 | NuGet 缺 `Mapsui.Wpf` 或没设置 `MapControl.Map` |
 | 投影错误 | `SphericalMercator.FromLonLat` 转换 |
-| MAUI 空白 | `MauiProgram`  -- ?`UseSkiaSharp()` + `UseMapsui()` |
+| MAUI 空白 | `MauiProgram` 中 `UseSkiaSharp()` + `UseMapsui()` |
 | Shapefile 中文乱码 | 指定 Encoding |
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作 -- ?
+### 推荐工作流
 
-1. **选择 UI 框架**：Mapsui 支持 WPF/WinUI/MAUI/Avalonia/Uno/Blazor/WinForms，根据需要选择对应 -- ?NuGet  -- ?
+1. **选择 UI 框架**：Mapsui 支持 WPF/WinUI/MAUI/Avalonia/Uno/Blazor/WinForms，根据需要选择对应的 NuGet 包
 2. **创建 Map**：实例化 `Map`，添加图层（`TileLayer` 作为底图 + `MemoryLayer` 作为矢量覆盖层）
 3. **数据转换**：通过 `SphericalMercator.FromLonLat()` 将经纬度转为 Web Mercator 坐标
 4. **绑定控件**：将 `MapControl.Map` 设置为创建的 Map 对象
@@ -210,15 +210,15 @@ MapControl.Info += (s, e) => {
 
 ### 关键注意事项
 
-- **NuGet 包完 -- ?*：确保安装了 `Mapsui.<UI框架>`、`Mapsui.Tiling`、`Mapsui.Nts` 三个 -- ?
-- **投影转换**：WGS84 经纬度必须通过 `SphericalMercator.FromLonLat()` 转换后才能用 -- ?Mapsui 定位
-- **Shapefile 编码**：中 -- ?Shapefile 需指定 `Encoding`（如 `Encoding.UTF8`  -- ?`Encoding.GetEncoding("GBK")` -- ?
-- **样式共享**：共 -- ?`Brush`/`Pen`/`VectorStyle` 实例可提升性能
-- **海量点优 -- ?*：使 -- ?`RasterizingTileLayer` 包装海量点图层，按瓦片预渲染
+- **NuGet 包完整**：确保安装了 `Mapsui.<UI框架>`、`Mapsui.Tiling`、`Mapsui.Nts` 三个包
+- **投影转换**：WGS84 经纬度必须通过 `SphericalMercator.FromLonLat()` 转换后才能用于 Mapsui 定位
+- **Shapefile 编码**：中文 Shapefile 需指定 `Encoding`（如 `Encoding.UTF8` 或 `Encoding.GetEncoding("GBK")`）
+- **样式共享**：共享 `Brush`/`Pen`/`VectorStyle` 实例可提升性能
+- **海量点优化**：使用 `RasterizingTileLayer` 包装海量点图层，按瓦片预渲染
 
-## 典型工作 -- ?
+## 典型工作流
 
-### 工作 -- ?1：加载底 -- ?+ GeoJSON 矢量数据
+### 工作流 1：加载底图 + GeoJSON 矢量数据
 
 ```csharp
 using Mapsui;
@@ -251,7 +251,7 @@ map.Navigator.CenterOnAndZoomTo(center, map.Navigator.Resolutions[10]);
 MapControl.Map = map;
 ```
 
-### 工作 -- ?2：Shapefile + WMS 叠加
+### 工作流 2：Shapefile + WMS 叠加
 
 ```csharp
 // Shapefile 图层
@@ -265,15 +265,15 @@ map.Layers.Add(new ImageLayer("Rivers") { DataSource = wmsProvider });
 map.ZoomToExtents();
 ```
 
-## 相关技 -- ?
+## 相关技能
 
-- **openlayers**  -- ?Web 二维地图库（JavaScript）：[../openlayers/SKILL.md](../openlayers/SKILL.md)
-- **sharpmap**  -- ?.NET 传统地图渲染引擎：[../sharpmap/SKILL.md](../sharpmap/SKILL.md)
-- **nettopologysuite**  -- ?.NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
-- **geoserver**  -- ?地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **openlayers** — Web 二维地图库（JavaScript）：[../openlayers/SKILL.md](../openlayers/SKILL.md)
+- **sharpmap** — .NET 传统地图渲染引擎：[../sharpmap/SKILL.md](../sharpmap/SKILL.md)
+- **nettopologysuite** — .NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **geoserver** — 地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
 
-## 参考资 -- ?
+## 参考资源
 
-- 文档 -- ?https://mapsui.com/documentation/>
-- 示例 -- ?https://mapsui.com/samples>
+- 文档：<https://mapsui.com/documentation/>
+- 示例：<https://mapsui.com/samples>
 - 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/mapsui/>
