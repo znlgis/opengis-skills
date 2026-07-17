@@ -1,6 +1,6 @@
 ---
 name: opengis-utils-for-net
-description: "Use when needing common GIS utility functions in .NET/C# �?CRS utilities, geometry helpers, format converters, spatial validation. OpenGIS Utils for .NET: convenience toolkit for .NET GIS projects."
+description: "Use when needing common GIS utility functions in .NET/C#  -- ?CRS utilities, geometry helpers, format converters, spatial validation. OpenGIS Utils for .NET: convenience toolkit for .NET GIS projects."
 tags:
   - dotnet
   - csharp
@@ -12,7 +12,7 @@ tags:
   - cgcs2000
 ---
 
-> **项目地址�?* <https://github.com/znlgis/opengis-utils-for-net>
+> **项目地址 -- ?* <https://github.com/znlgis/opengis-utils-for-net>
 >
 > **NuGet 包：** `OpenGIS.Utils`
 >
@@ -42,16 +42,16 @@ src/OpenGIS.Utils/
 ├── Configuration/        # GdalConfiguration, LibrarySettings
 ├── DataSource/           # OguLayerUtil (high-level I/O), GtTxtUtil (National Land Survey TXT)
 ├── Engine/
-�?  ├── Enums/            # GeometryType, FieldDataType, DataFormatType, GisEngineType, TopologyValidationErrorType
-�?  ├── IO/               # ILayerReader, ILayerWriter
-�?  ├── Model/
-�?  �?  └── Layer/        # OguLayer, OguFeature, OguField, OguFieldValue, OguCoordinate, OguLayerMetadata
-�?  ├── Util/             # CrsUtil, OgrUtil, ShpUtil, PostgisUtil, GdalCmdUtil
-�?  ├── GdalEngine.cs     # GDAL implementation of GisEngine
-�?  ├── GdalReader.cs     # ILayerReader implementation
-�?  ├── GdalWriter.cs     # ILayerWriter implementation
-�?  ├── GisEngine.cs      # Abstract base class
-�?  └── GisEngineFactory.cs
+ -- ?  ├── Enums/            # GeometryType, FieldDataType, DataFormatType, GisEngineType, TopologyValidationErrorType
+ -- ?  ├── IO/               # ILayerReader, ILayerWriter
+ -- ?  ├── Model/
+ -- ?   -- ?  └── Layer/        # OguLayer, OguFeature, OguField, OguFieldValue, OguCoordinate, OguLayerMetadata
+ -- ?  ├── Util/             # CrsUtil, OgrUtil, ShpUtil, PostgisUtil, GdalCmdUtil
+ -- ?  ├── GdalEngine.cs     # GDAL implementation of GisEngine
+ -- ?  ├── GdalReader.cs     # ILayerReader implementation
+ -- ?  ├── GdalWriter.cs     # ILayerWriter implementation
+ -- ?  ├── GisEngine.cs      # Abstract base class
+ -- ?  └── GisEngineFactory.cs
 ├── Exception/            # OguException, DataSourceException, FormatParseException, etc.
 ├── Geometry/             # GeometryUtil (50+ static methods)
 └── Utils/                # EncodingUtil, NumUtil, SortUtil, ZipUtil
@@ -103,7 +103,7 @@ SHP, GEOJSON, FILEGDB, POSTGIS, TXT, GEOPACKAGE, KML, DXF, UNKNOWN
 GDAL
 ```
 
-> **注意�?* .NET 版本仅支�?GDAL 引擎，与 Java 版本不同（Java 版本同时支持 GEOTOOLS �?GDAL）�?
+> **注意 -- ?* .NET 版本仅支 -- ?GDAL 引擎，与 Java 版本不同（Java 版本同时支持 GEOTOOLS  -- ?GDAL） -- ?
 
 ### TopologyValidationErrorType
 
@@ -139,7 +139,7 @@ using OpenGIS.Utils.Engine.Enums;
 | `Filter(Func<OguFeature, bool>)` | `IList<OguFeature>` | Filters features by predicate |
 | `GetFeatureCount()` | `int` | Feature count |
 | `ToJson()` | `string` | Serializes to JSON |
-| `FromJson(string json)` | `OguLayer?` | *static* �?Deserializes from JSON |
+| `FromJson(string json)` | `OguLayer?` | *static*  -- ?Deserializes from JSON |
 | `Clone()` | `OguLayer` | Deep copy |
 | `GetField(string fieldName)` | `OguField?` | Gets field by name |
 | `AddField(OguField field)` | `void` | Adds a field definition |
@@ -161,7 +161,7 @@ using OpenGIS.Utils.Engine.Enums;
 | `GetAttribute(string fieldName)` | `OguFieldValue?` | Gets field value object |
 | `HasAttribute(string fieldName)` | `bool` | Checks if attribute exists |
 | `ToJson()` | `string` | Serializes to JSON |
-| `FromJson(string json)` | `OguFeature?` | *static* �?Deserializes from JSON |
+| `FromJson(string json)` | `OguFeature?` | *static*  -- ?Deserializes from JSON |
 | `Clone()` | `OguFeature` | Deep copy |
 
 ### OguField
@@ -199,7 +199,7 @@ Type-safe getters: `GetStringValue()`, `GetIntValue()`, `GetLongValue()`, `GetDo
 | `RingNumber` | `string?` | Ring number |
 | `Remark` | `string?` | Remark text |
 
-Methods: `ToWkt()` �?`string`, `FromWkt(string wkt)` �?`OguCoordinate` *(static)*
+Methods: `ToWkt()`  -- ?`string`, `FromWkt(string wkt)`  -- ?`OguCoordinate` *(static)*
 
 ### OguLayerMetadata
 
@@ -216,7 +216,7 @@ Methods: `ToWkt()` �?`string`, `FromWkt(string wkt)` �?`OguCoordinate` *(stati
 
 ---
 
-## Data I/O �?OguLayerUtil (Recommended Entry Point)
+## Data I/O  -- ?OguLayerUtil (Recommended Entry Point)
 
 ```csharp
 using OpenGIS.Utils.DataSource;
@@ -277,7 +277,7 @@ await OguLayerUtil.ConvertFormatAsync(
 IList<string> names = OguLayerUtil.GetLayerNames(DataFormatType.FILEGDB, "data.gdb");
 ```
 
-### Supported Format �?Driver
+### Supported Format  -- ?Driver
 
 | DataFormatType | Driver Name | Extension |
 |---|---|---|
@@ -292,7 +292,7 @@ IList<string> names = OguLayerUtil.GetLayerNames(DataFormatType.FILEGDB, "data.g
 
 ---
 
-## Geometry Operations �?GeometryUtil
+## Geometry Operations  -- ?GeometryUtil
 
 ```csharp
 using OpenGIS.Utils.Geometry;
@@ -400,7 +400,7 @@ bool   GeometryUtil.IsWithinDistance(OgrGeometry a, OgrGeometry b, double maxDis
 
 ---
 
-## Coordinate Reference Systems �?CrsUtil
+## Coordinate Reference Systems  -- ?CrsUtil
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -418,8 +418,8 @@ int  CrsUtil.GetDh6(double longitude)      // 6-degree zone from longitude
 int  CrsUtil.GetDhFromWkid(int projectedWkid) // Zone from WKID
 
 // CGCS2000 projected WKID lookup
-int  CrsUtil.GetProjectedWkid(int zoneNumber)  // 3-degree zone �?WKID
-int  CrsUtil.GetProjectedWkid6(int zoneNumber) // 6-degree zone �?WKID
+int  CrsUtil.GetProjectedWkid(int zoneNumber)  // 3-degree zone  -- ?WKID
+int  CrsUtil.GetProjectedWkid6(int zoneNumber) // 6-degree zone  -- ?WKID
 
 // Properties
 double CrsUtil.GetTolerance(int wkid)       // Recommended tolerance
@@ -428,7 +428,7 @@ bool   CrsUtil.IsProjectedCRS(int wkid)     // Is projected CRS?
 
 ---
 
-## Shapefile Utilities �?ShpUtil
+## Shapefile Utilities  -- ?ShpUtil
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -445,7 +445,7 @@ void      ShpUtil.RepairShapefile(string shpPath)
 
 ---
 
-## PostGIS Utilities �?PostgisUtil
+## PostGIS Utilities  -- ?PostgisUtil
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -460,7 +460,7 @@ void     PostgisUtil.CreateSpatialIndex(string connectionString, string tableNam
 
 ---
 
-## National Land Survey TXT Format �?GtTxtUtil
+## National Land Survey TXT Format  -- ?GtTxtUtil
 
 ```csharp
 using OpenGIS.Utils.DataSource;
@@ -594,11 +594,11 @@ string NumUtil.FormatNumber(double value, int decimals)
 ```
 System.Exception
 └── OguException (ErrorCode, Context)
-    ├── DataSourceException        �?Data source access errors
-    ├── EngineNotSupportedException �?Unsupported engine type
-    ├── FormatParseException       �?Format parsing errors
-    ├── LayerValidationException   �?Layer validation failures
-    └── TopologyException          �?Topology validation/operation errors
+    ├── DataSourceException         -- ?Data source access errors
+    ├── EngineNotSupportedException  -- ?Unsupported engine type
+    ├── FormatParseException        -- ?Format parsing errors
+    ├── LayerValidationException    -- ?Layer validation failures
+    └── TopologyException           -- ?Topology validation/operation errors
 ```
 
 ---
@@ -660,7 +660,7 @@ layer.AddFeature(feature);
 layer.Validate();
 ```
 
-### Read �?Process �?Write
+### Read  -- ?Process  -- ?Write
 
 ```csharp
 using OpenGIS.Utils.DataSource;
@@ -752,35 +752,35 @@ var sorted = SortUtil.NaturalSort(files, f => f);
 
 ## AI 使用建议
 
-### 推荐工作�?
+### 推荐工作 -- ?
 
-1. **读取数据**：使�?`OguLayerUtil.ReadLayer()` 统一入口读取各类矢量格式
-2. **几何运算**：使�?`GeometryUtil.Wkt2Geometry()` 转换后操作，或直接用 `*Wkt` 后缀方法
-3. **坐标转换**：使�?`CrsUtil.Transform()` 进行坐标系变换（CGCS2000 系列�?
-4. **写出结果**：使�?`OguLayerUtil.WriteLayer()` 写出为目标格�?
-5. **格式转换**：使�?`OguLayerUtil.ConvertFormat()` 一步完�?
+1. **读取数据**：使 -- ?`OguLayerUtil.ReadLayer()` 统一入口读取各类矢量格式
+2. **几何运算**：使 -- ?`GeometryUtil.Wkt2Geometry()` 转换后操作，或直接用 `*Wkt` 后缀方法
+3. **坐标转换**：使 -- ?`CrsUtil.Transform()` 进行坐标系变换（CGCS2000 系列 -- ?
+4. **写出结果**：使 -- ?`OguLayerUtil.WriteLayer()` 写出为目标格 -- ?
+5. **格式转换**：使 -- ?`OguLayerUtil.ConvertFormat()` 一步完 -- ?
 
 ### 关键注意事项
 
-- **GDAL 自动初始�?*：无需手动调用 `GdalConfiguration.ConfigureGdal()`
-- **GeoJSON 字符串解析不支持**：`Geojson2Wkt()` �?`Geojson2Geometry()` 抛出 `NotSupportedException`，需从文件加�?
-- **几何�?WKT 存储**：`OguFeature.Wkt` 存储 WKT 字符串；多数 `GeometryUtil` 方法�?`*Wkt` 变体
-- **.NET 仅支�?GDAL 引擎**：与 Java 版本不同，无 GeoTools 引擎
-- **线程安全**：GDAL 初始化线程安全，但单�?GDAL 几何对象非线程安�?
+- **GDAL 自动初始 -- ?*：无需手动调用 `GdalConfiguration.ConfigureGdal()`
+- **GeoJSON 字符串解析不支持**：`Geojson2Wkt()`  -- ?`Geojson2Geometry()` 抛出 `NotSupportedException`，需从文件加 -- ?
+- **几何 -- ?WKT 存储**：`OguFeature.Wkt` 存储 WKT 字符串；多数 `GeometryUtil` 方法 -- ?`*Wkt` 变体
+- **.NET 仅支 -- ?GDAL 引擎**：与 Java 版本不同，无 GeoTools 引擎
+- **线程安全**：GDAL 初始化线程安全，但单 -- ?GDAL 几何对象非线程安 -- ?
 
-## 相关技�?
+## 相关技 -- ?
 
-- **nettopologysuite** �?.NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
-- **geometry-api-net** �?Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
-- **gdal** �?命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
-- **gdal-api** �?GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
+- **nettopologysuite**  -- ?.NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **geometry-api-net**  -- ?Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
+- **gdal**  -- ?命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **gdal-api**  -- ?GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
 
 ## Important Notes
 
-1. **GDAL auto-initializes** �?No manual `GdalConfiguration.ConfigureGdal()` call needed.
-2. **GeoJSON string parsing not supported** �?`Geojson2Wkt()` and `Geojson2Geometry()` throw `NotSupportedException`. Load GeoJSON from files via `GdalReader` or `OguLayerUtil.ReadLayer(DataFormatType.GEOJSON, path)`.
-3. **Geometry uses WKT strings** �?`OguFeature.Wkt` stores geometry as WKT. Use `GeometryUtil` for conversions and operations.
-4. **Thread safety** �?GDAL initialization is thread-safe. Individual GDAL geometry objects are NOT thread-safe.
-5. **Cross-platform** �?.NET Standard 2.0: works on .NET Core 2.0+, .NET 5+, .NET Framework 4.6.1+.
-6. **Encoding support** �?`EncodingUtil` detects UTF-8, UTF-16 LE/BE, GBK, GB2312. Register CodePages with `Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)` if needed.
-7. **WKT convenience methods** �?Most `GeometryUtil` methods have `*Wkt` variants that accept/return WKT strings directly, avoiding the need to manage `OgrGeometry` objects.
+1. **GDAL auto-initializes**  -- ?No manual `GdalConfiguration.ConfigureGdal()` call needed.
+2. **GeoJSON string parsing not supported**  -- ?`Geojson2Wkt()` and `Geojson2Geometry()` throw `NotSupportedException`. Load GeoJSON from files via `GdalReader` or `OguLayerUtil.ReadLayer(DataFormatType.GEOJSON, path)`.
+3. **Geometry uses WKT strings**  -- ?`OguFeature.Wkt` stores geometry as WKT. Use `GeometryUtil` for conversions and operations.
+4. **Thread safety**  -- ?GDAL initialization is thread-safe. Individual GDAL geometry objects are NOT thread-safe.
+5. **Cross-platform**  -- ?.NET Standard 2.0: works on .NET Core 2.0+, .NET 5+, .NET Framework 4.6.1+.
+6. **Encoding support**  -- ?`EncodingUtil` detects UTF-8, UTF-16 LE/BE, GBK, GB2312. Register CodePages with `Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)` if needed.
+7. **WKT convenience methods**  -- ?Most `GeometryUtil` methods have `*Wkt` variants that accept/return WKT strings directly, avoiding the need to manage `OgrGeometry` objects.

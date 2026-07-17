@@ -15,9 +15,9 @@ tags:
   - geospatial
 ---
 
-> **项目地址�?* <https://github.com/OSGeo/gdal>
+> **项目地址 -- ?* <https://github.com/OSGeo/gdal>
 >
-> **API 总览文档�?* <https://gdal.org/en/stable/api/index.html>
+> **API 总览文档 -- ?* <https://gdal.org/en/stable/api/index.html>
 >
 > **C/C++ API 参考：** <https://gdal.org/en/stable/api/index.html#c-api>
 >
@@ -31,15 +31,15 @@ tags:
 
 ## 概述
 
-GDAL 是地理空间数据处理的事实标准库，�?OSGeo 基金会维护。它提供�?
+GDAL 是地理空间数据处理的事实标准库， -- ?OSGeo 基金会维护。它提供 -- ?
 
-- **200+ 栅格驱动**：GeoTIFF、NetCDF、HDF5、COG、JPEG2000 �?
-- **100+ 矢量驱动**：Shapefile、GeoJSON、GeoPackage、PostGIS、FlatGeobuf �?
-- **坐标参考系�?*：基�?PROJ 的坐标变换与投影转换
-- **栅格分析**：重采样、镶嵌、裁剪、波段运算、DEM 分析�?
-- **矢量操作**：空间过滤、属性查询、要素创建与编辑�?
+- **200+ 栅格驱动**：GeoTIFF、NetCDF、HDF5、COG、JPEG2000  -- ?
+- **100+ 矢量驱动**：Shapefile、GeoJSON、GeoPackage、PostGIS、FlatGeobuf  -- ?
+- **坐标参考系 -- ?*：基 -- ?PROJ 的坐标变换与投影转换
+- **栅格分析**：重采样、镶嵌、裁剪、波段运算、DEM 分析 -- ?
+- **矢量操作**：空间过滤、属性查询、要素创建与编辑 -- ?
 
-GDAL 核心�?C++ 实现，同时通过 SWIG 提供 **Python**�?*Java**�?*C#** 三种语言绑定，各语言 API �?C++ 保持一致的类与方法命名�?
+GDAL 核心 -- ?C++ 实现，同时通过 SWIG 提供 **Python** -- ?*Java** -- ?*C#** 三种语言绑定，各语言 API  -- ?C++ 保持一致的类与方法命名 -- ?
 
 ---
 
@@ -54,7 +54,7 @@ apt-get install libgdal-dev
 # macOS (Homebrew)
 brew install gdal
 
-# CMake 项目中链�?GDAL
+# CMake 项目中链 -- ?GDAL
 # CMakeLists.txt
 find_package(GDAL REQUIRED)
 target_link_libraries(myapp PRIVATE GDAL::GDAL)
@@ -63,7 +63,7 @@ target_link_libraries(myapp PRIVATE GDAL::GDAL)
 ### Python 环境
 
 ```bash
-# pip 安装（需系统已安�?GDAL 库）
+# pip 安装（需系统已安 -- ?GDAL 库）
 pip install GDAL
 
 # Conda 安装（推荐，自动处理 C 库依赖）
@@ -80,7 +80,7 @@ python -c "from osgeo import gdal; print(gdal.VersionInfo())"
 <dependency>
     <groupId>org.gdal</groupId>
     <artifactId>gdal</artifactId>
-    <version><!-- 请查�?Maven Central 获取最新版：https://central.sonatype.com/artifact/org.gdal/gdal --></version>
+    <version><!-- 请查 -- ?Maven Central 获取最新版：https://central.sonatype.com/artifact/org.gdal/gdal --></version>
 </dependency>
 ```
 
@@ -89,7 +89,7 @@ python -c "from osgeo import gdal; print(gdal.VersionInfo())"
 implementation 'org.gdal:gdal:3.13.0'
 ```
 
-**注意�?* Java 绑定需要在系统 `PATH`（Windows）或 `LD_LIBRARY_PATH`（Linux）中找到 `gdalalljni` 本地库�?
+**注意 -- ?* Java 绑定需要在系统 `PATH`（Windows）或 `LD_LIBRARY_PATH`（Linux）中找到 `gdalalljni` 本地库 -- ?
 
 ### C# 环境
 
@@ -100,50 +100,50 @@ dotnet add package MaxRev.Gdal.LinuxRuntime.Minimal   # Linux
 dotnet add package MaxRev.Gdal.WindowsRuntime.Minimal  # Windows
 ```
 
-**注意�?* 官方 SWIG 绑定命名空间�?`OSGeo.GDAL`、`OSGeo.OGR`、`OSGeo.OSR`。NuGet �?`MaxRev.Gdal.Core` 是社区维护的跨平台封装�?
+**注意 -- ?* 官方 SWIG 绑定命名空间 -- ?`OSGeo.GDAL`、`OSGeo.OGR`、`OSGeo.OSR`。NuGet  -- ?`MaxRev.Gdal.Core` 是社区维护的跨平台封装 -- ?
 
 ---
 
-## 核心类一�?
+## 核心类一 -- ?
 
 GDAL API 在四种语言中保持一致的类结构，下表列出核心类及其作用：
 
-### 栅格 API 核心�?
+### 栅格 API 核心 -- ?
 
-| �?| C++ 头文�?/ 模块 | 用�?|
+|  -- ?| C++ 头文 -- ?/ 模块 | 用 -- ?|
 |---|---|---|
 | `GDALDriver` | `gdal_priv.h` / `osgeo.gdal` | 栅格驱动——注册格式、创建数据集 |
-| `GDALDataset` | `gdal_priv.h` / `osgeo.gdal` | �?栅格数据集——打开、读写、获取元数据 |
-| `GDALRasterBand` | `gdal_priv.h` / `osgeo.gdal` | 栅格波段——读写像素、获取统计信�?|
-| `GDALColorTable` | `gdal_priv.h` / `osgeo.gdal` | 颜色表——索引颜色映�?|
+| `GDALDataset` | `gdal_priv.h` / `osgeo.gdal` |  -- ?栅格数据集——打开、读写、获取元数据 |
+| `GDALRasterBand` | `gdal_priv.h` / `osgeo.gdal` | 栅格波段——读写像素、获取统计信 -- ?|
+| `GDALColorTable` | `gdal_priv.h` / `osgeo.gdal` | 颜色表——索引颜色映 -- ?|
 | `GDALRasterAttributeTable` | `gdal_priv.h` / `osgeo.gdal` | 栅格属性表 |
 
-### 矢量 API 核心类（OGR�?
+### 矢量 API 核心类（OGR -- ?
 
-| �?| C++ 头文�?/ 模块 | 用�?|
+|  -- ?| C++ 头文 -- ?/ 模块 | 用 -- ?|
 |---|---|---|
 | `OGRSFDriver` / `GDALDriver` | `ogrsf_frmts.h` / `osgeo.ogr` | 矢量驱动 |
-| `GDALDataset` / `OGRDataSource` | `ogrsf_frmts.h` / `osgeo.ogr` | �?矢量数据源——管理图层集�?|
-| `OGRLayer` | `ogrsf_frmts.h` / `osgeo.ogr` | �?矢量图层——读写要素、空间过�?|
-| `OGRFeature` | `ogr_feature.h` / `osgeo.ogr` | 矢量要素——属�?+ 几何 |
-| `OGRFeatureDefn` | `ogr_feature.h` / `osgeo.ogr` | 要素定义——字段结�?|
-| `OGRFieldDefn` | `ogr_feature.h` / `osgeo.ogr` | 字段定义——名称、类�?|
+| `GDALDataset` / `OGRDataSource` | `ogrsf_frmts.h` / `osgeo.ogr` |  -- ?矢量数据源——管理图层集 -- ?|
+| `OGRLayer` | `ogrsf_frmts.h` / `osgeo.ogr` |  -- ?矢量图层——读写要素、空间过 -- ?|
+| `OGRFeature` | `ogr_feature.h` / `osgeo.ogr` | 矢量要素——属 -- ?+ 几何 |
+| `OGRFeatureDefn` | `ogr_feature.h` / `osgeo.ogr` | 要素定义——字段结 -- ?|
+| `OGRFieldDefn` | `ogr_feature.h` / `osgeo.ogr` | 字段定义——名称、类 -- ?|
 | `OGRGeometry` | `ogr_geometry.h` / `osgeo.ogr` | 几何基类（Point、LineString、Polygon 等） |
 
-### 空间参考类（OSR�?
+### 空间参考类（OSR -- ?
 
-| �?| C++ 头文�?/ 模块 | 用�?|
+|  -- ?| C++ 头文 -- ?/ 模块 | 用 -- ?|
 |---|---|---|
-| `OGRSpatialReference` | `ogr_spatialref.h` / `osgeo.osr` | �?空间参考系统——定�?CRS |
-| `OGRCoordinateTransformation` | `ogr_spatialref.h` / `osgeo.osr` | �?坐标变换——在不同 CRS 间转换坐�?|
+| `OGRSpatialReference` | `ogr_spatialref.h` / `osgeo.osr` |  -- ?空间参考系统——定 -- ?CRS |
+| `OGRCoordinateTransformation` | `ogr_spatialref.h` / `osgeo.osr` |  -- ?坐标变换——在不同 CRS 间转换坐 -- ?|
 
 ### 各语言模块 / 命名空间对照
 
-| 功能�?| C++ | Python | Java | C# |
+| 功能 -- ?| C++ | Python | Java | C# |
 |---|---|---|---|---|
 | 栅格 | `#include "gdal_priv.h"` | `from osgeo import gdal` | `import org.gdal.gdal.*` | `using OSGeo.GDAL;` |
 | 矢量 | `#include "ogrsf_frmts.h"` | `from osgeo import ogr` | `import org.gdal.ogr.*` | `using OSGeo.OGR;` |
-| 空间参�?| `#include "ogr_spatialref.h"` | `from osgeo import osr` | `import org.gdal.osr.*` | `using OSGeo.OSR;` |
+| 空间参 -- ?| `#include "ogr_spatialref.h"` | `from osgeo import osr` | `import org.gdal.osr.*` | `using OSGeo.OSR;` |
 
 ---
 
@@ -164,19 +164,19 @@ int width  = ds->GetRasterXSize();
 int height = ds->GetRasterYSize();
 int bands  = ds->GetRasterCount();
 
-// 仿射变换参数 [左上X, 像素宽度, 旋转, 左上Y, 旋转, 像素高度(�?]
+// 仿射变换参数 [左上X, 像素宽度, 旋转, 左上Y, 旋转, 像素高度( -- ?]
 double gt[6];
 ds->GetGeoTransform(gt);
 
 // 投影信息
 const char *proj = ds->GetProjectionRef();
 
-// 读取第一个波�?
+// 读取第一个波 -- ?
 GDALRasterBand *band = ds->GetRasterBand(1);
 float *buf = new float[width * height];
 band->RasterIO(GF_Read, 0, 0, width, height, buf, width, height, GDT_Float32, 0, 0);
 
-// 获取 NoData �?
+// 获取 NoData  -- ?
 int hasNoData;
 double nodata = band->GetNoDataValue(&hasNoData);
 
@@ -208,10 +208,10 @@ proj = ds.GetProjection()
 band = ds.GetRasterBand(1)
 data = band.ReadAsArray()  # numpy.ndarray
 
-# 获取 NoData �?
+# 获取 NoData  -- ?
 nodata = band.GetNoDataValue()
 
-ds = None  # 关闭数据�?
+ds = None  # 关闭数据 -- ?
 ```
 
 ### Java
@@ -239,12 +239,12 @@ ds.GetGeoTransform(gt);
 // 投影信息
 String proj = ds.GetProjection();
 
-// 读取第一个波�?
+// 读取第一个波 -- ?
 Band band = ds.GetRasterBand(1);
 float[] buf = new float[width * height];
 band.ReadRaster(0, 0, width, height, buf);
 
-// 获取 NoData �?
+// 获取 NoData  -- ?
 Double[] nodata = new Double[1];
 band.GetNoDataValue(nodata);
 
@@ -273,12 +273,12 @@ ds.GetGeoTransform(gt);
 // 投影信息
 string proj = ds.GetProjection();
 
-// 读取第一个波�?
+// 读取第一个波 -- ?
 Band band = ds.GetRasterBand(1);
 float[] buf = new float[width * height];
 band.ReadRaster(0, 0, width, height, buf, width, height, 0, 0);
 
-// 获取 NoData �?
+// 获取 NoData  -- ?
 double nodata;
 int hasNoData;
 band.GetNoDataValue(out nodata, out hasNoData);
@@ -288,7 +288,7 @@ ds.Dispose();
 
 ---
 
-## 栅格数据创建与写�?
+## 栅格数据创建与写 -- ?
 
 ### C++
 
@@ -434,7 +434,7 @@ layer->ResetReading();
 
 OGRFeature *feature;
 while ((feature = layer->GetNextFeature()) != nullptr) {
-    // 读取属�?
+    // 读取属 -- ?
     const char *name = feature->GetFieldAsString("NAME");
     int pop = feature->GetFieldAsInteger("POPULATION");
 
@@ -458,12 +458,12 @@ from osgeo import ogr
 
 ds = ogr.Open("cities.shp", 0)  # 0 = 只读
 if ds is None:
-    raise RuntimeError("无法打开数据�?)
+    raise RuntimeError("无法打开数据 -- ?)
 
 layer = ds.GetLayer(0)
 
 for feature in layer:
-    # 读取属�?
+    # 读取属 -- ?
     name = feature.GetField("NAME")
     pop  = feature.GetField("POPULATION")
 
@@ -488,13 +488,13 @@ import org.gdal.ogr.Geometry;
 ogr.RegisterAll();
 
 DataSource ds = ogr.Open("cities.shp", false);  // false = 只读
-if (ds == null) { throw new RuntimeException("无法打开数据�?); }
+if (ds == null) { throw new RuntimeException("无法打开数据 -- ?); }
 
 Layer layer = ds.GetLayer(0);
 
 Feature feature;
 while ((feature = layer.GetNextFeature()) != null) {
-    // 读取属�?
+    // 读取属 -- ?
     String name = feature.GetFieldAsString("NAME");
     int pop = feature.GetFieldAsInteger("POPULATION");
 
@@ -518,13 +518,13 @@ using OSGeo.OGR;
 Ogr.RegisterAll();
 
 DataSource ds = Ogr.Open("cities.shp", 0);  // 0 = 只读
-if (ds == null) { throw new Exception("无法打开数据�?); }
+if (ds == null) { throw new Exception("无法打开数据 -- ?); }
 
 Layer layer = ds.GetLayerByIndex(0);
 
 Feature feature;
 while ((feature = layer.GetNextFeature()) != null) {
-    // 读取属�?
+    // 读取属 -- ?
     string name = feature.GetFieldAsString("NAME");
     int pop = feature.GetFieldAsInteger("POPULATION");
 
@@ -542,7 +542,7 @@ ds.Dispose();
 
 ---
 
-## 矢量数据创建与写�?
+## 矢量数据创建与写 -- ?
 
 ### C++
 
@@ -702,7 +702,7 @@ ds.Dispose();
 ```cpp
 #include "ogr_spatialref.h"
 
-// 定义坐标�?
+// 定义坐标 -- ?
 OGRSpatialReference srcSRS, dstSRS;
 srcSRS.SetWellKnownGeogCS("WGS84");        // EPSG:4326
 dstSRS.importFromEPSG(3857);               // Web Mercator
@@ -725,7 +725,7 @@ OCTDestroyCoordinateTransformation(transform);
 ```python
 from osgeo import osr
 
-# 定义坐标�?
+# 定义坐标 -- ?
 src_srs = osr.SpatialReference()
 src_srs.SetWellKnownGeogCS("WGS84")        # EPSG:4326
 
@@ -746,7 +746,7 @@ import org.gdal.osr.SpatialReference;
 import org.gdal.osr.CoordinateTransformation;
 import org.gdal.osr.osr;
 
-// 定义坐标�?
+// 定义坐标 -- ?
 SpatialReference srcSRS = new SpatialReference();
 srcSRS.SetWellKnownGeogCS("WGS84");        // EPSG:4326
 
@@ -768,7 +768,7 @@ transform.TransformPoint(point);
 ```csharp
 using OSGeo.OSR;
 
-// 定义坐标�?
+// 定义坐标 -- ?
 SpatialReference srcSRS = new SpatialReference("");
 srcSRS.SetWellKnownGeogCS("WGS84");        // EPSG:4326
 
@@ -797,14 +797,14 @@ transform.TransformPoint(point);
 
 GDALAllRegister();
 
-// 格式转换（GeoTIFF �?PNG�?
+// 格式转换（GeoTIFF  -- ?PNG -- ?
 GDALDataset *src = (GDALDataset *)GDALOpen("input.tif", GA_ReadOnly);
 GDALDriver *pngDriver = GetGDALDriverManager()->GetDriverByName("PNG");
 GDALDataset *dst = pngDriver->CreateCopy("output.png", src, FALSE, nullptr, nullptr, nullptr);
 GDALClose(dst);
 GDALClose(src);
 
-// 重投影（Warp�?
+// 重投影（Warp -- ?
 GDALDataset *srcDs = (GDALDataset *)GDALOpen("input.tif", GA_ReadOnly);
 const char *dstWKT = nullptr;
 OGRSpatialReference dstSRS;
@@ -834,12 +834,12 @@ GDALClose(srcDs);
 ```python
 from osgeo import gdal
 
-# 格式转换（GeoTIFF �?PNG�?
+# 格式转换（GeoTIFF  -- ?PNG -- ?
 src = gdal.Open("input.tif")
 gdal.GetDriverByName("PNG").CreateCopy("output.png", src)
 src = None
 
-# 重投影（Warp�?
+# 重投影（Warp -- ?
 gdal.Warp(
     "reprojected.tif",
     "input.tif",
@@ -870,14 +870,14 @@ import java.util.Vector;
 
 gdal.AllRegister();
 
-// 格式转换（GeoTIFF �?PNG�?
+// 格式转换（GeoTIFF  -- ?PNG -- ?
 Dataset src = gdal.Open("input.tif");
 Driver pngDriver = gdal.GetDriverByName("PNG");
 Dataset dst = pngDriver.CreateCopy("output.png", src);
 dst.delete();
 src.delete();
 
-// 重投影（Warp�?
+// 重投影（Warp -- ?
 Dataset srcDs = gdal.Open("input.tif");
 Vector<String> options = new Vector<>();
 options.add("-t_srs");
@@ -899,14 +899,14 @@ using OSGeo.GDAL;
 
 Gdal.AllRegister();
 
-// 格式转换（GeoTIFF �?PNG�?
+// 格式转换（GeoTIFF  -- ?PNG -- ?
 Dataset src = Gdal.Open("input.tif", Access.GA_ReadOnly);
 Driver pngDriver = Gdal.GetDriverByName("PNG");
 Dataset dst = pngDriver.CreateCopy("output.png", src, 0, null, null, null);
 dst.Dispose();
 src.Dispose();
 
-// 重投影（Warp�?
+// 重投影（Warp -- ?
 Dataset srcDs = Gdal.Open("input.tif", Access.GA_ReadOnly);
 string[] warpArgs = new string[] {
     "-t_srs", "EPSG:3857",
@@ -920,7 +920,7 @@ srcDs.Dispose();
 
 ---
 
-## 矢量格式转换与空间过�?
+## 矢量格式转换与空间过 -- ?
 
 ### C++
 
@@ -929,20 +929,20 @@ srcDs.Dispose();
 
 GDALAllRegister();
 
-// Shapefile �?GeoJSON
+// Shapefile  -- ?GeoJSON
 GDALDataset *srcDs = (GDALDataset *)GDALOpenEx("input.shp", GDAL_OF_VECTOR, nullptr, nullptr, nullptr);
 GDALDriver *jsonDriver = GetGDALDriverManager()->GetDriverByName("GeoJSON");
 GDALDataset *dstDs = jsonDriver->Create("output.geojson", 0, 0, 0, GDT_Unknown, nullptr);
 
 OGRLayer *srcLayer = srcDs->GetLayer(0);
 
-// 空间过滤（仅北京周边�?
+// 空间过滤（仅北京周边 -- ?
 OGREnvelope env;
 env.MinX = 116.0; env.MaxX = 117.0;
 env.MinY = 39.5;  env.MaxY = 40.5;
 srcLayer->SetSpatialFilterRect(env.MinX, env.MinY, env.MaxX, env.MaxY);
 
-// 属性过�?
+// 属性过 -- ?
 srcLayer->SetAttributeFilter("POPULATION > 1000000");
 
 // 复制图层
@@ -957,14 +957,14 @@ GDALClose(srcDs);
 ```python
 from osgeo import ogr
 
-# Shapefile �?GeoJSON
+# Shapefile  -- ?GeoJSON
 src_ds = ogr.Open("input.shp")
 src_layer = src_ds.GetLayer(0)
 
 # 空间过滤
 src_layer.SetSpatialFilterRect(116.0, 39.5, 117.0, 40.5)
 
-# 属性过�?
+# 属性过 -- ?
 src_layer.SetAttributeFilter("POPULATION > 1000000")
 
 # 输出
@@ -975,7 +975,7 @@ dst_ds.CopyLayer(src_layer, "filtered")
 dst_ds = None
 src_ds = None
 
-# 或使�?gdal.VectorTranslate（更高级�?
+# 或使 -- ?gdal.VectorTranslate（更高级 -- ?
 from osgeo import gdal
 
 gdal.VectorTranslate(
@@ -994,14 +994,14 @@ import org.gdal.ogr.*;
 
 ogr.RegisterAll();
 
-// Shapefile �?GeoJSON
+// Shapefile  -- ?GeoJSON
 DataSource srcDs = ogr.Open("input.shp", false);
 Layer srcLayer = srcDs.GetLayer(0);
 
 // 空间过滤
 srcLayer.SetSpatialFilterRect(116.0, 39.5, 117.0, 40.5);
 
-// 属性过�?
+// 属性过 -- ?
 srcLayer.SetAttributeFilter("POPULATION > 1000000");
 
 // 输出
@@ -1020,14 +1020,14 @@ using OSGeo.OGR;
 
 Ogr.RegisterAll();
 
-// Shapefile �?GeoJSON
+// Shapefile  -- ?GeoJSON
 DataSource srcDs = Ogr.Open("input.shp", 0);
 Layer srcLayer = srcDs.GetLayerByIndex(0);
 
 // 空间过滤
 srcLayer.SetSpatialFilterRect(116.0, 39.5, 117.0, 40.5);
 
-// 属性过�?
+// 属性过 -- ?
 srcLayer.SetAttributeFilter("POPULATION > 1000000");
 
 // 输出
@@ -1071,7 +1071,7 @@ OGRGeometryFactory::createFromWkt("POINT(116.4 39.9)", nullptr, &geomFromWkt);
 OGRGeometryFactory::destroyGeometry(geomFromWkt);
 
 // 空间操作
-OGRGeometry *buffer = pt.Buffer(1.0);           // 缓冲�?
+OGRGeometry *buffer = pt.Buffer(1.0);           // 缓冲 -- ?
 OGRGeometry *inter  = polygon.Intersection(&pt); // 交集
 OGRGeometry *united = polygon.Union(&pt);         // 合并
 double dist = polygon.Distance(&pt);              // 距离
@@ -1110,7 +1110,7 @@ geom_from_wkt = ogr.CreateGeometryFromWkt("POINT(116.4 39.9)")
 geom_from_json = ogr.CreateGeometryFromJson('{"type":"Point","coordinates":[116.4,39.9]}')
 
 # 空间操作
-buffer    = pt.Buffer(1.0)              # 缓冲�?
+buffer    = pt.Buffer(1.0)              # 缓冲 -- ?
 inter     = polygon.Intersection(pt)     # 交集
 united    = polygon.Union(pt)            # 合并
 dist      = polygon.Distance(pt)         # 距离
@@ -1145,7 +1145,7 @@ String wkt = polygon.ExportToWkt();
 Geometry geomFromWkt = Geometry.CreateFromWkt("POINT(116.4 39.9)");
 
 // 空间操作
-Geometry buffer  = pt.Buffer(1.0);              // 缓冲�?
+Geometry buffer  = pt.Buffer(1.0);              // 缓冲 -- ?
 Geometry inter   = polygon.Intersection(pt);     // 交集
 Geometry united  = polygon.Union(pt);            // 合并
 double dist      = polygon.Distance(pt);         // 距离
@@ -1179,7 +1179,7 @@ polygon.ExportToWkt(out wkt);
 Geometry geomFromWkt = Geometry.CreateFromWkt("POINT(116.4 39.9)");
 
 // 空间操作
-Geometry buffer  = pt.Buffer(1.0, 30);          // 缓冲�?
+Geometry buffer  = pt.Buffer(1.0, 30);          // 缓冲 -- ?
 Geometry inter   = polygon.Intersection(pt);     // 交集
 Geometry united  = polygon.Union(pt);            // 合并
 double dist      = polygon.Distance(pt);         // 距离
@@ -1192,7 +1192,7 @@ double area      = polygon.GetArea();            // 面积
 
 ## GeoPackage 读写
 
-GeoPackage �?OGC 标准的轻量级地理数据库格式，适合替代 Shapefile�?
+GeoPackage  -- ?OGC 标准的轻量级地理数据库格式，适合替代 Shapefile -- ?
 
 ### C++
 
@@ -1345,32 +1345,32 @@ readDs.Dispose();
 
 ## 常用栅格数据格式与创建选项
 
-| 驱动�?| 扩展�?| 说明 | 常用创建选项 |
+| 驱动 -- ?| 扩展 -- ?| 说明 | 常用创建选项 |
 |---|---|---|---|
-| `GTiff` | `.tif` | GeoTIFF，最常用的栅格格�?| `COMPRESS=LZW/DEFLATE/ZSTD`、`TILED=YES`、`BLOCKXSIZE=256` |
+| `GTiff` | `.tif` | GeoTIFF，最常用的栅格格 -- ?| `COMPRESS=LZW/DEFLATE/ZSTD`、`TILED=YES`、`BLOCKXSIZE=256` |
 | `COG` | `.tif` | Cloud Optimized GeoTIFF | `COMPRESS=DEFLATE`、`OVERVIEW_RESAMPLING=CUBIC` |
 | `PNG` | `.png` | PNG 图片 | `ZLEVEL=6` |
 | `JPEG` | `.jpg` | JPEG 图片 | `QUALITY=85` |
 | `GPKG` | `.gpkg` | GeoPackage 栅格 | `TILE_FORMAT=PNG/JPEG/WEBP` |
 | `netCDF` | `.nc` | NetCDF 科学数据格式 | `FORMAT=NC4`、`COMPRESS=DEFLATE` |
-| `HFA` | `.img` | Erdas Imagine | �?|
-| `VRT` | `.vrt` | 虚拟数据集（XML 引用�?| �?|
+| `HFA` | `.img` | Erdas Imagine |  -- ?|
+| `VRT` | `.vrt` | 虚拟数据集（XML 引用 -- ?|  -- ?|
 
 ---
 
 ## 常用矢量数据格式
 
-| 驱动�?| 扩展�?| 说明 |
+| 驱动 -- ?| 扩展 -- ?| 说明 |
 |---|---|---|
-| `ESRI Shapefile` | `.shp` | ESRI Shapefile，经典矢量格�?|
+| `ESRI Shapefile` | `.shp` | ESRI Shapefile，经典矢量格 -- ?|
 | `GeoJSON` | `.geojson` | GeoJSON，Web 友好格式 |
-| `GPKG` | `.gpkg` | GeoPackage，OGC 标准轻量数据�?|
-| `PostgreSQL` / `PostGIS` | �?| PostGIS 空间数据�?|
-| `FlatGeobuf` | `.fgb` | 高性能流式二进制格�?|
+| `GPKG` | `.gpkg` | GeoPackage，OGC 标准轻量数据 -- ?|
+| `PostgreSQL` / `PostGIS` |  -- ?| PostGIS 空间数据 -- ?|
+| `FlatGeobuf` | `.fgb` | 高性能流式二进制格 -- ?|
 | `GML` | `.gml` | OGC GML 格式 |
 | `KML` | `.kml` | Google Earth 格式 |
 | `CSV` | `.csv` | 逗号分隔值（配合 VRT 指定几何列） |
-| `SQLite` | `.sqlite` | SQLite / SpatiaLite 数据�?|
+| `SQLite` | `.sqlite` | SQLite / SpatiaLite 数据 -- ?|
 | `XLSX` | `.xlsx` | Excel 表格（只读） |
 
 ---
@@ -1379,13 +1379,13 @@ readDs.Dispose();
 
 | 场景 | C++ | Python | Java | C# |
 |---|---|---|---|---|
-| 读取栅格元数�?| `GDALOpen` + `GetGeoTransform` | `gdal.Open` + `GetGeoTransform` | `gdal.Open` + `GetGeoTransform` | `Gdal.Open` + `GetGeoTransform` |
+| 读取栅格元数 -- ?| `GDALOpen` + `GetGeoTransform` | `gdal.Open` + `GetGeoTransform` | `gdal.Open` + `GetGeoTransform` | `Gdal.Open` + `GetGeoTransform` |
 | 栅格格式转换 | `CreateCopy` | `gdal.Translate` | `gdal.Translate` | `Gdal.wrapper_GDALTranslate` |
-| 栅格重投�?| `GDALAutoCreateWarpedVRT` | `gdal.Warp` | `gdal.Warp` | `Gdal.Warp` |
+| 栅格重投 -- ?| `GDALAutoCreateWarpedVRT` | `gdal.Warp` | `gdal.Warp` | `Gdal.Warp` |
 | 读取矢量要素 | `GDALOpenEx` + `GetNextFeature` | `ogr.Open` + 迭代 | `ogr.Open` + `GetNextFeature` | `Ogr.Open` + `GetNextFeature` |
 | 矢量格式转换 | `CopyLayer` / `CreateFeature` | `gdal.VectorTranslate` | `ogr.CopyLayer` | `Ogr.CopyLayer` |
 | 坐标变换 | `OGRCreateCoordinateTransformation` | `osr.CoordinateTransformation` | `osr.CreateCoordinateTransformation` | `new CoordinateTransformation` |
-| 创建缓冲�?| `OGRGeometry::Buffer` | `geom.Buffer` | `geom.Buffer` | `geom.Buffer` |
+| 创建缓冲 -- ?| `OGRGeometry::Buffer` | `geom.Buffer` | `geom.Buffer` | `geom.Buffer` |
 | 空间查询 | `SetSpatialFilterRect` | `SetSpatialFilterRect` | `SetSpatialFilterRect` | `SetSpatialFilterRect` |
 | SQL 查询 | `ExecuteSQL` | `ExecuteSQL` | `ExecuteSQL` | `ExecuteSQL` |
 | 波段运算 | `RasterIO` 手动计算 | `gdal_calc.py` / NumPy | `RasterIO` 手动计算 | `RasterIO` 手动计算 |
@@ -1396,83 +1396,83 @@ readDs.Dispose();
 
 ### 通用注意事项
 
-1. **驱动注册**：使用任�?GDAL 功能前，必须调用注册函数。C++ �?Python 使用 `GDALAllRegister()`，Java 使用 `gdal.AllRegister()`，C# 使用 `Gdal.AllRegister()`。矢量操作还需 `OGRRegisterAll()` / `ogr.RegisterAll()`�?
-2. **资源释放**：C++ 使用 `GDALClose()` / `OGRFeature::DestroyFeature()`；Python 赋�?`None` 触发释放；Java 调用 `.delete()`；C# 调用 `.Dispose()`。未释放资源可能导致文件损坏�?
-3. **坐标轴顺�?*：GDAL 3.0+ 默认遵循 EPSG 规范（纬度在前），可通过 `OGRSpatialReference::SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)` 强制经度在前�?
-4. **线程安全**：GDAL 全局状态非线程安全，多线程环境需注意：每个线程使用独立的 `GDALDataset`；避免并发写入同一数据集�?
-5. **大文件处�?*：对大型栅格使用分块读写（`RasterIO` 指定窗口），避免一次性读取整个影像到内存�?
-6. **错误处理**：使�?`CPLGetLastErrorMsg()`（C++）、`gdal.GetLastErrorMsg()`（Python）获取详细错误信息�?
+1. **驱动注册**：使用任 -- ?GDAL 功能前，必须调用注册函数。C++  -- ?Python 使用 `GDALAllRegister()`，Java 使用 `gdal.AllRegister()`，C# 使用 `Gdal.AllRegister()`。矢量操作还需 `OGRRegisterAll()` / `ogr.RegisterAll()` -- ?
+2. **资源释放**：C++ 使用 `GDALClose()` / `OGRFeature::DestroyFeature()`；Python 赋 -- ?`None` 触发释放；Java 调用 `.delete()`；C# 调用 `.Dispose()`。未释放资源可能导致文件损坏 -- ?
+3. **坐标轴顺 -- ?*：GDAL 3.0+ 默认遵循 EPSG 规范（纬度在前），可通过 `OGRSpatialReference::SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)` 强制经度在前 -- ?
+4. **线程安全**：GDAL 全局状态非线程安全，多线程环境需注意：每个线程使用独立的 `GDALDataset`；避免并发写入同一数据集 -- ?
+5. **大文件处 -- ?*：对大型栅格使用分块读写（`RasterIO` 指定窗口），避免一次性读取整个影像到内存 -- ?
+6. **错误处理**：使 -- ?`CPLGetLastErrorMsg()`（C++）、`gdal.GetLastErrorMsg()`（Python）获取详细错误信息 -- ?
 
 ### C++ 特有注意事项
 
-7. **内存管理**：使�?`CPLFree()` 释放 GDAL 分配�?C 字符串（�?`exportToWkt` 返回�?WKT）。几何对象使�?`OGRGeometryFactory::destroyGeometry()` 销毁�?
-8. **编译链接**：确保使�?`gdal-config --cflags --libs` �?CMake `find_package(GDAL)` 正确配置编译参数�?
+7. **内存管理**：使 -- ?`CPLFree()` 释放 GDAL 分配 -- ?C 字符串（ -- ?`exportToWkt` 返回 -- ?WKT）。几何对象使 -- ?`OGRGeometryFactory::destroyGeometry()` 销毁 -- ?
+8. **编译链接**：确保使 -- ?`gdal-config --cflags --libs`  -- ?CMake `find_package(GDAL)` 正确配置编译参数 -- ?
 
 ### Python 特有注意事项
 
-9. **异常模式**：默�?GDAL Python 不抛出异常。启用异常模式：`gdal.UseExceptions()`（推荐在脚本开头调用）�?
-10. **NumPy 集成**：`band.ReadAsArray()` 直接返回 NumPy 数组，`band.WriteArray(array)` 直接写入，是 Python 最大的便利之一�?
+9. **异常模式**：默 -- ?GDAL Python 不抛出异常。启用异常模式：`gdal.UseExceptions()`（推荐在脚本开头调用） -- ?
+10. **NumPy 集成**：`band.ReadAsArray()` 直接返回 NumPy 数组，`band.WriteArray(array)` 直接写入，是 Python 最大的便利之一 -- ?
 
 ### Java 特有注意事项
 
-11. **本地库加�?*：必须确�?`gdalalljni`（Linux: `libgdalalljni.so`，Windows: `gdalalljni.dll`）在 `java.library.path` 中�?
-12. **Vector 参数**：Java 绑定中许多方法使�?`java.util.Vector<String>` 传递选项参数�?
+11. **本地库加 -- ?*：必须确 -- ?`gdalalljni`（Linux: `libgdalalljni.so`，Windows: `gdalalljni.dll`）在 `java.library.path` 中 -- ?
+12. **Vector 参数**：Java 绑定中许多方法使 -- ?`java.util.Vector<String>` 传递选项参数 -- ?
 
 ### C# 特有注意事项
 
-13. **平台运行�?*：需要根据目标平台引入对应的 NuGet 运行时包（Linux / Windows / macOS），否则本地库加载失败�?
-14. **字符串编�?*：C# 绑定中字符串参数默认使用 UTF-8 编码，处理中文路径时注意编码一致性�?
+13. **平台运行 -- ?*：需要根据目标平台引入对应的 NuGet 运行时包（Linux / Windows / macOS），否则本地库加载失败 -- ?
+14. **字符串编 -- ?*：C# 绑定中字符串参数默认使用 UTF-8 编码，处理中文路径时注意编码一致性 -- ?
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作�?
+### 推荐工作 -- ?
 
-1. **语言选择**：Python 优先（NumPy 集成、语法简洁），性能敏感�?C++�?NET 项目�?C#，Java 项目�?Java
-2. **驱动注册**：任�?GDAL 操作前先调用注册函数（C++: `GDALAllRegister()`, Python 默认已注册）
+1. **语言选择**：Python 优先（NumPy 集成、语法简洁），性能敏感 -- ?C++ -- ?NET 项目 -- ?C#，Java 项目 -- ?Java
+2. **驱动注册**：任 -- ?GDAL 操作前先调用注册函数（C++: `GDALAllRegister()`, Python 默认已注册）
 3. **探索数据**：先 `gdalinfo`/`ogrinfo` 命令行查数据结构，再编写 API 代码
 4. **异常处理**：Python 脚本开头加 `gdal.UseExceptions()` 启用异常模式
 5. **分块读写**：大栅格使用 `RasterIO` 指定窗口，避免全量加载到内存
 
 ### 关键注意事项
 
-- **资源释放**：C++ �?`GDALClose()`，Python 赋�?`None`，Java �?`.delete()`，C# �?`.Dispose()`
-- **坐标轴顺�?*：GDAL 3.0+ 默认纬度在前，可�?`SetAxisMappingStrategy` 切换
-- **Python NumPy 集成**：`ReadAsArray()` 直接返回 NumPy 数组，是 Python 最大优�?
-- **CS 平台依赖**：C# 需安装对应平台运行时包（Linux/Windows�?
-- **JA 本地�?*：Java 需确保 `gdalalljni` �?`java.library.path` �?
+- **资源释放**：C++  -- ?`GDALClose()`，Python 赋 -- ?`None`，Java  -- ?`.delete()`，C#  -- ?`.Dispose()`
+- **坐标轴顺 -- ?*：GDAL 3.0+ 默认纬度在前，可 -- ?`SetAxisMappingStrategy` 切换
+- **Python NumPy 集成**：`ReadAsArray()` 直接返回 NumPy 数组，是 Python 最大优 -- ?
+- **CS 平台依赖**：C# 需安装对应平台运行时包（Linux/Windows -- ?
+- **JA 本地 -- ?*：Java 需确保 `gdalalljni`  -- ?`java.library.path`  -- ?
 
 ### 各语言适用场景
 
 | 场景 | Python | C++ | Java | C# |
 |------|--------|-----|------|-----|
-| 数据处理脚本 | �?首�?| | | |
-| 生产级服�?| | �?首�?| �?| �?|
-| GIS 桌面插件 | �?| | | |
-| .NET 企业应用 | | | | �?|
-| Android GIS | | | �?| |
-| 嵌入式系�?| | �?| | |
+| 数据处理脚本 |  -- ?首 -- ?| | | |
+| 生产级服 -- ?| |  -- ?首 -- ?|  -- ?|  -- ?|
+| GIS 桌面插件 |  -- ?| | | |
+| .NET 企业应用 | | | |  -- ?|
+| Android GIS | | |  -- ?| |
+| 嵌入式系 -- ?| |  -- ?| | |
 
-## 相关技�?
+## 相关技 -- ?
 
-- **gdal** �?GDAL 命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
-- **jts** �?Java 几何引擎（比 OGR 几何更丰富）：[../jts/SKILL.md](../jts/SKILL.md)
-- **pyqgis** �?QGIS Python 开发（内部使用 GDAL）：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
-- **postgis** �?PostgreSQL 空间数据库（�?GDAL 配合导入导出）：[../postgis/SKILL.md](../postgis/SKILL.md)
-- **opengis-all** �?一站式 GIS 全流程：[../opengis-all/SKILL.md](../opengis-all/SKILL.md)
+- **gdal**  -- ?GDAL 命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **jts**  -- ?Java 几何引擎（比 OGR 几何更丰富）：[../jts/SKILL.md](../jts/SKILL.md)
+- **pyqgis**  -- ?QGIS Python 开发（内部使用 GDAL）：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **postgis**  -- ?PostgreSQL 空间数据库（ -- ?GDAL 配合导入导出）：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **opengis-all**  -- ?一站式 GIS 全流程：[../opengis-all/SKILL.md](../opengis-all/SKILL.md)
 
-## 参考链�?
+## 参考链 -- ?
 
-- **GitHub 仓库�?* <https://github.com/OSGeo/gdal>
-- **API 总览�?* <https://gdal.org/en/stable/api/index.html>
-- **C/C++ API 文档�?* <https://gdal.org/en/stable/api/index.html#c-api>
-- **Python API 文档�?* <https://gdal.org/en/stable/api/python/index.html>
-- **Python 绑定说明�?* <https://gdal.org/en/stable/api/python/python_bindings.html>
-- **Java API 文档�?* <https://gdal.org/en/stable/api/java/index.html>
-- **C# API 文档�?* <https://gdal.org/en/stable/api/csharp/index.html>
-- **SWIG 绑定源码�?* <https://github.com/OSGeo/gdal/tree/master/swig>
-- **官方文档首页�?* <https://gdal.org/en/stable/>
-- **GDAL 教程�?* <https://gdal.org/en/stable/tutorials/index.html>
-- **驱动格式列表�?* <https://gdal.org/en/stable/drivers/index.html>
-- **问题追踪�?* <https://github.com/OSGeo/gdal/issues>
+- **GitHub 仓库 -- ?* <https://github.com/OSGeo/gdal>
+- **API 总览 -- ?* <https://gdal.org/en/stable/api/index.html>
+- **C/C++ API 文档 -- ?* <https://gdal.org/en/stable/api/index.html#c-api>
+- **Python API 文档 -- ?* <https://gdal.org/en/stable/api/python/index.html>
+- **Python 绑定说明 -- ?* <https://gdal.org/en/stable/api/python/python_bindings.html>
+- **Java API 文档 -- ?* <https://gdal.org/en/stable/api/java/index.html>
+- **C# API 文档 -- ?* <https://gdal.org/en/stable/api/csharp/index.html>
+- **SWIG 绑定源码 -- ?* <https://github.com/OSGeo/gdal/tree/master/swig>
+- **官方文档首页 -- ?* <https://gdal.org/en/stable/>
+- **GDAL 教程 -- ?* <https://gdal.org/en/stable/tutorials/index.html>
+- **驱动格式列表 -- ?* <https://gdal.org/en/stable/drivers/index.html>
+- **问题追踪 -- ?* <https://github.com/OSGeo/gdal/issues>

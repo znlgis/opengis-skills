@@ -1,29 +1,29 @@
 ---
 name: openscad
-description: "Use when creating 3D models programmatically via CSG (Constructive Solid Geometry) scripting �?parametric parts, customizable designs for 3D printing. OpenSCAD: script-based 3D CAD using a declarative language rather than GUI modeling."
+description: "Use when creating 3D models programmatically via CSG (Constructive Solid Geometry) scripting  -- ?parametric parts, customizable designs for 3D printing. OpenSCAD: script-based 3D CAD using a declarative language rather than GUI modeling."
 tags: [3d, parametric, csg, scripting, stl, openscad]
 ---
 
-> **项目地址�?* <https://github.com/openscad/openscad>
+> **项目地址 -- ?* <https://github.com/openscad/openscad>
 >
-> **官网�?* <https://openscad.org/>
+> **官网 -- ?* <https://openscad.org/>
 >
-> **官方文档�?* <https://openscad.org/documentation.html>
+> **官方文档 -- ?* <https://openscad.org/documentation.html>
 >
-> **Cheatsheet�?* <https://openscad.org/cheatsheet/>
+> **Cheatsheet -- ?* <https://openscad.org/cheatsheet/>
 >
 > **许可证：** GPL-2.0+
 
 ## 概述
 
-OpenSCAD 与传�?GUI CAD 的区别：
+OpenSCAD 与传 -- ?GUI CAD 的区别：
 
-- **代码即模�?*：所有几何由 .scad 脚本生成
-- **CSG 内核**：基�?CGAL（精确）或新�?Manifold（更快）
-- **三大基础**：原�?+ 变换 + 布尔
-- **强参数化**：变量、模块、函数、循环、列表推�?
-- **导入导出**：STL、OFF、DXF、SVG、AMF�?MF；可导入 STL 做处�?
-- **批处�?*：CLI `openscad -o out.stl model.scad`
+- **代码即模 -- ?*：所有几何由 .scad 脚本生成
+- **CSG 内核**：基 -- ?CGAL（精确）或新 -- ?Manifold（更快）
+- **三大基础**：原 -- ?+ 变换 + 布尔
+- **强参数化**：变量、模块、函数、循环、列表推 -- ?
+- **导入导出**：STL、OFF、DXF、SVG、AMF -- ?MF；可导入 STL 做处 -- ?
+- **批处 -- ?*：CLI `openscad -o out.stl model.scad`
 
 ---
 
@@ -34,7 +34,7 @@ OpenSCAD 与传�?GUI CAD 的区别：
 sudo apt install openscad
 # macOS
 brew install --cask openscad
-# Windows: 安装�?
+# Windows: 安装 -- ?
 # 开发版（更快的 Manifold 内核）：<https://openscad.org/downloads.html#snapshots>
 ```
 
@@ -48,11 +48,11 @@ length = 50;
 width  = 30;
 height = 10;
 
-// 立方�?
+// 立方 -- ?
 cube([length, width, height], center = false);
 
-// �?
-sphere(r = 5, $fn = 64);          // $fn 控制圆滑�?
+//  -- ?
+sphere(r = 5, $fn = 64);          // $fn 控制圆滑 -- ?
 
 // 圆柱
 cylinder(h = 20, r1 = 5, r2 = 10, center = true, $fn = 32);
@@ -72,7 +72,7 @@ scale([2, 1, 1])       cube(5);
 mirror([1, 0, 0])      cube(5);
 ```
 
-链式�?
+链式 -- ?
 
 ```scad
 translate([20, 0, 0])
@@ -82,7 +82,7 @@ translate([20, 0, 0])
 
 ---
 
-## 布尔（CSG�?
+## 布尔（CSG -- ?
 
 ```scad
 union()        { cube(10); translate([8,0,0]) cube(10); }
@@ -92,7 +92,7 @@ intersection() { cube(10); translate([5,5,5]) sphere(7); }
 
 ---
 
-## 模块与函�?
+## 模块与函 -- ?
 
 ```scad
 module hex(d = 10, h = 5) {
@@ -111,12 +111,12 @@ hex_grid(rows = 5, cols = 5);
 
 // 函数（返回值）
 function sq(x) = x * x;
-echo(sq(5));     // �?25
+echo(sq(5));     //  -- ?25
 ```
 
 ---
 
-## 循环与列�?
+## 循环与列 -- ?
 
 ```scad
 // for 循环
@@ -130,10 +130,10 @@ polygon(points);
 
 ---
 
-## 2D �?3D
+## 2D  -- ?3D
 
 ```scad
-// 2D 多边形拉�?
+// 2D 多边形拉 -- ?
 linear_extrude(height = 5, twist = 30, scale = 0.5)
     polygon([[0,0],[10,0],[10,10],[0,10]]);
 
@@ -141,15 +141,15 @@ linear_extrude(height = 5, twist = 30, scale = 0.5)
 rotate_extrude($fn = 100)
     translate([20, 0, 0]) circle(r = 3);
 
-// 导入 SVG 后拉�?
+// 导入 SVG 后拉 -- ?
 linear_extrude(height = 4) import("logo.svg");
 ```
 
 ---
 
-## 高级特�?
+## 高级特 -- ?
 
-### Hull �?Minkowski
+### Hull  -- ?Minkowski
 
 ```scad
 hull() {
@@ -159,7 +159,7 @@ hull() {
 
 minkowski() {
     cube(10);
-    sphere(2);     // 倒圆角效�?
+    sphere(2);     // 倒圆角效 -- ?
 }
 ```
 
@@ -174,7 +174,7 @@ width  = 30;          // [10:1:200]
 $fn = 64;
 ```
 
-注释格式�?GUI 自动生成参数滑块�?
+注释格式 -- ?GUI 自动生成参数滑块 -- ?
 
 ---
 
@@ -196,22 +196,22 @@ openscad -o preview.png --camera=0,0,0,55,0,25,150 --imgsize=800,600 part.scad
 ## 性能优化
 
 1. `$fn` 不要全局设过高，需要圆滑的对象再设
-2. **Manifold 内核**（开发版）：�?Edit �?Preferences �?Features 启用，比 CGAL �?10×+
-3. **避免大量布尔嵌套**：使�?`hull()` �?`minkowski()` 后立即缓存为模块
+2. **Manifold 内核**（开发版）： -- ?Edit  -- ?Preferences  -- ?Features 启用，比 CGAL  -- ?10×+
+3. **避免大量布尔嵌套**：使 -- ?`hull()`  -- ?`minkowski()` 后立即缓存为模块
 4. **复用模块**优于复制粘贴
-5. **`use <lib.scad>`** 引入库不递归求�?
+5. **`use <lib.scad>`** 引入库不递归求 -- ?
 
 ---
 
-## 常用�?
+## 常用 -- ?
 
-| �?| 用�?|
+|  -- ?| 用 -- ?|
 |----|------|
-| BOSL2 | 强大的几何工具集（齿�?螺纹/金属件） |
-| MCAD | 早期通用机械�?|
-| NopSCADlib | 大量真实零部件（电机/轴承/PCB�?|
-| dotSCAD | 工程函数 / 多边形工�?|
-| BezierScad | 贝塞尔曲线扫�?|
+| BOSL2 | 强大的几何工具集（齿 -- ?螺纹/金属件） |
+| MCAD | 早期通用机械 -- ?|
+| NopSCADlib | 大量真实零部件（电机/轴承/PCB -- ?|
+| dotSCAD | 工程函数 / 多边形工 -- ?|
+| BezierScad | 贝塞尔曲线扫 -- ?|
 
 ---
 
@@ -219,31 +219,31 @@ openscad -o preview.png --camera=0,0,0,55,0,25,150 --imgsize=800,600 part.scad
 
 | 问题 | 解决 |
 |------|------|
-| 渲染极慢 | 启用 Manifold 内核；降�?`$fn` |
-| 导出 STL 不闭�?| 检查布尔输入是否流�?|
+| 渲染极慢 | 启用 Manifold 内核；降 -- ?`$fn` |
+| 导出 STL 不闭 -- ?| 检查布尔输入是否流 -- ?|
 | 中文文字 | `font = "Noto Sans CJK SC"` |
-| `import("a.stl")` �?| 转换�?OFF 或预�?mesh decimation |
-| 装配线性挤出失�?| `convexity` 参数加大 |
+| `import("a.stl")`  -- ?| 转换 -- ?OFF 或预 -- ?mesh decimation |
+| 装配线性挤出失 -- ?| `convexity` 参数加大 |
 
 ---
 
 ## AI 使用建议
 
-- **推荐工作流模�?*：AI 助手应将 OpenSCAD 模型组织为「全局参数 �?模块定义 �?主模型组合」的结构，利�?`module` 封装可复用组件。参数化面板�?`/* [ParamGroup] */` 注释格式暴露变量�?GUI Customizer。批处理使用 CLI `openscad -o out.stl model.scad -D 'param=value'`�?
-- **关键注意事项**：① `$fn` 不要全局设过高，仅对需要圆滑的对象单独设置；② 开发版启用 Manifold 内核（比 CGAL �?10×+）；�?`import("a.stl")` 场景避免频繁重导入，应缓存为模块；④ 中文字体使用 `font = "Noto Sans CJK SC"`�?
-- **常用代码模式**：基础体：`cube([l,w,h])` / `cylinder(h, r, $fn=N)` / `sphere(r, $fn=N)`。布尔：`difference() { ... }`。变换：`translate([x,y,z]) rotate([ax,ay,az])`。参数暴露：`/* [Section] */ variable = default; // [min:step:max]`�?
+- **推荐工作流模 -- ?*：AI 助手应将 OpenSCAD 模型组织为「全局参数  -- ?模块定义  -- ?主模型组合」的结构，利 -- ?`module` 封装可复用组件。参数化面板 -- ?`/* [ParamGroup] */` 注释格式暴露变量 -- ?GUI Customizer。批处理使用 CLI `openscad -o out.stl model.scad -D 'param=value'` -- ?
+- **关键注意事项**：① `$fn` 不要全局设过高，仅对需要圆滑的对象单独设置；② 开发版启用 Manifold 内核（比 CGAL  -- ?10×+）； -- ?`import("a.stl")` 场景避免频繁重导入，应缓存为模块；④ 中文字体使用 `font = "Noto Sans CJK SC"` -- ?
+- **常用代码模式**：基础体：`cube([l,w,h])` / `cylinder(h, r, $fn=N)` / `sphere(r, $fn=N)`。布尔：`difference() { ... }`。变换：`translate([x,y,z]) rotate([ax,ay,az])`。参数暴露：`/* [Section] */ variable = default; // [min:step:max]` -- ?
 
 ---
 
-## 相关技�?
+## 相关技 -- ?
 
-- **cadquery** �?Python 参数�?CAD（BREP 内核，适合工业零件）：[../cadquery/SKILL.md](../cadquery/SKILL.md)
-- **freecad** �?桌面参数�?CAD，含 GUI + Python 脚本：[../freecad/SKILL.md](../freecad/SKILL.md)
-- **solvespace** �?轻量约束求解器建模，互补性工具：[../solvespace/SKILL.md](../solvespace/SKILL.md)
+- **cadquery**  -- ?Python 参数 -- ?CAD（BREP 内核，适合工业零件）：[../cadquery/SKILL.md](../cadquery/SKILL.md)
+- **freecad**  -- ?桌面参数 -- ?CAD，含 GUI + Python 脚本：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **solvespace**  -- ?轻量约束求解器建模，互补性工具：[../solvespace/SKILL.md](../solvespace/SKILL.md)
 
 ---
 
-## 典型工作�?
+## 典型工作 -- ?
 
 ### 工作流一：参数化机械零件设计
 
@@ -252,21 +252,21 @@ openscad -o preview.png --camera=0,0,0,55,0,25,150 --imgsize=800,600 part.scad
 3. 编写特征模块：`module holes() { translate(...) cylinder(h=height+1, r=hole_r); }`
 4. 在主模型中用 CSG 组合：`difference() { base(); holes(); }`
 5. 添加 Customizer 注释暴露参数：`/* [Dimensions] */ length = 50; // [10:1:200]`
-6. 渲染预览（F6），导出 STL（F7�?
+6. 渲染预览（F6），导出 STL（F7 -- ?
 
-### 工作流二：CI 批量导出参数化模�?
+### 工作流二：CI 批量导出参数化模 -- ?
 
-1. 编写参数�?`.scad` 文件，用 `-D` 传递参�?
-2. CI 脚本中安�?OpenSCAD 或使�?Docker 镜像
+1. 编写参数 -- ?`.scad` 文件，用 `-D` 传递参 -- ?
+2. CI 脚本中安 -- ?OpenSCAD 或使 -- ?Docker 镜像
 3. 遍历参数组合：`openscad -o out_${variant}.stl model.scad -D "length=${L}" -D "width=${W}"`
-4. 选项：导�?PNG 预览 `openscad -o preview.png --camera=... --imgsize=800,600 model.scad`
-5. 将输�?STL/PNG 上传为构建产�?
+4. 选项：导 -- ?PNG 预览 `openscad -o preview.png --camera=... --imgsize=800,600 model.scad`
+5. 将输 -- ?STL/PNG 上传为构建产 -- ?
 
 ---
 
-## 参考资�?
+## 参考资 -- ?
 
-- 文档�?https://openscad.org/documentation.html>
-- Cheatsheet�?https://openscad.org/cheatsheet/>
+- 文档 -- ?https://openscad.org/documentation.html>
+- Cheatsheet -- ?https://openscad.org/cheatsheet/>
 - 用户手册（Wikibook）：<https://en.wikibooks.org/wiki/OpenSCAD_User_Manual>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/openscad/>

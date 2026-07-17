@@ -1,14 +1,14 @@
 ---
 name: ifoxcad
-description: "Use when developing AutoCAD plugins with .NET/C# �?entity creation, layer management, block references, transaction handling. iFoxCAD: AutoCAD .NET secondary development framework with simplified API wrappers."
+description: "Use when developing AutoCAD plugins with .NET/C#  -- ?entity creation, layer management, block references, transaction handling. iFoxCAD: AutoCAD .NET secondary development framework with simplified API wrappers."
 tags: [autocad, dotnet, csharp, cad, dxf, dwg, plugin]
 ---
 
-> **项目地址�?* <https://gitee.com/inspirefunction/ifoxcad>
+> **项目地址 -- ?* <https://gitee.com/inspirefunction/ifoxcad>
 >
-> **GitHub 镜像�?* <https://github.com/inspirefunction/ifoxcad>
+> **GitHub 镜像 -- ?* <https://github.com/inspirefunction/ifoxcad>
 >
-> **NuGet�?* `IFoxCAD.Cad`
+> **NuGet -- ?* `IFoxCAD.Cad`
 >
 > **许可证：** LGPL-2.1
 
@@ -18,10 +18,10 @@ IFoxCAD 通过统一的事务封装和大量扩展方法，让 AutoCAD .NET API 
 
 - **统一事务**：`using var tr = new DBTrans();`
 - **链式扩展**：`db.AddEntityToModelSpace(line, circle, ...)`
-- **�?CAD 兼容**：源码版宏控�?AutoCAD/ZWCAD/GstarCAD
-- **常用工具**：选择集、用户交互、图层、块、文字、标注、坐标变换、几�?
-- **依赖注入**：内�?IoC 容器
-- **菜单与命�?*：声明式命令注册
+- ** -- ?CAD 兼容**：源码版宏控 -- ?AutoCAD/ZWCAD/GstarCAD
+- **常用工具**：选择集、用户交互、图层、块、文字、标注、坐标变换、几 -- ?
+- **依赖注入**：内 -- ?IoC 容器
+- **菜单与命 -- ?*：声明式命令注册
 
 ---
 
@@ -33,7 +33,7 @@ IFoxCAD 通过统一的事务封装和大量扩展方法，让 AutoCAD .NET API 
 dotnet add package IFoxCAD.Cad
 ```
 
-项目需引用对应 CAD �?`acdbmgd`、`acmgd`、`accoremgd`，并设置 `Copy Local = false`�?
+项目需引用对应 CAD  -- ?`acdbmgd`、`acmgd`、`accoremgd`，并设置 `Copy Local = false` -- ?
 
 ### 项目模板
 
@@ -54,8 +54,8 @@ using Autodesk.AutoCAD.Runtime;
 
 public class MyApp : IExtensionApplication
 {
-    public void Initialize() { /* 加载时执�?*/ }
-    public void Terminate()  { /* 卸载时执�?*/ }
+    public void Initialize() { /* 加载时执 -- ?*/ }
+    public void Terminate()  { /* 卸载时执 -- ?*/ }
 }
 ```
 
@@ -74,7 +74,7 @@ public void DrawLine()
 }
 ```
 
-`DBTrans` 自动持有�?
+`DBTrans` 自动持有 -- ?
 
 - `Database` / `Transaction`
 - `BlockTable` / `BlockTableRecord` / `LayerTable` / `TextStyleTable` / `LinetypeTable` ...
@@ -82,21 +82,21 @@ public void DrawLine()
 
 ---
 
-## 用户交互（Editor 扩展�?
+## 用户交互（Editor 扩展 -- ?
 
 ```csharp
 var ed = Env.Editor;
 
 // 取一个点
-if (ed.GetPoint("\n请选择起点�?).GetPointResult(out var p)) {
-    // p �?Point3d
+if (ed.GetPoint("\n请选择起点 -- ?).GetPointResult(out var p)) {
+    // p  -- ?Point3d
 }
 
 // 取角度、整数、关键字
 ed.GetDouble("\n请输入半径：").GetDoubleResult(out var r);
-ed.GetKeyword("\n请选择 [�?C)/矩形(R)]�?, "C", "R").GetStringResult(out var k);
+ed.GetKeyword("\n请选择 [ -- ?C)/矩形(R)] -- ?, "C", "R").GetStringResult(out var k);
 
-// 选择�?
+// 选择 -- ?
 var sel = ed.SelectAll(new SelectionFilter(new[] {
     new TypedValue((int)DxfCode.Start, "LINE")
 }));
@@ -104,7 +104,7 @@ var sel = ed.SelectAll(new SelectionFilter(new[] {
 
 ---
 
-## 实体创建与样�?
+## 实体创建与样 -- ?
 
 ```csharp
 using var tr = new DBTrans();
@@ -123,23 +123,23 @@ tr.Commit();
 
 ---
 
-## 块（Block�?
+## 块（Block -- ?
 
 ```csharp
 using var tr = new DBTrans();
 
-// 1. 创建块定�?
+// 1. 创建块定 -- ?
 ObjectId btrId = tr.BlockTable.Add("MyBlock", btr => {
     btr.Origin = Point3d.Origin;
     btr.AppendEntity(new Circle(Point3d.Origin, Vector3d.ZAxis, 1));
     btr.AppendEntity(new Line(new Point3d(-1,0,0), new Point3d(1,0,0)));
 });
 
-// 2. 插入块参�?
+// 2. 插入块参 -- ?
 var br = new BlockReference(new Point3d(10, 10, 0), btrId);
 tr.CurrentSpace.AddEntity(br);
 
-// 3. 块属�?
+// 3. 块属 -- ?
 br.AddAttributes(("TAG1", "VALUE1"), ("TAG2", "VALUE2"));
 
 tr.Commit();
@@ -217,12 +217,12 @@ public class MyCommands
 
 ---
 
-## �?CAD 兼容
+##  -- ?CAD 兼容
 
-IFoxCAD 通过条件编译支持�?
+IFoxCAD 通过条件编译支持 -- ?
 
 - `IFOX_CAD2025` / `IFOX_CAD2024` ...
-- `ZWCAD` / `GCAD` �?
+- `ZWCAD` / `GCAD`  -- ?
 
 ```csharp
 #if ZWCAD
@@ -234,31 +234,31 @@ IFoxCAD 通过条件编译支持�?
 
 ---
 
-## 典型工作�?
+## 典型工作 -- ?
 
-### 工作流一：新�?AutoCAD 插件项目
+### 工作流一：新 -- ?AutoCAD 插件项目
 
 1. `dotnet new classlib` 创建 .NET 类库项目
-2. 通过 NuGet 添加 `IFoxCAD.Cad` 包，添加 AutoCAD 依赖 DLL 引用（`Copy Local=false`�?
-3. 创建 `IExtensionApplication` 实现类，添加 `[assembly: ExtensionApplication]` �?`[assembly: CommandClass]` 特�?
-4. �?`[CommandMethod]` 方法中编写业务逻辑：`using var tr = new DBTrans()` �?创建/修改实体 �?`tr.Commit()`
-5. 编译后通过 NETLOAD 加载�?AutoCAD 中运�?
+2. 通过 NuGet 添加 `IFoxCAD.Cad` 包，添加 AutoCAD 依赖 DLL 引用（`Copy Local=false` -- ?
+3. 创建 `IExtensionApplication` 实现类，添加 `[assembly: ExtensionApplication]`  -- ?`[assembly: CommandClass]` 特 -- ?
+4.  -- ?`[CommandMethod]` 方法中编写业务逻辑：`using var tr = new DBTrans()`  -- ?创建/修改实体  -- ?`tr.Commit()`
+5. 编译后通过 NETLOAD 加载 -- ?AutoCAD 中运 -- ?
 
-### 工作流二：批量处�?DWG 文件
+### 工作流二：批量处 -- ?DWG 文件
 
-1. 使用 `new DBTrans()` �?`HostMgd` 无界面打开 DWG 文件
-2. 遍历 `tr.CurrentSpace` 中的实体，`tr.GetObject<T>(id)` 获取强类型对�?
-3. 根据实体类型（Line/Circle/Polyline/...）执行批量修�?
-4. `tr.Commit()` 保存，输出到�?DWG
+1. 使用 `new DBTrans()`  -- ?`HostMgd` 无界面打开 DWG 文件
+2. 遍历 `tr.CurrentSpace` 中的实体，`tr.GetObject<T>(id)` 获取强类型对 -- ?
+3. 根据实体类型（Line/Circle/Polyline/...）执行批量修 -- ?
+4. `tr.Commit()` 保存，输出到 -- ?DWG
 
 ---
 
 ## 性能优化
 
-1. **批量操作必用事务**，不要在循环里频繁开关事�?
-2. **`db.UsingTrans()`** 在跨命令操作时使�?
+1. **批量操作必用事务**，不要在循环里频繁开关事 -- ?
+2. **`db.UsingTrans()`** 在跨命令操作时使 -- ?
 3. **`Editor.Regen()`** 仅必要时调用
-4. **块的修改**�?`BlockTableRecord.UpdateAnonymousBlocks` 同步实例
+4. **块的修改** -- ?`BlockTableRecord.UpdateAnonymousBlocks` 同步实例
 5. **Span/Stream 替代 ArrayList**
 
 ---
@@ -267,32 +267,32 @@ IFoxCAD 通过条件编译支持�?
 
 | 问题 | 解决 |
 |------|------|
-| `eNotInDatabase` | 实体未加�?BlockTableRecord 即访�?Id |
-| 修改后界面不刷新 | `ent.RecordGraphicsModified(true)` �?`Editor.Regen()` |
+| `eNotInDatabase` | 实体未加 -- ?BlockTableRecord 即访 -- ?Id |
+| 修改后界面不刷新 | `ent.RecordGraphicsModified(true)`  -- ?`Editor.Regen()` |
 | 引用 `acdbmgd` 报错 | 设置 `Copy Local=false` |
-| 脱离 CAD 单元测试 | �?`HostMgd` Mock �?IFoxCAD 提供的测试基�?|
+| 脱离 CAD 单元测试 |  -- ?`HostMgd` Mock  -- ?IFoxCAD 提供的测试基 -- ?|
 
 ---
 
 ## AI 使用建议
 
-- **推荐工作流模�?*：AI 助手应遵循「命令定�?�?DBTrans 事务 �?实体创建/修改 �?Commit」的标准模式。`using var tr = new DBTrans()` 是几乎所有操作的起点，自动管�?Database �?Transaction�?
-- **关键注意事项**：① 实体必须先加�?BlockTableRecord 再访�?Id，否则报 `eNotInDatabase`；② 引用 AutoCAD 依赖 DLL 时必须设�?`Copy Local=false`；③ 条件编译宏（`IFOX_CAD2025`/`ZWCAD` 等）用于�?CAD 兼容；④ 插件入口需实现 `IExtensionApplication`，在 `Initialize()` 中执行初始化、`Terminate()` 中执行清理，命令通过 `[CommandMethod]` 特性声明式注册�?
-- **常用代码模式**：`using var tr = new DBTrans()` �?`tr.CurrentSpace.AddEntity(...)` �?`tr.LayerTable.GetOrCreate("name")` �?`tr.Commit()`。选择集操作：`ed.SelectAll(new SelectionFilter(...))` �?`tr.GetObject<T>(id)` �?修改 �?`tr.Commit()`�?
+- **推荐工作流模 -- ?*：AI 助手应遵循「命令定 -- ? -- ?DBTrans 事务  -- ?实体创建/修改  -- ?Commit」的标准模式。`using var tr = new DBTrans()` 是几乎所有操作的起点，自动管 -- ?Database  -- ?Transaction -- ?
+- **关键注意事项**：① 实体必须先加 -- ?BlockTableRecord 再访 -- ?Id，否则报 `eNotInDatabase`；② 引用 AutoCAD 依赖 DLL 时必须设 -- ?`Copy Local=false`；③ 条件编译宏（`IFOX_CAD2025`/`ZWCAD` 等）用于 -- ?CAD 兼容；④ 插件入口需实现 `IExtensionApplication`，在 `Initialize()` 中执行初始化、`Terminate()` 中执行清理，命令通过 `[CommandMethod]` 特性声明式注册 -- ?
+- **常用代码模式**：`using var tr = new DBTrans()`  -- ?`tr.CurrentSpace.AddEntity(...)`  -- ?`tr.LayerTable.GetOrCreate("name")`  -- ?`tr.Commit()`。选择集操作：`ed.SelectAll(new SelectionFilter(...))`  -- ?`tr.GetObject<T>(id)`  -- ?修改  -- ?`tr.Commit()` -- ?
 
 ---
 
-## 相关技�?
+## 相关技 -- ?
 
-- **qcad** �?2D CAD 软件，ECMAScript 扩展�?DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
-- **librecad** �?开�?2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
-- **libredwg** �?DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
-- **lightcad** �?Web 2D CAD 框架（类似二次开发场景）：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **qcad**  -- ?2D CAD 软件，ECMAScript 扩展 -- ?DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **librecad**  -- ?开 -- ?2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **libredwg**  -- ?DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
+- **lightcad**  -- ?Web 2D CAD 框架（类似二次开发场景）：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 
 ---
 
-## 参考资�?
+## 参考资 -- ?
 
-- 仓库�?https://gitee.com/inspirefunction/ifoxcad>
+- 仓库 -- ?https://gitee.com/inspirefunction/ifoxcad>
 - 文档与示例：<https://gitee.com/inspirefunction/ifoxcad/wikis>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/ifoxcad/>

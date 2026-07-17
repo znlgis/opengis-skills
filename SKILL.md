@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 66+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more.
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 66+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
 tags:
   - gis
   - cad

@@ -1,6 +1,6 @@
 ---
 name: geometry-api-java
-description: Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in Java — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for Java.
+description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in Java — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for Java."
 tags:
   - java
   - geometry

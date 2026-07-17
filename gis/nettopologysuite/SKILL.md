@@ -1,6 +1,6 @@
 ---
 name: nettopologysuite
-description: "Use when performing 2D computational geometry in .NET �?spatial predicates, overlay operations, buffering, WKT/WKB I/O. NetTopologySuite: the .NET port of JTS, available via NuGet for spatial analysis in C# applications."
+description: "Use when performing 2D computational geometry in .NET  -- ?spatial predicates, overlay operations, buffering, WKT/WKB I/O. NetTopologySuite: the .NET port of JTS, available via NuGet for spatial analysis in C# applications."
 tags:
   - dotnet
   - csharp
@@ -13,25 +13,25 @@ tags:
   - npgsql
 ---
 
-> **项目地址�?* <https://github.com/NetTopologySuite/NetTopologySuite>
+> **项目地址 -- ?* <https://github.com/NetTopologySuite/NetTopologySuite>
 >
-> **NuGet�?* `NetTopologySuite`
+> **NuGet -- ?* `NetTopologySuite`
 >
-> **官方文档�?* <https://nettopologysuite.github.io/NetTopologySuite/>
+> **官方文档 -- ?* <https://nettopologysuite.github.io/NetTopologySuite/>
 >
 > **许可证：** BSD-3-Clause
 
 ## 概述
 
-NTS �?JTS API 几乎一一对应（C# 命名风格）：
+NTS  -- ?JTS API 几乎一一对应（C# 命名风格）：
 
 - **几何模型**：`Point`/`LineString`/`Polygon`/`Multi*`/`GeometryCollection`
 - **空间关系**：`Equals`/`Contains`/`Within`/`Intersects`/`Touches`/`Crosses`/`Overlaps`/`Disjoint`/`Relate`
 - **集合运算**：`Intersection`/`Union`/`Difference`/`SymmetricDifference`/`Buffer`
 - **几何分析**：`ConvexHull`/`Centroid`/`Area`/`Length`/`Distance`/`IsValid`/`Simplify`
 - **空间索引**：`STRtree`/`Quadtree`
-- **格式读写**：WKT、WKB、GeoJSON、Shapefile（独�?NuGet�?
-- **EF Core 集成**：SqlServer �?PostgreSQL 自动翻译为空�?SQL
+- **格式读写**：WKT、WKB、GeoJSON、Shapefile（独 -- ?NuGet -- ?
+- **EF Core 集成**：SqlServer  -- ?PostgreSQL 自动翻译为空 -- ?SQL
 
 ---
 
@@ -44,7 +44,7 @@ dotnet add package NetTopologySuite.IO.ShapeFile
 dotnet add package ProjNet                          # 坐标变换（可选）
 ```
 
-**.NET 6+** 推荐�?
+**.NET 6+** 推荐 -- ?
 
 ---
 
@@ -67,7 +67,7 @@ var poly = gf.CreatePolygon(new[] {
 
 ---
 
-## 空间关系与运�?
+## 空间关系与运 -- ?
 
 ```csharp
 bool b   = polyA.Intersects(polyB);
@@ -136,7 +136,7 @@ var nearby = tree.NearestNeighbour(p.EnvelopeInternal, p, new GeometryItemDistan
 
 ---
 
-## 几何修复与简�?
+## 几何修复与简 -- ?
 
 ```csharp
 using NetTopologySuite.Operation.Valid;
@@ -155,7 +155,7 @@ var simp = TopologyPreservingSimplifier.Simplify(poly, 0.001);
 
 ```bash
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite
-# �?
+#  -- ?
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite
 ```
 
@@ -174,12 +174,12 @@ var nearby = db.Cities
     .Where(c => c.Location.Distance(target) < 5000)
     .OrderBy(c => c.Location.Distance(target))
     .Take(10)
-    .ToList();   // 自动翻译为空�?SQL
+    .ToList();   // 自动翻译为空 -- ?SQL
 ```
 
 ---
 
-## 坐标系转换（ProjNet�?
+## 坐标系转换（ProjNet -- ?
 
 ```csharp
 using ProjNet.CoordinateSystems;
@@ -196,10 +196,10 @@ double[] xy = ct.MathTransform.Transform(new[] { 116.397, 39.908 });
 
 ## 性能优化
 
-1. 共享 `GeometryFactory`，固�?SRID
+1. 共享 `GeometryFactory`，固 -- ?SRID
 2. 大批量空间查询用 STRtree
-3. WKB �?WKT 更快更紧�?
-4. 多次空间关系判断使用 `PreparedGeometry`�?
+3. WKB  -- ?WKT 更快更紧 -- ?
+4. 多次空间关系判断使用 `PreparedGeometry` -- ?
 
 ```csharp
 using NetTopologySuite.Geometries.Prepared;
@@ -214,41 +214,41 @@ foreach (var p in points) if (prep.Contains(p)) ...
 | 问题 | 解决 |
 |------|------|
 | `TopologyException` | `GeometryFixer.Fix` 修复无效几何 |
-| EF Core 类型冲突 | �?`UseNetTopologySuite()` 而非 `Microsoft.SqlServer.Types` |
-| Z/M 坐标丢失 | 配置 `WKBWriter` �?`HandleOrdinates` |
-| Buffer �?| 减小 quadrantSegments、并行处�?|
+| EF Core 类型冲突 |  -- ?`UseNetTopologySuite()` 而非 `Microsoft.SqlServer.Types` |
+| Z/M 坐标丢失 | 配置 `WKBWriter`  -- ?`HandleOrdinates` |
+| Buffer  -- ?| 减小 quadrantSegments、并行处 -- ?|
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作�?
+### 推荐工作 -- ?
 
-1. **创建几何工厂**：使�?`new GeometryFactory(new PrecisionModel(), 4326)` 创建工厂，SRID 指定坐标�?
+1. **创建几何工厂**：使 -- ?`new GeometryFactory(new PrecisionModel(), 4326)` 创建工厂，SRID 指定坐标 -- ?
 2. **创建几何对象**：通过工厂方法 `CreatePoint()`、`CreateLineString()`、`CreatePolygon()` 创建几何
-3. **空间运算**：直接调用几何对象方�?`Intersects()`、`Intersection()`、`Buffer()` �?
-4. **格式读写**：使�?`WKTReader`/`WKTWriter`、`GeoJsonConverterFactory` 进行序列�?
-5. **EF Core 集成**：`UseNetTopologySuite()` 启用空间查询翻译�?SQL
+3. **空间运算**：直接调用几何对象方 -- ?`Intersects()`、`Intersection()`、`Buffer()`  -- ?
+4. **格式读写**：使 -- ?`WKTReader`/`WKTWriter`、`GeoJsonConverterFactory` 进行序列 -- ?
+5. **EF Core 集成**：`UseNetTopologySuite()` 启用空间查询翻译 -- ?SQL
 
 ### 关键注意事项
 
-- **GeometryFactory 共享**：固�?SRID，复�?`GeometryFactory` 实例
-- **拓扑异常修复**：无效几何使�?`GeometryFixer.Fix()` 修复
-- **PreparedGeometry**：重复空间关系判断时使用 `PreparedGeometryFactory.Prepare()` 大幅提�?
-- **STRtree 批量查询**：先 `Build()` �?`Query()`，大数据量场景优于逐几何判�?
-- **WKB vs WKT**：WKB �?WKT 更快更紧凑，数据库交互优先使�?WKB
+- **GeometryFactory 共享**：固 -- ?SRID，复 -- ?`GeometryFactory` 实例
+- **拓扑异常修复**：无效几何使 -- ?`GeometryFixer.Fix()` 修复
+- **PreparedGeometry**：重复空间关系判断时使用 `PreparedGeometryFactory.Prepare()` 大幅提 -- ?
+- **STRtree 批量查询**：先 `Build()`  -- ?`Query()`，大数据量场景优于逐几何判 -- ?
+- **WKB vs WKT**：WKB  -- ?WKT 更快更紧凑，数据库交互优先使 -- ?WKB
 - **Z/M 坐标**：`WKBWriter` 需配置 `HandleOrdinates` 保留 Z/M 坐标
 
-## 相关技�?
+## 相关技 -- ?
 
-- **jts** �?JTS Topology Suite（Java 原版）：[../jts/SKILL.md](../jts/SKILL.md)
-- **geometry-api-net** �?Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
-- **mapsui** �?.NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
-- **opengis-utils-for-net** �?.NET GIS 统一工具包：[../opengis-utils-for-net/SKILL.md](../opengis-utils-for-net/SKILL.md)
+- **jts**  -- ?JTS Topology Suite（Java 原版）：[../jts/SKILL.md](../jts/SKILL.md)
+- **geometry-api-net**  -- ?Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
+- **mapsui**  -- ?.NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
+- **opengis-utils-for-net**  -- ?.NET GIS 统一工具包：[../opengis-utils-for-net/SKILL.md](../opengis-utils-for-net/SKILL.md)
 
-## 参考资�?
+## 参考资 -- ?
 
-- 文档�?https://nettopologysuite.github.io/NetTopologySuite/>
-- API�?https://nettopologysuite.github.io/NetTopologySuite/api/>
+- 文档 -- ?https://nettopologysuite.github.io/NetTopologySuite/>
+- API -- ?https://nettopologysuite.github.io/NetTopologySuite/api/>
 - JTS Javadoc（API 等价）：<https://locationtech.github.io/jts/javadoc>
 - 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/nettopologysuite/>

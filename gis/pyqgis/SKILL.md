@@ -12,7 +12,7 @@ tags:
   - plugin
 ---
 
-> **项目地址�?* <https://github.com/qgis/QGIS>
+> **项目地址 -- ?* <https://github.com/qgis/QGIS>
 >
 > **开发者手册：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/>
 >
@@ -22,25 +22,25 @@ tags:
 
 ## 概述
 
-PyQGIS �?QGIS 桌面 GIS 软件�?Python 绑定层，对应 QGIS 源码�?`python/` 目录下的绑定代码。它�?QGIS 核心 C++ 类库完整暴露�?Python，使得开发者可以：
+PyQGIS  -- ?QGIS 桌面 GIS 软件 -- ?Python 绑定层，对应 QGIS 源码 -- ?`python/` 目录下的绑定代码。它 -- ?QGIS 核心 C++ 类库完整暴露 -- ?Python，使得开发者可以：
 
-- �?**QGIS Python 控制�?*中交互式操作
-- 编写 **独立 Python 脚本**（无需启动 QGIS 桌面�?
-- 开�?**QGIS 插件**扩展桌面功能
-- 调用 **Processing 框架**执行 100+ 种空间分析算�?
-- 进行 **地图渲染与导�?*（PNG / PDF / SVG�?
+-  -- ?**QGIS Python 控制 -- ?*中交互式操作
+- 编写 **独立 Python 脚本**（无需启动 QGIS 桌面 -- ?
+- 开 -- ?**QGIS 插件**扩展桌面功能
+- 调用 **Processing 框架**执行 100+ 种空间分析算 -- ?
+- 进行 **地图渲染与导 -- ?*（PNG / PDF / SVG -- ?
 
-PyQGIS 主要包含以下模块�?
+PyQGIS 主要包含以下模块 -- ?
 
 | 模块 | 说明 |
 |------|------|
-| `qgis.core` | 核心类——图层、要素、几何、坐标系、项目、Processing �?|
+| `qgis.core` | 核心类——图层、要素、几何、坐标系、项目、Processing  -- ?|
 | `qgis.gui` | GUI 组件——地图画布、地图工具、符号选择器等 |
 | `qgis.analysis` | 空间分析——插值、网络分析、栅格计算等 |
-| `qgis.processing` | Processing 算法调用入口（`processing.run()`�?|
+| `qgis.processing` | Processing 算法调用入口（`processing.run()` -- ?|
 | `qgis.server` | QGIS Server Python 插件接口 |
-| `qgis.3d` | 3D 地图视图相关�?|
-| `qgis.PyQt` | PyQt5/PyQt6 兼容�?|
+| `qgis.3d` | 3D 地图视图相关 -- ?|
+| `qgis.PyQt` | PyQt5/PyQt6 兼容 -- ?|
 
 ---
 
@@ -48,12 +48,12 @@ PyQGIS 主要包含以下模块�?
 
 ### 前置条件
 
-- 安装 QGIS 3.16+（[查看 QGIS LTR/最新版](https://qgis.org/download/)�?
-- Python 3.9+（QGIS 自带 Python 环境�?
+- 安装 QGIS 3.16+（[查看 QGIS LTR/最新版](https://qgis.org/download/) -- ?
+- Python 3.9+（QGIS 自带 Python 环境 -- ?
 
-### �?QGIS Python 控制台中使用
+###  -- ?QGIS Python 控制台中使用
 
-打开 QGIS 桌面 �?菜单「Plugins �?Python Console」，即可直接使用 PyQGIS�?
+打开 QGIS 桌面  -- ?菜单「Plugins  -- ?Python Console」，即可直接使用 PyQGIS -- ?
 
 ```python
 # QGIS 控制台中无需初始化，直接使用
@@ -61,26 +61,26 @@ layer = iface.activeLayer()
 print(layer.name(), layer.featureCount())
 ```
 
-### 独立脚本（Standalone Script�?
+### 独立脚本（Standalone Script -- ?
 
-�?QGIS 外部运行 Python 脚本时，需要先初始�?QGIS 应用�?
+ -- ?QGIS 外部运行 Python 脚本时，需要先初始 -- ?QGIS 应用 -- ?
 
 ```python
 import sys
 from qgis.core import QgsApplication
 
-# 初始�?QGIS（False 表示不使�?GUI�?
+# 初始 -- ?QGIS（False 表示不使 -- ?GUI -- ?
 qgs = QgsApplication([], False)
-qgs.setPrefixPath("/usr", True)  # Linux; Windows 示例�?C:/OSGeo4W/apps/qgis"
+qgs.setPrefixPath("/usr", True)  # Linux; Windows 示例 -- ?C:/OSGeo4W/apps/qgis"
 qgs.initQgis()
 
-# ===== 在此处编�?PyQGIS 代码 =====
+# ===== 在此处编 -- ?PyQGIS 代码 =====
 
-# 退�?
+# 退 -- ?
 qgs.exitQgis()
 ```
 
-### 独立脚本中使�?Processing
+### 独立脚本中使 -- ?Processing
 
 ```python
 import sys
@@ -92,7 +92,7 @@ qgs = QgsApplication([], False)
 qgs.setPrefixPath("/usr", True)
 qgs.initQgis()
 
-# 初始�?Processing 框架
+# 初始 -- ?Processing 框架
 Processing.initialize()
 
 # 现在可以使用 processing.run()
@@ -105,7 +105,7 @@ result = processing.run("native:buffer", {
 qgs.exitQgis()
 ```
 
-### Headless 服务器环�?
+### Headless 服务器环 -- ?
 
 ```bash
 export QT_QPA_PLATFORM=offscreen
@@ -114,30 +114,30 @@ python3 my_pyqgis_script.py
 
 ---
 
-## 核心类一�?
+## 核心类一 -- ?
 
-### 项目与应�?
+### 项目与应 -- ?
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
-| `QgsApplication` | `qgis.core` | QGIS 应用实例，初始化/退�?|
-| `QgsProject` | `qgis.core` | 项目管理（单例），加�?保存项目、管理图�?|
+| `QgsApplication` | `qgis.core` | QGIS 应用实例，初始化/退 -- ?|
+| `QgsProject` | `qgis.core` | 项目管理（单例），加 -- ?保存项目、管理图 -- ?|
 
-### 矢量图层与要�?
+### 矢量图层与要 -- ?
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
-| `QgsVectorLayer` | `qgis.core` | 矢量图层（Shapefile、GeoJSON、PostGIS、内存等�?|
-| `QgsFeature` | `qgis.core` | 单个要素（几�?+ 属性） |
+| `QgsVectorLayer` | `qgis.core` | 矢量图层（Shapefile、GeoJSON、PostGIS、内存等 -- ?|
+| `QgsFeature` | `qgis.core` | 单个要素（几 -- ?+ 属性） |
 | `QgsField` / `QgsFields` | `qgis.core` | 属性字段定义与集合 |
 | `QgsFeatureRequest` | `qgis.core` | 要素查询过滤器（空间/属性条件） |
 | `QgsVectorFileWriter` | `qgis.core` | 矢量数据写出（SHP、GPKG、GeoJSON 等） |
-| `QgsVectorLayerUtils` | `qgis.core` | 矢量图层工具方法�?|
-| `QgsSpatialIndex` | `qgis.core` | 空间索引，加速空间查�?|
+| `QgsVectorLayerUtils` | `qgis.core` | 矢量图层工具方法 -- ?|
+| `QgsSpatialIndex` | `qgis.core` | 空间索引，加速空间查 -- ?|
 
 ### 栅格图层
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
 | `QgsRasterLayer` | `qgis.core` | 栅格图层（GeoTIFF、VRT、WMS 等） |
 | `QgsRasterPipe` | `qgis.core` | 栅格渲染管线 |
@@ -145,52 +145,52 @@ python3 my_pyqgis_script.py
 
 ### 几何
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
-| `QgsGeometry` | `qgis.core` | 几何对象封装（含空间操作方法�?|
-| `QgsPointXY` | `qgis.core` | 二维点坐�?|
-| `QgsPoint` | `qgis.core` | 三维点坐标（�?Z / M�?|
-| `QgsRectangle` | `qgis.core` | 矩形范围（Bounding Box�?|
+| `QgsGeometry` | `qgis.core` | 几何对象封装（含空间操作方法 -- ?|
+| `QgsPointXY` | `qgis.core` | 二维点坐 -- ?|
+| `QgsPoint` | `qgis.core` | 三维点坐标（ -- ?Z / M -- ?|
+| `QgsRectangle` | `qgis.core` | 矩形范围（Bounding Box -- ?|
 | `QgsWkbTypes` | `qgis.core` | WKB 几何类型枚举 |
 | `QgsDistanceArea` | `qgis.core` | 距离和面积计算（支持椭球面） |
 
-### 坐标参考系与变�?
+### 坐标参考系与变 -- ?
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
-| `QgsCoordinateReferenceSystem` | `qgis.core` | 坐标参考系（CRS）对�?|
-| `QgsCoordinateTransform` | `qgis.core` | 坐标变换�?|
-| `QgsCoordinateTransformContext` | `qgis.core` | 坐标变换上下�?|
+| `QgsCoordinateReferenceSystem` | `qgis.core` | 坐标参考系（CRS）对 -- ?|
+| `QgsCoordinateTransform` | `qgis.core` | 坐标变换 -- ?|
+| `QgsCoordinateTransformContext` | `qgis.core` | 坐标变换上下 -- ?|
 
-### 表达�?
+### 表达 -- ?
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
-| `QgsExpression` | `qgis.core` | QGIS 表达式解析与求�?|
+| `QgsExpression` | `qgis.core` | QGIS 表达式解析与求 -- ?|
 | `QgsExpressionContext` | `qgis.core` | 表达式计算上下文 |
-| `QgsExpressionContextUtils` | `qgis.core` | 创建预设表达式上下文的工具方�?|
+| `QgsExpressionContextUtils` | `qgis.core` | 创建预设表达式上下文的工具方 -- ?|
 
 ### Processing 框架
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
-| `processing.run()` | `qgis.processing` | **执行 Processing 算法的核心入�?* |
+| `processing.run()` | `qgis.processing` | **执行 Processing 算法的核心入 -- ?* |
 | `QgsProcessingFeedback` | `qgis.core` | 算法执行反馈（进度、日志） |
-| `QgsProcessingContext` | `qgis.core` | 算法执行上下�?|
-| `QgsProcessingAlgorithm` | `qgis.core` | 自定义算法基�?|
+| `QgsProcessingContext` | `qgis.core` | 算法执行上下 -- ?|
+| `QgsProcessingAlgorithm` | `qgis.core` | 自定义算法基 -- ?|
 | `QgsProcessingParameterDefinition` | `qgis.core` | 算法参数定义基类 |
 
 ### 地图渲染
 
-| �?| 模块 | 用�?|
+|  -- ?| 模块 | 用 -- ?|
 |---|---|---|
 | `QgsMapSettings` | `qgis.core` | 地图渲染设置（范围、CRS、图层、尺寸） |
 | `QgsMapRendererSequentialJob` | `qgis.core` | 顺序渲染任务 |
 | `QgsMapRendererParallelJob` | `qgis.core` | 并行渲染任务 |
-| `QgsLayoutExporter` | `qgis.core` | 打印布局导出（PDF、PNG、SVG�?|
+| `QgsLayoutExporter` | `qgis.core` | 打印布局导出（PDF、PNG、SVG -- ?|
 | `QgsPrintLayout` | `qgis.core` | 打印布局对象 |
 
-### 数据提供�?
+### 数据提供 -- ?
 
 | Provider 名称 | 说明 | 示例 URI |
 |---|---|---|
@@ -201,14 +201,14 @@ python3 my_pyqgis_script.py
 | `wms` | WMS / WMTS 服务 | `url=https://example.com/wms&layers=dem&crs=EPSG:4326` |
 | `wfs` | WFS 服务 | `url=https://example.com/wfs&typename=buildings` |
 | `delimitedtext` | CSV / 分隔文本 | `file:///path/to/data.csv?delimiter=,&xField=lon&yField=lat&crs=epsg:4326` |
-| `spatialite` | SpatiaLite 数据�?| `dbname='/path/to/db.sqlite' table="layer" (geometry)` |
-| `virtual` | 虚拟图层（SQL 查询�?| SQL 表达�?|
+| `spatialite` | SpatiaLite 数据 -- ?| `dbname='/path/to/db.sqlite' table="layer" (geometry)` |
+| `virtual` | 虚拟图层（SQL 查询 -- ?| SQL 表达 -- ?|
 
 ---
 
 ## 项目管理
 
-### 加载与保存项�?
+### 加载与保存项 -- ?
 
 ```python
 from qgis.core import QgsProject
@@ -218,7 +218,7 @@ project = QgsProject.instance()
 # 读取项目
 project.read("/path/to/project.qgs")
 
-# 获取所有图�?
+# 获取所有图 -- ?
 layers = project.mapLayers()  # 返回 dict {layer_id: layer}
 
 # 保存项目
@@ -249,13 +249,13 @@ project.removeMapLayer(layer.id())
 ```python
 from qgis.core import QgsVectorLayer
 
-# 从文件加�?
+# 从文件加 -- ?
 layer = QgsVectorLayer("/data/buildings.shp", "buildings", "ogr")
 
-# �?GeoPackage 加载指定图层
+#  -- ?GeoPackage 加载指定图层
 layer = QgsVectorLayer("/data/data.gpkg|layername=rivers", "rivers", "ogr")
 
-# �?PostGIS 加载
+#  -- ?PostGIS 加载
 uri = 'dbname=\'gis\' host=localhost port=5432 user=\'postgres\' table="public"."parcels" (geom)'
 layer = QgsVectorLayer(uri, "parcels", "postgres")
 
@@ -264,7 +264,7 @@ layer = QgsVectorLayer("Point?crs=epsg:4326&field=id:integer&field=name:string(5
 
 # 验证
 if not layer.isValid():
-    print("图层加载失败�?)
+    print("图层加载失败 -- ?)
 ```
 
 ### 遍历要素
@@ -276,24 +276,24 @@ for feature in layer.getFeatures():
     print(feature.id(), geom.asWkt(), attrs)
 ```
 
-### 按条件查询要�?
+### 按条件查询要 -- ?
 
 ```python
 from qgis.core import QgsFeatureRequest
 
-# 按属性过�?
+# 按属性过 -- ?
 request = QgsFeatureRequest().setFilterExpression('"population" > 10000')
 for feature in layer.getFeatures(request):
     print(feature["name"], feature["population"])
 
-# 按空间范围过�?
+# 按空间范围过 -- ?
 from qgis.core import QgsRectangle
 rect = QgsRectangle(116.0, 39.0, 117.0, 40.0)
 request = QgsFeatureRequest().setFilterRect(rect)
 for feature in layer.getFeatures(request):
     print(feature.id())
 
-# 限制返回字段（提升性能�?
+# 限制返回字段（提升性能 -- ?
 request = QgsFeatureRequest().setSubsetOfAttributes(["name", "area"], layer.fields())
 ```
 
@@ -302,7 +302,7 @@ request = QgsFeatureRequest().setSubsetOfAttributes(["name", "area"], layer.fiel
 ```python
 from qgis.core import QgsFeature, QgsGeometry, QgsPointXY
 
-# 开启编�?
+# 开启编 -- ?
 layer.startEditing()
 
 # 添加要素
@@ -311,7 +311,7 @@ feat.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(116.4, 39.9)))
 feat.setAttributes([1, "北京"])
 layer.addFeature(feat)
 
-# 修改已有要素属�?
+# 修改已有要素属 -- ?
 layer.changeAttributeValue(feature_id, field_index, new_value)
 
 # 修改几何
@@ -322,7 +322,7 @@ layer.deleteFeature(feature_id)
 
 # 提交修改
 layer.commitChanges()
-# 或回�?
+# 或回 -- ?
 # layer.rollBack()
 ```
 
@@ -341,7 +341,7 @@ fields = QgsFields()
 fields.append(QgsField("id", QVariant.Int))
 fields.append(QgsField("name", QVariant.String))
 
-# 创建写入�?
+# 创建写入 -- ?
 crs = QgsCoordinateReferenceSystem("EPSG:4326")
 writer = QgsVectorFileWriter(
     "/data/output.shp",
@@ -386,7 +386,7 @@ from qgis.core import QgsSpatialIndex
 # 构建索引
 index = QgsSpatialIndex(layer.getFeatures())
 
-# 最近邻查询（返回要�?ID 列表�?
+# 最近邻查询（返回要 -- ?ID 列表 -- ?
 nearest_ids = index.nearestNeighbor(QgsPointXY(116.4, 39.9), 5)
 
 # 矩形范围查询
@@ -402,7 +402,7 @@ ids_in_rect = index.intersects(QgsRectangle(116.0, 39.0, 117.0, 40.0))
 ```python
 from qgis.core import QgsRasterLayer
 
-# 从文件加�?
+# 从文件加 -- ?
 layer = QgsRasterLayer("/data/dem.tif", "DEM")
 
 # WMS 服务
@@ -410,15 +410,15 @@ uri = "url=https://example.com/wms&layers=elevation&crs=EPSG:4326&format=image/p
 layer = QgsRasterLayer(uri, "WMS Layer", "wms")
 
 if not layer.isValid():
-    print("栅格加载失败�?)
+    print("栅格加载失败 -- ?)
 ```
 
-### 查询栅格�?
+### 查询栅格 -- ?
 
 ```python
 from qgis.core import QgsPointXY, QgsRaster
 
-# 在指定坐标获取栅格�?
+# 在指定坐标获取栅格 -- ?
 point = QgsPointXY(116.4, 39.9)
 result = layer.dataProvider().identify(point, QgsRaster.IdentifyFormatValue)
 if result.isValid():
@@ -432,10 +432,10 @@ if result.isValid():
 from qgis.core import QgsRasterBandStats
 
 stats = layer.dataProvider().bandStatistics(1, QgsRasterBandStats.All)
-print(f"最小�? {stats.minimumValue}")
-print(f"最大�? {stats.maximumValue}")
-print(f"平均�? {stats.mean}")
-print(f"标准�? {stats.stdDev}")
+print(f"最小 -- ? {stats.minimumValue}")
+print(f"最大 -- ? {stats.maximumValue}")
+print(f"平均 -- ? {stats.mean}")
+print(f"标准 -- ? {stats.stdDev}")
 ```
 
 ---
@@ -447,7 +447,7 @@ print(f"标准�? {stats.stdDev}")
 ```python
 from qgis.core import QgsGeometry, QgsPointXY, QgsPoint
 
-# �?
+#  -- ?
 geom_pt = QgsGeometry.fromPointXY(QgsPointXY(116.4, 39.9))
 
 # 折线
@@ -455,21 +455,21 @@ geom_line = QgsGeometry.fromPolylineXY([
     QgsPointXY(0, 0), QgsPointXY(10, 10), QgsPointXY(20, 0)
 ])
 
-# �?
+#  -- ?
 geom_poly = QgsGeometry.fromPolygonXY([[
     QgsPointXY(0, 0), QgsPointXY(10, 0),
     QgsPointXY(10, 10), QgsPointXY(0, 10),
     QgsPointXY(0, 0)
 ]])
 
-# �?WKT 创建
+#  -- ?WKT 创建
 geom = QgsGeometry.fromWkt("POINT(116.4 39.9)")
 
-# �?WKB 创建
+#  -- ?WKB 创建
 geom = QgsGeometry()
 geom.fromWkb(wkb_bytes)
 
-# �?GeoJSON 创建（通过 QgsJsonUtils�?
+#  -- ?GeoJSON 创建（通过 QgsJsonUtils -- ?
 from qgis.core import QgsJsonUtils
 features = QgsJsonUtils.stringToFeatureList(geojson_string)
 if features:
@@ -479,15 +479,15 @@ if features:
 ### 格式导出
 
 ```python
-wkt = geom.asWkt()        # WKT 字符�?
+wkt = geom.asWkt()        # WKT 字符 -- ?
 wkb = geom.asWkb()        # WKB bytes
-json_str = geom.asJson()  # GeoJSON 字符�?
+json_str = geom.asJson()  # GeoJSON 字符 -- ?
 ```
 
 ### 空间运算
 
 ```python
-# 缓冲�?
+# 缓冲 -- ?
 buffered = geom.buffer(100, 16)
 
 # 交集
@@ -499,7 +499,7 @@ union = geom1.combine(geom2)
 # 差集
 difference = geom1.difference(geom2)
 
-# 对称�?
+# 对称 -- ?
 sym_diff = geom1.symDifference(geom2)
 
 # 凸包
@@ -508,13 +508,13 @@ hull = geom.convexHull()
 # 质心
 centroid = geom.centroid()
 
-# 包围�?
+# 包围 -- ?
 bbox = geom.boundingBox()  # 返回 QgsRectangle
 
-# 简�?
+# 简 -- ?
 simplified = geom.simplify(tolerance)
 
-# 有效性检�?
+# 有效性检 -- ?
 is_valid = geom.isGeosValid()
 ```
 
@@ -523,15 +523,15 @@ is_valid = geom.isGeosValid()
 ```python
 geom1.intersects(geom2)   # 是否相交
 geom1.contains(geom2)     # 是否包含
-geom1.within(geom2)       # 是否在内�?
+geom1.within(geom2)       # 是否在内 -- ?
 geom1.overlaps(geom2)     # 是否重叠
 geom1.touches(geom2)      # 是否相切
 geom1.crosses(geom2)      # 是否交叉
-geom1.disjoint(geom2)     # 是否不相�?
+geom1.disjoint(geom2)     # 是否不相 -- ?
 geom1.equals(geom2)       # 是否相等
 ```
 
-### 距离与面积计�?
+### 距离与面积计 -- ?
 
 ```python
 # 平面距离
@@ -548,26 +548,26 @@ da.setEllipsoid("WGS84")
 length = da.measureLength(line_geom)
 area = da.measureArea(polygon_geom)
 
-# 两点间大地测量距�?
+# 两点间大地测量距 -- ?
 d = da.measureLine(QgsPointXY(116.4, 39.9), QgsPointXY(121.5, 31.2))
 ```
 
 ---
 
-## 坐标参考系与变�?
+## 坐标参考系与变 -- ?
 
 ### 创建 CRS
 
 ```python
 from qgis.core import QgsCoordinateReferenceSystem
 
-# �?EPSG 代码
+#  -- ?EPSG 代码
 crs = QgsCoordinateReferenceSystem("EPSG:4326")
 
-# �?WKT
+#  -- ?WKT
 crs = QgsCoordinateReferenceSystem.fromWkt(wkt_string)
 
-# �?Proj 字符�?
+#  -- ?Proj 字符 -- ?
 crs = QgsCoordinateReferenceSystem.fromProj4(proj4_string)
 
 # 获取图层 CRS
@@ -586,7 +586,7 @@ dst_crs = QgsCoordinateReferenceSystem("EPSG:3857")
 
 transform = QgsCoordinateTransform(src_crs, dst_crs, QgsProject.instance())
 
-# 变换单个�?
+# 变换单个 -- ?
 point = transform.transform(QgsPointXY(116.4, 39.9))
 
 # 变换几何
@@ -598,14 +598,14 @@ point_back = transform.transform(point, QgsCoordinateTransform.ReverseTransform)
 
 ---
 
-## 表达�?
+## 表达 -- ?
 
-### 基本表达式求�?
+### 基本表达式求 -- ?
 
 ```python
 from qgis.core import QgsExpression, QgsExpressionContext, QgsExpressionContextUtils
 
-# 简单计�?
+# 简单计 -- ?
 exp = QgsExpression("1 + 2 * 3")
 result = exp.evaluate()  # 7
 
@@ -623,7 +623,7 @@ for feature in layer.getFeatures():
 ### 过滤要素
 
 ```python
-# 表达式过�?
+# 表达式过 -- ?
 exp = QgsExpression('"type" = \'residential\' AND "area" > 1000')
 request = QgsFeatureRequest(exp)
 
@@ -631,14 +631,14 @@ for feature in layer.getFeatures(request):
     print(feature.attributes())
 ```
 
-### 字段计算�?
+### 字段计算 -- ?
 
 ```python
 from qgis.core import QgsExpression
 
 layer.startEditing()
 
-# 使用表达式批量更新字�?
+# 使用表达式批量更新字 -- ?
 expression = QgsExpression('"length" * "width"')
 context = QgsExpressionContext()
 context.appendScopes(QgsExpressionContextUtils.globalProjectLayerScopes(layer))
@@ -661,7 +661,7 @@ layer.commitChanges()
 ```python
 import processing
 
-# 运行缓冲区分�?
+# 运行缓冲区分 -- ?
 result = processing.run("native:buffer", {
     'INPUT': '/data/roads.shp',
     'DISTANCE': 50,
@@ -675,7 +675,7 @@ result = processing.run("native:buffer", {
 print(result['OUTPUT'])  # 输出文件路径
 ```
 
-### 带反馈对�?
+### 带反馈对 -- ?
 
 ```python
 from qgis.core import QgsProcessingFeedback
@@ -692,7 +692,7 @@ result = processing.run("native:dissolve", {
 ### 使用内存输出
 
 ```python
-# OUTPUT 设为 'memory:' 前缀可得到内存图�?
+# OUTPUT 设为 'memory:' 前缀可得到内存图 -- ?
 result = processing.run("native:buffer", {
     'INPUT': layer,
     'DISTANCE': 100,
@@ -716,32 +716,32 @@ result = processing.run("native:clip", {
 
 | 算法 ID | 说明 | 关键参数 |
 |---------|------|---------|
-| `native:buffer` | 缓冲�?| INPUT, DISTANCE, SEGMENTS, DISSOLVE |
+| `native:buffer` | 缓冲 -- ?| INPUT, DISTANCE, SEGMENTS, DISSOLVE |
 | `native:clip` | 矢量裁剪 | INPUT, OVERLAY |
 | `native:dissolve` | 融合 | INPUT, FIELD |
 | `native:intersection` | 交集 | INPUT, OVERLAY |
 | `native:union` | 联合 | INPUT, OVERLAY |
 | `native:difference` | 差集 | INPUT, OVERLAY |
 | `native:centroids` | 质心 | INPUT |
-| `native:reprojectlayer` | 重投�?| INPUT, TARGET_CRS |
+| `native:reprojectlayer` | 重投 -- ?| INPUT, TARGET_CRS |
 | `native:mergevectorlayers` | 合并图层 | LAYERS |
 | `native:fixgeometries` | 修复几何 | INPUT |
-| `native:extractbyattribute` | 按属性提�?| INPUT, FIELD, OPERATOR, VALUE |
-| `native:extractbylocation` | 按位置提�?| INPUT, INTERSECT, PREDICATE |
+| `native:extractbyattribute` | 按属性提 -- ?| INPUT, FIELD, OPERATOR, VALUE |
+| `native:extractbylocation` | 按位置提 -- ?| INPUT, INTERSECT, PREDICATE |
 | `native:joinattributesbylocation` | 空间连接 | INPUT, JOIN, PREDICATE, METHOD |
-| `native:fieldcalculator` | 字段计算�?| INPUT, FIELD_NAME, FORMULA |
-| `gdal:cliprasterbyextent` | 栅格按范围裁�?| INPUT, EXTENT |
-| `gdal:cliprasterbymask` | 栅格按掩膜裁�?| INPUT, MASK |
-| `gdal:warpreproject` | 栅格重投�?| INPUT, TARGET_CRS |
+| `native:fieldcalculator` | 字段计算 -- ?| INPUT, FIELD_NAME, FORMULA |
+| `gdal:cliprasterbyextent` | 栅格按范围裁 -- ?| INPUT, EXTENT |
+| `gdal:cliprasterbymask` | 栅格按掩膜裁 -- ?| INPUT, MASK |
+| `gdal:warpreproject` | 栅格重投 -- ?| INPUT, TARGET_CRS |
 | `gdal:merge` | 栅格合并 | INPUT |
 | `gdal:contour` | 等值线提取 | INPUT, INTERVAL |
-| `gdal:polygonize` | 栅格转矢�?| INPUT |
-| `gdal:rasterize` | 矢量转栅�?| INPUT, FIELD |
+| `gdal:polygonize` | 栅格转矢 -- ?| INPUT |
+| `gdal:rasterize` | 矢量转栅 -- ?| INPUT, FIELD |
 
 ### 查询可用算法
 
 ```python
-# �?QGIS 控制台中列出所有算�?
+#  -- ?QGIS 控制台中列出所有算 -- ?
 for alg in QgsApplication.processingRegistry().algorithms():
     print(alg.id(), "-", alg.displayName())
 
@@ -753,9 +753,9 @@ for alg in QgsApplication.processingRegistry().algorithms():
 
 ---
 
-## 地图渲染与导�?
+## 地图渲染与导 -- ?
 
-### 渲染为图�?
+### 渲染为图 -- ?
 
 ```python
 from qgis.core import QgsMapSettings, QgsMapRendererSequentialJob
@@ -787,7 +787,7 @@ project = QgsProject.instance()
 layout = QgsPrintLayout(project)
 layout.initializeDefaults()
 
-# 添加地图�?
+# 添加地图 -- ?
 map_item = QgsLayoutItemMap(layout)
 map_item.setRect(20, 20, 200, 150)
 map_item.setExtent(layer.extent())
@@ -802,9 +802,9 @@ exporter.exportToPdf("/data/output.pdf", pdf_settings)
 
 ---
 
-## 典型工作流示�?
+## 典型工作流示 -- ?
 
-### 示例 1：矢量格式转换（SHP �?GeoPackage�?
+### 示例 1：矢量格式转换（SHP  -- ?GeoPackage -- ?
 
 ```python
 from qgis.core import QgsVectorLayer, QgsVectorFileWriter, QgsProject
@@ -828,7 +828,7 @@ QgsVectorFileWriter.writeAsVectorFormatV3(
 ```python
 import processing
 
-# 缓冲�?
+# 缓冲 -- ?
 result1 = processing.run("native:buffer", {
     'INPUT': '/data/points.shp',
     'DISTANCE': 500,
@@ -843,7 +843,7 @@ result2 = processing.run("native:dissolve", {
 })
 ```
 
-### 示例 3：坐标系转换 + 属性过�?
+### 示例 3：坐标系转换 + 属性过 -- ?
 
 ```python
 import processing
@@ -855,7 +855,7 @@ result1 = processing.run("native:reprojectlayer", {
     'OUTPUT': 'memory:reprojected'
 })
 
-# 按属性提�?
+# 按属性提 -- ?
 result2 = processing.run("native:extractbyattribute", {
     'INPUT': result1['OUTPUT'],
     'FIELD': 'type',
@@ -865,16 +865,16 @@ result2 = processing.run("native:extractbyattribute", {
 })
 ```
 
-### 示例 4：栅格裁�?+ 坡度分析
+### 示例 4：栅格裁 -- ?+ 坡度分析
 
 ```python
 import processing
 
-# 按掩膜裁�?DEM（栅格算法使�?TEMPORARY_OUTPUT 生成临时文件�?
+# 按掩膜裁 -- ?DEM（栅格算法使 -- ?TEMPORARY_OUTPUT 生成临时文件 -- ?
 result1 = processing.run("gdal:cliprasterbymask", {
     'INPUT': '/data/dem.tif',
     'MASK': '/data/boundary.shp',
-    'OUTPUT': 'TEMPORARY_OUTPUT'  # 栅格输出不支�?memory:，使�?TEMPORARY_OUTPUT 创建临时文件
+    'OUTPUT': 'TEMPORARY_OUTPUT'  # 栅格输出不支 -- ?memory:，使 -- ?TEMPORARY_OUTPUT 创建临时文件
 })
 
 # 坡度分析
@@ -884,12 +884,12 @@ result2 = processing.run("gdal:slope", {
 })
 ```
 
-### 示例 5：从 CSV 创建矢量图层并导�?
+### 示例 5：从 CSV 创建矢量图层并导 -- ?
 
 ```python
 from qgis.core import QgsVectorLayer, QgsVectorFileWriter, QgsProject
 
-# �?CSV 加载（指定经纬度字段�?
+#  -- ?CSV 加载（指定经纬度字段 -- ?
 uri = "file:///data/stations.csv?delimiter=,&xField=longitude&yField=latitude&crs=epsg:4326"
 layer = QgsVectorLayer(uri, "stations", "delimitedtext")
 
@@ -904,10 +904,10 @@ if layer.isValid():
     )
 ```
 
-### 示例 6：独立脚本完整示�?
+### 示例 6：独立脚本完整示 -- ?
 
 ```python
-"""独立 PyQGIS 脚本：加�?SHP、缓冲区分析、导�?GeoJSON"""
+"""独立 PyQGIS 脚本：加 -- ?SHP、缓冲区分析、导 -- ?GeoJSON"""
 import sys
 from qgis.core import (
     QgsApplication, QgsVectorLayer, QgsProject
@@ -915,7 +915,7 @@ from qgis.core import (
 import processing
 from processing.core.Processing import Processing
 
-# 初始�?
+# 初始 -- ?
 qgs = QgsApplication([], False)
 qgs.setPrefixPath("/usr", True)
 qgs.initQgis()
@@ -925,7 +925,7 @@ Processing.initialize()
 layer = QgsVectorLayer("/data/buildings.shp", "buildings", "ogr")
 assert layer.isValid(), "图层加载失败"
 
-# 缓冲区分�?
+# 缓冲区分 -- ?
 result = processing.run("native:buffer", {
     'INPUT': layer,
     'DISTANCE': 200,
@@ -934,7 +934,7 @@ result = processing.run("native:buffer", {
 
 print(f"输出文件: {result['OUTPUT']}")
 
-# 退�?
+# 退 -- ?
 qgs.exitQgis()
 ```
 
@@ -942,26 +942,26 @@ qgs.exitQgis()
 
 ## AI 使用建议
 
-### 推荐工作�?
+### 推荐工作 -- ?
 
-1. **初始化环�?*：独立脚本需 `QgsApplication` 初始化；QGIS 控制台中可直接使�?
-2. **加载数据**：使�?`QgsVectorLayer` / `QgsRasterLayer` 加载数据�?
-3. **执行分析**：优先使�?`processing.run()` 调用算法（参数统一、算法丰富）；精细操作使�?`QgsGeometry` 方法
-4. **导出结果**：使�?`QgsVectorFileWriter` 写出矢量，`QgsRasterFileWriter` 写出栅格
-5. **清理退�?*：独立脚本调�?`qgs.exitQgis()`
+1. **初始化环 -- ?*：独立脚本需 `QgsApplication` 初始化；QGIS 控制台中可直接使 -- ?
+2. **加载数据**：使 -- ?`QgsVectorLayer` / `QgsRasterLayer` 加载数据 -- ?
+3. **执行分析**：优先使 -- ?`processing.run()` 调用算法（参数统一、算法丰富）；精细操作使 -- ?`QgsGeometry` 方法
+4. **导出结果**：使 -- ?`QgsVectorFileWriter` 写出矢量，`QgsRasterFileWriter` 写出栅格
+5. **清理退 -- ?*：独立脚本调 -- ?`qgs.exitQgis()`
 
 ### 关键注意事项
 
-1. **始终检查图层有效�?*：加载图层后必须检�?`layer.isValid()`，无效时检查路径和 Provider�?
-2. **坐标系一致�?*：空间运算前确保所有图层使用相�?CRS；使�?`native:reprojectlayer` �?`QgsCoordinateTransform` 进行转换�?
-3. **编辑模式**：修改图层数据需 `startEditing()` �?操作 �?`commitChanges()`；失败可 `rollBack()`�?
-4. **Processing 内存输出**：将 OUTPUT 设为 `'memory:name'` 可得到内存图层，避免创建临时文件�?
-5. **椭球面计�?*：对地理坐标（经纬度）计算距�?面积时，使用 `QgsDistanceArea` 并设置椭球体，或使用 Processing 算法指定椭球体�?
-6. **Headless 环境**：无显示器的服务器上必须设置 `QT_QPA_PLATFORM=offscreen`�?
-7. **文件路径使用绝对路径**：避免工作目录不确定导致文件找不到�?
-8. **大数据量优化**：使�?`QgsSpatialIndex` 加速空间查询；使用 `QgsFeatureRequest` 限制返回字段和范围�?
-9. **表达式语�?*：字段名用双引号 `"field"`，字符串值用单引�?`'value'`�?
-10. **QGIS 版本兼容**：部�?API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；注�?QGIS 4.0�?026）为新主版本，部�?API 有调整�?
+1. **始终检查图层有效 -- ?*：加载图层后必须检 -- ?`layer.isValid()`，无效时检查路径和 Provider -- ?
+2. **坐标系一致 -- ?*：空间运算前确保所有图层使用相 -- ?CRS；使 -- ?`native:reprojectlayer`  -- ?`QgsCoordinateTransform` 进行转换 -- ?
+3. **编辑模式**：修改图层数据需 `startEditing()`  -- ?操作  -- ?`commitChanges()`；失败可 `rollBack()` -- ?
+4. **Processing 内存输出**：将 OUTPUT 设为 `'memory:name'` 可得到内存图层，避免创建临时文件 -- ?
+5. **椭球面计 -- ?*：对地理坐标（经纬度）计算距 -- ?面积时，使用 `QgsDistanceArea` 并设置椭球体，或使用 Processing 算法指定椭球体 -- ?
+6. **Headless 环境**：无显示器的服务器上必须设置 `QT_QPA_PLATFORM=offscreen` -- ?
+7. **文件路径使用绝对路径**：避免工作目录不确定导致文件找不到 -- ?
+8. **大数据量优化**：使 -- ?`QgsSpatialIndex` 加速空间查询；使用 `QgsFeatureRequest` 限制返回字段和范围 -- ?
+9. **表达式语 -- ?*：字段名用双引号 `"field"`，字符串值用单引 -- ?`'value'` -- ?
+10. **QGIS 版本兼容**：部 -- ?API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；注 -- ?QGIS 4.0 -- ?026）为新主版本，部 -- ?API 有调整 -- ?
 
 ### 错误处理
 
@@ -986,19 +986,19 @@ if not layer.commitChanges():
 
 ---
 
-## 相关技�?
+## 相关技 -- ?
 
-- **qgis-process** �?QGIS 命令行处理工具：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
-- **gdal** �?命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
-- **geopandas** �?Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
-- **shapely** �?Python 几何计算核心：[../shapely/SKILL.md](../shapely/SKILL.md)
-- **geopipe-agent** �?AI 原生分析流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
+- **qgis-process**  -- ?QGIS 命令行处理工具：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+- **gdal**  -- ?命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **geopandas**  -- ?Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **shapely**  -- ?Python 几何计算核心：[../shapely/SKILL.md](../shapely/SKILL.md)
+- **geopipe-agent**  -- ?AI 原生分析流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
 
-## 参考链�?
+## 参考链 -- ?
 
-- **QGIS 源码仓库�?* <https://github.com/qgis/QGIS>
+- **QGIS 源码仓库 -- ?* <https://github.com/qgis/QGIS>
 - **PyQGIS 开发者手册（3.44）：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/>
 - **PyQGIS API 参考（3.44）：** <https://qgis.org/pyqgis/3.44/>
-- **QGIS 文档仓库�?* <https://github.com/qgis/QGIS-Documentation>
-- **QGIS 用户手册�?* <https://docs.qgis.org/3.44/en/docs/user_manual/>
+- **QGIS 文档仓库 -- ?* <https://github.com/qgis/QGIS-Documentation>
+- **QGIS 用户手册 -- ?* <https://docs.qgis.org/3.44/en/docs/user_manual/>
 - **PyQGIS 速查表：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/cheat_sheet.html>

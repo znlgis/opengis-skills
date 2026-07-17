@@ -1,6 +1,6 @@
 ---
 name: geometry-api-net
-description: Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in .NET/C# — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for .NET.
+description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in .NET/C# — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for .NET."
 tags:
   - dotnet
   - geometry
