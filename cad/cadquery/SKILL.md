@@ -1,28 +1,28 @@
 ---
 name: cadquery
-description: Use when scripting parametric 3D CAD models in Python — programmatic part generation, parametric design optimization, STEP export. CadQuery: Python-based parametric CAD built on OCCT kernel with a fluent API.
+description: "Use when scripting parametric 3D CAD models in Python �?programmatic part generation, parametric design optimization, STEP export. CadQuery: Python-based parametric CAD built on OCCT kernel with a fluent API."
 tags: [python, 3d, parametric, brep, step, stl, occ, cad]
 ---
 
-> **项目地址：** <https://github.com/CadQuery/cadquery>
+> **项目地址�?* <https://github.com/CadQuery/cadquery>
 >
-> **官方文档：** <https://cadquery.readthedocs.io/en/latest/>
+> **官方文档�?* <https://cadquery.readthedocs.io/en/latest/>
 >
-> **GUI：** CQ-editor（<https://github.com/CadQuery/CQ-editor>）
+> **GUI�?* CQ-editor�?https://github.com/CadQuery/CQ-editor>�?
 >
 > **许可证：** Apache-2.0
 
 ## 概述
 
-CadQuery 与 OpenSCAD 的对比：
+CadQuery �?OpenSCAD 的对比：
 
 | 维度 | OpenSCAD | CadQuery |
 |------|----------|----------|
 | 语言 | 自有 DSL | Python |
 | 几何内核 | CGAL/Manifold | OCCT |
-| 模型 | CSG（实体加减） | BREP（带圆角/曲面/约束） |
+| 模型 | CSG（实体加减） | BREP（带圆角/曲面/约束�?|
 | 装配 | 手动 | 内置 `Assembly` |
-| 特征命名 | 弱 | 通过 Selector 访问面/边/顶点 |
+| 特征命名 | �?| 通过 Selector 访问�?�?顶点 |
 | 输出 | STL/OFF/DXF | STEP/IGES/STL/glTF/DXF/SVG |
 
 ---
@@ -30,7 +30,7 @@ CadQuery 与 OpenSCAD 的对比：
 ## 安装
 
 ```bash
-# Conda（推荐，自动带 OCCT）
+# Conda（推荐，自动�?OCCT�?
 conda install -c conda-forge cadquery
 # pip
 pip install cadquery
@@ -38,7 +38,7 @@ pip install cadquery
 pip install cq-editor
 ```
 
-> 当前稳定版参见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)，支持 **Python 3.9–3.14**（经由 `cadquery-ocp`，基于 OCCT）。
+> 当前稳定版参�?[CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)，支�?**Python 3.9�?.14**（经�?`cadquery-ocp`，基�?OCCT）�?
 
 ---
 
@@ -49,10 +49,10 @@ import cadquery as cq
 
 result = (
     cq.Workplane("XY")
-      .box(80, 60, 10)            # 立方体
+      .box(80, 60, 10)            # 立方�?
       .faces(">Z").workplane()     # 选择 +Z 面，建立工作平面
       .hole(8)                    # 钻孔
-      .edges("|Z").fillet(2)      # Z 方向边圆角 2
+      .edges("|Z").fillet(2)      # Z 方向边圆�?2
 )
 
 cq.exporters.export(result, "out.step")
@@ -61,7 +61,7 @@ cq.exporters.export(result, "out.stl")
 
 ---
 
-## 工作平面（Workplane）
+## 工作平面（Workplane�?
 
 ```python
 wp = cq.Workplane("XY")               # XY/YZ/XZ 或自定义
@@ -72,7 +72,7 @@ wp = (cq.Workplane("front")           # 命名平面
 
 ---
 
-## 二维草图与拉伸
+## 二维草图与拉�?
 
 ```python
 result = (cq.Workplane("XY")
@@ -81,13 +81,13 @@ result = (cq.Workplane("XY")
             .lineTo(50, 30).lineTo(0, 30).close()
             .extrude(20))
 
-# 圆形 → 拉伸为圆柱
+# 圆形 �?拉伸为圆�?
 cyl = cq.Workplane("XY").circle(10).extrude(50)
 
 # 矩形阵列
 plate = (cq.Workplane("XY").rect(100, 60).extrude(2)
           .faces(">Z").workplane()
-          .rarray(10, 10, 8, 5).hole(3))   # 8x5 阵列孔
+          .rarray(10, 10, 8, 5).hole(3))   # 8x5 阵列�?
 ```
 
 ---
@@ -95,20 +95,20 @@ plate = (cq.Workplane("XY").rect(100, 60).extrude(2)
 ## Selector（核心特性）
 
 ```python
-result = result.faces(">Z")        # 最大 Z 的面
+result = result.faces(">Z")        # 最�?Z 的面
               .edges("|X")         # 平行 X 方向的边
-              .vertices("<Y")       # 最小 Y 的顶点
+              .vertices("<Y")       # 最�?Y 的顶�?
               .faces("not >Z and %CIRCLE")  # 复合
 ```
 
-| 表达式 | 含义 |
+| 表达�?| 含义 |
 |--------|------|
-| `>Z` / `<Z` | 最大/最小 Z 方向 |
-| `|X` | 平行 X 轴 |
-| `#X` | 垂直 X 轴 |
+| `>Z` / `<Z` | 最�?最�?Z 方向 |
+| `|X` | 平行 X �?|
+| `#X` | 垂直 X �?|
 | `%CIRCLE` | 圆形（曲率） |
 | `%PLANE` | 平面 |
-| `>>X` | 严格按 X 排序 |
+| `>>X` | 严格�?X 排序 |
 
 ---
 
@@ -144,13 +144,13 @@ c = a.intersect(b)
 
 ---
 
-## Sketch（新草图 API）
+## Sketch（新草图 API�?
 
 ```python
 sk = (cq.Sketch()
         .rect(60, 40)
-        .circle(10, mode='s')             # 减
-        .reset().rect(50, 30, mode='i')   # 交
+        .circle(10, mode='s')             # �?
+        .reset().rect(50, 30, mode='i')   # �?
         .reset().vertices().fillet(3))
 
 result = cq.Workplane().placeSketch(sk).extrude(10)
@@ -158,7 +158,7 @@ result = cq.Workplane().placeSketch(sk).extrude(10)
 
 ---
 
-## 装配（Assembly）
+## 装配（Assembly�?
 
 ```python
 asm = (cq.Assembly()
@@ -189,10 +189,10 @@ for L in (40, 60, 80):
 ## CQ-editor / Jupyter
 
 ```python
-# 在 cq-editor 中：
+# �?cq-editor 中：
 show_object(result, name='part', options={'color': (0.7, 0.7, 0.9)})
 
-# 在 Jupyter：
+# �?Jupyter�?
 from jupyter_cadquery import show
 show(result)
 ```
@@ -211,35 +211,35 @@ cq.exporters.export(result, "out.svg")
 
 ---
 
-## 典型工作流
+## 典型工作�?
 
-### 工作流一：从草图到 STEP 的完整零件建模
+### 工作流一：从草图�?STEP 的完整零件建�?
 
-1. 确定零件几何参数（长宽高、孔径、圆角半径等），封装为 Python 函数参数
-2. 使用 `cq.Workplane("XY")` 创建基准面
+1. 确定零件几何参数（长宽高、孔径、圆角半径等），封装�?Python 函数参数
+2. 使用 `cq.Workplane("XY")` 创建基准�?
 3. 绘制 2D 草图轮廓（`rect`/`circle`/`polyline` 等）
 4. `extrude(length)` 生成 3D 实体
-5. 通过 Selector（`.faces(">Z")` / `.edges("|Z")`）定位特征面/边
+5. 通过 Selector（`.faces(">Z")` / `.edges("|Z")`）定位特征面/�?
 6. 添加修饰：`fillet()` / `chamfer()` / `shell()`
 7. `cq.exporters.export(result, "out.step")` 导出 STEP 用于下游加工
 
 ### 工作流二：CI 流水线批量参数化生成
 
-1. 编写参数化模型函数（接受尺寸参数，返回 Workplane 对象）
-2. 在 GitHub Actions / Jenkins 中安装 `cadquery`（conda-forge）
+1. 编写参数化模型函数（接受尺寸参数，返�?Workplane 对象�?
+2. �?GitHub Actions / Jenkins 中安�?`cadquery`（conda-forge�?
 3. 脚本遍历参数矩阵，调用模型函数，导出 STL/STEP
-4. 将输出文件上传为构建产物（Artifacts），或直接在 CI 中对比几何差异
-5. 对于复杂装配，使用 `cq.Assembly` 组合多个零件并添加约束
+4. 将输出文件上传为构建产物（Artifacts），或直接在 CI 中对比几何差�?
+5. 对于复杂装配，使�?`cq.Assembly` 组合多个零件并添加约�?
 
 ---
 
 ## 性能优化
 
-1. 使用 **Sketch API** 比逐边 lineTo 更高效
-2. 大量阵列用 `rarray/cboreHole` 等专用方法
+1. 使用 **Sketch API** 比逐边 lineTo 更高�?
+2. 大量阵列�?`rarray/cboreHole` 等专用方�?
 3. 复杂模型缓存中间 `Workplane` 实例
 4. 导出 STL 调整 `tolerance` / `angularTolerance`
-5. CI 中无显示运行用 `headless` Python，避免 cq-editor
+5. CI 中无显示运行�?`headless` Python，避�?cq-editor
 
 ---
 
@@ -248,33 +248,33 @@ cq.exporters.export(result, "out.svg")
 | 问题 | 解决 |
 |------|------|
 | OCCT 异常 | 检查输入几何是否合法；调用 `.clean()` |
-| Selector 选不到 | 使用 `result.faces().vals()` 调试 |
-| 圆角失败 | 减小半径或拆分到边集合后逐一加 |
-| Conda 安装慢 | 使用 mamba |
-| `cq.Assembly` 求解失败 | 减少冲突约束、给定初始 `Location` |
+| Selector 选不�?| 使用 `result.faces().vals()` 调试 |
+| 圆角失败 | 减小半径或拆分到边集合后逐一�?|
+| Conda 安装�?| 使用 mamba |
+| `cq.Assembly` 求解失败 | 减少冲突约束、给定初�?`Location` |
 
 ---
 
 ## AI 使用建议
 
-- **推荐工作流模式**：AI 助手应将几何逻辑封装为可复用的 Python 函数，利用 CadQuery 的 fluent API 链式描述几何操作序列——遵循「基准面 → 2D 草图 → 拉伸/扫掠 → Selector 定位 → 修饰 → 导出」的模式。
-- **关键注意事项**：① Selector 表达式需要调试，`result.faces().vals()` 可列出所有面供排查；② 圆角/倒角失败通常意味着半径过大或边不连续，可逐一添加而非批量；③ 布尔运算前确保实体无退化几何；④ Assembly 求解是数值优化，减少约束数量可提高成功率。
-- **常用代码模式**：`cq.Workplane("XY").rect(...).extrude(...).faces(">Z").workplane().hole(...)` 是最经典的模式；多零件建模用 `cq.Assembly().add(...).constrain(...).solve()` 装配。
+- **推荐工作流模�?*：AI 助手应将几何逻辑封装为可复用�?Python 函数，利�?CadQuery �?fluent API 链式描述几何操作序列——遵循「基准面 �?2D 草图 �?拉伸/扫掠 �?Selector 定位 �?修饰 �?导出」的模式�?
+- **关键注意事项**：① Selector 表达式需要调试，`result.faces().vals()` 可列出所有面供排查；�?圆角/倒角失败通常意味着半径过大或边不连续，可逐一添加而非批量；③ 布尔运算前确保实体无退化几何；�?Assembly 求解是数值优化，减少约束数量可提高成功率�?
+- **常用代码模式**：`cq.Workplane("XY").rect(...).extrude(...).faces(">Z").workplane().hole(...)` 是最经典的模式；多零件建模用 `cq.Assembly().add(...).constrain(...).solve()` 装配�?
 
 ---
 
-## 相关技能
+## 相关技�?
 
-- **occt** — 底层 OCCT 几何内核 API（C++/PythonOCC）：[../occt/SKILL.md](../occt/SKILL.md)
-- **freecad** — 桌面参数化 CAD，含 Sketcher/PartDesign/BIM：[../freecad/SKILL.md](../freecad/SKILL.md)
-- **openscad** — 声明式脚本建模（CSG 风格），适合对比选型：[../openscad/SKILL.md](../openscad/SKILL.md)
-- **solvespace** — 轻量约束求解器建模，适合快速概念设计：[../solvespace/SKILL.md](../solvespace/SKILL.md)
+- **occt** �?底层 OCCT 几何内核 API（C++/PythonOCC）：[../occt/SKILL.md](../occt/SKILL.md)
+- **freecad** �?桌面参数�?CAD，含 Sketcher/PartDesign/BIM：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **openscad** �?声明式脚本建模（CSG 风格），适合对比选型：[../openscad/SKILL.md](../openscad/SKILL.md)
+- **solvespace** �?轻量约束求解器建模，适合快速概念设计：[../solvespace/SKILL.md](../solvespace/SKILL.md)
 
 ---
 
-## 参考资源
+## 参考资�?
 
-- 文档：<https://cadquery.readthedocs.io/>
-- 示例：<https://github.com/CadQuery/cadquery/tree/master/examples>
-- CQ-editor：<https://github.com/CadQuery/CQ-editor>
+- 文档�?https://cadquery.readthedocs.io/>
+- 示例�?https://github.com/CadQuery/cadquery/tree/master/examples>
+- CQ-editor�?https://github.com/CadQuery/CQ-editor>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/cadquery/>

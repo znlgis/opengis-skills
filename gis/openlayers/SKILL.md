@@ -1,6 +1,6 @@
 ---
 name: openlayers
-description: Use when adding interactive 2D maps to web applications — WMS/WFS/WMTS layers, vector styling, map controls, popups. OpenLayers: the most full-featured open-source JavaScript web mapping library.
+description: "Use when adding interactive 2D maps to web applications �?WMS/WFS/WMTS layers, vector styling, map controls, popups. OpenLayers: the most full-featured open-source JavaScript web mapping library."
 tags:
   - javascript
   - web
@@ -12,13 +12,13 @@ tags:
   - drawing
 ---
 
-> **项目地址：** <https://github.com/openlayers/openlayers>
+> **项目地址�?* <https://github.com/openlayers/openlayers>
 >
-> **官方文档：** <https://openlayers.org/doc/>
+> **官方文档�?* <https://openlayers.org/doc/>
 >
 > **API 参考：** <https://openlayers.org/en/latest/apidoc/>
 >
-> **示例：** <https://openlayers.org/en/latest/examples/>
+> **示例�?* <https://openlayers.org/en/latest/examples/>
 >
 > **许可证：** BSD-2-Clause
 
@@ -28,10 +28,10 @@ OpenLayers（OL）特性：
 
 - 多源底图：OSM、Bing、XYZ、WMS、WMTS、ArcGIS REST
 - 矢量数据：GeoJSON、KML、GPX、TopoJSON、GML、MVT
-- 投影：内置 EPSG:3857/4326，与 proj4 集成支持任意投影
-- 矢量瓦片（MVT）原生支持
-- 强大的样式与交互（Draw/Modify/Select/Snap）
-- WebGL 渲染（点云、海量点）
+- 投影：内�?EPSG:3857/4326，与 proj4 集成支持任意投影
+- 矢量瓦片（MVT）原生支�?
+- 强大的样式与交互（Draw/Modify/Select/Snap�?
+- WebGL 渲染（点云、海量点�?
 
 ---
 
@@ -59,13 +59,13 @@ const map = new Map({
 
 ## 核心概念
 
-| 类 | 作用 |
+| �?| 作用 |
 |----|------|
 | `Map` | 顶层容器 |
 | `View` | 视图（投影、中心、缩放、旋转） |
 | `Layer` | 图层 |
-| `Source` | 数据源 |
-| `Feature` / `Geometry` | 矢量要素与几何 |
+| `Source` | 数据�?|
+| `Feature` / `Geometry` | 矢量要素与几�?|
 | `Style` | 样式 |
 | `Interaction` | 交互 |
 
@@ -89,7 +89,7 @@ new TileLayer({ source: new TileWMS({
 }) });
 ```
 
-### 矢量图层（GeoJSON）
+### 矢量图层（GeoJSON�?
 
 ```js
 import VectorLayer from 'ol/layer/Vector.js';
@@ -104,7 +104,7 @@ map.addLayer(new VectorLayer({
 }));
 ```
 
-### 矢量瓦片（MVT）
+### 矢量瓦片（MVT�?
 
 ```js
 import VectorTileLayer from 'ol/layer/VectorTile.js';
@@ -156,7 +156,7 @@ register(proj4);
 
 ---
 
-## 交互（Draw / Modify / Select / Snap）
+## 交互（Draw / Modify / Select / Snap�?
 
 ```js
 import Draw from 'ol/interaction/Draw.js';
@@ -223,11 +223,11 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 
 ## 性能优化
 
-1. 大量要素 → `WebGLPointsLayer` 或 MVT
-2. 不要每帧重新创建 Style，缓存样式实例
-3. 添加要素用 `addFeatures([])` 而非循环 `addFeature`
+1. 大量要素 �?`WebGLPointsLayer` �?MVT
+2. 不要每帧重新创建 Style，缓存样式实�?
+3. 添加要素�?`addFeatures([])` 而非循环 `addFeature`
 4. `declutter: true` 自动避让标注
-5. `renderMode: 'image'` 用于不变的矢量图层
+5. `renderMode: 'image'` 用于不变的矢量图�?
 
 ---
 
@@ -235,42 +235,42 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 
 | 问题 | 解决 |
 |------|------|
-| 中心点偏移 | 投影未对齐：`fromLonLat()` 转换 |
-| WMS 不显示 | 检查 CORS、`LAYERS` 名、`SRS` 参数 |
-| 字体未生效 | 加载字体后再创建 Text 样式 |
+| 中心点偏�?| 投影未对齐：`fromLonLat()` 转换 |
+| WMS 不显�?| 检�?CORS、`LAYERS` 名、`SRS` 参数 |
+| 字体未生�?| 加载字体后再创建 Text 样式 |
 | MVT 字段缺失 | 使用 `MVT({ featureClass: Feature })` |
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作流
+### 推荐工作�?
 
-1. **创建 Map**：`new Map({ target, layers, view })` → 设置投影和初始中心
+1. **创建 Map**：`new Map({ target, layers, view })` �?设置投影和初始中�?
 2. **添加底图**：`TileLayer` + `OSM`/`XYZ`/`TileWMS` Source
 3. **加载矢量数据**：`VectorLayer` + `VectorSource` + `GeoJSON`/`MVT` Format
-4. **应用样式**：使用 `Style` 函数按属性动态渲染
+4. **应用样式**：使�?`Style` 函数按属性动态渲�?
 5. **添加交互**：`Draw`/`Modify`/`Select`/`Snap` Interaction
-6. **性能优化**：`declutter` 避让标注、`renderMode: 'image'` 静态图层
+6. **性能优化**：`declutter` 避让标注、`renderMode: 'image'` 静态图�?
 
 ### 关键注意事项
 
-- **投影一致**：经纬度需 `fromLonLat()` 转为 EPSG:3857；自定义投影需注册 proj4
-- **WMS 参数**：`LAYERS` 参数需使用完整名称（如 `workspace:layer`），检查 CORS
-- **矢量瓦片字段**：MVT 格式需设置 `featureClass: Feature` 保留属性
+- **投影一�?*：经纬度需 `fromLonLat()` 转为 EPSG:3857；自定义投影需注册 proj4
+- **WMS 参数**：`LAYERS` 参数需使用完整名称（如 `workspace:layer`），检�?CORS
+- **矢量瓦片字段**：MVT 格式需设置 `featureClass: Feature` 保留属�?
 - **样式缓存**：使用函数式 Style 时，缓存 Style 实例避免重复创建
-- **批量添加**：使用 `addFeatures([])` 而非循环 `addFeature`，显著提升性能
+- **批量添加**：使�?`addFeatures([])` 而非循环 `addFeature`，显著提升性能
 
-## 相关技能
+## 相关技�?
 
-- **cesiumjs** — 三维地球与地图库：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
-- **geoserver** — 地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
-- **postgis** — 空间数据库（MVT 数据源）：[../postgis/SKILL.md](../postgis/SKILL.md)
-- **mapsui** — .NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
+- **cesiumjs** �?三维地球与地图库：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
+- **geoserver** �?地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **postgis** �?空间数据库（MVT 数据源）：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **mapsui** �?.NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
 
-## 参考资源
+## 参考资�?
 
-- 文档：<https://openlayers.org/doc/>
-- 示例：<https://openlayers.org/en/latest/examples/>
-- API：<https://openlayers.org/en/latest/apidoc/>
+- 文档�?https://openlayers.org/doc/>
+- 示例�?https://openlayers.org/en/latest/examples/>
+- API�?https://openlayers.org/en/latest/apidoc/>
 - 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/openlayers/>

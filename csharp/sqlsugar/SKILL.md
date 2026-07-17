@@ -1,14 +1,14 @@
 ---
 name: sqlsugar
-description: Use when doing multi-database ORM operations in .NET — SQL Server, MySQL, PostgreSQL, SQLite, Oracle with fluent API, code-first, and LINQ. SqlSugar: high-performance .NET ORM supporting 10+ databases.
+description: "Use when doing multi-database ORM operations in .NET �?SQL Server, MySQL, PostgreSQL, SQLite, Oracle with fluent API, code-first, and LINQ. SqlSugar: high-performance .NET ORM supporting 10+ databases."
 tags: [dotnet, orm, database, code-first, sql]
 ---
 
-> **项目地址：** <https://github.com/DotNetNext/SqlSugar>
+> **项目地址�?* <https://github.com/DotNetNext/SqlSugar>
 >
-> **官方文档：** <https://www.donet5.com/Home/Doc>
+> **官方文档�?* <https://www.donet5.com/Home/Doc>
 >
-> **NuGet：** `SqlSugar` / `SqlSugarCore`
+> **NuGet�?* `SqlSugar` / `SqlSugarCore`
 >
 > **许可证：** Apache-2.0
 
@@ -16,14 +16,14 @@ tags: [dotnet, orm, database, code-first, sql]
 
 SqlSugar 主要特性：
 
-- **多数据库**：SQL Server / MySQL / Oracle / PostgreSQL / SQLite / 达梦 / 人大金仓 / 神舟通用 / GBase / Highgo / Oscar / Tdengine / ClickHouse / OceanBase / MariaDB / Access / 行云数据库
-- **Code First / DB First** 双模式
+- **多数据库**：SQL Server / MySQL / Oracle / PostgreSQL / SQLite / 达梦 / 人大金仓 / 神舟通用 / GBase / Highgo / Oscar / Tdengine / ClickHouse / OceanBase / MariaDB / Access / 行云数据�?
+- **Code First / DB First** 双模�?
 - **链式查询**：`Queryable<T>().Where(...).Select(...).ToList()`
-- **Lambda 表达式 → SQL**
+- **Lambda 表达�?�?SQL**
 - **批量操作**：`Insertable / Updateable / Deleteable.ExecuteCommand()`
-- **多种主键策略**：自增、Guid、雪花 ID
+- **多种主键策略**：自增、Guid、雪�?ID
 - **读写分离 / 分库分表**
-- **AOT 友好**（高级版）
+- **AOT 友好**（高级版�?
 - **事务**：`UseTran` 自动管理
 
 ---
@@ -32,13 +32,13 @@ SqlSugar 主要特性：
 
 ```bash
 dotnet add package SqlSugarCore     # .NET 6+
-# 或
+# �?
 dotnet add package SqlSugar         # .NET Framework
 ```
 
 ---
 
-## 创建客户端
+## 创建客户�?
 
 ```csharp
 using SqlSugar;
@@ -47,15 +47,15 @@ var db = new SqlSugarClient(new ConnectionConfig {
     DbType = DbType.MySql,
     ConnectionString = "server=127.0.0.1;uid=root;pwd=...;database=demo",
     IsAutoCloseConnection = true,
-    InitKeyType = InitKeyType.Attribute   // 通过特性识别主键
+    InitKeyType = InitKeyType.Attribute   // 通过特性识别主�?
 });
 
 db.Aop.OnLogExecuting = (sql, p) => Console.WriteLine(sql);
 ```
 
-> 多数据库：使用 `SqlSugarClient(List<ConnectionConfig>)` 或 `SqlSugarScope`（推荐 DI 注入）。
+> 多数据库：使�?`SqlSugarClient(List<ConnectionConfig>)` �?`SqlSugarScope`（推�?DI 注入）�?
 
-### 在 ASP.NET Core 中注册
+### �?ASP.NET Core 中注�?
 
 ```csharp
 builder.Services.AddSingleton<ISqlSugarClient>(sp =>
@@ -162,11 +162,11 @@ if (!result.IsSuccess) Console.WriteLine(result.ErrorMessage);
 
 ---
 
-## Code First（自动建库/建表）
+## Code First（自动建�?建表�?
 
 ```csharp
-db.DbMaintenance.CreateDatabase();              // 创建库
-db.CodeFirst.InitTables(typeof(User), typeof(Order));   // 创建/更新表
+db.DbMaintenance.CreateDatabase();              // 创建�?
+db.CodeFirst.InitTables(typeof(User), typeof(Order));   // 创建/更新�?
 db.CodeFirst.InitTables<User>();
 ```
 
@@ -180,7 +180,7 @@ public class Order {
     public long Id { get; set; }      // 不要 IsIdentity
 }
 
-SnowFlakeSingle.WorkId = 1;           // 设置工作机器号
+SnowFlakeSingle.WorkId = 1;           // 设置工作机器�?
 
 var o = new Order { Id = SnowFlakeSingle.Instance.NextId() };
 ```
@@ -199,14 +199,14 @@ new ConnectionConfig {
 };
 ```
 
-写走主库，读自动负载到从库。
+写走主库，读自动负载到从库�?
 
 ---
 
-## 分表（按时间）
+## 分表（按时间�?
 
 ```csharp
-[SplitTable(SplitType.Month)]   // 月分表
+[SplitTable(SplitType.Month)]   // 月分�?
 [SugarTable("Logs_{year}{month}")]
 public class Log { ... }
 
@@ -216,7 +216,7 @@ db.Queryable<Log>().SplitTable(t => t.InMonths(2024, 2024, 1)).ToList();
 
 ---
 
-## AOP（日志 / 拦截）
+## AOP（日�?/ 拦截�?
 
 ```csharp
 db.Aop.OnLogExecuting    = (sql, p) => log.Info(sql);
@@ -227,42 +227,42 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 
 ---
 
-## 性能与最佳实践
+## 性能与最佳实�?
 
-1. **批量 Insert** 用 `Insertable(list).UseSqlBulkCopy()` 或 `PageSize`
-2. **大查询**用 `ToPageList`，不要 ToList 全量
-3. **复杂表达式** 抽成方法，避免反射开销
+1. **批量 Insert** �?`Insertable(list).UseSqlBulkCopy()` �?`PageSize`
+2. **大查�?*�?`ToPageList`，不�?ToList 全量
+3. **复杂表达�?* 抽成方法，避免反射开销
 4. **Aop** 异步日志，避免影响主流程
-5. **使用 SqlSugarScope** 在 DI 中替代直接 `SqlSugarClient`
+5. **使用 SqlSugarScope** �?DI 中替代直�?`SqlSugarClient`
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作流
+### 推荐工作�?
 
-1. **创建客户端**：DI 注入用 `SqlSugarScope`（线程安全），单次使用用 `SqlSugarClient`（记得 `IsAutoCloseConnection = true`）
-2. **定义实体**：`[SugarTable("表名")]` + `[SugarColumn(IsPrimaryKey = true)]` 标注特性
-3. **Code First 建表**：`db.CodeFirst.InitTables<T>()` 自动创建/更新表结构
+1. **创建客户�?*：DI 注入�?`SqlSugarScope`（线程安全），单次使用用 `SqlSugarClient`（记�?`IsAutoCloseConnection = true`�?
+2. **定义实体**：`[SugarTable("表名")]` + `[SugarColumn(IsPrimaryKey = true)]` 标注特�?
+3. **Code First 建表**：`db.CodeFirst.InitTables<T>()` 自动创建/更新表结�?
 4. **CRUD**：`Insertable`/`Updateable`/`Deleteable`/`Queryable` 链式 API
-5. **高级特性**：读写分离（`SlaveConnectionConfigs`）、分表（`[SplitTable]`）、AOP 日志（`db.Aop.OnLogExecuting`）
+5. **高级特�?*：读写分离（`SlaveConnectionConfigs`）、分表（`[SplitTable]`）、AOP 日志（`db.Aop.OnLogExecuting`�?
 
-### 关键模式与常见陷阱
+### 关键模式与常见陷�?
 
-- **线程安全**：多线程场景务必用 `SqlSugarScope`（内部连接池），`SqlSugarClient` 非线程安全
-- **实体特性**：主键用 `[SugarColumn(IsPrimaryKey = true)]`，自增用 `IsIdentity = true`，雪花 ID 不要设 `IsIdentity`
-- **批量操作**：大批量插入用 `Insertable(list).UseSqlBulkCopy()` 比逐条快 10-100 倍
-- **分页查询**：用 `ToPageList(pageNumber, pageSize, ref total)` 而不是 `ToList()` 后手动分页
-- **中文乱码**：MySQL 连接字符串加 `Charset=utf8mb4`，列类型用 `utf8mb4`
-- **AOP 最佳实践**：`OnLogExecuting` 异步写日志，避免阻塞主查询流程
+- **线程安全**：多线程场景务必�?`SqlSugarScope`（内部连接池），`SqlSugarClient` 非线程安�?
+- **实体特�?*：主键用 `[SugarColumn(IsPrimaryKey = true)]`，自增用 `IsIdentity = true`，雪�?ID 不要�?`IsIdentity`
+- **批量操作**：大批量插入�?`Insertable(list).UseSqlBulkCopy()` 比逐条�?10-100 �?
+- **分页查询**：用 `ToPageList(pageNumber, pageSize, ref total)` 而不�?`ToList()` 后手动分�?
+- **中文乱码**：MySQL 连接字符串加 `Charset=utf8mb4`，列类型�?`utf8mb4`
+- **AOP 最佳实�?*：`OnLogExecuting` 异步写日志，避免阻塞主查询流�?
 
 ### 如何选择正确方案
 
 | 场景 | 推荐方案 |
 |------|---------|
-| 新项目快速开发 | SqlSugar（Code First + 链式查询） |
-| 政企项目（达梦/金仓） | SqlSugar 或 SOD（两者都支持国产库） |
-| 已有数据库（DB First） | SqlSugar（自动生成实体） |
+| 新项目快速开�?| SqlSugar（Code First + 链式查询�?|
+| 政企项目（达�?金仓�?| SqlSugar �?SOD（两者都支持国产库） |
+| 已有数据库（DB First�?| SqlSugar（自动生成实体） |
 | 高性能批量处理 | SqlSugar + SqlBulkCopy |
 | MyBatis 风格 XML | SOD SQL-MAP |
 
@@ -274,23 +274,23 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 |------|------|
 | 表名映射不对 | `[SugarTable("name")]` 或全局 `EntityService` |
 | 外键关联未带条件 | `Mapper` 配合 `Includes` 显式指定 |
-| 多线程异常 | 使用 `SqlSugarScope`（线程安全） |
-| 中文乱码 | MySQL 用 `utf8mb4`，连接字符串加 `Charset=utf8mb4` |
-| 时间精度丢失 | 列改 `datetime(3)` 或 `datetime2` |
+| 多线程异�?| 使用 `SqlSugarScope`（线程安全） |
+| 中文乱码 | MySQL �?`utf8mb4`，连接字符串�?`Charset=utf8mb4` |
+| 时间精度丢失 | 列改 `datetime(3)` �?`datetime2` |
 
 ---
 
-## 相关技能
+## 相关技�?
 
-- **furion** — .NET Web 框架，默认集成 SqlSugar：[../furion/SKILL.md](../furion/SKILL.md)
-- **admin-net-backend** — 基于 Furion + SqlSugar 的完整后台框架：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
-- **sod** — 同为国产 .NET ORM，多数据库适配见长：[../sod/SKILL.md](../sod/SKILL.md)
-- **npoi** — Excel 读写库，配合 SqlSugar 实现数据库→Excel 导出：[../npoi/SKILL.md](../npoi/SKILL.md)
+- **furion** �?.NET Web 框架，默认集�?SqlSugar：[../furion/SKILL.md](../furion/SKILL.md)
+- **admin-net-backend** �?基于 Furion + SqlSugar 的完整后台框架：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
+- **sod** �?同为国产 .NET ORM，多数据库适配见长：[../sod/SKILL.md](../sod/SKILL.md)
+- **npoi** �?Excel 读写库，配合 SqlSugar 实现数据库→Excel 导出：[../npoi/SKILL.md](../npoi/SKILL.md)
 
 ---
 
-## 参考资源
+## 参考资�?
 
-- 官方文档：<https://www.donet5.com/Home/Doc>
-- 仓库：<https://github.com/DotNetNext/SqlSugar>
+- 官方文档�?https://www.donet5.com/Home/Doc>
+- 仓库�?https://github.com/DotNetNext/SqlSugar>
 - 中文教程（znlgis）：<https://znlgis.github.io/csharp/tutorial/sqlsugar/>

@@ -1,27 +1,27 @@
 ---
 name: clipper1
-description: Use when maintaining legacy code that depends on Clipper 1.x API for polygon clipping and offsetting. Clipper1: the original widely-deployed polygon boolean library. Prefer Clipper2 for new projects.
+description: "Use when maintaining legacy code that depends on Clipper 1.x API for polygon clipping and offsetting. Clipper1: the original widely-deployed polygon boolean library. Prefer Clipper2 for new projects."
 tags: [2d, geometry, boolean, offset, polygon, csharp, python, cpp]
 ---
 
-> **项目地址：** <https://github.com/AngusJohnson/Clipper>
+> **项目地址�?* <https://github.com/AngusJohnson/Clipper>
 >
-> **官方文档：** <http://www.angusj.com/delphi/clipper.php>
+> **官方文档�?* <http://www.angusj.com/delphi/clipper.php>
 >
-> **NuGet：** `Clipper`（多个第三方移植版）
+> **NuGet�?* `Clipper`（多个第三方移植版）
 >
 > **许可证：** Boost Software License 1.0
 
 ## 概述
 
-Clipper1 主要特征：
+Clipper1 主要特征�?
 
 - **整数算法**（`IntPoint`），通过 `scale` 系数模拟浮点
 - **核心 API**：`Clipper`、`ClipperOffset`、`ClipperBase`
-- **支持**：布尔运算 + 偏移 + 多边形简化
+- **支持**：布尔运�?+ 偏移 + 多边形简�?
 - **多语言移植**：C++（含 Header-only）、C#、Delphi/Pascal、JS、Python
 
-> **新项目优先使用 [Clipper2](../clipper2/SKILL.md)**，其性能与 API 均优于 Clipper1。本 SKILL 主要用于维护遗留代码。
+> **新项目优先使�?[Clipper2](../clipper2/SKILL.md)**，其性能�?API 均优�?Clipper1。本 SKILL 主要用于维护遗留代码�?
 
 ---
 
@@ -32,13 +32,13 @@ Clipper1 主要特征：
 dotnet add package Clipper
 
 # JavaScript
-npm install js-clipper          # 或 clipper-lib
+npm install js-clipper          # �?clipper-lib
 
 # Python
 pip install pyclipper
 ```
 
-C++ 通常直接拷贝 `clipper.hpp/.cpp` 到工程。
+C++ 通常直接拷贝 `clipper.hpp/.cpp` 到工程�?
 
 ---
 
@@ -48,7 +48,7 @@ C++ 通常直接拷贝 `clipper.hpp/.cpp` 到工程。
 using ClipperLib;
 using IntPoint = ClipperLib.IntPoint;
 
-const long Scale = 1000000;     // 浮点 → 整数缩放因子
+const long Scale = 1000000;     // 浮点 �?整数缩放因子
 
 List<IntPoint> path = new() {
     new IntPoint(0, 0),
@@ -78,14 +78,14 @@ clipper.Execute(ClipType.ctUnion, solution,
 
 ---
 
-## 多边形偏移（ClipperOffset）
+## 多边形偏移（ClipperOffset�?
 
 ```csharp
 var co = new ClipperOffset();
 co.AddPaths(paths, JoinType.jtRound, EndType.etClosedPolygon);
 
 var solution = new List<List<IntPoint>>();
-co.Execute(ref solution, 10 * Scale);     // 正：外扩；负：内缩
+co.Execute(ref solution, 10 * Scale);     // 正：外扩；负：内�?
 ```
 
 `JoinType`：`jtSquare`、`jtMiter`、`jtRound`
@@ -93,15 +93,15 @@ co.Execute(ref solution, 10 * Scale);     // 正：外扩；负：内缩
 
 ---
 
-## PolyTree（保留环层级）
+## PolyTree（保留环层级�?
 
 ```csharp
 var tree = new PolyTree();
 clipper.Execute(ClipType.ctUnion, tree,
     PolyFillType.pftNonZero, PolyFillType.pftNonZero);
 
-foreach (var node in tree.Childs)        // 顶层是外环
-    foreach (var hole in node.Childs)    // 子节点是孔
+foreach (var node in tree.Childs)        // 顶层是外�?
+    foreach (var hole in node.Childs)    // 子节点是�?
         Console.WriteLine(hole.Contour.Count);
 ```
 
@@ -119,7 +119,7 @@ var    reverse = Clipper.ReversePath(path);
 
 ---
 
-## Python（pyclipper）
+## Python（pyclipper�?
 
 ```python
 import pyclipper
@@ -164,42 +164,42 @@ c.Execute(ctUnion, solution, pftNonZero, pftNonZero);
 
 ---
 
-## 典型工作流
+## 典型工作�?
 
 ### 工作流一：CAD/GIS 中多边形布尔运算
 
-1. 确定浮点精度需求，选定 `scale` 系数（如 1,000,000 表示微米精度）
-2. 将输入几何（Polygon/MultiLine 等）转换为 `List<IntPoint>` 格式，乘以 scale 取整
-3. 创建 `Clipper` 实例，`AddPath` 添加 Subject 和 Clip
-4. 调用 `Execute` 执行布尔运算（Union/Intersect/Difference/Xor）
-5. 将结果坐标除以 scale 还原为浮点坐标
-6. 如需保留孔洞关系，使用 `PolyTree` 替代 `List<List<IntPoint>>`
+1. 确定浮点精度需求，选定 `scale` 系数（如 1,000,000 表示微米精度�?
+2. 将输入几何（Polygon/MultiLine 等）转换�?`List<IntPoint>` 格式，乘�?scale 取整
+3. 创建 `Clipper` 实例，`AddPath` 添加 Subject �?Clip
+4. 调用 `Execute` 执行布尔运算（Union/Intersect/Difference/Xor�?
+5. 将结果坐标除�?scale 还原为浮点坐�?
+6. 如需保留孔洞关系，使�?`PolyTree` 替代 `List<List<IntPoint>>`
 
 ### 工作流二：多边形轮廓偏移（生成安全区/缓冲区）
 
-1. 构建多边形路径（闭合路径用 `etClosedPolygon`，开放用 `etOpenButt` 等）
+1. 构建多边形路径（闭合路径�?`etClosedPolygon`，开放用 `etOpenButt` 等）
 2. 创建 `ClipperOffset`，通过 `AddPaths` 添加输入
-3. 调用 `Execute`，正值为外扩（膨胀），负值为内缩（侵蚀）
-4. 检查结果是否自交——偏移前可先用 `SimplifyPolygon` 清理输入
+3. 调用 `Execute`，正值为外扩（膨胀），负值为内缩（侵蚀�?
+4. 检查结果是否自交——偏移前可先�?`SimplifyPolygon` 清理输入
 5. 输出偏移后的多边形用于刀路生成、安全距离计算等
 
 ---
 
-## 与 Clipper2 主要差异
+## �?Clipper2 主要差异
 
 | 维度 | Clipper1 | Clipper2 |
 |------|----------|----------|
-| 数值类型 | 整数 + scale | 整数 / 浮点双模式 |
+| 数值类�?| 整数 + scale | 整数 / 浮点双模�?|
 | 性能 | 较慢 | 显著更快 |
-| API | `Clipper` 类 | 顶层 `Union/Intersect/...` |
-| 简化 | `SimplifyPolygon` | `SimplifyPaths` 更准确 |
+| API | `Clipper` �?| 顶层 `Union/Intersect/...` |
+| 简�?| `SimplifyPolygon` | `SimplifyPaths` 更准�?|
 | 维护 | 已停止新功能 | 活跃维护 |
 
-迁移要点：
+迁移要点�?
 
-- `IntPoint` → `Point64`
-- 移除 scale，使用 `PathsD` 或保留 `Paths64`
-- API 改为静态函数
+- `IntPoint` �?`Point64`
+- 移除 scale，使�?`PathsD` 或保�?`Paths64`
+- API 改为静态函�?
 
 ---
 
@@ -207,32 +207,32 @@ c.Execute(ctUnion, solution, pftNonZero, pftNonZero);
 
 | 问题 | 解决 |
 |------|------|
-| 浮点 → 整数舍入失真 | 增大 `scale` |
-| 偏移产生自相交 | 偏移前 `SimplifyPolygon` |
-| 闭合 path 多余首尾点 | Clipper 不需要重复首点 |
-| Mac/Linux 编译失败 | 启用 `use_int32`/`use_xyz` 对应宏 |
+| 浮点 �?整数舍入失真 | 增大 `scale` |
+| 偏移产生自相�?| 偏移�?`SimplifyPolygon` |
+| 闭合 path 多余首尾�?| Clipper 不需要重复首�?|
+| Mac/Linux 编译失败 | 启用 `use_int32`/`use_xyz` 对应�?|
 
 ---
 
 ## AI 使用建议
 
-- **推荐工作流模式**：AI 助手应将几何数据统一转换为 Clipper 的整数坐标格式（选择恰当的 scale），然后按「创建 Clipper → 添加路径 → 执行运算 → 还原坐标」的流程处理。对于带孔多边形，优先使用 `PolyTree` 保留层级关系。
-- **关键注意事项**：① scale 选择需权衡精度与整数溢出——常用 1e6（微米级）；② Clipper1 的闭合路径不需要重复首点；③ `PolyFillType` 需 Subject 和 Clip 各指定一次，非零环绕（NonZero）是最常用的填充规则；④ Clipper1 为非线程安全，多线程需各自持有实例。
-- **常用代码模式**：`new Clipper() → AddPath(subject, ptSubject, true) → AddPath(clip, ptClip, true) → Execute(ctUnion, solution, pftNonZero, pftNonZero)`。
+- **推荐工作流模�?*：AI 助手应将几何数据统一转换�?Clipper 的整数坐标格式（选择恰当�?scale），然后按「创�?Clipper �?添加路径 �?执行运算 �?还原坐标」的流程处理。对于带孔多边形，优先使�?`PolyTree` 保留层级关系�?
+- **关键注意事项**：① scale 选择需权衡精度与整数溢出——常�?1e6（微米级）；�?Clipper1 的闭合路径不需要重复首点；�?`PolyFillType` 需 Subject �?Clip 各指定一次，非零环绕（NonZero）是最常用的填充规则；�?Clipper1 为非线程安全，多线程需各自持有实例�?
+- **常用代码模式**：`new Clipper() �?AddPath(subject, ptSubject, true) �?AddPath(clip, ptClip, true) �?Execute(ctUnion, solution, pftNonZero, pftNonZero)`�?
 
 ---
 
-## 相关技能
+## 相关技�?
 
-- **clipper2** — 新一代多边形裁剪/偏移库（推荐新项目使用）：[../clipper2/SKILL.md](../clipper2/SKILL.md)
-- **qcad** — 2D CAD 软件，内置 DXF 多边形编辑能力：[../qcad/SKILL.md](../qcad/SKILL.md)
-- **librecad** — 开源 2D CAD，可用于可视化 Clipper 结果：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **clipper2** �?新一代多边形裁剪/偏移库（推荐新项目使用）：[../clipper2/SKILL.md](../clipper2/SKILL.md)
+- **qcad** �?2D CAD 软件，内�?DXF 多边形编辑能力：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **librecad** �?开�?2D CAD，可用于可视�?Clipper 结果：[../librecad/SKILL.md](../librecad/SKILL.md)
 
 ---
 
-## 参考资源
+## 参考资�?
 
-- 仓库：<https://github.com/AngusJohnson/Clipper>
-- 文档：<http://www.angusj.com/delphi/clipper.php>
-- pyclipper：<https://github.com/fonttools/pyclipper>
+- 仓库�?https://github.com/AngusJohnson/Clipper>
+- 文档�?http://www.angusj.com/delphi/clipper.php>
+- pyclipper�?https://github.com/fonttools/pyclipper>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/clipper1/>

@@ -1,6 +1,6 @@
 ---
 name: postgis
-description: Use when extending PostgreSQL with spatial data types, spatial indexes (GiST/SP-GiST), geometry functions (ST_Intersects, ST_Buffer, ST_Transform), and spatial queries. PostGIS: the most widely used open-source spatial database extension.
+description: "Use when extending PostgreSQL with spatial data types, spatial indexes (GiST/SP-GiST), geometry functions (ST_Intersects, ST_Buffer, ST_Transform), and spatial queries. PostGIS: the most widely used open-source spatial database extension."
 tags:
   - postgresql
   - database
@@ -14,23 +14,23 @@ tags:
   - wkb
 ---
 
-> **项目地址：** <https://github.com/postgis/postgis>
+> **项目地址�?* <https://github.com/postgis/postgis>
 >
-> **官方文档：** <https://postgis.net/docs/>
+> **官方文档�?* <https://postgis.net/docs/>
 >
 > **许可证：** GPL-2.0+
 
 ## 概述
 
-PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple Features for SQL 规范。核心能力：
+PostGIS 是基�?PostgreSQL 的开源空间数据库扩展，遵�?OGC Simple Features for SQL 规范。核心能力：
 
 - **空间数据类型**：`geometry`（平面）、`geography`（球面）、`raster`、`topology`、`3DZ/4DZM`
-- **空间索引**：基于 R-Tree-over-GiST，亿级要素仍保持毫秒级查询
-- **1000+ 空间函数**：覆盖度量、关系、构造、聚合、栅格代数
-- **坐标参考系**：内置 6000+ EPSG 投影，自动 ST_Transform
+- **空间索引**：基�?R-Tree-over-GiST，亿级要素仍保持毫秒级查�?
+- **1000+ 空间函数**：覆盖度量、关系、构造、聚合、栅格代�?
+- **坐标参考系**：内�?6000+ EPSG 投影，自�?ST_Transform
 - **数据导入导出**：与 GDAL/ogr2ogr/shp2pgsql 无缝集成
 
-**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.3，2026-04）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
+**版本要求�?* PostgreSQL 12�?8 配合 PostGIS 3.x（最新稳定版 3.6.3�?026-04）；GEOS �?3.8（部分新算子需 GEOS �?3.14�?
 
 ---
 
@@ -48,7 +48,7 @@ sudo yum install postgis34_17
 # macOS
 brew install postgis
 
-# Docker（推荐，标签格式 <PG 主版本>-<PostGIS 主版本>）
+# Docker（推荐，标签格式 <PG 主版�?-<PostGIS 主版�?�?
 docker run --name pg -e POSTGRES_PASSWORD=pg -p 5432:5432 -d postgis/postgis:17-3.6
 ```
 
@@ -68,13 +68,13 @@ SELECT PostGIS_Full_Version();         -- 验证
 
 | 类型 | 说明 | 适用场景 |
 |------|------|---------|
-| `geometry(Point, 4326)` | 平面几何，速度快 | 投影坐标系下的常规分析 |
-| `geography(Point, 4326)` | 球面几何，距离按米 | 全球范围、跨经线计算 |
-| `raster` | 栅格 | DEM、影像 |
+| `geometry(Point, 4326)` | 平面几何，速度�?| 投影坐标系下的常规分�?|
+| `geography(Point, 4326)` | 球面几何，距离按�?| 全球范围、跨经线计算 |
+| `raster` | 栅格 | DEM、影�?|
 
 ---
 
-## 建表与索引
+## 建表与索�?
 
 ```sql
 CREATE TABLE poi (
@@ -86,7 +86,7 @@ CREATE TABLE poi (
 CREATE INDEX poi_geom_idx ON poi USING GIST (geom);
 
 INSERT INTO poi(name, geom) VALUES
-    ('天安门', ST_GeomFromText('POINT(116.397 39.908)', 4326)),
+    ('天安�?, ST_GeomFromText('POINT(116.397 39.908)', 4326)),
     ('外滩',   ST_SetSRID(ST_MakePoint(121.490, 31.241), 4326));
 
 ANALYZE poi;
@@ -99,12 +99,12 @@ ANALYZE poi;
 ### 1. 空间关系
 
 ```sql
--- 范围查询：&& 走 GiST 索引
+-- 范围查询�?& �?GiST 索引
 SELECT id, name FROM poi
 WHERE geom && ST_MakeEnvelope(116, 39, 117, 40, 4326)
   AND ST_Within(geom, ST_MakeEnvelope(116, 39, 117, 40, 4326));
 
--- KNN：<-> 走索引
+-- KNN�?-> 走索�?
 SELECT id, name, geom <-> ST_MakePoint(116.4, 39.9)::geometry AS d
 FROM poi ORDER BY d LIMIT 10;
 
@@ -116,7 +116,7 @@ WHERE ST_DWithin(geom::geography, ST_MakePoint(116.4, 39.9)::geography, 5000);
 ### 2. 几何变换
 
 ```sql
-SELECT ST_Buffer(geom::geography, 100)::geometry FROM poi;       -- 100 米
+SELECT ST_Buffer(geom::geography, 100)::geometry FROM poi;       -- 100 �?
 SELECT ST_Transform(geom, 3857) FROM poi;                        -- WGS84→Mercator
 SELECT ST_SimplifyPreserveTopology(geom, 0.001) FROM province;
 SELECT ST_Centroid(geom), ST_ConvexHull(geom), ST_Envelope(geom) FROM province;
@@ -148,13 +148,13 @@ SELECT ST_AsText(geom), ST_AsGeoJSON(geom), ST_AsBinary(geom) FROM poi;
 ## 数据导入导出
 
 ```bash
-# Shapefile → PostGIS
+# Shapefile �?PostGIS
 shp2pgsql -s 4326 -I -W UTF-8 china.shp public.china | psql -d gisdb
 
 # 反向
 pgsql2shp -f out.shp -h localhost -u postgres gisdb "SELECT * FROM poi"
 
-# 通用（GDAL）
+# 通用（GDAL�?
 ogr2ogr -f PostgreSQL "PG:host=localhost user=postgres dbname=gisdb password=pg" \
         -nln poi -nlt PROMOTE_TO_MULTI -lco GEOMETRY_NAME=geom \
         -t_srs EPSG:4326 input.gpkg
@@ -162,7 +162,7 @@ ogr2ogr -f PostgreSQL "PG:host=localhost user=postgres dbname=gisdb password=pg"
 
 ---
 
-## 矢量瓦片（ST_AsMVT）
+## 矢量瓦片（ST_AsMVT�?
 
 ```sql
 WITH mvtgeom AS (
@@ -181,7 +181,7 @@ SELECT ST_AsMVT(mvtgeom.*, 'poi', 4096, 'geom') FROM mvtgeom;
 ## 栅格
 
 ```sql
--- 导入（命令行）
+-- 导入（命令行�?
 raster2pgsql -s 4326 -I -C -M dem.tif -F -t 256x256 public.dem | psql -d gisdb
 
 SELECT ST_Value(rast, ST_MakePoint(116.4, 39.9)) FROM dem;
@@ -194,13 +194,13 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 ## 性能优化
 
 1. **必建空间索引**：`USING GIST(geom)`
-2. 用 `&&` 让查询走索引，再用 `ST_Within/Intersects` 精筛
+2. �?`&&` 让查询走索引，再�?`ST_Within/Intersects` 精筛
 3. 大批量导入后 `VACUUM ANALYZE`
-4. SRID 必须一致，跨 SRID 必须 `ST_Transform`
-5. 距离排序用 KNN `<->` 替代 `ST_Distance`
-6. 几何简化：前端展示用 `ST_SimplifyPreserveTopology`
+4. SRID 必须一致，�?SRID 必须 `ST_Transform`
+5. 距离排序�?KNN `<->` 替代 `ST_Distance`
+6. 几何简化：前端展示�?`ST_SimplifyPreserveTopology`
 7. 大表按行政区分区
-8. `ST_Subdivide` 切分大几何加速空间连接
+8. `ST_Subdivide` 切分大几何加速空间连�?
 
 ---
 
@@ -208,44 +208,44 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 
 | 问题 | 解决方案 |
 |------|---------|
-| 查询慢 | 建索引 + `ANALYZE` + 检查 `EXPLAIN` |
+| 查询�?| 建索�?+ `ANALYZE` + 检�?`EXPLAIN` |
 | `Operation on mixed SRID` | 统一 SRID：`ST_SetSRID/ST_Transform` |
-| 距离单位不对 | 投影下是度，需转 `geography` 或投到米制 |
-| 跨经线 180° 异常 | 改用 `geography` |
-| 多边形无效 | `ST_MakeValid` 修复，`ST_IsValidReason` 诊断 |
+| 距离单位不对 | 投影下是度，需�?`geography` 或投到米�?|
+| 跨经�?180° 异常 | 改用 `geography` |
+| 多边形无�?| `ST_MakeValid` 修复，`ST_IsValidReason` 诊断 |
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作流
+### 推荐工作�?
 
 1. **安装扩展**：`CREATE EXTENSION postgis;` 启用空间功能
-2. **建表**：包含 `geometry(Point, 4326)` 或 `geography(Point, 4326)` 类型的几何列
-3. **建索引**：`CREATE INDEX ON table USING GIST(geom)` —— 必建空间索引
-4. **导入数据**：使用 `shp2pgsql`（Shapefile）、`ogr2ogr`（通用）、`raster2pgsql`（栅格）
-5. **空间查询**：用 `&&` 先做包围盒粗筛（走 GiST 索引），再用 `ST_Within`/`ST_Intersects` 精筛
+2. **建表**：包�?`geometry(Point, 4326)` �?`geography(Point, 4326)` 类型的几何列
+3. **建索�?*：`CREATE INDEX ON table USING GIST(geom)` —�?必建空间索引
+4. **导入数据**：使�?`shp2pgsql`（Shapefile）、`ogr2ogr`（通用）、`raster2pgsql`（栅格）
+5. **空间查询**：用 `&&` 先做包围盒粗筛（�?GiST 索引），再用 `ST_Within`/`ST_Intersects` 精筛
 6. **验证结果**：`EXPLAIN ANALYZE` 查看查询计划，确认索引被使用
 
 ### 关键注意事项
 
-- **geometry vs geography**：`geometry`（平面计算，速度快）vs `geography`（球面计算，距离单位为米）
-- **SRID 必须一致**：跨 SRID 运算必须先 `ST_Transform`，否则报 `Operation on mixed SRID`
-- **用 `&&` 让查询走索引**：`WHERE geom && ST_MakeEnvelope(...)` 粗筛 + `ST_Within` 精筛
-- **KNN 用 `<->`**：`ORDER BY geom <-> point LIMIT 10` 走 GiST 索引，比 `ST_Distance` 快几个数量级
-- **大几何优化**：使用 `ST_Subdivide` 切分大面几何加速空间连接
-- **导入后 ANALYZE**：大批量数据导入后执行 `VACUUM ANALYZE` 更新统计信息
+- **geometry vs geography**：`geometry`（平面计算，速度快）vs `geography`（球面计算，距离单位为米�?
+- **SRID 必须一�?*：跨 SRID 运算必须�?`ST_Transform`，否则报 `Operation on mixed SRID`
+- **�?`&&` 让查询走索引**：`WHERE geom && ST_MakeEnvelope(...)` 粗筛 + `ST_Within` 精筛
+- **KNN �?`<->`**：`ORDER BY geom <-> point LIMIT 10` �?GiST 索引，比 `ST_Distance` 快几个数量级
+- **大几何优�?*：使�?`ST_Subdivide` 切分大面几何加速空间连�?
+- **导入�?ANALYZE**：大批量数据导入后执�?`VACUUM ANALYZE` 更新统计信息
 
-## 相关技能
+## 相关技�?
 
-- **geoserver** — 地图服务发布（PostGIS 是最常见数据源）：[../geoserver/SKILL.md](../geoserver/SKILL.md)
-- **geotools** — Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
-- **geopandas** — Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
-- **gdal** — 命令行数据导入导出：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **geoserver** �?地图服务发布（PostGIS 是最常见数据源）：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **geotools** �?Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
+- **geopandas** �?Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **gdal** �?命令行数据导入导出：[../gdal/SKILL.md](../gdal/SKILL.md)
 
-## 参考资源
+## 参考资�?
 
-- 文档：<https://postgis.net/docs/>
-- 函数速查：<https://postgis.net/docs/reference.html>
-- Workshop：<https://postgis.net/workshops/postgis-intro/>
+- 文档�?https://postgis.net/docs/>
+- 函数速查�?https://postgis.net/docs/reference.html>
+- Workshop�?https://postgis.net/workshops/postgis-intro/>
 - 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/postgis/>

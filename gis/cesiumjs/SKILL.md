@@ -1,6 +1,6 @@
 ---
 name: cesiumjs
-description: Use when building browser-based 3D globes, 3D Tiles visualization, time-dynamic geospatial data, or virtual globe applications. CesiumJS: high-performance WebGL 3D geospatial engine for interactive earth visualization.
+description: "Use when building browser-based 3D globes, 3D Tiles visualization, time-dynamic geospatial data, or virtual globe applications. CesiumJS: high-performance WebGL 3D geospatial engine for interactive earth visualization."
 tags:
   - javascript
   - webgl
@@ -13,26 +13,26 @@ tags:
   - visualization
 ---
 
-> **项目地址：** <https://github.com/CesiumGS/cesium>
+> **项目地址�?* <https://github.com/CesiumGS/cesium>
 >
-> **官方文档：** <https://cesium.com/learn/cesiumjs-learn/>
+> **官方文档�?* <https://cesium.com/learn/cesiumjs-learn/>
 >
 > **API 参考：** <https://cesium.com/learn/cesiumjs/ref-doc/>
 >
-> **Sandcastle：** <https://sandcastle.cesium.com/>
+> **Sandcastle�?* <https://sandcastle.cesium.com/>
 >
 > **许可证：** Apache-2.0
 
 ## 概述
 
-CesiumJS 提供：
+CesiumJS 提供�?
 
-- **三维全球**：WGS84 椭球体、地形（Quantized-Mesh）、卫星影像
+- **三维全球**：WGS84 椭球体、地形（Quantized-Mesh）、卫星影�?
 - **3D Tiles**：海量三维流式（倾斜摄影、BIM、点云、城市模型）
-- **glTF / GLB 模型**：标准 PBR 渲染
-- **CZML / Entity API**：高层声明式数据模型，时序动画
+- **glTF / GLB 模型**：标�?PBR 渲染
+- **CZML / Entity API**：高层声明式数据模型，时序动�?
 - **Primitive API**：底层高性能 API
-- **可视化分析**：通视/剖面/缓冲/裁剪/视频投影/光影
+- **可视化分�?*：通视/剖面/缓冲/裁剪/视频投影/光影
 
 ---
 
@@ -57,11 +57,11 @@ export default defineConfig({ plugins: [cesium()] });
 
 ### Webpack 集成
 
-需将 `node_modules/cesium/Build/Cesium/{Workers,Assets,Widgets}` 拷贝到输出目录，并设置 `window.CESIUM_BASE_URL`。
+需�?`node_modules/cesium/Build/Cesium/{Workers,Assets,Widgets}` 拷贝到输出目录，并设�?`window.CESIUM_BASE_URL`�?
 
 ---
 
-## 快速上手
+## 快速上�?
 
 ```html
 <div id="cesiumContainer" style="width:100%;height:100vh"></div>
@@ -91,13 +91,13 @@ export default defineConfig({ plugins: [cesium()] });
 | `Viewer` | 顶层容器 |
 | `Scene` | 渲染场景，含 globe/camera/primitives |
 | `Entity` | 高层数据对象，时序、属性、可视化封装 |
-| `DataSource` | Entity 集合（CZML/GeoJSON/KML） |
-| `Primitive` | 低层渲染单元，性能最优 |
-| `Cesium3DTileset` | 3D Tiles 数据集 |
+| `DataSource` | Entity 集合（CZML/GeoJSON/KML�?|
+| `Primitive` | 低层渲染单元，性能最�?|
+| `Cesium3DTileset` | 3D Tiles 数据�?|
 
 ---
 
-## 影像与地形
+## 影像与地�?
 
 ```js
 viewer.imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider({
@@ -125,7 +125,7 @@ viewer.flyTo(ds);
 viewer.entities.add({
   position: Cesium.Cartesian3.fromDegrees(116.397, 39.908),
   point: { pixelSize: 10, color: Cesium.Color.YELLOW },
-  label: { text: '天安门', font: '14px sans-serif',
+  label: { text: '天安�?, font: '14px sans-serif',
            verticalOrigin: Cesium.VerticalOrigin.BOTTOM }
 });
 
@@ -177,7 +177,7 @@ viewer.entities.add({
 
 ---
 
-## 时序动画（CZML）
+## 时序动画（CZML�?
 
 ```js
 const czml = [
@@ -193,7 +193,7 @@ viewer.dataSources.add(Cesium.CzmlDataSource.load(czml));
 
 ---
 
-## 交互与拾取
+## 交互与拾�?
 
 ```js
 const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
@@ -212,7 +212,7 @@ handler.setInputAction(e => {
 
 ---
 
-## 摄像机
+## 摄像�?
 
 ```js
 viewer.camera.flyTo({
@@ -229,8 +229,8 @@ viewer.trackedEntity = entity;
 
 1. 大量静态要素优先用 Primitive 而非 Entity
 2. 3D Tiles 启用 `dynamicScreenSpaceError`、`skipLevelOfDetail`
-3. 影像图层数量 ≤ 4
-4. 启用 `requestRenderMode = true`（按需渲染）
+3. 影像图层数量 �?4
+4. 启用 `requestRenderMode = true`（按需渲染�?
 5. `clampToGround` 适度使用
 6. 释放：`viewer.entities.removeAll()`、`tileset.destroy()`
 7. 监听 `webglcontextlost`
@@ -241,44 +241,44 @@ viewer.trackedEntity = entity;
 
 | 问题 | 解决 |
 |------|------|
-| 黑屏 | 检查 `CESIUM_BASE_URL` 与静态资源 |
-| 模型贴地不准 | `HeightReference.CLAMP_TO_GROUND` 或地形采样 |
-| 性能卡顿 | 启用 `requestRenderMode`，降低 `maximumScreenSpaceError` |
+| 黑屏 | 检�?`CESIUM_BASE_URL` 与静态资�?|
+| 模型贴地不准 | `HeightReference.CLAMP_TO_GROUND` 或地形采�?|
+| 性能卡顿 | 启用 `requestRenderMode`，降�?`maximumScreenSpaceError` |
 | 国内瓦片偏移 | 使用 GCJ02→WGS84 纠偏 |
-| Token 过期 | 不需要 ion 时不设置 token；或自托管 |
+| Token 过期 | 不需�?ion 时不设置 token；或自托�?|
 
 ---
 
 ## AI 使用建议
 
-### 推荐工作流
+### 推荐工作�?
 
-1. **初始化 Viewer**：使用 `Cesium.Viewer` 创建三维地球，设置地形和影像提供者
-2. **加载数据**：根据数据类型选择合适 API——GeoJSON/CZML 用 `DataSource`，3D 瓦片用 `Cesium3DTileset`，单模型用 `Entity.model`
-3. **设置相机**：使用 `camera.flyTo()` 定位到目标区域
+1. **初始�?Viewer**：使�?`Cesium.Viewer` 创建三维地球，设置地形和影像提供�?
+2. **加载数据**：根据数据类型选择合�?API——GeoJSON/CZML �?`DataSource`�?D 瓦片�?`Cesium3DTileset`，单模型�?`Entity.model`
+3. **设置相机**：使�?`camera.flyTo()` 定位到目标区�?
 4. **添加交互**：通过 `ScreenSpaceEventHandler` 处理点击拾取
-5. **性能优化**：根据场景复杂度启用 `requestRenderMode`、调整 `maximumScreenSpaceError`
+5. **性能优化**：根据场景复杂度启用 `requestRenderMode`、调�?`maximumScreenSpaceError`
 
 ### 关键注意事项
 
-- **Ion Token**：使用 Cesium ion 服务需要设置 `Cesium.Ion.defaultAccessToken`；自托管数据则无需
+- **Ion Token**：使�?Cesium ion 服务需要设�?`Cesium.Ion.defaultAccessToken`；自托管数据则无需
 - **坐标转换**：Cesium 内部使用 Cartesian3（地心地固坐标），通过 `Cesium.Cartesian3.fromDegrees(lon, lat, height)` 将经纬度转为内部坐标
-- **Entity vs Primitive**：少量动态要素用 Entity API（简洁），大量静态要素用 Primitive API（高性能）
-- **贴地（clampToGround）**：在三维地形上，需要明确设置 `clampToGround: true` 或 `HeightReference.CLAMP_TO_GROUND`
-- **资源释放**：不再使用的 `DataSource` 调用 `viewer.dataSources.remove(ds)`，3D Tileset 调用 `tileset.destroy()`
-- **静态资源部署**：使用 Webpack/Vite 时，确保 `Assets`、`Workers`、`Widgets` 目录正确复制到输出目录
+- **Entity vs Primitive**：少量动态要素用 Entity API（简洁），大量静态要素用 Primitive API（高性能�?
+- **贴地（clampToGround�?*：在三维地形上，需要明确设�?`clampToGround: true` �?`HeightReference.CLAMP_TO_GROUND`
+- **资源释放**：不再使用的 `DataSource` 调用 `viewer.dataSources.remove(ds)`�?D Tileset 调用 `tileset.destroy()`
+- **静态资源部�?*：使�?Webpack/Vite 时，确保 `Assets`、`Workers`、`Widgets` 目录正确复制到输出目�?
 
-## 相关技能
+## 相关技�?
 
-- **openlayers** — 二维 Web 地图库：[../openlayers/SKILL.md](../openlayers/SKILL.md)
-- **geoserver** — 地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
-- **geoserver-rest-api** — REST 自动化管理：[../geoserver-rest-api/SKILL.md](../geoserver-rest-api/SKILL.md)
-- **postgis** — 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
-- **mapsui** — .NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
+- **openlayers** �?二维 Web 地图库：[../openlayers/SKILL.md](../openlayers/SKILL.md)
+- **geoserver** �?地图服务发布：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **geoserver-rest-api** �?REST 自动化管理：[../geoserver-rest-api/SKILL.md](../geoserver-rest-api/SKILL.md)
+- **postgis** �?空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **mapsui** �?.NET 跨平台地图组件：[../mapsui/SKILL.md](../mapsui/SKILL.md)
 
-## 参考资源
+## 参考资�?
 
-- 学习中心：<https://cesium.com/learn/>
-- API：<https://cesium.com/learn/cesiumjs/ref-doc/>
-- Sandcastle：<https://sandcastle.cesium.com/>
+- 学习中心�?https://cesium.com/learn/>
+- API�?https://cesium.com/learn/cesiumjs/ref-doc/>
+- Sandcastle�?https://sandcastle.cesium.com/>
 - 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/cesiumjs/>

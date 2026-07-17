@@ -1,6 +1,6 @@
 ---
 name: shapely
-description: Use when performing computational geometry in Python — intersection, union, buffer, convex hull, simplification. Shapely: Python bindings for GEOS, the C++ geometry engine that powers PostGIS.
+description: "Use when performing computational geometry in Python �?intersection, union, buffer, convex hull, simplification. Shapely: Python bindings for GEOS, the C++ geometry engine that powers PostGIS."
 tags:
   - python
   - geometry
@@ -35,7 +35,7 @@ Python library for manipulation and analysis of planar geometric objects, based 
 | MultiPolygon | `shapely.MultiPolygon` | Collection of Polygons |
 | GeometryCollection | `shapely.GeometryCollection` | Heterogeneous collection |
 
-Z coordinates are **ignored for all spatial analysis** — operations are performed in the x-y plane only.
+Z coordinates are **ignored for all spatial analysis** �?operations are performed in the x-y plane only.
 
 ## Dual API Pattern
 
@@ -248,7 +248,7 @@ from shapely import STRtree
 
 tree = STRtree(geometries, node_capacity=10)
 
-# Bounding-box query — returns indices
+# Bounding-box query �?returns indices
 idx = tree.query(geometry)                            # shape (n,)
 idx = tree.query(geom_array)                          # shape (2, n)
 
@@ -376,7 +376,7 @@ Use `shapely.is_missing(obj)` to check, distinct from `shapely.is_empty(geom)`.
 
 7. **OOP vs function `buffer` defaults differ**: `Point(0,0).buffer(1)` uses `quad_segs=16`; `shapely.buffer(Point(0,0), 1)` uses `quad_segs=8`.
 
-8. **`set_precision` changes vertex order**: Returned geometry is in "mild canonical form" — vertex order should not be relied upon.
+8. **`set_precision` changes vertex order**: Returned geometry is in "mild canonical form" �?vertex order should not be relied upon.
 
 9. **NaN coordinates**: Creating geometries with NaN/Inf is allowed by default. Use `handle_nan='error'` or `handle_nan='skip'` in creation functions to control this.
 
@@ -428,29 +428,29 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 
 ## AI 使用建议
 
-### 推荐工作流
+### 推荐工作�?
 
-1. **创建几何**：使用 `shapely.points()` / `shapely.linestrings()` / `shapely.polygons()` 向量化创建，或 `Point()` / `LineString()` / `Polygon()` OOP 方式
-2. **空间运算**：使用向量化函数（`shapely.intersection()` / `shapely.buffer()`）批量处理，比逐个 OOP 调用快 10-100 倍
-3. **空间谓词**：使用 `shapely.contains()` / `shapely.intersects()` 等函数式 API，返回 bool 数组
-4. **空间索引**：`STRtree` 查询 + `predicate="intersects"` 加速批量空间关系判断
-5. **序列化**：`shapely.from_wkt()` / `shapely.to_geojson()` 等进行格式互转
+1. **创建几何**：使�?`shapely.points()` / `shapely.linestrings()` / `shapely.polygons()` 向量化创建，�?`Point()` / `LineString()` / `Polygon()` OOP 方式
+2. **空间运算**：使用向量化函数（`shapely.intersection()` / `shapely.buffer()`）批量处理，比逐个 OOP 调用�?10-100 �?
+3. **空间谓词**：使�?`shapely.contains()` / `shapely.intersects()` 等函数式 API，返�?bool 数组
+4. **空间索引**：`STRtree` 查询 + `predicate="intersects"` 加速批量空间关系判�?
+5. **序列�?*：`shapely.from_wkt()` / `shapely.to_geojson()` 等进行格式互�?
 
 ### 关键注意事项
 
-- **Z 坐标在分析中被忽略**：所有空间运算仅在 x-y 平面进行
-- **`contains` 不包含边界**：如需边界判断使用 `covers()` 或 `intersects()`
-- **向量化函数 vs OOP 方法**：函数式 API（`shapely.area(geoms)`）释放 GIL，支持 NumPy 广播，性能远优于 OOP（`geom.area`）
-- **`set_precision` 改变顶点顺序**：返回的几何为"温和规范形式"，不应依赖顶点顺序
+- **Z 坐标在分析中被忽�?*：所有空间运算仅�?x-y 平面进行
+- **`contains` 不包含边�?*：如需边界判断使用 `covers()` �?`intersects()`
+- **向量化函�?vs OOP 方法**：函数式 API（`shapely.area(geoms)`）释�?GIL，支�?NumPy 广播，性能远优�?OOP（`geom.area`�?
+- **`set_precision` 改变顶点顺序**：返回的几何�?温和规范形式"，不应依赖顶点顺�?
 - **Prepared 状态不持久**：任何操作产生新几何后需重新 `prepare()`
-- **WKB 会丢弃 LinearRing**：WKB 序列化时 LinearRing 变为 LineString
+- **WKB 会丢�?LinearRing**：WKB 序列化时 LinearRing 变为 LineString
 
-## 相关技能
+## 相关技�?
 
-- **geopandas** — 基于 Shapely 的矢量数据分析库：[../geopandas/SKILL.md](../geopandas/SKILL.md)
-- **pyqgis** — QGIS Python 绑定（也使用 GEOS/QgsGeometry）：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
-- **jts** — Java 几何计算（Shapely 的 GEOS 底层是 JTS 的 C++ 移植）：[../jts/SKILL.md](../jts/SKILL.md)
-- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **geopandas** �?基于 Shapely 的矢量数据分析库：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **pyqgis** �?QGIS Python 绑定（也使用 GEOS/QgsGeometry）：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **jts** �?Java 几何计算（Shapely �?GEOS 底层�?JTS �?C++ 移植）：[../jts/SKILL.md](../jts/SKILL.md)
+- **gdal** �?命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
 
 ## Package Structure
 
@@ -458,11 +458,11 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 shapely/
 ├── __init__.py              # Top-level re-exports
 ├── geometry/                # OOP geometry classes
-│   ├── base.py              # BaseGeometry (all methods/properties)
-│   ├── point.py, linestring.py, polygon.py
-│   ├── multipoint.py, multilinestring.py, multipolygon.py
-│   ├── collection.py        # GeometryCollection
-│   └── geo.py               # shape(), mapping(), box()
+�?  ├── base.py              # BaseGeometry (all methods/properties)
+�?  ├── point.py, linestring.py, polygon.py
+�?  ├── multipoint.py, multilinestring.py, multipolygon.py
+�?  ├── collection.py        # GeometryCollection
+�?  └── geo.py               # shape(), mapping(), box()
 ├── constructive.py          # buffer, simplify, hull, etc.
 ├── predicates.py            # contains, intersects, etc.
 ├── set_operations.py        # union, intersection, difference, etc.
