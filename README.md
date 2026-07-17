@@ -149,7 +149,7 @@ opengis-skills/
 | SKILL | 简介 |
 |-------|------|
 | [ifoxcad](./cad/ifoxcad/SKILL.md) | AutoCAD .NET 二次开发框架 |
-| [fy_layout](./cad/fy_layout/SKILL.md) | AutoCAD 自动布图工具 |
+| [fy_layout](./cad/fy_layout/SKILL.md) | 施工场地布置插件（LightCAD 平台二次开发示例） |
 | [clipper2](./cad/clipper2/SKILL.md) | 高性能 2D 多边形布尔运算与偏移（Angus Johnson） |
 | [clipper1](./cad/clipper1/SKILL.md) | Clipper 1.x（旧版本，仍广泛使用） |
 | [chili3d](./cad/chili3d/SKILL.md) | 基于 OCCT.js 的纯 Web 3D CAD |
@@ -244,15 +244,17 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
    ```yaml
    ---
    name: 项目英文名
-   description: 一句话中文简介，说明定位、核心能力与典型用途
-   tags:                 # ← 新增必填字段：用于 AI 工具按标签搜索技能
+   description: Use when <触发条件>. <项目定位>. Covers <关键特性>.   # 英文 "Use when..." 格式，≤500 字符
+   tags:                 # 用于 AI 工具按标签搜索技能
      - <语言/平台>
      - <功能领域>
      - <...>
    ---
    ```
 
-   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组，列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部 66 个文件。
+   > **`description` 规范：** 采用英文 `Use when...` 格式，描述**何时使用**该技能（而非描述项目本身），遵循 [Anthropic Skill 最佳实践](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills)。分类索引用 `Use when... Index of N skills: ...` 格式。所有 description 均以 `Use when` 开头、第三人称、≤500 字符。
+   >
+   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组，列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部文件。
 
 2. **头部引用块**：项目地址、官方文档、许可证
 
@@ -266,7 +268,7 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
    - **参考资源**
 
 4. **风格**：中文为主，配合代码示例；命令、API、字段使用代码格式
-5. **大小**：通常 300–1500 行；过长内容拆分到 `reference/*.md`
+5. **大小**：通常 300–1500 行；主文件超过 500 行时，将详细参数/示例拆分到 `reference/*.md`（参见 GDAL 拆分示例：[主文件](./gis/gdal/SKILL.md) 452 行 + [矢量工具参考](./gis/gdal/reference/vector-tools.md) + [栅格工具参考](./gis/gdal/reference/raster-tools.md)）
 6. **示例**：基于上游官方文档实地核对，避免编造 API
 
 参考样板：[`gis/gdal/SKILL.md`](./gis/gdal/SKILL.md)、[`gis/jts/SKILL.md`](./gis/jts/SKILL.md)。
