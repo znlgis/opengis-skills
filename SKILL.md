@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 65 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
+description: 面向 AI 编程助手的开源 GIS、CAD、C#、AI、IoT、3D 技能集合。覆盖 66 个开源项目，提供一站式技能索引、标签搜索、按需加载指南，让 AI 助手在 GIS/CAD/C#/AI/3D 领域获得更准确的代码生成与问题排查能力。
 tags:
   - gis
   - cad
@@ -27,7 +27,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 65 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 66 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -131,11 +131,12 @@ tags:
 |------|------|---------|
 | [ke3036-keyes-pico](./iot/ke3036-keyes-pico/SKILL.md) | Keyes Raspberry Pi Pico 学习套件 | `micropython` `rp2040` `sensor` |
 
-### 🧊 3D — 三维/高斯泼溅（1 个）
+### 🧊 3D — 三维/高斯泼溅（2 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） | `3dgs` `webgl` `typescript` `editor` |
+| [ara3d-sdk](./3d/ara3d-sdk/SKILL.md) | 面向 AEC 的高性能 .NET 三维/BIM 库集合（.NET 8） | `bim` `aec` `dotnet` `geometry` `ifc` |
 
 ### 🗂️ Others — 其它（6 个）
 
@@ -160,7 +161,7 @@ tags:
 |------|---------|
 | `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, freecad, docutranslate |
 | `java` | geotools, jts, geometry-api-java, opengis-utils-for-java, ruoyi-cloud |
-| `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, ifoxcad, xbim, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend |
+| `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, ifoxcad, xbim, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk |
 | `javascript` / `typescript` | cesiumjs, openlayers, chili3d, admin-net-frontend |
 | `cpp` / `c` | gdal-api, occt, librecad, libredwg |
 | `go` | go, robotgo, robotgo-flow |
@@ -173,7 +174,7 @@ tags:
 | `raster` | gdal, gdal-api, qgis-process |
 | `vector` | gdal, gdal-api, geopandas, geotools |
 | `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api |
-| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, supersplat |
+| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, supersplat, ara3d-sdk |
 | `2d` | openlayers, qcad, librecad, sharpmap, lightcad |
 | `orm` / `database` | sod, sqlsugar, postgis |
 | `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate |
