@@ -27,7 +27,7 @@ tags:
 >
 > **C# API 参考：** <https://gdal.org/en/stable/api/csharp/index.html>
 >
-> **许可证：** MIT License
+> **许可证：** MIT
 
 ## 概述
 
@@ -86,7 +86,7 @@ python -c "from osgeo import gdal; print(gdal.VersionInfo())"
 
 ```groovy
 // Gradle
-implementation 'org.gdal:gdal:3.13.0'
+implementation 'org.gdal:gdal:3.13.1'
 ```
 
 **注意：** Java 绑定需要在系统 `PATH`（Windows）或 `LD_LIBRARY_PATH`（Linux）中找到 `gdalalljni` 本地库。

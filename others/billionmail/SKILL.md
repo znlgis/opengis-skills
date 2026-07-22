@@ -4,7 +4,7 @@ description: "Use when setting up self-hosted email marketing and transactional 
 tags: [email, smtp, self-hosted, newsletter, marketing]
 ---
 
-> **项目地址：** <https://github.com/aaPanel/BillionMail>
+> **项目地址：** <https://github.com/Billionmail/BillionMail>
 >
 > **官网：** <https://www.billionmail.com/>
 >
@@ -34,7 +34,7 @@ BillionMail 主要能力：
 ### Docker Compose（推荐）
 
 ```bash
-git clone https://github.com/aaPanel/BillionMail
+git clone https://github.com/Billionmail/BillionMail
 cd BillionMail
 cp .env.example .env
 # 编辑 .env：DOMAIN、DB 密码、MX/SMTP 配置等
@@ -177,13 +177,40 @@ mail-tester.com   # 免费送达率打分
 
 ---
 
+## 核心命令
+
+```bash
+# 部署
+git clone https://github.com/Billionmail/BillionMail && cd BillionMail
+cp .env.example .env
+# 编辑 .env：DOMAIN、数据库密码、SMTP 配置
+docker compose up -d
+
+# 查看运行状态
+docker compose ps
+docker compose logs -f postfix dovecot
+
+# DNS 校验
+dig TXT default._domainkey.example.com
+dig TXT _dmarc.example.com
+dig MX example.com
+
+# SMTP 测试
+swaks --to test@example.com --server localhost --port 587 --tls
+
+# 送达率检测
+# 访问 https://www.mail-tester.com 获取测试邮箱，发送一封测试邮件
+```
+
+---
+
 ## 典型工作流
 
 ### 场景一：搭建企业 Newsletter 系统
 
 ```bash
 # 1. 部署
-git clone https://github.com/aaPanel/BillionMail
+git clone https://github.com/Billionmail/BillionMail
 cd BillionMail
 cp .env.example .env
 # 编辑 .env：DOMAIN=mail.example.com, 数据库密码
@@ -282,5 +309,5 @@ curl -X POST https://mail.example.com/api/v1/mail/send \
 ## 参考资源
 
 - 文档：<https://docs.billionmail.com/>
-- 仓库：<https://github.com/aaPanel/BillionMail>
+- 仓库：<https://github.com/Billionmail/BillionMail>
 - 中文教程（znlgis）：<https://znlgis.github.io/others/tutorial/billionmail/>

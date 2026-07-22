@@ -170,25 +170,6 @@ docker run -v /mnt/gsdata:/opt/app/data_dir geoservercloud/geoserver-cloud-wms:.
 
 ---
 
-## AI 使用建议
-
-### 推荐工作流
-
-1. **确定架构**：根据业务需求选择配置后端（生产推荐 PgConfig）
-2. **部署基础设施**：先部署 RabbitMQ + PostgreSQL + Redis，再启动微服务
-3. **启动服务**：使用 docker-compose 或 Helm Chart 一键部署
-4. **验证服务**：通过 Gateway (`localhost:9090/geoserver`) 访问 Web UI
-5. **配置监控**：启用 Prometheus + Grafana 监控各微服务状态
-6. **弹性伸缩**：按负载独立扩缩 WMS/WFS 等服务的副本数
-
-### 关键注意事项
-
-- **启动顺序**：先启动 discovery → config → 数据库/RabbitMQ → 各业务服务
-- **配置同步**：确保 `spring.cloud.bus.enabled=true` 且 RabbitMQ 可达
-- **PgConfig 一致性**：多副本共享同一个 PgConfig 数据库实现强一致
-- **JVM 独立调优**：每个微服务根据负载独立设置 `-Xmx`，避免 OOM
-- **不部署不需要的服务**：如不使用 WPS/WCS，直接从 docker-compose 中移除
-
 ## 典型工作流
 
 ### 工作流 1：从零部署高可用 GeoServer Cloud
@@ -226,6 +207,25 @@ helm install gs geoserver-cloud/geoserver-cloud \
 # 手动伸缩 WMS
 kubectl scale deploy gs-wms -n gis --replicas=10
 ```
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **确定架构**：根据业务需求选择配置后端（生产推荐 PgConfig）
+2. **部署基础设施**：先部署 RabbitMQ + PostgreSQL + Redis，再启动微服务
+3. **启动服务**：使用 docker-compose 或 Helm Chart 一键部署
+4. **验证服务**：通过 Gateway (`localhost:9090/geoserver`) 访问 Web UI
+5. **配置监控**：启用 Prometheus + Grafana 监控各微服务状态
+6. **弹性伸缩**：按负载独立扩缩 WMS/WFS 等服务的副本数
+
+### 关键注意事项
+
+- **启动顺序**：先启动 discovery → config → 数据库/RabbitMQ → 各业务服务
+- **配置同步**：确保 `spring.cloud.bus.enabled=true` 且 RabbitMQ 可达
+- **PgConfig 一致性**：多副本共享同一个 PgConfig 数据库实现强一致
+- **JVM 独立调优**：每个微服务根据负载独立设置 `-Xmx`，避免 OOM
+- **不部署不需要的服务**：如不使用 WPS/WCS，直接从 docker-compose 中移除
 
 ## 相关技能
 

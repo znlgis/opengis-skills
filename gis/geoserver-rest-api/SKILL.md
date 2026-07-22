@@ -20,7 +20,7 @@ tags:
 >
 > **API 参考：** <https://docs.geoserver.org/stable/en/user/rest/api/index.html>
 >
-> **许可证：** GNU General Public License v2.0+
+> **许可证：** GPL-2.0
 
 ## 概述
 

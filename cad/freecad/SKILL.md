@@ -52,11 +52,11 @@ brew install --cask freecad
 conda install -c conda-forge freecad
 ```
 
-最新稳定 FreeCAD 1.0.x / 1.1.x 起合并了大量长期分支（如 PartDesign Toponaming 修复）。
+最新稳定 FreeCAD 1.1.1（2026-04）起合并了大量长期分支（如 PartDesign Toponaming 修复）。
 
 ---
 
-## 工作流（GUI）
+## 典型工作流
 
 1. **新建文档** → 选择「Part Design」工作台
 2. **新建 Body** → 进入 Sketcher，绘制带约束的 2D 草图
@@ -192,7 +192,7 @@ freecad   --console <<<'doc=App.newDocument(); ...'
 
 | 问题 | 解决 |
 |------|------|
-| Toponaming 在编辑后特征丢失 | 升级到 FreeCAD 1.0.x / 1.1.x（含拓扑命名修复） |
+| Toponaming 在编辑后特征丢失 | 升级到 FreeCAD 1.1.1（2026-04）（含拓扑命名修复） |
 | 中文文件名编码 | 使用 UTF-8；Windows 下避免 GBK 路径 |
 | 导出 STEP 缺少颜色 | 用 STEP AP242 或在 ImportSettings 启用颜色 |
 | Sketcher 求解失败 | 删除冗余约束、检查 DoF |
@@ -203,7 +203,7 @@ freecad   --console <<<'doc=App.newDocument(); ...'
 ## AI 使用建议
 
 - **推荐工作流模式**：AI 助手应根据场景选择工作台——机械零件用 PartDesign（草图+特征），简单几何用 Part（CSG），建筑用 Arch/BIM。脚本自动化优先使用 `FreeCAD Python Console` 或 `freecadcmd` 无头模式。
-- **关键注意事项**：① Sketcher 草图需完全约束（黑色），欠约束（蓝色）在后续编辑中可能偏移；② Python 操作几何对象后需调用 `doc.recompute()` 才能更新显示与关联；③ 导出 STEP 前确认模型无错误（`Part → Check Geometry`）；④ Toponaming 问题在 FreeCAD 1.0.x / 1.1.x 版基本解决，旧版注意避免引用面/边编号。
+- **关键注意事项**：① Sketcher 草图需完全约束（黑色），欠约束（蓝色）在后续编辑中可能偏移；② Python 操作几何对象后需调用 `doc.recompute()` 才能更新显示与关联；③ 导出 STEP 前确认模型无错误（`Part → Check Geometry`）；④ Toponaming 问题在 FreeCAD 1.1.1（2026-04）版基本解决，旧版注意避免引用面/边编号。
 - **常用代码模式**：`doc.addObject("Part::Box", ...)` 创建参数化体 → 设置属性 → `doc.recompute()` → `Part.export([shape], "out.step")`。对于脚本化建模，也可直接用 `Part.make*` 系列函数构造几何。
 
 ---

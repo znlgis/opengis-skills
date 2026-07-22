@@ -30,8 +30,6 @@ Astral3D 主要特性：
 
 ```bash
 # Web SDK（npm）
-npm install astral3d
-
 # 编辑器（如有桌面版）：从官网下载
 ```
 
@@ -244,7 +242,6 @@ viewer.timeline
 
 ## 参考资源
 
-- 仓库：<https://github.com/AstralEngine/astral3d>
 - 演示：<https://astral3d.com/>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/astral3d/>
 

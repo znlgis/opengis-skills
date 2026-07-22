@@ -180,15 +180,6 @@ solvespace-cli export-view out.svg  input.slvs --view top
 
 ---
 
-## 相关技能
-
-- **freecad** — 桌面参数化 CAD（更复杂的工业建模）：[../freecad/SKILL.md](../freecad/SKILL.md)
-- **openscad** — 声明式 CSG 脚本建模：[../openscad/SKILL.md](../openscad/SKILL.md)
-- **cadquery** — Python BREP 建模库：[../cadquery/SKILL.md](../cadquery/SKILL.md)
-- **occt** — OCCT 几何内核（SolveSpace 的几何引擎可互补使用）：[../occt/SKILL.md](../occt/SKILL.md)
-
----
-
 ## 典型工作流
 
 ### 工作流一：3D 打印零件快速建模
@@ -207,6 +198,15 @@ solvespace-cli export-view out.svg  input.slvs --view top
 3. 使用 3D 草图约束（距离、同轴、点重合）固定零件相对位置
 4. 移动驱动零件，观察约束驱动的从动件运动
 5. Analyze → Trace Point 跟踪关键点轨迹，验证机构运动范围
+
+---
+
+## 相关技能
+
+- **freecad** — 桌面参数化 CAD（更复杂的工业建模）：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **openscad** — 声明式 CSG 脚本建模：[../openscad/SKILL.md](../openscad/SKILL.md)
+- **cadquery** — Python BREP 建模库：[../cadquery/SKILL.md](../cadquery/SKILL.md)
+- **occt** — OCCT 几何内核（SolveSpace 的几何引擎可互补使用）：[../occt/SKILL.md](../occt/SKILL.md)
 
 ---
 

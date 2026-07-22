@@ -186,6 +186,7 @@ namespace QdLayout
         {
             Guid = Guid.ParseExact("{63A566EA-3702-A98C-7A6B-8DBEA6B3F41A}", "B").ToLcGuid(),
             Name = "Lawn",
+            // 注意：SDK属性名本身为 DispalyName（非 DisplayName），此为飞扬SDK的拼写错误，使用时须按此名称
             DispalyName = "草坪",
             ClassType = typeof(QdLawn)
         };
@@ -343,7 +344,7 @@ public static TabItem LayoutItem = new TabItem
 | `OpenOuterLine` | OPL | `OpenLineAction` | `ExecCreateOpenLine` | 绘制开门边线 |
 | `PlateBuilding` | W | `PlateBuildingAction` | `ExecCreate` | 编辑板房布置 |
 | `SetBuildGroup` | W | `PlateBuildGroupAction` | `SetGroup` | 设置板房楼栋分组 |
-| `PlateUBuild` | W | `PlateBuildGroupAction` | `ExecCreate` | 创建板房楼栋 |
+| `PlateUBuild` | W | `PlateBuildGroupAction` | `ExecCreate` | 创建板房楼栋 ⚠ 快捷键 W 与 Fence/PlateBuilding/SetBuildGroup 冲突 |
 | `SelRedLinesForArrange` | SRFA | `TemComAttriAction` | `ExecCreate` | 选择红线生成排布方案 |
 | `DrawOrAdjust` | DRAD | `DrawOrAdjustAction` | `ExecCreate` | 绘制或调整 |
 
@@ -535,7 +536,7 @@ namespace QdLayoutProvider
 | `Solid3d` | `LightCAD.MathLib` | 三维实体（Name / Geometry） |
 | `Solid3dCollection` | `LightCAD.MathLib` | 三维实体集合（Solid 返回类型） |
 | `PlanarSurface3d` | `LightCAD.MathLib.Csg` | 平面表面，支持三角化 `Trianglate()` |
-| `GeometryData` | `LightCAD.MathLib` | 几何数据（Verteics / Indics / Groups） |
+| `GeometryData` | `LightCAD.MathLib` | 几何数据（Vertices / Indices / Groups） |
 | `Intersect2d` | `LightCAD.MathLib` | 二维相交计算（线线、线圆、圆圆） |
 
 常用向量操作：

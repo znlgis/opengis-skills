@@ -18,7 +18,7 @@ tags:
 >
 > **Python API 参考：** <https://qgis.org/pyqgis/3.44/>
 >
-> **许可证：** GNU General Public License v2.0+
+> **许可证：** GPL-2.0+
 
 ## 概述
 
@@ -961,7 +961,7 @@ qgs.exitQgis()
 7. **文件路径使用绝对路径**：避免工作目录不确定导致文件找不到。
 8. **大数据量优化**：使用 `QgsSpatialIndex` 加速空间查询；使用 `QgsFeatureRequest` 限制返回字段和范围。
 9. **表达式语法**：字段名用双引号 `"field"`，字符串值用单引号 `'value'`。
-10. **QGIS 版本兼容**：部分 API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；注意 QGIS 4.0（2026）为新主版本，部分 API 有调整。
+10. **QGIS 版本兼容**：部分 API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；QGIS 4.2.0 已于 2026-07 发布为稳定版，3.44 LTR 仍受支持。
 
 ### 错误处理
 

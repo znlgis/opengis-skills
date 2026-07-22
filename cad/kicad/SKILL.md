@@ -30,7 +30,7 @@ KiCad 主要程序：
 | BOM 工具 | 物料清单 |
 | CLI（KiCad 7+） | 自动化（`kicad-cli`） |
 
-新版本改进（KiCad 7/8/9/10，当前稳定版 10.0.x，2026）：
+新版本改进（KiCad 7/8/9/10，当前稳定版 10.0.4（2026-06））：
 
 - 全新原生 Python API（`pcbnew`），支持脚本扩展
 - 标准 IPC-2581 输出
@@ -53,28 +53,6 @@ brew install --cask kicad
 ```
 
 库（Symbols/Footprints/3D Models）随主程序安装；亦可单独 `kicad-symbols / kicad-footprints / kicad-packages3D` 仓库 git 跟踪。
-
----
-
-## 工作流
-
-```
-新建 Project (.kicad_pro)
-    │
-    ├── 1. 原理图 (.kicad_sch)：放置元件 → 连线 → 注释 → 总线 → 分页
-    │       │
-    │       └── ERC（Electrical Rules Check）
-    │
-    ├── 2. 分配封装：Tools → Assign Footprints（CvPcb）
-    │
-    ├── 3. 生成网表 / 同步到 PCB（Update PCB from Schematic）
-    │
-    ├── 4. PCB 布局 (.kicad_pcb)：摆件 → 布线 → 覆铜 → DRC
-    │
-    ├── 5. 3D 预览 / 导出 STEP
-    │
-    └── 6. 制造输出：Gerber + Drill + Pick & Place + BOM
-```
 
 ---
 
@@ -197,22 +175,25 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 
 ---
 
-## AI 使用建议
-
-- **推荐工作流模式**：AI 助手应遵循 KiCad 标准设计流程：原理图（Eeschema）→ 封装分配 → PCB（Pcbnew）→ DRC → 制造输出。自动化批处理使用 `kicad-cli` 命令行工具，Python 脚本使用 `pcbnew` 模块。
-- **关键注意事项**：① ERC/DRC 必须在每次重要修改后运行，红色错误不可忽略；② 元件封装需在原理图阶段绑定，否则同步到 PCB 时会丢失；③ Gerber 输出需包含完整层栈（F.Cu/B.Cu/F.Mask/B.Mask/Edge.Cuts/Silk + Drill）；④ 覆铜后需 Refill Zones 检查热焊盘连接。
-- **常用代码模式**：CLI 自动化：`kicad-cli sch export pdf` / `kicad-cli pcb export gerbers` / `kicad-cli pcb export drill`。Python：`pcbnew.LoadBoard("board.kicad_pcb")` → 遍历 footprints/tracks → 修改 → `pcbnew.SaveBoard()`。
-
----
-
-## 相关技能
-
-- **freecad** — 3D 参数化 CAD，可与 KiCad 3D 模型协同：[../freecad/SKILL.md](../freecad/SKILL.md)
-- **occt** — OCCT 几何内核（KiCad 3D Viewer 底层依赖）：[../occt/SKILL.md](../occt/SKILL.md)
-
----
-
 ## 典型工作流
+
+```
+新建 Project (.kicad_pro)
+    │
+    ├── 1. 原理图 (.kicad_sch)：放置元件 → 连线 → 注释 → 总线 → 分页
+    │       │
+    │       └── ERC（Electrical Rules Check）
+    │
+    ├── 2. 分配封装：Tools → Assign Footprints（CvPcb）
+    │
+    ├── 3. 生成网表 / 同步到 PCB（Update PCB from Schematic）
+    │
+    ├── 4. PCB 布局 (.kicad_pcb)：摆件 → 布线 → 覆铜 → DRC
+    │
+    ├── 5. 3D 预览 / 导出 STEP
+    │
+    └── 6. 制造输出：Gerber + Drill + Pick & Place + BOM
+```
 
 ### 工作流一：从原理图到 PCB 的完整设计
 
@@ -232,6 +213,21 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 4. `kicad-cli pcb export drill project/board.kicad_pcb -o gerber/`
 5. `kicad-cli pcb export pos project/board.kicad_pcb --format csv -o pos.csv`
 6. 打包 Gerber + Drill 为 ZIP 上传至构建产物
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手应遵循 KiCad 标准设计流程：原理图（Eeschema）→ 封装分配 → PCB（Pcbnew）→ DRC → 制造输出。自动化批处理使用 `kicad-cli` 命令行工具，Python 脚本使用 `pcbnew` 模块。
+- **关键注意事项**：① ERC/DRC 必须在每次重要修改后运行，红色错误不可忽略；② 元件封装需在原理图阶段绑定，否则同步到 PCB 时会丢失；③ Gerber 输出需包含完整层栈（F.Cu/B.Cu/F.Mask/B.Mask/Edge.Cuts/Silk + Drill）；④ 覆铜后需 Refill Zones 检查热焊盘连接。
+- **常用代码模式**：CLI 自动化：`kicad-cli sch export pdf` / `kicad-cli pcb export gerbers` / `kicad-cli pcb export drill`。Python：`pcbnew.LoadBoard("board.kicad_pcb")` → 遍历 footprints/tracks → 修改 → `pcbnew.SaveBoard()`。
+
+---
+
+## 相关技能
+
+- **freecad** — 3D 参数化 CAD，可与 KiCad 3D 模型协同：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **occt** — OCCT 几何内核（KiCad 3D Viewer 底层依赖）：[../occt/SKILL.md](../occt/SKILL.md)
 
 ---
 

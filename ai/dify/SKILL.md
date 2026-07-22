@@ -11,6 +11,7 @@ tags: [llm, workflow, rag, agent, platform]
 > **官方文档：** <https://docs.dify.ai/>
 >
 > **许可证：** Dify Open Source License（基于 Apache-2.0 + 附加条款）
+> **最新版本：** 参见 [GitHub Releases](https://github.com/langgenius/dify/releases)
 
 ## 概述
 
@@ -271,8 +272,8 @@ Start → 用户提交申请
 
 ## 相关技能
 
-- **hermes-agent** — 轻量级 LLM Agent 框架，适合需要自建后端 Agent 的场景：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
-- **oh-my-openagent** — AI Agent 工程化模板集合，覆盖 ReAct/Plan-Execute/Multi-Agent 模式：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
+- **hermes-agent** — 自学习通用型 AI 智能体，适合需要自建后端 Agent 的场景：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **oh-my-openagent** — OpenCode 多模型编排插件，提供并行 Agent 与 AST/LSP 工具：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
 - **superpowers-zh** — 中文提示词/Skill 工程库，可与 Dify 的提示词编排结合使用：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 
 ---

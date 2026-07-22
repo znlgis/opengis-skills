@@ -14,13 +14,13 @@ tags:
 
 > **项目地址：** <https://github.com/znlgis/opengis-utils-for-net>
 >
+> **官方文档：** <https://github.com/znlgis/opengis-utils-for-net#readme>
+>
 > **NuGet 包：** `OpenGIS.Utils`
 >
 > **许可证：** Apache-2.0
->
-> AI-friendly reference for developing with this library. Target: .NET Standard 2.0 | Engine: GDAL/OGR
 
-## Installation
+## 环境准备
 
 ```bash
 dotnet add package OpenGIS.Utils

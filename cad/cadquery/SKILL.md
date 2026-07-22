@@ -38,7 +38,7 @@ pip install cadquery
 pip install cq-editor
 ```
 
-> 当前稳定版参见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)，支持 **Python 3.9–3.14**（经由 `cadquery-ocp`，基于 OCCT）。
+> 当前稳定版参见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)。pip 支持 **Python 3.9–3.12**，conda-forge 可扩展至 3.13+（经由 `cadquery-ocp`，基于 OCCT）。
 
 ---
 

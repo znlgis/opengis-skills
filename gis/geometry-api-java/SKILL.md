@@ -14,9 +14,11 @@ tags:
 
 > **项目地址：** <https://github.com/Esri/geometry-api-java>
 >
+> **官方文档：** <https://github.com/Esri/geometry-api-java/wiki>
+>
 > **Maven Central：** `com.esri.geometry:esri-geometry-api`
 >
-> **许可证：** Apache License 2.0
+> **许可证：** Apache-2.0
 
 ## 概述
 

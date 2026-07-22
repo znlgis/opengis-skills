@@ -14,10 +14,16 @@ tags:
 ---
 
 > **项目地址：** <https://github.com/znlgis/geometry-api-net>
+>
+> **官方文档：** <https://github.com/znlgis/geometry-api-net/wiki>
+>
+> **注意：** 原 Esri 仓库（github.com/Esri/geometry-api-net）已不再维护（404）。此分支由 znlgis 社区维护，已重命名为 OpenGIS.Esri.Geometry。
+>
+> **许可证：** LGPL-2.1
 > 
 > 本文件旨在帮助 AI 快速理解并使用 geometry-api-net 库进行空间几何开发。
 
-## 项目概述
+## 概述
 
 这是一个 .NET Standard 2.0 的空间几何计算库，提供 6 种几何类型、25+ 空间运算算子和 4 种序列化格式。
 

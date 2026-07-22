@@ -12,15 +12,10 @@ tags:
   - numpy
 ---
 
-# Shapely
-
-Python library for manipulation and analysis of planar geometric objects, based on the GEOS library.
-
-- **Repository**: https://github.com/shapely/shapely
-- **Documentation**: https://shapely.readthedocs.io/
-- **PyPI**: https://pypi.org/project/shapely/
-- **License**: BSD-3-Clause
-- **Requirements**: Python >= 3.11, GEOS >= 3.9 (build), NumPy >= 1.23. Latest stable: 2.1.2 (2025-09); PyPI wheels bundle GEOS 3.13.1
+> **项目地址：** <https://github.com/shapely/shapely>
+> **官方文档：** <https://shapely.readthedocs.io/>
+> **PyPI：** <https://pypi.org/project/shapely/>
+> **许可证：** BSD-3-Clause
 
 ## Geometry Types
 

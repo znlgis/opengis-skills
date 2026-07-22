@@ -79,7 +79,7 @@ SuperSplat 是「3D 高斯泼溅领域的 Photoshop + 发布平台」：完全�
 ```bash
 git clone https://github.com/playcanvas/supersplat.git
 cd supersplat
-npm install            # 需 Node ≥ 20.19
+npm install            # 需 Node ≥ 20.19.0
 npm run develop        # = watch（Rollup 监听构建）+ serve（静态服务 dist）
 ```
 
@@ -120,7 +120,7 @@ npm run develop        # = watch（Rollup 监听构建）+ serve（静态服务 
 | 隐藏(hidden)与删除区别 | 隐藏的点默认仍会导出，删除的点导出时被剔除 |
 | 导出文件太大 | 删噪点 + 勾选 Compress PLY + 降低 SH Bands；Web 发布优先压缩 PLY 或 SOG |
 | 本地开发看到旧版本 | Service Worker 缓存，按上文关闭缓存 / Update on reload |
-| `npm install` 失败 | 确认 Node ≥ 20.19 |
+| `npm install` 失败 | 确认 Node ≥ 18 |
 | 该用哪种格式 | 继续编辑/归档→PLY；网页加载→压缩 PLY 或 SOG；对接特定查看器→splat/ksplat |
 | 原始 .ply 从哪来 | 3DGS 训练工具（COLMAP+gaussian-splatting、Postshot、Nerfstudio 等）产出 |
 

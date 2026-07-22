@@ -9,6 +9,7 @@ tags: [ai, agent, self-improving, memory, terminal, mcp, python, nous-research]
 > **官网 / 文档：** <https://nousresearch.com/> ｜ <https://hermes-agent.nousresearch.com/docs>
 >
 > **许可证：** MIT ｜ **语言：** Python（≥ 3.11）
+> **最新版本：** 参见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)
 
 ## 概述
 
@@ -30,7 +31,7 @@ Hermes 是「The agent that grows with you」——**唯一内置完整学习闭
 支持 Linux、macOS、WSL2、Termux（Android）、Nix。一键脚本：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 # 脚本会准备 Python 环境，并在 ~/.hermes/hermes-agent/ 下执行 uv pip install -e ".[all]"
 
 source ~/.bashrc      # 或 source ~/.zshrc
@@ -74,6 +75,33 @@ Hermes 区别于普通 Agent 的关键在于「学习」：
 - **用户画像**：跨会话累积，对「你是谁、偏好什么」建立越来越准的模型。
 
 > 这意味着 Hermes 越用越「懂你」，适合作为长期个人/团队助手，而非一次性任务工具。
+
+---
+
+## 典型工作流
+
+### 工作流一：快速上手
+
+```bash
+hermes setup          # 初始化配置
+hermes model           # 选择/配置模型
+hermes chat            # 开始对话
+```
+创建第一个技能：让 Hermes 监听你的工作 → 自动总结模式 → 写入技能文件。
+
+### 工作流二：长期运行部署
+
+```bash
+hermes serve --gateway telegram --gateway discord  # 启动多通道 Gateway
+hermes cron --schedule "0 9 * * *" "daily-brief"    # 定时任务
+```
+定期审查 `~/.hermes/memories/` 和 `~/.hermes/skills/` 确保记忆质量。
+
+### 工作流三：团队协作
+
+1. 配置 MCP 集成 → 连接外部工具与数据源
+2. 设置子代理 → 分配专门任务给子代理
+3. 审查子代理产出 → 合并到主上下文
 
 ---
 

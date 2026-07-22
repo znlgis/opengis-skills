@@ -8,11 +8,12 @@ tags: [ai, llm, translation, document, pdf, mineru, mcp, python, cli]
 >
 > **PyPI：** <https://pypi.org/project/docutranslate/>
 >
-> **官方文档：** README（中/英/日/越）｜启动服务后 `http://127.0.0.1:8010/docs`（Swagger UI）
+> **官方文档：** GitHub README（中/英/日/越）｜API文档：启动后 http://127.0.0.1:8010/docs（Swagger UI）
 >
-> **最新发布：** 参见 [GitHub Releases](https://github.com/xunbu/docutranslate/releases) |
+> **最新发布：** 参见 [GitHub Releases](https://github.com/xunbu/docutranslate/releases)
 >
 > **许可证：** Mozilla Public License 2.0 (MPL-2.0)
+> **最新版本：** v1.7.8（参见 [PyPI](https://pypi.org/project/docutranslate/)）
 
 ## 概述
 

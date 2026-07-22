@@ -11,6 +11,8 @@ tags: [dotnet, excel, word, office, npoi]
 > **官方文档：** <https://github.com/nissl-lab/npoi/wiki>
 >
 > **许可证：** Apache-2.0
+>
+> **注意：** 自 NPOI 2.8.0（2026-04）起，产生收入的商业用户需通过 GitHub Sponsors 支付月度维护费用。详见 [NPOI GitHub](https://github.com/nissl-lab/npoi)。
 
 ## 概述
 

@@ -247,6 +247,5 @@ GUI → Advanced：
 
 ## 参考资源
 
-- 官网与文档：<https://www.eziriz.com/dotnet_reactor.htm>
-- 用户手册（PDF）：<https://www.eziriz.com/dotnet_reactor.htm>
+- 官网与用户手册：<https://www.eziriz.com/dotnet_reactor.htm>
 - 中文教程（znlgis）：<https://znlgis.github.io/csharp/tutorial/dotnet-reactor/>

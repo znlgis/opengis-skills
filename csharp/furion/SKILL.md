@@ -12,7 +12,7 @@ tags: [dotnet, webapi, framework, dynamic-api, jwt]
 >
 > **NuGet：** `Furion`、`Furion.Pure`
 >
-> **许可证：** MIT
+> **许可证：** MIT + Apache-2.0
 
 ## 概述
 

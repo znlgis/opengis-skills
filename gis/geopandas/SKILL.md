@@ -12,8 +12,6 @@ tags:
   - visualization
 ---
 
-# GeoPandas
-
 > **项目地址：** <https://github.com/geopandas/geopandas>
 >
 > **官方文档：** <https://geopandas.readthedocs.io>

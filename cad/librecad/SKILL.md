@@ -180,15 +180,6 @@ doc.saveas('out.dxf')   # LibreCAD 可直接打开
 
 ---
 
-## 相关技能
-
-- **qcad** — 2D CAD 软件，ECMAScript 脚本扩展与 DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
-- **libredwg** — DWG/DXF 文件格式读写库（C 语言）：[../libredwg/SKILL.md](../libredwg/SKILL.md)
-- **lightcad** — Web 2D CAD 框架，DXF 导入导出：[../lightcad/SKILL.md](../lightcad/SKILL.md)
-- **ifoxcad** — AutoCAD .NET 二次开发框架：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
-
----
-
 ## 典型工作流
 
 ### 工作流一：绘制建筑平面图
@@ -207,6 +198,15 @@ doc.saveas('out.dxf')   # LibreCAD 可直接打开
 3. 在 LibreCAD 中打开生成的 DXF，检查中文文字和图层
 4. 必要时用 `ezdxf` Python 脚本修复格式问题
 5. 保存为 R2007 DXF，确保兼容性
+
+---
+
+## 相关技能
+
+- **qcad** — 2D CAD 软件，ECMAScript 脚本扩展与 DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **libredwg** — DWG/DXF 文件格式读写库（C 语言）：[../libredwg/SKILL.md](../libredwg/SKILL.md)
+- **lightcad** — Web 2D CAD 框架，DXF 导入导出：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发框架：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 
 ---
 

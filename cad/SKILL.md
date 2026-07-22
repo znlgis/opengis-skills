@@ -1,6 +1,6 @@
 ---
-name: cad-skills
-description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 18 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, KiCad, SolveSpace, QCAD, xBIM, Clipper2 and more."
+name: cad
+description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 19 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, KiCad, SolveSpace, QCAD, xBIM, Clipper2, TongWen and more."
 tags:
   - cad
   - 3d-modeling
@@ -16,7 +16,7 @@ tags:
 
 ## 概述
 
-本分类涵盖 **18 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
+本分类涵盖 **19 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
 
 ```
 几何内核 → 参数化建模 → CAD 应用 → 数据交换 → 可视化
@@ -79,6 +79,7 @@ tags:
 | [ifoxcad](./ifoxcad/SKILL.md) | AutoCAD .NET 二次开发框架 | `autocad` `dotnet` `plugin` |
 | [fy_layout](./fy_layout/SKILL.md) | AutoCAD 自动布图工具 | `autocad` `layout` `automation` |
 | [lightningcad](./lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） | `autocad` `zwcad` `panel-layout` |
+| [tongwen](./tongwen/SKILL.md) | CAD/BIM 工程图纸无损翻译套件（AutoCAD 2019-2026） | `autocad` `translation` `i18n` `bim` |
 
 ### 🔄 数据交换与可视化
 
@@ -101,6 +102,7 @@ tags:
 | "Python 脚本建模" | `cadquery/SKILL.md` |
 | "AutoCAD .NET 插件" | `ifoxcad/SKILL.md` |
 | "建筑围护板材排布/深化设计" | `lightningcad/SKILL.md` |
+| "CAD 图纸多语言翻译" | `tongwen/SKILL.md` |
 | "PCB 电路板设计" | `kicad/SKILL.md` |
 | "BIM/IFC 数据处理" | `xbim/SKILL.md` |
 | "2D 多边形布尔运算" | `clipper2/SKILL.md` |

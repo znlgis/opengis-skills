@@ -20,7 +20,7 @@ tags:
 >
 > **许可证：** LGPL 2.1
 >
-> **文档链接：** <https://docs.geotools.org/>
+> **官方文档：** <https://docs.geotools.org/>
 
 ## 概述
 

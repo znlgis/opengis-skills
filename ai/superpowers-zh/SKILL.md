@@ -18,7 +18,7 @@ superpowers-zh 不是代码库或语言框架，而是一套面向 AI 编程工�
 2. **让 AI 用工程纪律工作**：用 TDD、系统化调试、完成前验证、代码审查约束「看起来能跑」的草率实现。
 3. **让中文团队直接落地**：在完整汉化基础上补充中文代码审查、中文 Git 工作流、中文技术文档与提交规范等本土化能力。
 
-包内含 `skills/`、`agents/`、`commands/`、`hooks/` 与一键安装脚本 `bin/superpowers-zh.js`。它在 obra/superpowers（英文上游，超 15 万 ⭐）基础上完整汉化并新增 4 个中国原创 skills，支持 Claude Code / GitHub Copilot CLI / Hermes Agent / Cursor / Claw Code / Windsurf / Kiro / Gemini CLI / OpenCode / Qoder 等 18 款工具。
+包内含 `skills/`、`agents/`、`commands/`、`hooks/` 与一键安装脚本 `bin/superpowers-zh.js`。它在 obra/superpowers（英文上游，250k+ ⭐）基础上完整汉化并新增 6 个中国原创 skills，支持 Claude Code / GitHub Copilot CLI / Hermes Agent / Cursor / Claw Code / Windsurf / Kiro / Gemini CLI / OpenCode / Qoder 等 20 款工具。
 
 ---
 
@@ -47,7 +47,7 @@ npx superpowers-zh
 | 代码审查与反馈处理 | 验证审查建议是否适用本代码库，而非盲目附和 |
 | 分支收尾 | 规范提交、合并与分支清理 |
 | 并行子智能体 / Git Worktree | 用子代理与 worktree 并行推进多任务 |
-| 中国特色 Skills | 中文审查表达、提交规范、文档排版、国内 Git 平台流程 |
+| 中国特色 Skills | 中文审查表达、提交规范、文档排版、国内 Git 平台流程、MCP 构建器、工作流执行器 |
 
 `using-superpowers` 是入口型 Skill：引导 AI 在合适时机发现并加载其余技能。
 
@@ -71,8 +71,8 @@ npx superpowers-zh
 | 问题 | 解决 |
 |------|------|
 | 它是模型或插件吗 | 都不是，是一套被 AI 加载的「方法论 Skills」，约束 AI 的工作流程 |
-| 支持哪些工具 | Claude Code、Copilot CLI、Cursor、OpenCode、Hermes Agent、Windsurf、Gemini CLI、Kiro、Qoder 等 18 款 |
-| 和英文 superpowers 区别 | 完整汉化 + 4 个中国原创 skills（中文审查/提交规范/国内 Git 流程等） |
+| 支持哪些工具 | Claude Code、Copilot CLI、Cursor、OpenCode、Hermes Agent、Windsurf、Gemini CLI、Kiro、Qoder 等 20 款 |
+| 和英文 superpowers 区别 | 完整汉化 + 6 个中国原创 skills（中文审查/提交规范/文档排版/国内 Git 流程/MCP 构建器/工作流执行器） |
 | 安装要求 | Node.js ≥ 20，`npx superpowers-zh` 一键安装 |
 | AI 不触发 Skill | 确认工具支持 Skill 发现/自定义指令，并已写入对应配置；从 `using-superpowers` 入口引导 |
 | 能和编码 Agent 一起用吗 | 可以，常与 OpenCode / Hermes Agent / Claude Code 搭配，作为「工作方式约束层」 |

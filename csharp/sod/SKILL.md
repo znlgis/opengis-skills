@@ -12,6 +12,8 @@ tags: [dotnet, orm, database, sql-mapping, oql]
 >
 > **NuGet：** `PDF.NET.SOD`
 >
+> **NuGet（.NET 6+）：** `PWMIS.SOD`
+>
 > **许可证：** Apache-2.0
 
 ## 概述

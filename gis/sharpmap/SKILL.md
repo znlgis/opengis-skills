@@ -14,7 +14,7 @@ tags:
 
 > **项目地址：** <https://github.com/SharpMap/SharpMap>
 >
-> **官方 Wiki：** <https://github.com/SharpMap/SharpMap/wiki>
+> **官方文档：** <https://github.com/SharpMap/SharpMap/wiki>
 >
 > **NuGet：** `SharpMap`、`SharpMap.UI.WinForms`
 >
@@ -199,24 +199,6 @@ mapBox1.MouseDown += (s, e) => {
 
 ---
 
-## AI 使用建议
-
-### 推荐工作流
-
-1. **创建 Map**：`new Map(new Size(width, height))` → 设置 SRID
-2. **添加数据源**：`ShapeFile(path)` / `PostGIS(conn, table, geomCol, idCol)` 等方式连接数据
-3. **创建图层**：`VectorLayer(name, provider)` 并设置 `Style`；按需添加 `LabelLayer`
-4. **添加底图**：`TileAsyncLayer` + `BruTile` 加载 OSM 在线底图
-5. **渲染输出**：`map.GetMap()` 获取 `Image` 对象 → 保存为 PNG 或通过 ASP.NET WMS 发布
-
-### 关键注意事项
-
-- **新项目建议 Mapsui**：SharpMap 主要面向 .NET Framework，新项目推荐使用 Mapsui（更活跃、跨平台更好）
-- **SRID 一致性**：图层与地图 SRID 必须一致，必要时通过 `CoordinateTransformation` 转换
-- **空间索引**：Shapefile 需预建 `.qix` 索引，PostGIS 用 GiST 索引加速查询
-- **资源释放**：GDI+ `Brush`/`Pen`/`Bitmap` 需及时释放避免内存泄漏
-- **Shapefile 编码**：中文数据需指定 `Encoding.UTF8` 或 `Encoding.GetEncoding("GBK")`
-
 ## 典型工作流
 
 ### 工作流 1：Shapefile 渲染 + 主题样式 + 输出图片
@@ -287,6 +269,24 @@ var tileSrc = KnownTileSources.Create(KnownTileSource.OpenStreetMap);
 map.Layers.Add(new TileAsyncLayer(tileSrc, "OSM"));
 map.SRID = 3857;
 ```
+
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建 Map**：`new Map(new Size(width, height))` → 设置 SRID
+2. **添加数据源**：`ShapeFile(path)` / `PostGIS(conn, table, geomCol, idCol)` 等方式连接数据
+3. **创建图层**：`VectorLayer(name, provider)` 并设置 `Style`；按需添加 `LabelLayer`
+4. **添加底图**：`TileAsyncLayer` + `BruTile` 加载 OSM 在线底图
+5. **渲染输出**：`map.GetMap()` 获取 `Image` 对象 → 保存为 PNG 或通过 ASP.NET WMS 发布
+
+### 关键注意事项
+
+- **新项目建议 Mapsui**：SharpMap 主要面向 .NET Framework，新项目推荐使用 Mapsui（更活跃、跨平台更好）
+- **SRID 一致性**：图层与地图 SRID 必须一致，必要时通过 `CoordinateTransformation` 转换
+- **空间索引**：Shapefile 需预建 `.qix` 索引，PostGIS 用 GiST 索引加速查询
+- **资源释放**：GDI+ `Brush`/`Pen`/`Bitmap` 需及时释放避免内存泄漏
+- **Shapefile 编码**：中文数据需指定 `Encoding.UTF8` 或 `Encoding.GetEncoding("GBK")`
 
 ## 相关技能
 

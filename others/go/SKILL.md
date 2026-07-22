@@ -58,8 +58,8 @@ Go 是由 Robert Griesemer、Rob Pike 和 Ken Thompson 于 2007 年在 Google �
 brew install go
 
 # Linux（官方二进制）
-wget https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
-sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.26.5.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.26.5.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 
 # Windows
@@ -111,7 +111,7 @@ var (                    // 批量声明
 const Pi = 3.14159
 const (
     StatusOK = 200
-    _        = iota  // iota: 0
+    _        = iota  // iota: 1
     StatusError      // iota: 2
 )
 ```
@@ -681,6 +681,62 @@ go test -bench=. -benchmem       # 基准测试 + 内存
 go test -race ./...              # 竞态检测器
 go tool pprof cpu.prof           # CPU 性能分析
 go tool cover -html=c.out        # 覆盖率报告
+```
+
+---
+
+## 典型工作流
+
+### 构建一个包含数据库和中间件的 Go REST API 服务
+
+```bash
+# 1. 初始化模块
+go mod init example.com/myapi
+
+# 2. 添加依赖
+go get github.com/go-chi/chi/v5
+go get github.com/go-sql-driver/mysql
+go get github.com/redis/go-redis/v9
+```
+
+```go
+// 3. cmd/api/main.go
+package main
+
+import (
+    "log"
+    "net/http"
+    "github.com/go-chi/chi/v5"
+    "github.com/go-chi/chi/v5/middleware"
+)
+
+func main() {
+    r := chi.NewRouter()
+
+    // 中间件
+    r.Use(middleware.Logger)
+    r.Use(middleware.Recoverer)
+    r.Use(middleware.Timeout(30 * time.Second))
+
+    // 路由
+    r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte(`{"status":"ok"}`))
+    })
+
+    r.Route("/api/users", func(r chi.Router) {
+        r.Get("/", listUsers)
+        r.Post("/", createUser)
+        r.Get("/{id}", getUser)
+    })
+
+    log.Println("Server on :8080")
+    log.Fatal(http.ListenAndServe(":8080", r))
+}
+```
+
+```bash
+# 4. 运行
+go run ./cmd/api
 ```
 
 ---

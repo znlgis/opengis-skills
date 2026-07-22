@@ -22,7 +22,7 @@ LibreDWG 解决 DWG 二进制格式的开源读写：
 - **命令行工具**：`dwgread`、`dwgwrite`、`dwg2dxf`、`dxf2dwg`、`dwg2SVG`、`dwgrewrite`
 - **绑定**：C API、Python（`libredwg.python`）、Common Lisp、Perl
 
-> 当前稳定版 **0.13.3**（2024-02）。与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。
+> 当前稳定版 **0.14**（2026-06）。与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。
 
 ---
 
@@ -201,15 +201,6 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 
 ---
 
-## 相关技能
-
-- **librecad** — 开源 2D CAD，DXF 编辑与 LibreDWG 协同使用：[../librecad/SKILL.md](../librecad/SKILL.md)
-- **qcad** — 2D CAD 软件，DXF/DWG 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
-- **ifoxcad** — AutoCAD .NET 二次开发框架（DWG 读写高层封装）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
-- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
-
----
-
 ## 典型工作流
 
 ### 工作流一：DWG 数据提取与格式转换
@@ -228,6 +219,15 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 4. 使用 `dwg_block_header_get_entities()` 获取实体引用列表
 5. 遍历实体，按 `fixedtype` 分派处理（DWG_TYPE_LINE / CIRCLE / TEXT 等）
 6. `dwg_free(&dwg)` 释放内存
+
+---
+
+## 相关技能
+
+- **librecad** — 开源 2D CAD，DXF 编辑与 LibreDWG 协同使用：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **qcad** — 2D CAD 软件，DXF/DWG 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发框架（DWG 读写高层封装）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
+- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 
 ---
 

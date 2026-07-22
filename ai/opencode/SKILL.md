@@ -9,6 +9,7 @@ tags: [ai, agent, coding-agent, llm, terminal, tui, mcp, opencode]
 > **官网 / 文档：** <https://opencode.ai> ｜ **配置 Schema：** <https://opencode.ai/config.json> ｜ **TUI Schema：** <https://opencode.ai/tui.json>
 >
 > **许可证：** MIT
+> **版本：** 迭代快，以本机 `opencode --version` 为准
 
 > ⚠️ OpenCode 迭代非常快，命令、配置字段与模型名称请以你当前版本的 `opencode --help`、TUI 内 `/help` 及在线 JSON Schema 为准。
 
@@ -105,12 +106,7 @@ OpenCode 支持 **JSON / JSONC**（带注释）。务必加 `$schema` 获得校�
 
 `.opencode/` 与 `~/.config/opencode/` 下使用复数子目录：`agents/`、`commands/`、`plugins/`、`skills/`、`tools/`、`themes/`。
 
-**关键机制：配置是「合并」而非「替换」**——只有冲突键被覆盖，其余全部保留。优先级（后者覆盖前者）：
-
-```
-远程(组织 .well-known/opencode) < 全局 < 自定义(OPENCODE_CONFIG)
-  < 项目 < .opencode 目录 < 内联(OPENCODE_CONFIG_CONTENT) < 托管(企业 MDM)
-```
+配置优先级（后者覆盖前者）：组织远程 < 全局 < 自定义 < 项目 < .opencode/ < 内联 < 托管。覆盖，不替换。
 
 ### TUI 专属配置（`tui.json`）
 

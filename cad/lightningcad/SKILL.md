@@ -183,11 +183,9 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 
 ## AI 使用建议
 
-- **生成 CAD .NET 插件代码时**：加载本技能获取自定义实体类名（AecPanel 等）和命令命名规范（Fs/LT 前缀）
-- **处理板材碰撞检测**：参考 NetTopologySuite STR-Tree 方案，或直接调用 LTChuTuJianCha
-- **自动化批量处理**：可通过 .scr 脚本 + 命令行方式实现无人值守出图
-- **配置文件操作**：JSON 格式，存储在 `.cfg/Configs/` 下，可用 `System.Text.Json` 直接读写
-- **跨平台编译**：条件编译符号区分 AutoCAD（AC_*）与 ZWCAD（ZW_*）目标
+- **推荐工作流模式**：AI 助手开发或使用 LightningCAD 时应遵循标准深化设计流程——FsInitBuilding 初始化 → FsPanelLayout 排布 → FsCreateNodeLine 节点线 → FsShouBian* 收边 → FsCreateWallRectOpening 洞口 → LTJianChaTuZhi 校验 → FsExportPanelTable 输出。自动化批处理可通过 .scr 脚本 + 命令行方式实现无人值守出图。
+- **关键注意事项**：① 自定义实体类名（AecPanel 等）和命令前缀（Fs/LT）有明确约定，不得随意命名；② 配置文件为 JSON 格式，存储在 `.cfg/Configs/` 下，可用 `System.Text.Json` 直接读写；③ 板材碰撞检测板材数 >50 时自动启用多线程（NetTopologySuite STR-Tree）；④ 跨平台编译使用条件编译符号区分 AutoCAD（AC_*）与 ZWCAD（ZW_*）目标。
+- **常用代码模式**：CAD .NET 插件结构 = 实现 CommandClass → [CommandMethod] 注册命令 → 操作 AutoCAD 实体。配置读写 = `System.Text.Json` 序列化/反序列化 `.cfg/Configs/` 下 JSON 文件。板材排布 = FsPanelLayout → FsMergePanel → FsExportPanelTable 导出统计表。
 
 ---
 

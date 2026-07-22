@@ -10,7 +10,7 @@ tags: [dotnet, spreadsheet, winforms, wpf, excel]
 >
 > **NuGet：** `unvell.ReoGrid`、`unvell.ReoGrid.WinForm`、`unvell.ReoGrid.WPF`
 >
-> **许可证：** GPL-3.0（社区版）；商业版另购
+> **许可证：** MIT（V3 社区版）；商业版另购（V4）
 
 ## 概述
 
@@ -315,7 +315,7 @@ btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
 - **UI 更新暂停**：大量数据填充期间务必 `SuspendUIUpdates()` / `ResumeUIUpdates()`
 - **公式不会自动触发**：设置了公式后需要调用 `Recalculate()`，或在 `CellDataChanged` 事件中手动触发
 - **样式限制**：ReoGrid 仅支持核心 Excel 样式，复杂条件格式/图表建议直接用 NPOI 生成后导入
-- **商业授权**：GPL-3.0 限制，商业闭源产品需购买商业许可
+- **商业授权**：V3社区版为MIT许可，商业闭源产品需购买V4商业许可
 - **DPI 适配**：WPF 高 DPI 环境需启用 `PerMonitorV2`，否则控件模糊
 
 ### 如何选择正确方案
@@ -333,7 +333,7 @@ btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
 
 | 问题 | 解决 |
 |------|------|
-| GPL 不适合商业 | 购买商业授权 |
+| V3社区版MIT不适合商业闭源 | 购买V4商业许可 |
 | WPF 高 DPI 模糊 | 启用 `PerMonitorV2` DPI |
 | 公式不计算 | 调用 `sh.Recalculate()` |
 | Excel 打开样式丢失 | 仅支持核心样式，复杂样式建议直接 NPOI 处理 |

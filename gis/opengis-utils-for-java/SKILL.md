@@ -15,13 +15,13 @@ tags:
 
 > **项目地址：** <https://github.com/znlgis/opengis-utils-for-java>
 >
+> **官方文档：** <https://github.com/znlgis/opengis-utils-for-java#readme>
+>
 > **Maven 坐标：** `com.znlgis.ogu4j:ogu4j:1.0.0`
 >
 > **许可证：** LGPL-2.1-or-later
->
-> This document is designed to help AI assistants (and developers) quickly understand and use the OGU4J library for GIS development in Java.
 
-## Library Overview
+## 概述
 
 **OGU4J** (OpenGIS Utils for Java) is a unified Java GIS toolkit built on GeoTools, JTS, GDAL/OGR, and ESRI Geometry API. It provides:
 

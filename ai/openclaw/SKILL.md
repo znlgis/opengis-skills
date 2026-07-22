@@ -9,6 +9,7 @@ tags: [ai, assistant, gateway, self-hosted, multi-channel, typescript, agent]
 > **官网 / 文档：** <https://openclaw.ai> ｜ <https://docs.openclaw.ai>
 >
 > **许可证：** MIT ｜ **语言：** TypeScript
+> **发布频道：** latest / beta / dev（参见 [GitHub Releases](https://github.com/openclaw/openclaw/releases)）
 
 > ⚠️ OpenClaw 的助手可以执行命令、读写文件、控制设备并接入你的私人聊天账号。**对外暴露前**务必阅读官方 [Security](https://docs.openclaw.ai/gateway/security) 与 [Exposure runbook](https://docs.openclaw.ai/gateway/security/exposure-runbook)，并配置沙箱与访问控制。
 

@@ -222,15 +222,6 @@ doc.applyOperation(op);
 
 ---
 
-## 相关技能
-
-- **librecad** — 开源 2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
-- **libredwg** — DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
-- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
-- **ifoxcad** — AutoCAD .NET 二次开发框架（类似的插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
-
----
-
 ## 典型工作流
 
 ### 工作流一：ECMAScript 脚本自动绘图
@@ -249,6 +240,15 @@ doc.applyOperation(op);
 3. `dxf2bmp -a -o out.png input.dxf` DXF 转 PNG 位图
 4. `dwg2dxf -outversion=2018 input.dwg` DWG 转 DXF（需 ODA File Converter）
 5. 编写 Shell 脚本批量处理多个文件
+
+---
+
+## 相关技能
+
+- **librecad** — 开源 2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
+- **libredwg** — DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
+- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发框架（类似的插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 
 ---
 

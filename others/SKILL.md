@@ -16,9 +16,12 @@ tags:
   - rpa
   - automation
   - yaml
+> **仓库地址：** <https://github.com/znlgis/opengis-skills>
+> **许可证：** MIT
+
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 66 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 67 技能总索引
 
 ## 概述
 
@@ -30,7 +33,7 @@ tags:
 - 需要 Go 语言桌面自动化 / RPA（鼠标键盘控制、截图、图像识别）
 - 需要用 YAML 声明式编排 Windows RPA 工作流（robotgo-flow）
 - 需要自建邮件营销 / 事务邮件 / Newsletter 系统
-- 需要 Java 微服务后台管理脚手架（Spring Boot 3 + Spring Cloud）
+- 需要 Java 微服务后台管理脚手架（Spring Boot 4 / 3 + Spring Cloud）
 - 需要自动申请 / 部署 / 续期免费 SSL/TLS 证书（Let's Encrypt 等）
 - 寻找可替代商业方案的开源自托管工具
 

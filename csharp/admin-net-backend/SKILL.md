@@ -1,10 +1,12 @@
 ---
-name: Admin.NET-backend
+name: admin-net-backend
 description: "Use when building .NET admin/backend management systems with Furion framework — user/role/permission management, CRUD code generation, API documentation. Admin.NET: Furion-based enterprise admin backend scaffold."
 tags: [dotnet, webapi, rbac, multitenant, furion, sqlsugar]
 ---
 
-> **项目地址：** <https://github.com/znlgis/Admin.NET>
+> **项目地址（上游）：** <https://github.com/zuohuaijun/Admin.NET>
+>
+> **znlgis 维护分支：** <https://github.com/znlgis/Admin.NET>
 >
 > **后端代码目录：** `Admin.NET/`（.NET 解决方案）
 >
@@ -12,7 +14,7 @@ tags: [dotnet, webapi, rbac, multitenant, furion, sqlsugar]
 >
 > **演示环境：** <https://demo.adminnet.top>（账号：superAdmin.NET / 密码：Admin.NET++010101）
 >
-> **许可证：** MIT + Apache 2.0
+> **许可证：** MIT / Apache-2.0
 
 ## 概述
 

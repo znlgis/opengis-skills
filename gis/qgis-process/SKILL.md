@@ -18,7 +18,7 @@ tags:
 >
 > **在线文档：** <https://docs.qgis.org/3.44/en/docs/user_manual/processing/standalone.html>
 >
-> **许可证：** GNU General Public License v2.0+
+> **许可证：** GPL-2.0+
 
 ## 概述
 

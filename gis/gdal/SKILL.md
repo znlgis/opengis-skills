@@ -20,7 +20,7 @@ tags:
 >
 > **源码命令文档：** <https://gdal.org/en/latest/programs/>
 >
-> **许可证：** MIT License
+> **许可证：** MIT
 
 ## 概述
 

@@ -11,6 +11,7 @@ tags: [ai, agent, coding-agent, terminal, llm, typescript, extension, pi]
 > **最新发布：** 参见 [GitHub Releases](https://github.com/earendil-works/pi/releases)
 >
 > **许可证：** MIT
+> **最新版本：** 参见 [npm](https://www.npmjs.com/package/@earendil-works/pi)
 
 ## 概述
 
@@ -72,7 +73,9 @@ npm run build
 
 ---
 
-## 常用命令
+## 命令参考
+
+> Pi 是最小化的 Agent Harness，CLI 主要用于验证安装。以下为基本探测命令：
 
 ```bash
 pi --help

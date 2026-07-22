@@ -9,6 +9,7 @@ tags: [ai, agent, opencode, orchestration, multi-model, lsp, ast, harness]
 > **安装文档：** <https://github.com/code-yeongyu/oh-my-openagent/blob/dev/docs/guide/installation.md>
 >
 > **许可证：** SUL-1.0（Sustainable Use License，商用前请阅读条款）｜ **npm 包：** `oh-my-opencode` ｜ **作者：** YeonGyu-Kim
+> **最新版本：** v4.19.0（参见 [npm](https://www.npmjs.com/package/oh-my-openagent)）
 
 > 说明：项目以 npm 包 **`oh-my-opencode`** 发布，CLI 别名包含 `oh-my-opencode` / `oh-my-openagent` / `omo` / `lazycodex`。它是 **OpenCode 的插件**，使用前需先安装 [OpenCode](../opencode/SKILL.md)。
 
@@ -41,8 +42,8 @@ bunx oh-my-opencode install
 非交互安装（CI / 脚本，可显式带标志）：
 
 ```bash
-bunx oh-my-opencode install --no-tui \
-  # 例如 --openai / --subscription / --max20 等模型与订阅相关标志
+# 例如 --openai / --subscription / --max20 等模型与订阅相关标志
+bunx oh-my-opencode install --no-tui
 ```
 
 > ⚠️ 官方安装手册特别提示：让 Agent 获取安装文档时务必用 `curl` 而非 WebFetch——WebFetch 会做摘要，丢掉 `--openai`、subscription、`max20` 等关键标志：

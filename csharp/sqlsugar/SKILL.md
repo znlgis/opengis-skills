@@ -10,7 +10,7 @@ tags: [dotnet, orm, database, code-first, sql]
 >
 > **NuGet：** `SqlSugar` / `SqlSugarCore`
 >
-> **许可证：** Apache-2.0
+> **许可证：** MIT
 
 ## 概述
 

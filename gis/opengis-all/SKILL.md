@@ -76,7 +76,7 @@ python3 -c "from osgeo import gdal; print(gdal.VersionInfo())"
 ### QGIS（qgis_process + PyQGIS）
 
 ```bash
-# 安装 QGIS 3.16+（qgis_process 从 3.16 开始可用）
+# 安装 QGIS 3.44 LTR 或 4.x（qgis_process 从 3.16 开始可用）
 # Ubuntu
 apt-get install qgis qgis-plugin-grass
 
@@ -91,7 +91,7 @@ export QT_QPA_PLATFORM=offscreen
 
 ```bash
 # Docker 方式（推荐）
-docker run -d -p 8080:8080 kartoza/geoserver:latest
+docker run -d -p 8080:8080 docker.osgeo.org/geoserver:3.0.0
 
 # 验证
 curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"

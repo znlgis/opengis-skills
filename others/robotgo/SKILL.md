@@ -22,7 +22,7 @@ tags: [go, golang, rpa, automation, desktop, screen-capture, mouse, keyboard, cl
 
 ## 概述
 
-RobotGo 是 Go 生态中最成熟的桌面自动化库（GitHub 10.7k+ Star），核心能力覆盖 RPA 全链路：
+RobotGo 是 Go 生态中最成熟的桌面自动化库（GitHub 10.8k+ Star），核心能力覆盖 RPA 全链路：
 
 | 能力域 | 主要 API |
 |--------|---------|
@@ -35,7 +35,7 @@ RobotGo 是 Go 生态中最成熟的桌面自动化库（GitHub 10.7k+ Star）�
 | 全局事件监听 | hook.Register、hook.Start、hook.Process、hook.End |
 | OpenCV 识别 | gcv.FindImgFile、gcv.FindAllImgFile、gcv.Find、gcv.FindX |
 
-> **v1.0.0+ 重大变更：** v1.0.0（2025-12）起对 API 进行了重构。v1.0.2 移除了旧版 FindBitmap / OpenBitmap / SaveBitmap 等位图函数（迁移至 `bitmap` 子库）。如需旧 API，使用 `v0.100.10`（最后一个保留旧位图 API 的版本）。
+> **v2.0.0-beta1（2026-07）重大变更：** 引入 Go 纯后端（`purego` build tag）替代 CGo 依赖，新增 `libei` 后端支持。v1.0.2 移除了旧版 FindBitmap / OpenBitmap / SaveBitmap 等位图函数（迁移至 `bitmap` 子库）。如需旧 API，使用 `v0.100.10`（最后一个保留旧位图 API 的版本）。
 
 ---
 

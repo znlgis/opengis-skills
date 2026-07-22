@@ -4,7 +4,7 @@ description: "Use when embedding lightweight 2D CAD features in web applications
 tags: [web, 2d, cad, dxf, typescript, drafting]
 ---
 
-> **项目地址：** <https://github.com/light-CAD/lightcad>（如仓库迁移请以 znlgis.github.io 为准）
+> **项目地址：** 原仓库 `github.com/light-CAD/lightcad` 已404，请以 [znlgis.github.io](https://znlgis.github.io/cad/LightCAD/) 为准
 >
 > **官网/演示：** <https://lightcad.cn/>
 >
@@ -37,18 +37,6 @@ LightCAD 主要特性：
 <iframe src="https://lightcad.cn/" style="width:100%;height:100vh;border:0"></iframe>
 ```
 
-### 本地部署
-
-```bash
-git clone https://github.com/light-CAD/lightcad.git
-cd lightcad
-pnpm install
-pnpm dev      # http://localhost:5173
-pnpm build
-```
-
-构建产物为静态资源，可托管到任意 CDN。
-
 ---
 
 ## 嵌入到自有应用（SDK）
@@ -56,6 +44,7 @@ pnpm build
 ```html
 <div id="cad" style="width:100%;height:100vh"></div>
 <script type="module">
+  // ⚠ npm 包可能已不可用，请以 znlgis 文档为准
   import { LightCAD } from '@lightcad/sdk';
 
   const app = new LightCAD({
@@ -249,7 +238,7 @@ app.view.rotate(15);
 
 ## 参考资源
 
-- 仓库：<https://github.com/light-CAD/lightcad>
+- 原仓库（已下线）：<https://github.com/light-CAD/lightcad>
 - 文档与示例：<https://lightcad.cn/docs>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/lightcad/>
 

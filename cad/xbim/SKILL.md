@@ -208,14 +208,6 @@ facility.WriteXls("out.xlsx", out _);     // Excel 格式（COBie 标准）
 
 ---
 
-## 相关技能
-
-- **freecad** — 桌面参数化 CAD，BIM 工作台与 IFC 支持：[../freecad/SKILL.md](../freecad/SKILL.md)
-- **ifoxcad** — .NET CAD 二次开发框架（同 .NET 生态）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
-- **occt** — OCCT 几何内核（xBIM 几何引擎的底层）：[../occt/SKILL.md](../occt/SKILL.md)
-
----
-
 ## 典型工作流
 
 ### 工作流一：IFC 模型读取与属性提取
@@ -235,6 +227,14 @@ facility.WriteXls("out.xlsx", out _);     // Excel 格式（COBie 标准）
 4. 使用 `model.Instances.New<IfcProject>()` / `New<IfcSite>()` / `New<IfcBuilding>()` 构建空间结构
 5. 添加墙/梁/柱/板等建筑元素，设置属性
 6. `txn.Commit()` → `model.SaveAs("new.ifc")` 保存
+
+---
+
+## 相关技能
+
+- **freecad** — 桌面参数化 CAD，BIM 工作台与 IFC 支持：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **ifoxcad** — .NET CAD 二次开发框架（同 .NET 生态）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
+- **occt** — OCCT 几何内核（xBIM 几何引擎的底层）：[../occt/SKILL.md](../occt/SKILL.md)
 
 ---
 

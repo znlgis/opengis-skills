@@ -5,6 +5,7 @@ tags: [go, golang, rpa, automation, desktop, windows, yaml, image-matching, wpf]
 ---
 
 > **项目地址：** <https://github.com/znlgis/robotgo-flow>
+> **官方文档：** <https://github.com/znlgis/robotgo-flow#readme>
 >
 > **底层库：** [go-vgo/robotgo](https://github.com/go-vgo/robotgo)
 >
