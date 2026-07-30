@@ -361,7 +361,7 @@ gdalwarp input.tif output.tif
 | HDF5 | .h5, .he5 | 多维数据 |
 | ASCII Grid | .asc | 简单栅格（DEM） |
 | JPEG2000 | .jp2 | 高质量压缩 |
-| ECW | .ecw | MrSID 格式 |
+| ECW | .ecw | ERDAS ECW 格式 |
 
 ---
 

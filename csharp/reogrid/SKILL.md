@@ -333,7 +333,7 @@ btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
 
 | 问题 | 解决 |
 |------|------|
-| V3社区版MIT不适合商业闭源 | 购买V4商业许可 |
+| V3社区版功能有限（如缺少部分高级功能），商业闭源建议购买V4商业许可 | 购买 V4 商业许可获取完整功能 |
 | WPF 高 DPI 模糊 | 启用 `PerMonitorV2` DPI |
 | 公式不计算 | 调用 `sh.Recalculate()` |
 | Excel 打开样式丢失 | 仅支持核心样式，复杂样式建议直接 NPOI 处理 |

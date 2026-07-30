@@ -30,7 +30,7 @@ KiCad 主要程序：
 | BOM 工具 | 物料清单 |
 | CLI（KiCad 7+） | 自动化（`kicad-cli`） |
 
-新版本改进（KiCad 7/8/9/10，当前稳定版 10.0.4（2026-06））：
+新版本改进（KiCad 7+，最新稳定版请参见 [KiCad Downloads](https://www.kicad.org/download/)）：
 
 - 全新原生 Python API（`pcbnew`），支持脚本扩展
 - 标准 IPC-2581 输出

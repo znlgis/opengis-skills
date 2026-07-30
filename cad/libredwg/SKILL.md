@@ -22,7 +22,7 @@ LibreDWG 解决 DWG 二进制格式的开源读写：
 - **命令行工具**：`dwgread`、`dwgwrite`、`dwg2dxf`、`dxf2dwg`、`dwg2SVG`、`dwgrewrite`
 - **绑定**：C API、Python（`libredwg.python`）、Common Lisp、Perl
 
-> 当前稳定版 **0.14**（2026-06）。与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。
+> 与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。最新版本请参见 [GitHub Releases](https://github.com/LibreDWG/libredwg/releases)。
 
 ---
 

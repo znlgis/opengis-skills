@@ -45,7 +45,7 @@ conda install -c conda-forge pythonocc-core
 # 源码：CMake 构建（OCCT 8.0.0 起要求 C++17、CMake ≥ 3.10；VTK 默认关闭，需 -DUSE_VTK=ON 开启）
 ```
 
-> **版本提示：** 当前稳定版为 **OCCT 8.0.0_p1**（2026-06），是多年来最大改动：`Standard_Failure` 改为继承 `std::exception`；`Raise()`/`Throw()`/`Instance()` 静态助手被移除（改用 `throw` 关键字）；`Standard_Mutex` 等退役，改用 `std::mutex`/`std::lock_guard`。从 7.x 升级需留意这些破坏性变更。
+> **版本提示：** OCCT 8.0 起有重大变更：`Standard_Failure` 改为继承 `std::exception`；`Raise()`/`Throw()`/`Instance()` 静态助手被移除（改用 `throw` 关键字）；`Standard_Mutex` 等退役，改用 `std::mutex`/`std::lock_guard`。从 7.x 升级需留意这些破坏性变更。最新版本请参见 [OCCT Releases](https://github.com/Open-Cascade-SAS/OCCT/releases)。
 
 ---
 

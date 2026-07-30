@@ -30,7 +30,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 67 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 68 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -135,12 +135,13 @@ tags:
 |------|------|---------|
 | [ke3036-keyes-pico](./iot/ke3036-keyes-pico/SKILL.md) | Keyes Raspberry Pi Pico 学习套件 | `micropython` `rp2040` `sensor` |
 
-### 🧊 3D — 三维/高斯泼溅（2 个）
+### 🧊 3D — 三维/高斯泼溅/全景（3 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） | `3dgs` `webgl` `typescript` `editor` |
 | [ara3d-sdk](./3d/ara3d-sdk/SKILL.md) | 面向 AEC 的高性能 .NET 三维/BIM 库集合（.NET 8） | `bim` `aec` `dotnet` `geometry` `ifc` |
+| [photo-sphere-viewer](./3d/photo-sphere-viewer/SKILL.md) | JavaScript 360° 全景照片/球体查看器（Three.js 驱动） | `javascript` `threejs` `panorama` `webgl` |
 
 ### 🗂️ Others — 其它（6 个）
 
@@ -242,7 +243,7 @@ tags:
 
 每个技能文件遵循统一规范：
 
-1. **YAML frontmatter** — `name`、`description`（中文）、`tags`（用于搜索）
+1. **YAML frontmatter** — `name`、`description`（英文 Use when... 格式）、`tags`（用于搜索）
 2. **引用块** — 项目地址、官方文档、许可证
 3. **概述** — 定位与特性矩阵
 4. **环境准备/安装**

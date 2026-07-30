@@ -80,7 +80,7 @@ public class User
     [SugarColumn(Length = 50, IsNullable = false)]
     public string Name { get; set; } = "";
 
-    public int  Age { get; set; }
+    public int Age { get; set; }
 
     [SugarColumn(IsNullable = true, ColumnDataType = "datetime")]
     public DateTime? CreateTime { get; set; }

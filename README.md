@@ -74,7 +74,7 @@ opengis-skills/
 ├── SKILL.md         # 🌐 根入口：全局索引 + 标签搜索 + 使用指南
 ├── gis/             # GIS 类（23 个）
 │   └── SKILL.md     # GIS 分类索引
-├── cad/             # CAD 类（18 个）
+├── cad/             # CAD 类（19 个）
 │   └── SKILL.md     # CAD 分类索引
 ├── csharp/          # C# 框架/库（8 个）
 │   └── SKILL.md     # C# 分类索引
@@ -82,7 +82,7 @@ opengis-skills/
 │   └── SKILL.md     # AI 分类索引
 ├── iot/             # 物联网（1 个）
 │   └── SKILL.md     # IoT 分类索引
-├── 3d/              # 3D / 高斯泼溅（2 个）
+├── 3d/              # 3D / 高斯泼溅 / 全景（3 个）
 │   └── SKILL.md     # 3D 分类索引
 └── others/          # 其它（6 个）
     └── SKILL.md     # Others 分类索引
@@ -99,14 +99,14 @@ opengis-skills/
 | 分类索引 | 涵盖内容 | 适用场景 |
 |---------|---------|---------|
 | [`gis/SKILL.md`](./gis/SKILL.md) | 23 个 GIS 技能概要（GDAL、QGIS、GeoServer、PostGIS、JTS 等） | 空间数据处理、地图服务、Web GIS |
-| [`cad/SKILL.md`](./cad/SKILL.md) | 18 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
+| [`cad/SKILL.md`](./cad/SKILL.md) | 19 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
 | [`csharp/SKILL.md`](./csharp/SKILL.md) | 8 个 C#/.NET 技能概要（Furion、NPOI、SqlSugar 等） | .NET Web 开发、ORM、Office 操作 |
 | [`ai/SKILL.md`](./ai/SKILL.md) | 8 个 AI 技能概要（Dify、Pi、智能体、OpenCode、DocuTranslate、AI 编程方法论） | LLM 应用、智能体、终端编码代理 |
 | [`iot/SKILL.md`](./iot/SKILL.md) | 1 个 IoT 技能概要（Raspberry Pi Pico） | 嵌入式、传感器 |
-| [`3d/SKILL.md`](./3d/SKILL.md) | 2 个 3D 技能概要（SuperSplat 高斯泼溅编辑器、Ara3D-SDK 高性能 .NET 三维/BIM 库） | 3D 高斯泼溅清理/压缩/发布、AEC/BIM 三维数据处理 |
+| [`3d/SKILL.md`](./3d/SKILL.md) | 3 个 3D 技能概要（SuperSplat 高斯泼溅编辑器、Ara3D-SDK 高性能 .NET 三维/BIM 库、Photo-Sphere-Viewer 360° 全景展示） | 3D 高斯泼溅清理/压缩/发布、AEC/BIM 三维数据处理、Web 360° 全景 |
 | [`others/SKILL.md`](./others/SKILL.md) | 6 个其它技能概要（Go 语言、RobotGo、robotgo-flow、邮件平台、Java 脚手架、acme.sh） | 通用工具、Go 开发、自动化、SSL 证书 |
 
-> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 66 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
+> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 68 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
 
 ---
 
@@ -165,6 +165,7 @@ opengis-skills/
 | [openscad](./cad/openscad/SKILL.md) | 脚本式 3D CAD（CSG） |
 | [xbim](./cad/xbim/SKILL.md) | .NET BIM / IFC 工具集 |
 | [lightcad](./cad/lightcad/SKILL.md) | 轻量级 Web 2D CAD 框架 |
+| [tongwen](./cad/tongwen/SKILL.md) | 国产 Linux 三维 CAD（OpenCASCADE 内核） |
 | [lightningcad](./cad/lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） |
 
 ---
@@ -219,6 +220,7 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 |-------|------|
 | [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） |
 | [ara3d-sdk](./3d/ara3d-sdk/SKILL.md) | 面向 AEC 的高性能 .NET 三维/BIM 库集合（.NET 8） |
+| [photo-sphere-viewer](./3d/photo-sphere-viewer/SKILL.md) | JavaScript 360° 全景照片/球体查看器（Three.js 驱动） |
 
 ---
 
