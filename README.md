@@ -28,7 +28,7 @@
 
 | 层级 | 文件 | 内容 | 适用场景 |
 |------|------|------|---------|
-| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 66 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
+| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 68 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
 | **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`3d/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
 | **L3 项目技能** | `<category>/<project>/SKILL.md` | 单个开源项目的深度知识（API、工作流、FAQ） | 已确定使用哪个工具，需要精准的编码指导 |
 
@@ -165,7 +165,7 @@ opengis-skills/
 | [openscad](./cad/openscad/SKILL.md) | 脚本式 3D CAD（CSG） |
 | [xbim](./cad/xbim/SKILL.md) | .NET BIM / IFC 工具集 |
 | [lightcad](./cad/lightcad/SKILL.md) | 轻量级 Web 2D CAD 框架 |
-| [tongwen](./cad/tongwen/SKILL.md) | 国产 Linux 三维 CAD（OpenCASCADE 内核） |
+| [tongwen](./cad/tongwen/SKILL.md) | CAD/BIM 工程图纸无损翻译套件（AutoCAD 2019-2026） |
 | [lightningcad](./cad/lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） |
 
 ---

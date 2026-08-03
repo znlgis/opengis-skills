@@ -503,5 +503,5 @@ tourPlugin.setCurrentNode('garden');
 
 ## 相关技能
 
-- **cesiumjs** — 3D 地球与大规模场景可视化：[../gis/cesiumjs/SKILL.md](../gis/cesiumjs/SKILL.md)
-- **supersplat** — 3D 高斯泼溅编辑器与查看器：[../3d/supersplat/SKILL.md](../3d/supersplat/SKILL.md)
+- **cesiumjs** — 3D 地球与大规模场景可视化：[../../gis/cesiumjs/SKILL.md](../../gis/cesiumjs/SKILL.md)
+- **supersplat** — 3D 高斯泼溅编辑器与查看器：[../supersplat/SKILL.md](../supersplat/SKILL.md)
