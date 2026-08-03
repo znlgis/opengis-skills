@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 67+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 68+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
 tags:
   - gis
   - cad
@@ -84,7 +84,7 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [ifoxcad](./cad/ifoxcad/SKILL.md) | AutoCAD .NET 二次开发框架 | `autocad` `dotnet` `plugin` |
-| [fy_layout](./cad/fy_layout/SKILL.md) | AutoCAD 自动布图工具 | `autocad` `layout` `automation` |
+| [fy_layout](./cad/fy_layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） | `lightcad` `construction` `dotnet` |
 | [clipper2](./cad/clipper2/SKILL.md) | 高性能 2D 多边形布尔运算与偏移 | `geometry` `polygon` `clipping` |
 | [clipper1](./cad/clipper1/SKILL.md) | Clipper 1.x（旧版本，仍广泛使用） | `geometry` `legacy` `polygon` |
 | [chili3d](./cad/chili3d/SKILL.md) | 纯 Web 3D CAD（基于 OCCT.js） | `web` `typescript` `wasm` `3d` |
@@ -185,7 +185,7 @@ tags:
 | `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate |
 | `pipeline` / `workflow` | dify, geopipe-agent, qgis-process, robotgo-flow |
 | `automation` / `rpa` | robotgo, robotgo-flow |
-| `autocad` | ifoxcad, fy_layout, lightningcad |
+| `autocad` | ifoxcad, lightningcad, tongwen |
 
 ---
 

@@ -58,6 +58,7 @@ tags:
 | [qcad](./qcad/SKILL.md) | 开源 2D CAD（DXF 编辑器） | `dxf` `2d` `editor` |
 | [librecad](./librecad/SKILL.md) | 开源 2D CAD（C++/Qt） | `dxf` `2d` `qt` |
 | [lightcad](./lightcad/SKILL.md) | 轻量级 Web 2D CAD 框架 | `web` `2d` `lightweight` |
+| [fy_layout](./fy_layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） | `lightcad` `construction` `dotnet` |
 
 ### 🔌 PCB/EDA 设计
 
@@ -77,7 +78,6 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [ifoxcad](./ifoxcad/SKILL.md) | AutoCAD .NET 二次开发框架 | `autocad` `dotnet` `plugin` |
-| [fy_layout](./fy_layout/SKILL.md) | AutoCAD 自动布图工具 | `autocad` `layout` `automation` |
 | [lightningcad](./lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） | `autocad` `zwcad` `panel-layout` |
 | [tongwen](./tongwen/SKILL.md) | CAD/BIM 工程图纸无损翻译套件（AutoCAD 2019-2026） | `autocad` `translation` `i18n` `bim` |
 
