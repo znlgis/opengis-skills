@@ -1,6 +1,6 @@
 ---
 name: ai-skills
-description: "Use when building LLM applications, RAG knowledge bases, AI agents, terminal coding agents, multi-model orchestration, or file translation. Index of 8 skills: Dify, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, Oh-My-OpenAgent, Superpowers-zh."
+description: "Use when building LLM applications, RAG knowledge bases, AI agents, terminal coding agents, multi-model orchestration, plugin-based agent harnesses, or file translation. Index of 9 skills: Dify, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, Oh-My-OpenAgent, Superpowers-zh, DeepSeek Harness."
 tags:
   - ai
   - llm
@@ -16,11 +16,12 @@ tags:
 
 ## 概述
 
-本分类涵盖 **8 个 AI/LLM 开源项目**的技能文件：
+本分类涵盖 **9 个 AI/LLM 开源项目**的技能文件：
 
 - **LLM 应用平台**：Dify（RAG + 工作流 + Agent 一站式）
 - **智能体 / 助手**：Hermes Agent（自学习通用智能体）、OpenClaw（多通道个人 AI 助手 Gateway）
 - **终端编码代理**：Pi（极简 Agent Harness）、OpenCode（模型无关、配置即代码的 AI coding agent）
+- **插件式智能体框架**：DeepSeek Harness（dsh，Cordis 引擎驱动的插件化 Agent Harness）
 - **文件翻译**：DocuTranslate（基于 LLM 的本地多格式文件翻译工具）
 - **编排与方法论**：Oh-My-OpenAgent（OpenCode 多模型编排插件）、Superpowers-zh（中文 AI 编程方法论 Skills）
 
@@ -44,6 +45,7 @@ tags:
 | [docutranslate](./docutranslate/SKILL.md) | 基于 LLM 的本地多格式文件翻译工具 | `llm` `translation` `pdf` `mcp` |
 | [oh-my-openagent](./oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） | `agent` `opencode` `orchestration` |
 | [superpowers-zh](./superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 | `methodology` `chinese` `skill` |
+| [deepseek-harness](./deepseek-harness/SKILL.md) | DeepSeek Harness（dsh）：插件化智能体框架 | `agent` `deepseek` `plugin` `cordis` `typescript` |
 
 ---
 
@@ -61,6 +63,8 @@ tags:
 | "翻译 PDF/Word/Excel/字幕等文件" | `docutranslate/SKILL.md` |
 | "用中文 TDD/审查方法论约束 AI" | `superpowers-zh/SKILL.md` |
 | "OpenCode 多模型编排 / Agent Harness" | `oh-my-openagent/SKILL.md` |
+| "用插件式架构开发 AI Agent" | `deepseek-harness/SKILL.md` |
+| "DeepSeek 官方智能体框架 dsh" | `deepseek-harness/SKILL.md` |
 
 ---
 

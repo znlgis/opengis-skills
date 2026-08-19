@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 68+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 72+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
 tags:
   - gis
   - cad
@@ -30,7 +30,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 68 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域共 72 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -44,6 +44,10 @@ tags:
 - **需要 CAD 参数化建模？** → 加载 `cad/freecad/SKILL.md`
 - **需要用 .NET 操作 Excel？** → 加载 `csharp/npoi/SKILL.md`
 - **需要搭建 LLM 应用？** → 加载 `ai/dify/SKILL.md`
+- **需要用纯 C# 生成建筑模型？** → 加载 `3d/elements/SKILL.md`
+- **需要 CSG 布尔运算建模？** → 加载 `3d/opencsg-net/SKILL.md`
+- **需要 .NET 错误追踪？** → 加载 `csharp/sentry/SKILL.md`
+- **需要 DeepSeek 智能体框架？** → 加载 `ai/deepseek-harness/SKILL.md`
 
 > **AI 使用提示：** 优先使用下方标签系统精准定位所需技能，按需加载 1-3 个 SKILL.md，避免全量加载导致上下文膨胀。
 
@@ -103,7 +107,7 @@ tags:
 | [lightningcad](./cad/lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） | `autocad` `zwcad` `panel-layout` |
 | [tongwen](./cad/tongwen/SKILL.md) | CAD/BIM 工程图纸无损翻译套件（AutoCAD 2019-2026） | `autocad` `translation` `i18n` `bim` |
 
-### 🛠️ C# — .NET 生态（8 个）
+### 🛠️ C# — .NET 生态（9 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -115,8 +119,9 @@ tags:
 | [reogrid](./csharp/reogrid/SKILL.md) | .NET 电子表格控件 | `dotnet` `spreadsheet` `ui` |
 | [sqlsugar](./csharp/sqlsugar/SKILL.md) | 国产高性能多数据库 ORM | `orm` `dotnet` `database` |
 | [dotnet-reactor](./csharp/dotnet-reactor/SKILL.md) | .NET 商业级混淆/加壳/授权 | `dotnet` `obfuscation` `security` |
+| [sentry](./csharp/sentry/SKILL.md) | Sentry .NET SDK：错误追踪与性能监控 | `dotnet` `error-tracking` `monitoring` |
 
-### 🤖 AI — LLM/Agent（8 个）
+### 🤖 AI — LLM/Agent（9 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -128,6 +133,7 @@ tags:
 | [pi](./ai/pi/SKILL.md) | 极简可扩展终端 AI 编码代理（Agent Harness） | `agent` `coding-agent` `terminal` `typescript` |
 | [opencode](./ai/opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码） | `agent` `coding-agent` `terminal` `mcp` |
 | [docutranslate](./ai/docutranslate/SKILL.md) | 基于 LLM 的本地多格式文件翻译工具 | `llm` `translation` `pdf` `mcp` |
+| [deepseek-harness](./ai/deepseek-harness/SKILL.md) | DeepSeek Harness（dsh）：插件化智能体框架 | `agent` `deepseek` `plugin` `cordis` |
 
 ### 📡 IoT — 物联网（1 个）
 
@@ -135,13 +141,15 @@ tags:
 |------|------|---------|
 | [ke3036-keyes-pico](./iot/ke3036-keyes-pico/SKILL.md) | Keyes Raspberry Pi Pico 学习套件 | `micropython` `rp2040` `sensor` |
 
-### 🧊 3D — 三维/高斯泼溅/全景（3 个）
+### 🧊 3D — 三维/高斯泼溅/全景（5 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [supersplat](./3d/supersplat/SKILL.md) | 浏览器端开源 3D 高斯泼溅编辑器（PlayCanvas） | `3dgs` `webgl` `typescript` `editor` |
 | [ara3d-sdk](./3d/ara3d-sdk/SKILL.md) | 面向 AEC 的高性能 .NET 三维/BIM 库集合（.NET 8） | `bim` `aec` `dotnet` `geometry` `ifc` |
 | [photo-sphere-viewer](./3d/photo-sphere-viewer/SKILL.md) | JavaScript 360° 全景照片/球体查看器（Three.js 驱动） | `javascript` `threejs` `panorama` `webgl` |
+| [elements](./3d/elements/SKILL.md) | Hypar Elements：纯 C# BIM 编程生成库 | `dotnet` `bim` `geometry` `ifc` `gltf` |
+| [opencsg-net](./3d/opencsg-net/SKILL.md) | OpenCSG.NET：零依赖 .NET CSG 建模库 | `dotnet` `csg` `3d` `stl` |
 
 ### 🗂️ Others — 其它（6 个）
 
@@ -166,7 +174,7 @@ tags:
 |------|---------|
 | `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, freecad, docutranslate |
 | `java` | geotools, jts, geometry-api-java, opengis-utils-for-java, ruoyi-cloud |
-| `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, ifoxcad, xbim, tongwen, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk |
+| `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, ifoxcad, xbim, tongwen, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
 | `javascript` / `typescript` | cesiumjs, openlayers, chili3d, admin-net-frontend |
 | `cpp` / `c` | gdal-api, occt, librecad, libredwg |
 | `go` | go, robotgo, robotgo-flow |
@@ -175,14 +183,14 @@ tags:
 
 | 标签 | 相关技能 |
 |------|---------|
-| `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, clipper1, clipper2, opengis-utils-for-java |
+| `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, clipper1, clipper2, opengis-utils-for-java, elements, opencsg-net |
 | `raster` | gdal, gdal-api, qgis-process |
 | `vector` | gdal, gdal-api, geopandas, geotools |
 | `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api |
-| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, supersplat, ara3d-sdk |
+| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, supersplat, ara3d-sdk, elements, opencsg-net |
 | `2d` | openlayers, qcad, librecad, sharpmap, lightcad |
 | `orm` / `database` | sod, sqlsugar, postgis |
-| `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate |
+| `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate, deepseek-harness |
 | `pipeline` / `workflow` | dify, geopipe-agent, qgis-process, robotgo-flow |
 | `automation` / `rpa` | robotgo, robotgo-flow |
 | `autocad` | ifoxcad, lightningcad, tongwen |
