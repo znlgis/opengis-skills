@@ -1,7 +1,16 @@
 ---
 name: docutranslate
 description: "Use when translating documents locally via LLM — PDF, Word, Excel, Markdown, SRT subtitles with format preservation. DocuTranslate: LLM-powered multi-format local file translation tool with MCP server support."
-tags: [ai, llm, translation, document, pdf, mineru, mcp, python, cli]
+tags:
+  - ai
+  - llm
+  - translation
+  - document
+  - pdf
+  - mineru
+  - mcp
+  - python
+  - cli
 ---
 
 > **项目地址：** <https://github.com/xunbu/docutranslate>

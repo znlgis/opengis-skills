@@ -1,7 +1,15 @@
 ---
 name: oh-my-openagent
 description: "Use when configuring OpenCode for multi-model orchestration, Agent Harness patterns, CI/automation integration, or token cost optimization. Oh-My-OpenAgent: curated OpenCode agent configurations and prompt engineering patterns."
-tags: [ai, agent, opencode, orchestration, multi-model, lsp, ast, harness]
+tags:
+  - ai
+  - agent
+  - opencode
+  - orchestration
+  - multi-model
+  - lsp
+  - ast
+  - harness
 ---
 
 > **项目地址：** <https://github.com/code-yeongyu/oh-my-openagent>

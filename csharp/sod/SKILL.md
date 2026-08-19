@@ -1,7 +1,12 @@
 ---
 name: sod
 description: "Use when needing a multi-paradigm .NET ORM with SQL-MAP (MyBatis-style XML mapping), OQL (Object Query Language), and traditional ORM. PDF.NET SOD: combines ORM + SQL-MAP + OQL for flexible .NET data access."
-tags: [dotnet, orm, database, sql-mapping, oql]
+tags:
+  - dotnet
+  - orm
+  - database
+  - sql-mapping
+  - oql
 ---
 
 > **项目地址：** <https://github.com/znlgis/SOD>（社区主仓库见 <https://gitee.com/znlgis/SOD>）

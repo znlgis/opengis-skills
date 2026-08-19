@@ -1,7 +1,16 @@
 ---
 name: fy_layout
 description: "Use when doing construction site layout planning with the FeiYang LightCAD platform — fence, lawn, foundation pit, road, prefab house 2D/3D modeling. FY_Layout: construction site layout secondary development plugin for LightCAD/LightBIM."
-tags: [2d, 3d, cad, dotnet, csharp, bim, construction, dwg, dxf]
+tags:
+  - 2d
+  - 3d
+  - cad
+  - dotnet
+  - csharp
+  - bim
+  - construction
+  - dwg
+  - dxf
 ---
 
 > **项目地址：** <https://github.com/znlgis/FY_Layout>

@@ -1,7 +1,12 @@
 ---
 name: dotnet-reactor
 description: "Use when protecting .NET assemblies from reverse engineering — obfuscation, string encryption, control flow obfuscation, anti-debugging, licensing. .NET Reactor: commercial-grade .NET code protection and licensing tool."
-tags: [dotnet, obfuscation, protection, licensing, security]
+tags:
+  - dotnet
+  - obfuscation
+  - protection
+  - licensing
+  - security
 ---
 
 > **官网：** <https://www.eziriz.com/dotnet_reactor.htm>

@@ -1,7 +1,15 @@
 ---
 name: occt
 description: "Use when developing custom CAD/CAM/CAE applications requiring a production-grade 3D geometric kernel — B-Rep modeling, Boolean operations, fillets, STEP/IGES I/O, meshing. OCCT (Open CASCADE Technology): the industrial C++ geometry kernel that powers FreeCAD, KiCad, and many commercial CAD systems."
-tags: [3d, geometry, brep, kernel, cpp, step, iges, mesh]
+tags:
+  - 3d
+  - geometry
+  - brep
+  - kernel
+  - cpp
+  - step
+  - iges
+  - mesh
 ---
 
 > **项目地址：** <https://github.com/Open-Cascade-SAS/OCCT>

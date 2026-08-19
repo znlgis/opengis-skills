@@ -1,7 +1,13 @@
 ---
 name: openscad
 description: "Use when creating 3D models programmatically via CSG (Constructive Solid Geometry) scripting — parametric parts, customizable designs for 3D printing. OpenSCAD: script-based 3D CAD using a declarative language rather than GUI modeling."
-tags: [3d, parametric, csg, scripting, stl, openscad]
+tags:
+  - 3d
+  - parametric
+  - csg
+  - scripting
+  - stl
+  - openscad
 ---
 
 > **项目地址：** <https://github.com/openscad/openscad>

@@ -1,7 +1,14 @@
 ---
 name: openclaw
 description: "Use when setting up a multi-channel personal AI assistant gateway bridging chat platforms (Telegram, Discord, WhatsApp, WeChat) with LLM backends. OpenClaw: multi-channel AI assistant gateway for unified personal AI access."
-tags: [ai, assistant, gateway, self-hosted, multi-channel, typescript, agent]
+tags:
+  - ai
+  - assistant
+  - gateway
+  - self-hosted
+  - multi-channel
+  - typescript
+  - agent
 ---
 
 > **项目地址：** <https://github.com/openclaw/openclaw>

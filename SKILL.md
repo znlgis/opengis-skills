@@ -243,7 +243,7 @@ tags:
 
 每个技能文件遵循统一规范：
 
-1. **YAML frontmatter** — `name`、`description`（英文 Use when... 格式）、`tags`（用于搜索）
+1. **YAML frontmatter** — `name`、`description`（英文 Use when... 格式）、`tags`（多行 YAML 数组格式，用于搜索）
 2. **引用块** — 项目地址、官方文档、许可证
 3. **概述** — 定位与特性矩阵
 4. **环境准备/安装**
@@ -263,7 +263,7 @@ tags:
 2. 如需引用数据或大型文件，放在 `reference/` 子目录
 3. 基于上游官方文档编写，避免编造 API
 4. 保持中文为主，代码、命令、API 使用原文格式
-5. 提交 PR 时确保 YAML frontmatter 格式正确
+5. 提交 PR 时确保 YAML frontmatter 格式正确（`tags` 必须使用多行 `- tag` 格式，而非内联 `[tag1, tag2]` 格式）
 
 ---
 

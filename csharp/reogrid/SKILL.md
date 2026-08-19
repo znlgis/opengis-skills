@@ -1,7 +1,12 @@
 ---
 name: reogrid
 description: "Use when embedding an Excel-like spreadsheet control in .NET WinForms/WPF applications — formula engine, cell editing, clipboard, undo/redo. ReoGrid: .NET spreadsheet component with NPOI-based Excel read/write."
-tags: [dotnet, spreadsheet, winforms, wpf, excel]
+tags:
+  - dotnet
+  - spreadsheet
+  - winforms
+  - wpf
+  - excel
 ---
 
 > **项目地址：** <https://github.com/unvell/ReoGrid>

@@ -1,7 +1,13 @@
 ---
 name: admin-net-frontend
 description: "Use when building Vue 3 admin dashboard frontends with dynamic routing, permission-based menus, and CRUD page generation. Admin.NET Frontend: Vue 3 + Vite + TypeScript admin UI for Admin.NET backend."
-tags: [vue3, typescript, element-plus, vite, admin, frontend]
+tags:
+  - vue3
+  - typescript
+  - element-plus
+  - vite
+  - admin
+  - frontend
 ---
 
 > **项目地址（上游）：** <https://github.com/zuohuaijun/Admin.NET>

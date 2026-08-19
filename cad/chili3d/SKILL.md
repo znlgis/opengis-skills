@@ -1,7 +1,15 @@
 ---
 name: chili3d
 description: "Use when building browser-based 3D CAD applications with WebAssembly — STEP/B-Rep visualization, measurement tools, sectioning. Chili3D: pure Web 3D CAD built on OCCT.js compiled to WASM with TypeScript API."
-tags: [web, 3d, typescript, wasm, occt, parametric, step, stl]
+tags:
+  - web
+  - 3d
+  - typescript
+  - wasm
+  - occt
+  - parametric
+  - step
+  - stl
 ---
 
 > **项目地址：** <https://github.com/xiangechen/chili3d>

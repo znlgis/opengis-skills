@@ -1,7 +1,16 @@
 ---
 name: go
 description: "Use when writing Go/Golang code — goroutines/channels concurrency, net/http web servers, database/sql, generics (1.18+), module management, testing and benchmarking. Go: the language powering Docker, Kubernetes, and cloud-native infrastructure."
-tags: [go, golang, backend, concurrency, cloud-native, compiled, static-typed, server, cli]
+tags:
+  - go
+  - golang
+  - backend
+  - concurrency
+  - cloud-native
+  - compiled
+  - static-typed
+  - server
+  - cli
 ---
 
 > **官网：** <https://go.dev/>

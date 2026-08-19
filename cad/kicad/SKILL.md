@@ -1,7 +1,13 @@
 ---
 name: kicad
 description: "Use when designing electronic circuits and PCBs — schematic capture, PCB layout, 3D viewer, SPICE simulation, Gerber export. KiCad: the leading open-source EDA/PCB design suite."
-tags: [eda, pcb, electronics, schematic, gerber, python]
+tags:
+  - eda
+  - pcb
+  - electronics
+  - schematic
+  - gerber
+  - python
 ---
 
 > **项目地址：** <https://gitlab.com/kicad/code/kicad>

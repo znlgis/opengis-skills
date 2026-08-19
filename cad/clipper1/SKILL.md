@@ -1,7 +1,15 @@
 ---
 name: clipper1
 description: "Use when maintaining legacy code that depends on Clipper 1.x API for polygon clipping and offsetting. Clipper1: the original widely-deployed polygon boolean library. Prefer Clipper2 for new projects."
-tags: [2d, geometry, boolean, offset, polygon, csharp, python, cpp]
+tags:
+  - 2d
+  - geometry
+  - boolean
+  - offset
+  - polygon
+  - csharp
+  - python
+  - cpp
 ---
 
 > **项目地址：** <https://github.com/AngusJohnson/Clipper>

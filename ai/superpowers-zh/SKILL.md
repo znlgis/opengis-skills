@@ -1,7 +1,15 @@
 ---
 name: superpowers-zh
 description: "Use when constraining AI coding with Chinese TDD methodology, systematic debugging, code review, and verification workflows. Superpowers-zh: Chinese adaptation of the Superpowers AI-assisted programming skills and methodologies."
-tags: [ai, skill, methodology, chinese, tdd, code-review, prompt, claude-code]
+tags:
+  - ai
+  - skill
+  - methodology
+  - chinese
+  - tdd
+  - code-review
+  - prompt
+  - claude-code
 ---
 
 > **项目地址：** <https://github.com/jnMetaCode/superpowers-zh>

@@ -1,7 +1,15 @@
 ---
 name: hermes-agent
 description: "Use when building self-learning AI agents that improve through experience — terminal-first interface, tool calling, memory persistence, autonomous task execution. Hermes Agent: self-improving general-purpose AI agent with local-first architecture."
-tags: [ai, agent, self-improving, memory, terminal, mcp, python, nous-research]
+tags:
+  - ai
+  - agent
+  - self-improving
+  - memory
+  - terminal
+  - mcp
+  - python
+  - nous-research
 ---
 
 > **项目地址：** <https://github.com/NousResearch/hermes-agent>

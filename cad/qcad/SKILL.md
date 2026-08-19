@@ -1,7 +1,14 @@
 ---
 name: qcad
 description: "Use when editing DXF files with a professional open-source 2D CAD application — CAM output, part libraries, isometric projection. QCAD: open-source 2D CAD with DXF as native format, scriptable via ECMAScript."
-tags: [2d, cad, dxf, dwg, qt, javascript, ecmascript]
+tags:
+  - 2d
+  - cad
+  - dxf
+  - dwg
+  - qt
+  - javascript
+  - ecmascript
 ---
 
 > **项目地址：** <https://github.com/qcad/qcad>

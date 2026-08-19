@@ -256,7 +256,7 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 
    > **`description` 规范：** 采用英文 `Use when...` 格式，描述**何时使用**该技能（而非描述项目本身），遵循 [Anthropic Skill 最佳实践](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills)。分类索引用 `Use when... Index of N skills: ...` 格式。所有 description 均以 `Use when` 开头、第三人称、≤500 字符。
    >
-   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组，列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部文件。
+   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组（**必须使用多行 `- tag` 格式**，不使用内联 `[tag1, tag2]` 格式），列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部文件。
 
 2. **头部引用块**：项目地址、官方文档、许可证
 

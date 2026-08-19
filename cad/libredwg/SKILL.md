@@ -1,7 +1,13 @@
 ---
 name: libredwg
 description: "Use when reading or writing AutoCAD DWG files programmatically in C — DWG version conversion, entity extraction, DWG to DXF. LibreDWG: free C library for reading/writing AutoCAD DWG format."
-tags: [dwg, dxf, cad, c, python, conversion]
+tags:
+  - dwg
+  - dxf
+  - cad
+  - c
+  - python
+  - conversion
 ---
 
 > **项目地址：** <https://github.com/LibreDWG/libredwg>

@@ -1,7 +1,12 @@
 ---
 name: sqlsugar
 description: "Use when doing multi-database ORM operations in .NET — SQL Server, MySQL, PostgreSQL, SQLite, Oracle with fluent API, code-first, and LINQ. SqlSugar: high-performance .NET ORM supporting 10+ databases."
-tags: [dotnet, orm, database, code-first, sql]
+tags:
+  - dotnet
+  - orm
+  - database
+  - code-first
+  - sql
 ---
 
 > **项目地址：** <https://github.com/DotNetNext/SqlSugar>

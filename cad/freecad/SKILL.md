@@ -1,7 +1,17 @@
 ---
 name: freecad
 description: "Use when doing parametric 3D CAD modeling, BIM/architectural design, FEM simulation, CAM toolpath generation, or robot simulation with Python scripting. FreeCAD: the leading open-source parametric 3D CAD with Sketcher, Part, PartDesign, Arch, CAM, and FEM workbenches."
-tags: [3d, parametric, cad, python, brep, step, cam, bim, ifc, freecad]
+tags:
+  - 3d
+  - parametric
+  - cad
+  - python
+  - brep
+  - step
+  - cam
+  - bim
+  - ifc
+  - freecad
 ---
 
 > **项目地址：** <https://github.com/FreeCAD/FreeCAD>
