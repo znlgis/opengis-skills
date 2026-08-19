@@ -1,7 +1,15 @@
 ---
 name: opencode
 description: "Use when working with a model-agnostic terminal AI coding agent that uses opencode.json for declarative configuration — MCP servers, custom commands, agent routing, skills. OpenCode: configuration-as-code terminal AI coding agent with multi-model support."
-tags: [ai, agent, coding-agent, llm, terminal, tui, mcp, opencode]
+tags:
+  - ai
+  - agent
+  - coding-agent
+  - llm
+  - terminal
+  - tui
+  - mcp
+  - opencode
 ---
 
 > **项目地址：** <https://github.com/anomalyco/opencode>

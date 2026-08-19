@@ -1,7 +1,12 @@
 ---
 name: ke3036-keyes-pico
 description: "Use when programming the Keyes Raspberry Pi Pico (RP2040) learning kit with MicroPython — GPIO LED/button control, I2C/SPI/UART sensor integration, servo/motor/relay driving, Wi-Fi MQTT, 0.96 inch OLED display, ultrasonic ranging. KE3036 Keyes Pico: 45-sensor STEM learning kit for RP2040."
-tags: [micropython, rp2040, sensor, iot, pico]
+tags:
+  - micropython
+  - rp2040
+  - sensor
+  - iot
+  - pico
 ---
 
 > **项目地址（资料/示例）：** <https://github.com/keyestudio/ke3036>（仓库已404，具体请以 znlgis.github.io 或 keyestudio 官方为准）

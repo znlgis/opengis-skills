@@ -1,7 +1,12 @@
 ---
 name: furion
 description: "Use when building .NET Web API applications with minimal boilerplate — dynamic controllers, automatic dependency injection, JWT authentication, Swagger, event bus. Furion: lightweight convention-over-configuration .NET enterprise web framework."
-tags: [dotnet, webapi, framework, dynamic-api, jwt]
+tags:
+  - dotnet
+  - webapi
+  - framework
+  - dynamic-api
+  - jwt
 ---
 
 > **项目地址：** <https://gitee.com/dotnetchina/Furion>

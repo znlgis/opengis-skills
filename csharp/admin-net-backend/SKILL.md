@@ -1,7 +1,13 @@
 ---
 name: admin-net-backend
 description: "Use when building .NET admin/backend management systems with Furion framework — user/role/permission management, CRUD code generation, API documentation. Admin.NET: Furion-based enterprise admin backend scaffold."
-tags: [dotnet, webapi, rbac, multitenant, furion, sqlsugar]
+tags:
+  - dotnet
+  - webapi
+  - rbac
+  - multitenant
+  - furion
+  - sqlsugar
 ---
 
 > **项目地址（上游）：** <https://github.com/zuohuaijun/Admin.NET>

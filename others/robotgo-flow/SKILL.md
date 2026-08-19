@@ -1,7 +1,16 @@
 ---
 name: robotgo-flow
 description: "Use when building YAML-driven Windows RPA workflows in Go — step-by-step desktop automation with image template matching, interactive recording mode, hotkey triggers. RobotGo-Flow: YAML-based Windows RPA framework built on RobotGo."
-tags: [go, golang, rpa, automation, desktop, windows, yaml, image-matching, wpf]
+tags:
+  - go
+  - golang
+  - rpa
+  - automation
+  - desktop
+  - windows
+  - yaml
+  - image-matching
+  - wpf
 ---
 
 > **项目地址：** <https://github.com/znlgis/robotgo-flow>

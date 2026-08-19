@@ -1,7 +1,15 @@
 ---
 name: acme.sh
 description: "Use when automating SSL/TLS certificate issuance and renewal from Let's Encrypt, ZeroSSL, or BuyPass — wildcard certs, DNS API mode for 150+ providers, Nginx/Apache auto-reload. acme.sh: pure Shell ACME client, zero dependencies, crontab-friendly auto-renewal."
-tags: [ssl, tls, acme, lets-encrypt, shell, certificate, devops, automation]
+tags:
+  - ssl
+  - tls
+  - acme
+  - lets-encrypt
+  - shell
+  - certificate
+  - devops
+  - automation
 ---
 
 > **项目地址：** <https://github.com/acmesh-official/acme.sh>

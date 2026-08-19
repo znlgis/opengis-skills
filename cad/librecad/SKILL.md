@@ -1,7 +1,13 @@
 ---
 name: librecad
 description: "Use when editing 2D DXF/DWG drawings with a lightweight open-source CAD — floor plans, mechanical drawings, laser cutting layouts. LibreCAD: open-source 2D CAD based on Qt/C++, community edition fork of QCAD."
-tags: [2d, cad, dxf, dwg, qt, drafting]
+tags:
+  - 2d
+  - cad
+  - dxf
+  - dwg
+  - qt
+  - drafting
 ---
 
 > **项目地址：** <https://github.com/LibreCAD/LibreCAD>

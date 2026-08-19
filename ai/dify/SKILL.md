@@ -1,7 +1,12 @@
 ---
 name: dify
 description: "Use when building LLM applications with visual workflow — RAG knowledge bases, AI agents, chatbots with drag-and-drop orchestration. Dify: open-source LLM app platform supporting 30+ models (OpenAI, Claude, DeepSeek, Ollama, Qwen, GLM) with Docker deployment."
-tags: [llm, workflow, rag, agent, platform]
+tags:
+  - llm
+  - workflow
+  - rag
+  - agent
+  - platform
 ---
 
 > **项目地址：** <https://github.com/langgenius/dify>

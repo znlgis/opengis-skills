@@ -1,7 +1,17 @@
 ---
 name: lightningcad
 description: "Use when doing architectural facade panel layout and detailing in AutoCAD or ZWCAD — panel numbering, shop drawing generation, material optimization. LightningCAD: building envelope detailing plugin for AutoCAD/ZWCAD."
-tags: [autocad, zwcad, cad, dotnet, wpf, panel-layout, bim, envelope, commercial, plugin]
+tags:
+  - autocad
+  - zwcad
+  - cad
+  - dotnet
+  - wpf
+  - panel-layout
+  - bim
+  - envelope
+  - commercial
+  - plugin
 ---
 
 > **产品定位：** 商业软件（非开源），基于 AutoCAD 2019/2020 与 ZWCAD 2022+ 的建筑围护深化设计插件

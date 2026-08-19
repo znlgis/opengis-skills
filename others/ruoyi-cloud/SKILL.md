@@ -1,7 +1,12 @@
 ---
 name: ruoyi-cloud
 description: "Use when scaffolding Java Spring Cloud microservice backends — Nacos service discovery, Sentinel rate limiting, Seata distributed transactions, Spring Boot 3 + Vue 3 admin. RuoYi-Cloud: popular Chinese Spring Cloud microservice boilerplate framework."
-tags: [java, spring-cloud, microservices, rbac, nacos]
+tags:
+  - java
+  - spring-cloud
+  - microservices
+  - rbac
+  - nacos
 ---
 
 > **项目地址：** <https://gitee.com/y_project/RuoYi-Cloud>

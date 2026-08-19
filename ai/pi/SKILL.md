@@ -1,7 +1,15 @@
 ---
 name: pi
 description: "Use when needing a minimal, extensible terminal AI coding agent harness in TypeScript with plugin architecture. Pi: minimalist terminal AI coding agent emphasizing simplicity and composability."
-tags: [ai, agent, coding-agent, terminal, llm, typescript, extension, pi]
+tags:
+  - ai
+  - agent
+  - coding-agent
+  - terminal
+  - llm
+  - typescript
+  - extension
+  - pi
 ---
 
 > **项目地址：** <https://github.com/earendil-works/pi>

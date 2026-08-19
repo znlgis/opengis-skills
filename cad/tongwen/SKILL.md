@@ -1,7 +1,17 @@
 ---
 name: tongwen
 description: "Use when translating engineering CAD drawings between languages — DWG text extraction, translation workspace with terminology management, quality-checked write-back. TongWen (同文): local-first CAD/BIM lossless translation suite for AutoCAD 2019-2026."
-tags: [autocad, cad, dwg, translation, bim, l10n, i18n, terminology, commercial, plugin]
+tags:
+  - autocad
+  - cad
+  - dwg
+  - translation
+  - bim
+  - l10n
+  - i18n
+  - terminology
+  - commercial
+  - plugin
 ---
 
 > **产品定位：** 商业软件（非开源），面向工程图纸的本地优先 CAD/BIM 无损翻译套件

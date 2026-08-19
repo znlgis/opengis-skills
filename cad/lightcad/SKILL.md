@@ -1,7 +1,13 @@
 ---
 name: lightcad
 description: "Use when embedding lightweight 2D CAD features in web applications — basic drawing, layer management, snapping, DXF import. LightCAD: lightweight Web 2D CAD framework for browser-based drafting."
-tags: [web, 2d, cad, dxf, typescript, drafting]
+tags:
+  - web
+  - 2d
+  - cad
+  - dxf
+  - typescript
+  - drafting
 ---
 
 > **项目地址：** 原仓库 `github.com/light-CAD/lightcad` 已404，请以 [znlgis.github.io](https://znlgis.github.io/cad/LightCAD/) 为准

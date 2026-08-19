@@ -1,7 +1,12 @@
 ---
 name: billionmail
 description: "Use when setting up self-hosted email marketing and transactional email — SMTP relay, newsletter campaigns, bounce handling, delivery analytics. BillionMail: self-hosted email marketing platform with multi-tenant support."
-tags: [email, smtp, self-hosted, newsletter, marketing]
+tags:
+  - email
+  - smtp
+  - self-hosted
+  - newsletter
+  - marketing
 ---
 
 > **项目地址：** <https://github.com/Billionmail/BillionMail>

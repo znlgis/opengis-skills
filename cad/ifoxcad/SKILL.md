@@ -1,7 +1,14 @@
 ---
 name: ifoxcad
 description: "Use when developing AutoCAD plugins with .NET/C# — entity creation, layer management, block references, transaction handling. iFoxCAD: AutoCAD .NET secondary development framework with simplified API wrappers."
-tags: [autocad, dotnet, csharp, cad, dxf, dwg, plugin]
+tags:
+  - autocad
+  - dotnet
+  - csharp
+  - cad
+  - dxf
+  - dwg
+  - plugin
 ---
 
 > **项目地址：** <https://gitee.com/inspirefunction/ifoxcad>

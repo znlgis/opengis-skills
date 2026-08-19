@@ -1,7 +1,15 @@
 ---
 name: clipper2
 description: "Use when performing high-performance 2D polygon boolean operations (union, intersection, difference, XOR) and offsetting via C++, C#, or Python bindings. Clipper2: the modern polygon clipping library with robust numerical handling."
-tags: [2d, geometry, boolean, offset, polygon, csharp, cpp, delphi]
+tags:
+  - 2d
+  - geometry
+  - boolean
+  - offset
+  - polygon
+  - csharp
+  - cpp
+  - delphi
 ---
 
 > **项目地址：** <https://github.com/AngusJohnson/Clipper2>

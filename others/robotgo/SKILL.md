@@ -1,7 +1,18 @@
 ---
 name: robotgo
 description: "Use when automating desktop GUI operations in Go — mouse/keyboard control, screen capture, image recognition via OpenCV, global hotkeys via gohook. RobotGo: cross-platform Go desktop automation (RPA) library for macOS, Windows, and Linux."
-tags: [go, golang, rpa, automation, desktop, screen-capture, mouse, keyboard, clipboard, gui, testing]
+tags:
+  - go
+  - golang
+  - rpa
+  - automation
+  - desktop
+  - screen-capture
+  - mouse
+  - keyboard
+  - clipboard
+  - gui
+  - testing
 ---
 
 > **项目地址：** <https://github.com/go-vgo/robotgo>

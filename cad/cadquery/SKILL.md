@@ -1,7 +1,15 @@
 ---
 name: cadquery
 description: "Use when scripting parametric 3D CAD models in Python — programmatic part generation, parametric design optimization, STEP export. CadQuery: Python-based parametric CAD built on OCCT kernel with a fluent API."
-tags: [python, 3d, parametric, brep, step, stl, occt, cad]
+tags:
+  - python
+  - 3d
+  - parametric
+  - brep
+  - step
+  - stl
+  - occt
+  - cad
 ---
 
 > **项目地址：** <https://github.com/CadQuery/cadquery>

@@ -1,7 +1,13 @@
 ---
 name: xbim
 description: "Use when processing BIM/IFC data in .NET/C# — IFC reading/writing, model validation, quantity takeoff, geometry extraction. xBIM: .NET BIM/IFC toolkit for building information modeling workflows."
-tags: [bim, ifc, dotnet, csharp, geometry, occ]
+tags:
+  - bim
+  - ifc
+  - dotnet
+  - csharp
+  - geometry
+  - occ
 ---
 
 > **项目地址：** <https://github.com/xBimTeam/XbimEssentials>

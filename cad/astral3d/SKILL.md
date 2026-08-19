@@ -1,7 +1,14 @@
 ---
 name: astral3d
 description: "Use when building industrial 3D visualization and editing applications — large model rendering, STEP/B-Rep viewing, measurement, markup. Astral3D: industrial 3D visualization and editing framework."
-tags: [web, 3d, visualization, threejs, digital-twin, gltf, step]
+tags:
+  - web
+  - 3d
+  - visualization
+  - threejs
+  - digital-twin
+  - gltf
+  - step
 ---
 
 > **项目地址：** <https://github.com/AstralEngine/astral3d>（仓库已404，请以 znlgis.github.io 链接为准）

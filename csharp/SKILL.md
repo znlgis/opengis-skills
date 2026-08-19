@@ -1,6 +1,6 @@
 ---
 name: csharp-skills
-description: "Use when developing with .NET/C# for Web APIs, ORM data access, Excel/Word file I/O, spreadsheet controls, or .NET code protection. Index of 8 skills: Furion, SqlSugar, NPOI, SOD, ReoGrid, Admin.NET, DotNet Reactor."
+description: "Use when developing with .NET/C# for Web APIs, ORM data access, Excel/Word file I/O, spreadsheet controls, error tracking, or .NET code protection. Index of 9 skills: Furion, SqlSugar, NPOI, SOD, ReoGrid, Admin.NET, DotNet Reactor, Sentry."
 tags:
   - dotnet
   - csharp
@@ -16,11 +16,12 @@ tags:
 
 ## 概述
 
-本分类涵盖 **8 个 .NET 生态开源项目**的技能文件，聚焦企业级 Web 开发核心需求：
+本分类涵盖 **9 个 .NET 生态开源项目**的技能文件，聚焦企业级 Web 开发核心需求：
 
 - **Web 框架**：Furion、Admin.NET
 - **数据访问**：SqlSugar、SOD（PDF.NET）
 - **Office 操作**：NPOI、ReoGrid
+- **错误追踪与监控**：Sentry .NET SDK
 - **代码保护**：DotNet Reactor
 
 ### 何时加载此索引？
@@ -43,6 +44,7 @@ tags:
 | [npoi](./npoi/SKILL.md) | .NET Excel/Word 读写 | `excel` `office` `dotnet` |
 | [reogrid](./reogrid/SKILL.md) | .NET 电子表格控件 | `dotnet` `spreadsheet` `ui` |
 | [dotnet-reactor](./dotnet-reactor/SKILL.md) | .NET 商业级混淆/加壳/授权 | `dotnet` `obfuscation` `security` |
+| [sentry](./sentry/SKILL.md) | Sentry .NET SDK：错误追踪与性能监控 | `dotnet` `error-tracking` `monitoring` `performance` |
 
 ---
 
@@ -57,6 +59,7 @@ tags:
 | "多数据库 ORM 操作" | `sqlsugar/SKILL.md` |
 | "MyBatis 风格的 SQL 映射" | `sod/SKILL.md` |
 | "保护 .NET 代码不被反编译" | `dotnet-reactor/SKILL.md` |
+| ".NET 错误追踪与性能监控" | `sentry/SKILL.md` |
 
 ---
 

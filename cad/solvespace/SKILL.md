@@ -1,7 +1,14 @@
 ---
 name: solvespace
 description: "Use when doing lightweight parametric 2D/3D CAD with constraint-based sketching — linkages, section analysis, STL export for 3D printing. SolveSpace: ultra-light parametric constraint solver CAD with real-time solving."
-tags: [3d, 2d, parametric, cad, constraint-solver, step, dxf]
+tags:
+  - 3d
+  - 2d
+  - parametric
+  - cad
+  - constraint-solver
+  - step
+  - dxf
 ---
 
 > **项目地址：** <https://github.com/solvespace/solvespace>

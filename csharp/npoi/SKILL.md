@@ -1,7 +1,12 @@
 ---
 name: npoi
 description: "Use when reading/writing Excel (.xls/.xlsx) or Word (.doc/.docx) files in .NET without Microsoft Office — data import/export, report generation, template filling. NPOI: .NET port of Apache POI for Office file I/O in server environments."
-tags: [dotnet, excel, word, office, npoi]
+tags:
+  - dotnet
+  - excel
+  - word
+  - office
+  - npoi
 ---
 
 > **项目地址：** <https://github.com/nissl-lab/npoi>
