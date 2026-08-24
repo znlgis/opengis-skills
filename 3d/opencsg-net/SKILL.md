@@ -182,6 +182,34 @@ dotnet test tests/OpenCSG.NET.Tests/
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建基本体**：使用 `Solids.Cube()`、`Solids.Sphere()`、`Solids.Cylinder()` 创建基础形体
+2. **布尔运算**：`.Subtract()`（差集）、`.Intersect()`（交集）、`Union()`（并集）
+3. **变换**：`.Translate()`、`.RotateX/Y/Z()`、`.Scale()` 链式调用
+4. **导出**：使用 `BinaryWriter` + `WriteStl()` 导出 Binary STL（更小文件体积）
+
+### 关键注意事项
+
+- **零依赖**：无任何外部 NuGet 依赖，netstandard2.0 兼容所有现代 .NET
+- **Union 位置修复**：本库已修复上游 Csg fork 的 origin-centering 问题
+- **Binary STL 优先**：Binary STL 比 ASCII STL 文件体积更小，推荐使用
+- **圆柱体穿透**：布尔运算时让减去的形体稍大（如高 0.1）确保完全穿透
+- **非递归 BSP**：迭代式 BSP 树实现，处理复杂网格不会栈溢出
+
+---
+
+## 相关技能
+
+- **elements** — Hypar Elements BIM 编程生成库（内置 CSG 内核）：[../elements/SKILL.md](../elements/SKILL.md)
+- **ara3d-sdk** — .NET 高性能三维/BIM 库：[../ara3d-sdk/SKILL.md](../ara3d-sdk/SKILL.md)
+- **clipper2** — 2D 多边形布尔运算：[../../cad/clipper2/SKILL.md](../../cad/clipper2/SKILL.md)
+- **openscad** — 脚本式 3D CAD（CSG）：[../../cad/openscad/SKILL.md](../../cad/openscad/SKILL.md)
+
+---
+
 ## 参考资源
 
 - [OpenCSG.NET GitHub](https://github.com/znlgis/OpenCSG.NET) — 源码与示例

@@ -216,6 +216,35 @@ model.ToGlTF("room.glb");
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **创建 Model**：`new Model()` → 添加建筑元素（Wall/Column/Floor/Beam）
+2. **几何构建**：使用 `Polygon.Rectangle()`、`Vector3`、`Line` 构建几何轮廓
+3. **实体操作**：`Extrude`（拉伸）、`Sweep`（扫掠）、CSG 布尔运算（Union/Subtract/Intersect）
+4. **序列化导出**：`model.ToGlTF()`（推荐 glTF/GLB）、`model.ToJson()`、`model.ToIFC()`（需额外包）
+5. **自定义元素**：继承 `Element`，用 JSON Schema 定义属性，通过 CodeGeneration 生成代码
+
+### 关键注意事项
+
+- **坐标系**：右手坐标系，+Z 朝上，无量纲
+- **浮点比较**：使用 `Vector3.Epsilon` 和 `IsAlmostEqualTo()`，不要直接用 `==`
+- **零依赖**：不依赖 Revit/Rhino，可完全在 Linux Docker 中运行
+- **IFC 导出**：需额外安装 `Hypar.Elements.Serialization.IFC` 包
+- **实例化复用**：相同构件使用 Element Instance 模式，避免重复创建
+
+---
+
+## 相关技能
+
+- **opencsg-net** — .NET CSG 建模库：[../opencsg-net/SKILL.md](../opencsg-net/SKILL.md)
+- **ara3d-sdk** — .NET 高性能三维/BIM 库：[../ara3d-sdk/SKILL.md](../ara3d-sdk/SKILL.md)
+- **xbim** — .NET BIM/IFC 工具集：[../../cad/xbim/SKILL.md](../../cad/xbim/SKILL.md)
+- **freecad** — 开源参数化 3D CAD/BIM：[../../cad/freecad/SKILL.md](../../cad/freecad/SKILL.md)
+
+---
+
 ## 参考资源
 
 - [Elements 官方文档](https://hypar.io/Elements/)

@@ -214,6 +214,25 @@ gh repo edit my-dsh-plugin --add-topic dsh-plugin
 
 ---
 
+## AI 使用建议
+
+- 用户提到「DeepSeek Harness」「dsh」「Cordis 插件框架」时加载本技能
+- 当前为 **Developer Preview**，API 可能有 Breaking Changes，以仓库最新代码为准
+- 推荐使用 `npx @deepseek-ai/dsh web` 快速启动 Web UI 体验
+- 插件开发遵循 Cordis 范式：Service → Component → Plugin 三层抽象
+- 多模型选择：`deepseek-chat`（快速通用）vs `deepseek-reasoner`（深度推理）
+
+---
+
+## 相关技能
+
+- **opencode** — 模型无关的终端 AI 编码代理：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **pi** — 极简终端 AI 编码代理：[../pi/SKILL.md](../pi/SKILL.md)
+- **hermes-agent** — 自学习通用型 AI 智能体：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **dify** — 开源 LLM 应用开发平台：[../dify/SKILL.md](../dify/SKILL.md)
+
+---
+
 ## 参考资源
 
 - [DeepSeek Harness GitHub](https://github.com/deepseek-ai/deepseek-harness)

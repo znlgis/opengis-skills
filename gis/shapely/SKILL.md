@@ -13,9 +13,29 @@ tags:
 ---
 
 > **项目地址：** <https://github.com/shapely/shapely>
+>
 > **官方文档：** <https://shapely.readthedocs.io/>
+>
 > **PyPI：** <https://pypi.org/project/shapely/>
+>
 > **许可证：** BSD-3-Clause
+
+## 概述
+
+Shapely 是 Python 计算几何的核心库，基于 GEOS（Geometry Engine - Open Source）的 C++ 几何引擎。它为 PostGIS、GeoPandas、PyQGIS 等众多开源 GIS 项目提供几何计算底层支持。核心能力：
+
+- **几何对象模型**：Point、LineString、Polygon、Multi*、GeometryCollection
+- **空间关系判断**：contains、intersects、within、touches、covers、disjoint、relate（DE-9IM）
+- **集合运算**：intersection、union、difference、symmetric_difference
+- **构造操作**：buffer、simplify、convex_hull、delaunay_triangles、voronoi_polygons、make_valid
+- **几何度量**：area、length、distance、hausdorff_distance、frechet_distance
+- **空间索引**：STRtree，加速批量空间查询
+- **格式读写**：WKT、WKB、GeoJSON
+- **双重 API**：函数式（向量化，支持 NumPy 广播）+ OOP（标量便捷）
+
+**环境要求：** Python 3.9+，Shapely 2.0+
+
+---
 
 ## Geometry Types
 
@@ -440,6 +460,23 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 - **Prepared 状态不持久**：任何操作产生新几何后需重新 `prepare()`
 - **WKB 会丢弃 LinearRing**：WKB 序列化时 LinearRing 变为 LineString
 
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 面积/距离为 0 或极小 | CRS 为地理坐标系（度），需要投影到投影坐标系再计算 |
+| `contains` 对边界上的点返回 False | 使用 `covers()` 或 `intersects()` 代替 |
+| 几何操作产生 TopologyException | 几何无效，用 `make_valid()` 修复后再操作 |
+| OOP 和函数式 API 结果不一致 | `buffer` 默认 `quad_segs` 不同（OOP=16，函数式=8），显式指定即可 |
+| `None` 参与运算报错 | 使用 `shapely.is_missing()` 先检查，或过滤掉 `None` 再运算 |
+| STRtree 查询返回空数组 | 检查几何是否 `None`/`Empty`；确认查询几何与索引几何的 CRS 一致 |
+| WKB 序列化丢失 LinearRing | WKB 规范不支持 LinearRing，会自动转为 LineString |
+| `to_geojson` 丢失 Z 坐标 | GeoJSON 标准不支持 Z，改用 WKB 或自定义序列化 |
+
+---
+
 ## 相关技能
 
 - **geopandas** — 基于 Shapely 的矢量数据分析库：[../geopandas/SKILL.md](../geopandas/SKILL.md)
@@ -474,3 +511,14 @@ shapely/
 ├── algorithms/              # polylabel, oriented_envelope fallback
 └── plotting.py              # Matplotlib helpers (experimental)
 ```
+
+---
+
+## 参考资源
+
+- **GitHub 仓库：** <https://github.com/shapely/shapely>
+- **官方文档：** <https://shapely.readthedocs.io/>
+- **API 参考：** <https://shapely.readthedocs.io/en/stable/reference.html>
+- **PyPI：** <https://pypi.org/project/shapely/>
+- **GEOS（底层 C++ 引擎）：** <https://libgeos.org/>
+- **上游中文教程：** <https://znlgis.github.io/gis/tutorial/shapely/>

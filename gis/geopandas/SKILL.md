@@ -581,3 +581,13 @@ m = gdf.explore(column="population", cmap="viridis",
 - 大数据集用 `read_file(rows=slice(0, 1000))` 先预览
 - `dissolve()` 使用 `method="coverage"` 对已知不重叠的多边形更快
 - 避免逐行循环几何操作，使用向量化方法（如 `buffer()`, `intersection()` 等）
+
+---
+
+## 参考资源
+
+- **GitHub 仓库：** <https://github.com/geopandas/geopandas>
+- **官方文档：** <https://geopandas.readthedocs.io>
+- **官网：** <https://geopandas.org>
+- **GeoParquet 规范：** <https://geoparquet.org/>
+- **中文教程（znlgis）：** <https://znlgis.github.io/gis/tutorial/geopandas/>

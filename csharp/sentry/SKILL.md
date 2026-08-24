@@ -221,6 +221,34 @@ cd self-hosted
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **安装 SDK**：`dotnet add package Sentry.AspNetCore`（ASP.NET Core）或 `Sentry`（基础）
+2. **配置 DSN**：在 `appsettings.json` 中设置 `Sentry:Dsn` 或环境变量 `SENTRY_DSN`
+3. **启用追踪**：添加 `SentrySdk.Init()` + `app.UseSentryTracing()`
+4. **自动采集**：ASP.NET Core、EF Core、HttpClient 等自动采集性能数据
+5. **自定义事件**：`SentrySdk.CaptureMessage()` 或 `SentrySdk.CaptureException()`
+
+### 关键注意事项
+
+- **DSN 必填**：无 DSN 时 SDK 静默不工作，不会抛异常
+- **性能追踪**：必须调用 `app.UseSentryTracing()`，否则无 Span 数据
+- **采样率**：生产环境建议 `TracesSampleRate = 0.1`（10%），避免过多数据
+- **隐私过滤**：用 `BeforeSend` 回调过滤敏感数据（PII、密码等）
+- **自托管**：Docker 部署需配置 `SENTRY_SECRET_KEY` 和邮件服务
+
+---
+
+## 相关技能
+
+- **furion** — .NET Web 框架：[../furion/SKILL.md](../furion/SKILL.md)
+- **sqlsugar** — .NET ORM：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
+- **dotnet-reactor** — .NET 代码保护：[../dotnet-reactor/SKILL.md](../dotnet-reactor/SKILL.md)
+
+---
+
 ## 参考资源
 
 - [Sentry .NET 文档](https://docs.sentry.io/platforms/dotnet/)

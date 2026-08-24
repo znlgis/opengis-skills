@@ -20,6 +20,20 @@ tags:
 >
 > **许可证：** Apache-2.0
 
+## 概述
+
+**OGU4N** (OpenGIS Utils for .NET) 是一个面向 .NET 的 GIS 实用工具集，提供矢量数据读写、几何运算、坐标系管理等能力。核心特性：
+
+- **统一数据读写**：`OguLayerUtil` 一站式读取/写出 Shapefile、GeoJSON、FileGDB、GeoPackage、KML、DXF、PostGIS、TXT 等格式
+- **几何运算**：`GeometryUtil` 提供 50+ 静态方法（空间关系、集合运算、属性查询、拓扑验证）
+- **坐标系管理**：`CrsUtil` 支持 CGCS2000 系列坐标系变换与分区计算
+- **辅助工具**：编码检测、文件压缩、自然排序、数字格式化等
+- **仅 GDAL 引擎**：.NET 版本基于 GDAL/OGR 实现（与 Java 版本不同，后者同时支持 GeoTools 和 GDAL）
+
+**环境要求：** .NET Standard 2.0+（兼容 .NET Core 2.0+、.NET 5+、.NET Framework 4.6.1+）
+
+---
+
 ## 环境准备
 
 ```bash
