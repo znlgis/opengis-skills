@@ -172,27 +172,30 @@ tags:
 
 | 标签 | 相关技能 |
 |------|---------|
-| `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, freecad, docutranslate |
-| `java` | geotools, jts, geometry-api-java, opengis-utils-for-java, ruoyi-cloud |
-| `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, ifoxcad, xbim, tongwen, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
-| `javascript` / `typescript` | cesiumjs, openlayers, chili3d, admin-net-frontend |
-| `cpp` / `c` | gdal-api, occt, librecad, libredwg |
+| `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, clipper1, freecad, kicad, libredwg, geopipe-agent, deepseek-harness, docutranslate, hermes-agent |
+| `java` | gdal-api, geotools, jts, geometry-api-java, opengis-utils-for-java, geoserver, geoserver-cloud, ruoyi-cloud |
+| `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
+| `javascript` / `typescript` | cesiumjs, openlayers, qcad, chili3d, lightcad, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat |
+| `cpp` / `c` | gdal-api, occt, clipper1, clipper2, librecad, libredwg |
 | `go` | go, robotgo, robotgo-flow |
+| `shell` | qgis-process, acme.sh |
+| `vue` | admin-net-frontend |
+| `micropython` | ke3036-keyes-pico |
 
 ### 按功能领域
 
 | 标签 | 相关技能 |
 |------|---------|
-| `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, clipper1, clipper2, opengis-utils-for-java, elements, opencsg-net |
-| `raster` | gdal, gdal-api, qgis-process |
-| `vector` | gdal, gdal-api, geopandas, geotools |
-| `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api |
-| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, supersplat, ara3d-sdk, elements, opencsg-net |
-| `2d` | openlayers, qcad, librecad, sharpmap, lightcad |
+| `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, geopandas, postgis, opengis-utils-for-java, opengis-utils-for-net, occt, xbim, clipper1, clipper2, ara3d-sdk, elements, opencsg-net |
+| `raster` | gdal, gdal-api, qgis-process, geopipe-agent, geotools, postgis, pyqgis |
+| `vector` | gdal, gdal-api, geopandas, geopipe-agent, geotools, opengis-utils-for-java, opengis-utils-for-net, postgis, pyqgis |
+| `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api, geotools, mapsui, openlayers, sharpmap |
+| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, fy_layout, photo-sphere-viewer, supersplat, ara3d-sdk, elements, opencsg-net |
+| `2d` | openlayers, qcad, librecad, sharpmap, lightcad, clipper1, clipper2, fy_layout, solvespace |
 | `orm` / `database` | sod, sqlsugar, postgis |
 | `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate, deepseek-harness |
-| `pipeline` / `workflow` | dify, geopipe-agent, qgis-process, robotgo-flow |
-| `automation` / `rpa` | robotgo, robotgo-flow |
+| `pipeline` / `workflow` | dify, opengis-all, geopipe-agent, qgis-process, robotgo-flow |
+| `automation` / `rpa` | geoserver-rest-api, qgis-process, acme.sh, robotgo, robotgo-flow |
 | `autocad` | ifoxcad, lightningcad, tongwen |
 
 ---

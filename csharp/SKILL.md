@@ -1,6 +1,6 @@
 ---
 name: csharp-skills
-description: "Use when developing with .NET/C# for Web APIs, ORM data access, Excel/Word file I/O, spreadsheet controls, error tracking, or .NET code protection. Index of 9 skills: Furion, SqlSugar, NPOI, SOD, ReoGrid, Admin.NET, DotNet Reactor, Sentry."
+description: "Use when developing with .NET/C# for Web APIs, ORM data access, Excel/Word file I/O, spreadsheet controls, error tracking, or .NET code protection. Index of 9 skills: Furion, Admin.NET Backend, Admin.NET Frontend, SqlSugar, NPOI, SOD, ReoGrid, DotNet Reactor, Sentry."
 tags:
   - dotnet
   - csharp
@@ -12,7 +12,7 @@ tags:
   - security
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 68 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 72 技能总索引
 
 ## 概述
 
