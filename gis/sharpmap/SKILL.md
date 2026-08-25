@@ -4,6 +4,7 @@ description: "Use when rendering 2D maps in legacy .NET WinForms or ASP.NET WebF
 tags:
   - dotnet
   - csharp
+  - 2d
   - map
   - rendering
   - wms

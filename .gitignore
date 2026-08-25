@@ -1,0 +1,12 @@
+# 本地工具生成的临时文件
+.freebuff/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# 编辑器
+.vscode/
+.idea/
+*.swp

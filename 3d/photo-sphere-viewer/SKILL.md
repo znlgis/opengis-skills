@@ -6,6 +6,7 @@ tags:
   - typescript
   - threejs
   - webgl
+  - 3d
   - panorama
   - 360-photo
   - virtual-tour

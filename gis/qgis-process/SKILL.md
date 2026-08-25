@@ -5,6 +5,7 @@ tags:
   - cli
   - qgis
   - processing
+  - raster
   - automation
   - batch
   - ci-cd

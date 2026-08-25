@@ -4,6 +4,7 @@ description: "Use when adding interactive 2D maps to web applications — WMS/WF
 tags:
   - javascript
   - web
+  - 2d
   - map
   - wms
   - wmts
