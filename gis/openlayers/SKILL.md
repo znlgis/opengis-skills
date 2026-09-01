@@ -232,7 +232,7 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

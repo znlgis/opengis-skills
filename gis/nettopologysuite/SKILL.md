@@ -209,7 +209,7 @@ foreach (var p in points) if (prep.Contains(p)) ...
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

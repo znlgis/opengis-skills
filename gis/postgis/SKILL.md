@@ -204,7 +204,7 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决方案 |
 |------|---------|

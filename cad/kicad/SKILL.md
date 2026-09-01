@@ -169,7 +169,7 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

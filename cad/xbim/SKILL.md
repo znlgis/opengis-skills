@@ -195,7 +195,7 @@ facility.WriteXls("out.xlsx", out _);     // Excel 格式（COBie 标准）
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

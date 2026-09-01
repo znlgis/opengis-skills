@@ -160,7 +160,7 @@ solvespace-cli export-view out.svg  input.slvs --view top
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

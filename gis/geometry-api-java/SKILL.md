@@ -329,7 +329,7 @@ geometry.addAttribute(VertexDescription.Semantics.M);
 
 ---
 
-## 常见注意事项
+$h$faq`
 
 1. **坐标系一致**：进行空间运算前，确保所有几何对象使用相同的 `SpatialReference`。
 2. **简化几何**：导入外部数据后，使用 `GeometryEngine.simplify()` 确保拓扑正确。
@@ -364,7 +364,7 @@ geometry.addAttribute(VertexDescription.Semantics.M);
 - **opengis-utils-for-java** — Java GIS 统一工具包：[../opengis-utils-for-java/SKILL.md](../opengis-utils-for-java/SKILL.md)
 - **geometry-api-net** — .NET 版本 Esri Geometry API：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
 
-## 参考链接
+## 参考资源
 
 - **GitHub 仓库：** <https://github.com/Esri/geometry-api-java>
 - **官方 Wiki：** <https://github.com/Esri/geometry-api-java/wiki>

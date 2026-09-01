@@ -299,7 +299,7 @@ var jwt = App.GetConfig<JwtSettings>("JWTSettings");
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

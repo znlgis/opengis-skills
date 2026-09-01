@@ -460,7 +460,7 @@ curl -u admin:geoserver -XDELETE \
 - **gdal** — 命令行数据预处理：[../gdal/SKILL.md](../gdal/SKILL.md)
 - **postgis** — 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
 
-## 参考链接
+## 参考资源
 
 - GeoServer 源码仓库：<https://github.com/geoserver/geoserver>
 - REST API 概述：<https://docs.geoserver.org/latest/en/user/rest/index.html>

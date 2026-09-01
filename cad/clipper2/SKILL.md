@@ -203,7 +203,7 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

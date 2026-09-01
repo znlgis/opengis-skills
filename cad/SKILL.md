@@ -1,5 +1,5 @@
 ---
-name: cad
+name: cad-skills
 description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 19 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, KiCad, SolveSpace, QCAD, xBIM, Clipper2, TongWen and more."
 tags:
   - cad
@@ -71,7 +71,6 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [xbim](./xbim/SKILL.md) | .NET BIM/IFC 工具集 | `dotnet` `bim` `ifc` |
-| [freecad](./freecad/SKILL.md) | 也包含 BIM 工作台 | `bim` `parametric` |
 
 ### 🛠️ .NET AutoCAD 开发
 

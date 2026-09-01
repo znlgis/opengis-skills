@@ -493,7 +493,7 @@ gdaltindex -recursive -of GPKG \
 - **postgis** — PostgreSQL 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
 - **opengis-all** — 一站式 GIS 全流程：[../opengis-all/SKILL.md](../opengis-all/SKILL.md)
 
-## 相关资源
+## 参考资源
 
 - **官方文档与资源：** <https://gdal.org/> | [命令行工具](https://gdal.org/en/latest/programs/) | [API](https://gdal.org/api/) | [GitHub](https://github.com/OSGeo/gdal)
 - **矢量工具详细参考：** [reference/vector-tools.md](reference/vector-tools.md)

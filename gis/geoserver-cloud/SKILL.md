@@ -159,7 +159,7 @@ docker run -v /mnt/gsdata:/opt/app/data_dir geoservercloud/geoserver-cloud-wms:.
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

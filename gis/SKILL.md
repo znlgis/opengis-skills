@@ -84,7 +84,6 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [nettopologysuite](./nettopologysuite/SKILL.md) | JTS 的 .NET 移植 | `dotnet` `geometry` |
-| [geometry-api-net](./geometry-api-net/SKILL.md) | Esri Geometry API for .NET | `dotnet` `esri` `geometry` |
 | [sharpmap](./sharpmap/SKILL.md) | .NET WinForms/Web 地图渲染库 | `dotnet` `legacy` `winforms` |
 | [mapsui](./mapsui/SKILL.md) | .NET 跨平台地图控件 | `dotnet` `crossplatform` `maui` |
 

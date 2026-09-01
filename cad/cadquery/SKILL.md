@@ -251,7 +251,7 @@ cq.exporters.export(result, "out.svg")
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

@@ -334,7 +334,7 @@ btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

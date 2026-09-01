@@ -1,6 +1,6 @@
 # opengis-skills
 
-> 面向 **AI 编程助手 / Agent** 的开源 GIS、CAD、C#、AI、IoT 技能（Skill）集合。
+> 面向 **AI 编程助手 / Agent** 的开源 GIS、CAD、C#、AI、IoT、3D 技能及通用工具（Skill）集合。
 >
 > 本仓库与 [znlgis.github.io](https://github.com/znlgis/znlgis.github.io) 上游博客分类完全对齐，便于双向导航与学习。
 
@@ -274,7 +274,7 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
    - **参考资源**
 
 4. **风格**：中文为主，配合代码示例；命令、API、字段使用代码格式
-5. **大小**：通常 300–1500 行；主文件超过 500 行时，将详细参数/示例拆分到 `reference/*.md`（参见 GDAL 拆分示例：[主文件](./gis/gdal/SKILL.md) 452 行 + [矢量工具参考](./gis/gdal/reference/vector-tools.md) + [栅格工具参考](./gis/gdal/reference/raster-tools.md)）
+5. **大小**：主文件建议 ≤500 行；超过时将详细参数/示例拆分到 `reference/*.md`（参见 GDAL 拆分示例：[主文件](./gis/gdal/SKILL.md) 500 行 + [矢量工具参考](./gis/gdal/reference/vector-tools.md) + [栅格工具参考](./gis/gdal/reference/raster-tools.md)），主文件与 reference 合计通常 300–1500 行
 6. **示例**：基于上游官方文档实地核对，避免编造 API
 
 参考样板：[`gis/gdal/SKILL.md`](./gis/gdal/SKILL.md)、[`gis/jts/SKILL.md`](./gis/jts/SKILL.md)。

@@ -179,7 +179,7 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

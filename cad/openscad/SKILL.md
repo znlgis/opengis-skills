@@ -221,7 +221,7 @@ openscad -o preview.png --camera=0,0,0,55,0,25,150 --imgsize=800,600 part.scad
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

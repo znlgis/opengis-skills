@@ -163,7 +163,7 @@ TongWen.CLI.exe --project "项目路径" --source-dir "源图纸目录" --output
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决方案 |
 |------|---------|

@@ -171,7 +171,7 @@ dotnet test tests/OpenCSG.NET.Tests/
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决方案 |
 |------|---------|

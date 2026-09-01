@@ -236,7 +236,7 @@ const box = new oc.BRepPrimAPI_MakeBox_2(100, 60, 30).Shape();
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

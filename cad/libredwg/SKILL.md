@@ -188,7 +188,7 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|

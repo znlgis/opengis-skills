@@ -198,7 +198,7 @@ freecad   --console <<<'doc=App.newDocument(); ...'
 
 ---
 
-## 常见问题
+$h$faq`
 
 | 问题 | 解决 |
 |------|------|
