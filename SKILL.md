@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 72+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 73+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
 tags:
   - gis
   - cad
@@ -30,7 +30,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域及通用工具（others），共 7 个分类、72 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域及通用工具（others），共 7 个分类、73 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -83,7 +83,7 @@ tags:
 | [opengis-utils-for-net](./gis/opengis-utils-for-net/SKILL.md) | OpenGIS .NET 实用工具集 | `dotnet` `utils` `toolkit` |
 | [geopipe-agent](./gis/geopipe-agent/SKILL.md) | GIS 数据流水线 Agent（YAML 驱动） | `agent` `pipeline` `yaml` `qc` |
 
-### 📐 CAD — 计算机辅助设计（19 个）
+### 📐 CAD — 计算机辅助设计（20 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -106,6 +106,7 @@ tags:
 | [lightcad](./cad/lightcad/SKILL.md) | 轻量级 Web 2D CAD 框架 | `web` `2d` `lightweight` |
 | [lightningcad](./cad/lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） | `autocad` `zwcad` `panel-layout` |
 | [tongwen](./cad/tongwen/SKILL.md) | CAD/BIM 工程图纸无损翻译套件（AutoCAD 2019-2026） | `autocad` `translation` `i18n` `bim` |
+| [design-drawing-svg-md](./cad/design-drawing-svg-md/SKILL.md) | 设计图 SVG+MD 双载体记录（钢结构施工图→可复现图纸描述） | `svg` `markdown` `pdf` `steel-structure` `llm` |
 
 ### 🛠️ C# — .NET 生态（9 个）
 
@@ -197,6 +198,7 @@ tags:
 | `pipeline` / `workflow` | dify, opengis-all, geopipe-agent, qgis-process, robotgo-flow |
 | `automation` / `rpa` | geoserver-rest-api, qgis-process, acme.sh, robotgo, robotgo-flow |
 | `autocad` | ifoxcad, lightningcad, tongwen |
+| `svg` / `markdown` / `pdf` | design-drawing-svg-md |
 
 ---
 

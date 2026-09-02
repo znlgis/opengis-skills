@@ -28,7 +28,7 @@
 
 | 层级 | 文件 | 内容 | 适用场景 |
 |------|------|------|---------|
-| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 72 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
+| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 73 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
 | **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`3d/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
 | **L3 项目技能** | `<category>/<project>/SKILL.md` | 单个开源项目的深度知识（API、工作流、FAQ） | 已确定使用哪个工具，需要精准的编码指导 |
 
@@ -74,7 +74,7 @@ opengis-skills/
 ├── SKILL.md         # 🌐 根入口：全局索引 + 标签搜索 + 使用指南
 ├── gis/             # GIS 类（23 个）
 │   └── SKILL.md     # GIS 分类索引
-├── cad/             # CAD 类（19 个）
+├── cad/             # CAD 类（20 个）
 │   └── SKILL.md     # CAD 分类索引
 ├── csharp/          # C# 框架/库（9 个）
 │   └── SKILL.md     # C# 分类索引
@@ -99,14 +99,14 @@ opengis-skills/
 | 分类索引 | 涵盖内容 | 适用场景 |
 |---------|---------|---------|
 | [`gis/SKILL.md`](./gis/SKILL.md) | 23 个 GIS 技能概要（GDAL、QGIS、GeoServer、PostGIS、JTS 等） | 空间数据处理、地图服务、Web GIS |
-| [`cad/SKILL.md`](./cad/SKILL.md) | 19 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
+| [`cad/SKILL.md`](./cad/SKILL.md) | 20 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
 | [`csharp/SKILL.md`](./csharp/SKILL.md) | 9 个 C#/.NET 技能概要（Furion、NPOI、SqlSugar、Sentry 等） | .NET Web 开发、ORM、Office 操作、错误追踪 |
 | [`ai/SKILL.md`](./ai/SKILL.md) | 9 个 AI 技能概要（Dify、Pi、智能体、OpenCode、DeepSeek Harness、DocuTranslate、AI 编程方法论） | LLM 应用、智能体、终端编码代理、插件式 Agent 框架 |
 | [`iot/SKILL.md`](./iot/SKILL.md) | 1 个 IoT 技能概要（Raspberry Pi Pico） | 嵌入式、传感器 |
 | [`3d/SKILL.md`](./3d/SKILL.md) | 5 个 3D 技能概要（SuperSplat 高斯泼溅编辑器、Ara3D-SDK 高性能 .NET 三维/BIM 库、Photo-Sphere-Viewer 360° 全景、Elements BIM 编程生成库、OpenCSG.NET CSG 建模库） | 3D 高斯泼溅、AEC/BIM、全景展示、CSG 建模 |
 | [`others/SKILL.md`](./others/SKILL.md) | 6 个其它技能概要（Go 语言、RobotGo、robotgo-flow、邮件平台、Java 脚手架、acme.sh） | 通用工具、Go 开发、自动化、SSL 证书 |
 
-> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 72 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
+> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 73 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
 
 ---
 
@@ -166,6 +166,7 @@ opengis-skills/
 | [xbim](./cad/xbim/SKILL.md) | .NET BIM / IFC 工具集 |
 | [lightcad](./cad/lightcad/SKILL.md) | 轻量级 Web 2D CAD 框架 |
 | [tongwen](./cad/tongwen/SKILL.md) | CAD/BIM 工程图纸无损翻译套件（AutoCAD 2019-2026） |
+| [design-drawing-svg-md](./cad/design-drawing-svg-md/SKILL.md) | 设计图 SVG+MD 双载体记录（钢结构施工图→可复现图纸描述） |
 | [lightningcad](./cad/lightningcad/SKILL.md) | 建筑围护深化设计插件（AutoCAD/ZWCAD） |
 
 ---

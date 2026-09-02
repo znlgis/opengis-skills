@@ -1,6 +1,6 @@
 ---
 name: cad-skills
-description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 19 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, KiCad, SolveSpace, QCAD, xBIM, Clipper2, TongWen and more."
+description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 20 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, KiCad, SolveSpace, QCAD, xBIM, Clipper2, TongWen and more."
 tags:
   - cad
   - 3d-modeling
@@ -12,11 +12,11 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 72 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 73 技能总索引
 
 ## 概述
 
-本分类涵盖 **19 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
+本分类涵盖 **20 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
 
 ```
 几何内核 → 参数化建模 → CAD 应用 → 数据交换 → 可视化
@@ -59,6 +59,7 @@ tags:
 | [librecad](./librecad/SKILL.md) | 开源 2D CAD（C++/Qt） | `dxf` `2d` `qt` |
 | [lightcad](./lightcad/SKILL.md) | 轻量级 Web 2D CAD 框架 | `web` `2d` `lightweight` |
 | [fy_layout](./fy_layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） | `lightcad` `construction` `dotnet` |
+| [design-drawing-svg-md](./design-drawing-svg-md/SKILL.md) | 设计图 SVG+MD 双载体记录（钢结构施工图→可复现图纸描述） | `svg` `markdown` `pdf` `steel-structure` `llm` |
 
 ### 🔌 PCB/EDA 设计
 
@@ -107,6 +108,7 @@ tags:
 | "2D 多边形布尔运算" | `clipper2/SKILL.md` |
 | "DWG 文件读写" | `libredwg/SKILL.md` |
 | "三维几何底层操作" | `occt/SKILL.md` |
+| "把钢结构施工图转成 LLM 可读的 SVG+MD" | `design-drawing-svg-md/SKILL.md` |
 
 ---
 
