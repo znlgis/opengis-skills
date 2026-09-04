@@ -14,9 +14,11 @@ tags:
 
 > **技能定位：** 设计图 SVG+MD 双载体记录方法论——把"会画不懂"的矢量 PDF 工程图，转化为大模型能准确理解、指认与复刻的交付物。
 >
-> **方法来源：** 一套钢结构施工图数字化执行方案（v1.2）的固化与泛化；文中数字均为示例值，执行时以实际图纸实测为准。
+> **方法来源：** 一套钢结构施工图数字化执行方案的固化与泛化；文中数字为示例值或多图实测值，执行时以实际图纸实测为准。
 >
-> **适用输入：** 矢量线画 + 无文字层的 PDF 工程图（彩色分层或单色均可）。本仓库不附带脚本资产，各步骤脚本由执行者按本规范编写。
+> **适用输入：** 矢量线画 + 无文字层的 PDF 工程图（彩色分层或单色均可）。
+>
+> **脚本资产：** 本仓库 `scripts/` 目录附带可直接复跑的泛化脚本——共用库 [scripts/common.py](scripts/common.py)、入口配置 [scripts/config.example.json](scripts/config.example.json)、十一阶段脚本 `01_extract.py` … `09_verify_deliverables.py`（执行顺序与门禁见 [reference/pipeline.md](reference/pipeline.md)）。
 
 ---
 
@@ -39,7 +41,7 @@ tags:
 
 ### 适用对象
 
-A0 钢结构施工图（如 X600S-888301A 6-3/6-6 R00）为典型用例；任何"矢量线画 + 无文字层"的 PDF 工程图均可套用。
+A0 钢结构施工图（无文字层的矢量线画）为典型用例；任何"矢量线画 + 无文字层"的 PDF 工程图均可套用。
 
 ---
 
@@ -49,7 +51,7 @@ A0 钢结构施工图（如 X600S-888301A 6-3/6-6 R00）为典型用例；任何
 
 ```
 原图 PDF（矢量线画 / 无文字层 / 彩色分层）
-   │  提取（fitz.get_drawings + 颜色分层）
+   │  提取（fitz.get_drawings + 分层：OCG 语义优先 + 颜色兜底）
    ▼
 MD（魂·阅读主线） ◄── ID 互联（view/dim/balloon/prim-id + crosswalk） ──► SVG（骨·几何档案）
 语义/参数/值/工艺/BOM                                       原生坐标/图层/视图分组/文本
@@ -98,9 +100,9 @@ MD（魂·阅读主线） ◄── ID 互联（view/dim/balloon/prim-id + cross
 | 功能语义自然语言注解 | **MD** | — |
 | 不清/待确认项 | **MD** | — |
 | 换算关系（旋转/比例/平移） | **crosswalk**（MD 附录 + SVG metadata 各存一份，脚本同源生成） | — |
-| 渲染兼容性约束（不用 crispEdges、剔除纯白背景矩形、颜色→图层语义映射） | **SVG**（生成时内建） | MD 不复制 |
+| 渲染兼容性约束（不用 crispEdges、剔除纯白背景矩形、OCG 语义优先 + 颜色兜底的分层映射） | **SVG**（生成时内建） | MD 不复制 |
 
-**冲突仲裁：** 几何坐标以 SVG 为准；值与语义以 MD 为准；不一致时由校验闭环（流水线步骤 6）产出修正单，人工确认后回写。
+**冲突仲裁：** 几何坐标以 SVG 为准；值与语义以 MD 为准；不一致时由校验闭环（流水线步骤 8）产出修正单，人工确认后回写。
 
 ---
 
@@ -131,18 +133,40 @@ X_L = x·s + tx          Y_L = −y·s + ty
 
 ---
 
-## 生产与校验流水线（8 步）
+## 生产与校验流水线（11 步）
 
-各步骤所需脚本与动作由执行者按本规范编写与执行；〔新〕= 相对基础六层 SVG/六层 MD 的增量环节。文中数字均为示例值。
+完整职责、脚本执行顺序、关键依赖与门禁矩阵见 [reference/pipeline.md](reference/pipeline.md)；本节只留步骤索引 + 门禁矩阵。文中数字均为多图实测值。**语义步骤号 ≠ 执行顺序**（如 06 SVG 生成在 04 MD 增补之前执行），执行顺序以 [reference/pipeline.md](reference/pipeline.md) §2 为准。
 
-1. **矢量提取 + 分层**：`fitz.get_drawings()` 按颜色归六层 → 基础 SVG。
-2. **视图聚类归属〔新〕**：outline + dimension + centerline 三层做空间连通聚类（必须排除 thin/黄层——图框/标题栏线横跨全页会把所有视图串成单簇）；聚类 eps≈25pt（bbox 扩展相交并查集，示例值）；与 MD 布局表互认，产出 `data-view` 分组与 bbox；详图密集区粘连时人工指定 bbox。
-3. **文本恢复〔新〕**：整页渲染（≈144DPI）+ 分区放大后交视觉多模态模型识读（细线 glyph OCR 易碎、不推荐）；绿层掩码裁切作交叉核对；MD 已有值为先验；产出 `<text>` 并与 dim-id 绑定。
-4. **MD 增补**：在六层 MD 上补 ID、语义注解段、crosswalk 字段 → 重建 MD。
-5. **配准〔新〕**：逐视图固定尺度/旋转后，用对应锚点（视图外框角点/对称轴交点）直接求平移，得 crosswalk 的 tx/ty；CAD 矢量图无采样噪声、无需 RANSAC；并把 MD 的"测量"坐标吸附到 SVG 原生坐标。
-6. **三方互校**：MD 重绘 ⇄ SVG 叠合（几何差集）；绿层尺寸值集合 ⇄ MD dims；BOM ⇄ 气球；差异出修正单、人工仲裁后回写。
-7. **LLM 验收〔新〕**：题库问答（见下节），仅喂交付物作答，准确率 ≥95% 方交付。
-8. **交付物齐套**（见交付物与命名表）。
+1. **矢量提取 + 分层**（`01_extract.py`）：`fitz.get_drawings()` 按 **OCG 语义优先 + 颜色兜底** 归六层（颜色→层硬映射对部分图失效）；title-block 靠 OCG `layer==PDM_Title` 独立成层，否则退化为五层不合规。
+2. **视图聚类归属**（`02_cluster_views.py`）：outline + dimension + centerline 空间聚类（排除 thin 层）；**视图数是聚类输出、非可预设目标**（实测区间 [8,26]）。
+3. **跨图字形字典**（`03`/`03c`/`03d`）：模板聚类 → 自监督解码 → 视觉逐行对账，跨图合并；**视觉识读过双闸门**（图号真值 + 转录字符数核对）才入字典。
+4. **文本恢复**（`03b_text_recover.py`）：按视图 bbox 高清竖正裁切识读 → `<text>` + dim-id 绑定；竖排归一化必须用 `(x,y) → (1−y, x)`（旧式 `(y, 1−x)` 缺平移校正、静默降质）。
+5. **配准**（`05_crosswalk.py`）：逐视图定尺度/旋转/平移 → crosswalk 的 tx/ty + `self_check`；比例三档 read/inferred/fallback（实测 read 档全 0，inferred score=0 归 fallback）；V00 整页图框区用 `frame_scale()` 页面几何自证 1:1。
+6. **SVG 生成**（`06_enhance_svg.py`）：按六层 + 视图分组生成增强版 SVG（骨）——`data-*` 属性、`<text>` 尺寸绑定、弧/圆参数旁注、metadata 同源镜像（见 [reference/svg-spec.md](reference/svg-spec.md)）。
+7. **MD 增补**（`04_build_md.py`）：补 ID / 语义注解段 / crosswalk → 重建 MD（三条硬约束见 [reference/md-spec.md](reference/md-spec.md)）。
+8. **三方互校**（`07_validate.py`）：MD 重绘 ⇄ SVG 叠合（**2px 膨胀容差度量，recall≥0.99 门禁**）；绿层值集合 ⇄ dims（**绑定率非门禁**，未绑定值只入 MD §6）；BOM ⇄ 气球。
+9. **LLM 验收**（`08_qa.py`）：题库 ≥20 题 + 盲测子代理只读交付物作答，准确率 ≥95% 方交付。
+10. **独立审计**（`spec_audit`/`final_audit` 探针）：不复用生成器判定，从交付物 + 源 PDF 重算方案条款。
+11. **交付物齐套**（`09_verify_deliverables.py`）：六件套齐套 + 门禁汇总 + 基线对账（见交付物与命名章）。
+
+### 关键实测结论（多图验证）
+
+- **分层**：OCG 语义优先 + 颜色兜底；纠偏只在主色占比 >50% 时触发，逐图落盘 `meta.triggers` + 分层审计表。
+- **竖排归正式**：`(x,y) → (1−y, x)`；写错是静默降质（模板虚增 1010→1031、竖排已解行 129→1）。
+- **视图数不可预设**：是聚类输出（实测 [8,26]），不得为对齐基线数字调参或加机制。
+- **绿层绑定率非门禁**：上限是字典标签覆盖率（31/1010），未绑定值只入 MD §6 不清项。
+- **比例三档** read/inferred/fallback；实测 read 档全 0，`score=0` 仍叫 `inferred` 有误导 → 归 `fallback`。
+- **视觉识读双闸门**：图号真值（单行转录最长公共子串）+ 转录字符数核对（容差 0）；第一道未过整图不采信。
+- **三方互校容差度量**：2px 膨胀 + recall/precision/F1，门禁 recall≥0.99；严格 IoU 假性偏低仅参考；precision 不作门禁。
+- **V00 比例**：`frame_scale()` 页面几何自证 1:1，不打分。
+- **MD 三条硬约束**：单文件 ≤80000 字符、总量类问题须有明文句子可逐字核对、§3 须给 prim-id 区间 + 计数且区间求和 == kept。
+
+### 门禁矩阵（硬门禁 12 项 vs 基线对账）
+
+| 类别 | 含义 | 项 | 不达标动作 |
+|---|---|---|---|
+| **硬门禁** | 交付物自洽性与合规性，**必须全过** | 计数链四相等、六层齐全（含独立 title-block）、无 `UNASSIGNED`、recall≥0.99、rms≤0.1pt、载体一致性、`self_check` 全过、QA≥20 题、五类齐全、QA 自检 100%、盲测≥95%、MD≤80000 字符 | 回相应阶段修正后重跑，不得放行 |
+| **基线对账** | 与参照数值比较，**只记录并解释** | 逐层图元数、视图数、绑定率、recall/rms 具体数值 | 写清机制差异；**禁止为对齐数字调参或加机制** |
 
 ---
 
@@ -196,8 +220,12 @@ X_L = x·s + tx          Y_L = −y·s + ty
 | 弧/长圆 data-params 旁注 | — | ✔ |
 | 语义注解段 | 每视图 1 句 | 每视图 1–3 句 + 关系句 |
 | 三方互校 + LLM 验收 | 值集合核对 | + 叠合差集 + 题库 ≥95% |
+| data-view 无 UNASSIGNED（标题栏/图框归 V00） | ✔ | ✔ |
+| crosswalk 记 scale_source + self_check | self_check | + scale_source 三档分级 |
+| 叠合用容差度量（recall/precision/F1） | — | ✔（recall≥0.99 门禁） |
+| 独立于生成器的审计 | — | ✔（09 + spec_audit + final_audit，三者互不复用判定） |
 
-估算（示例）：最小版 ≈0.5 人日/图（主要增量为视图分组与文本恢复）；完整版 ≈1 人日/图（含配准吸附与验收题库）。
+估算（实测修正）：最小版 ≈0.5 人日/图；完整版 ≈**1.5–2 人日/图**（首图含字典冷启动更高，后续图因字典跨图复用递减）。原估「≈1 人日/图」未计入跨图字形字典、多轮盲测答卷维护、独立审计三处增量。
 
 ---
 
@@ -215,10 +243,17 @@ X_L = x·s + tx          Y_L = −y·s + ty
 | 渲染库缺 cairo（svglib/reportlab） | 重绘脚本用 PIL 直读 get_drawings() 数据，不走 svglib→PNG 链路 |
 | 视图聚类串簇（thin 层横跨全页） | 聚类排除 thin(黄)层，仅用 outline+dimension+centerline |
 | BOM 缺失 | 源图标题栏可能不含可填写明细表；降级为记录"BOM 未提供"并列出已识别零件编号，不得臆造材料/重量 |
+| 颜色→层硬映射对个别图失效（黄既是 thin 又是 title-block） | OCG 语义优先、颜色兜底；任一色占比 >50% 时触发复核并落 `meta.triggers` + 分层审计表 |
+| 竖排归正式写错（静默降质：所有 `rotate(90)` 文本坐标错位，计数类门禁却全过） | 用 `self_check` 双界断言逐视图验；竖排归一化固定用 `(x,y)→(1−y,x)` |
+| 发丝线严格 IoU 假性偏低（0.12pt 抗锯齿） | 叠合用容差度量（2px 膨胀 + recall/precision/F1）；严格 IoU 仅参考，precision 不作门禁 |
+| 为对齐基线数字而调参/加机制 | 基线不吻合先做参数扫描取证，证不可弥合后按「记录并解释」登记，不改机制凑数 |
+| 校验由生成器自判（「自己说自己通过」） | 官方 09 之外另立不复用其判定的审计（spec_audit + final_audit）；FAIL 先定性（口径错 / 真缺陷）再动手 |
+| metadata 裸 JSON 含中文/特殊字符破坏 XML | 用 `<![CDATA[...]]>` 包裹 |
 
 ---
 
 ## 参考资源
 
-- **SVG 规范（骨）：** [reference/svg-spec.md](reference/svg-spec.md) — 完整 XML 示例、四项增强、渲染兼容性约束
-- **MD 规范（魂）：** [reference/md-spec.md](reference/md-spec.md) — 六层 schema、逐视图章节模板、crosswalk JSON 全文、BOM 降级规则
+- **SVG 规范（骨）：** [reference/svg-spec.md](reference/svg-spec.md) — 完整 XML 示例、四项增强、data-* 属性速查、渲染兼容性约束
+- **MD 规范（魂）：** [reference/md-spec.md](reference/md-spec.md) — 六层 schema、逐视图章节模板、crosswalk JSON 全文、BOM 降级规则、三条硬约束
+- **流水线（十一步）：** [reference/pipeline.md](reference/pipeline.md) — 每步职责、脚本执行顺序与覆写防护、门禁矩阵、范围分级

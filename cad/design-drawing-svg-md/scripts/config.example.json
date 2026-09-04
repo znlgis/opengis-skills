@@ -1,0 +1,70 @@
+{
+  "paths": {
+    "pdf_dir": "<源PDF目录>",
+    "out": "<输出根目录>",
+    "glyph_dir": null,
+    "probe_dir": null
+  },
+  "sheets": [
+    "示例图号A 1-1 R00",
+    "示例图号B 2-1 R00"
+  ],
+  "baseline": {
+    "sheet": null,
+    "drawings": null,
+    "layers": {},
+    "views": null,
+    "bind_rate": null,
+    "rms_pt": null,
+    "recall": null
+  },
+  "plan_drawings": {},
+  "page": {
+    "w_pt": 2383.654052734375,
+    "h_pt": 3370.110107421875,
+    "rotation": "ccw90",
+    "pt_per_mm": 2.83465
+  },
+  "drawing_no_prefixes": [
+    "示例图号A",
+    "示例图号B"
+  ],
+  "fonts": {
+    "cjk": "C:/Windows/Fonts/simhei.ttf",
+    "latin": "arial.ttf"
+  },
+  "layering": {
+    "color_layer": {
+      "black": "outline",
+      "cyan": "centerline",
+      "yellow": "thin",
+      "green": "dimension",
+      "red": "special"
+    },
+    "ocg_strong": {
+      "outline": ["粗实线", "产品轮廓线", "产品线", "粗线"],
+      "centerline": ["中心线", "细点划线"],
+      "dimension": ["标注尺寸线"],
+      "special": ["双点划线", "剖面线"]
+    },
+    "ocg_generic": [
+      "0", "01", "02", "05", "7", "8", "DIM", "DEFPOINTS", "THIN", "hsl",
+      "文字", "标注 文字线", "标注\u3000文字线", "7标注层"
+    ],
+    "ocg_text": [
+      "8", "文字", "标注 文字线", "标注\u3000文字线", "7标注层",
+      "标注尺寸线", "DIM", "PDM_Title"
+    ],
+    "ocg_notes": [
+      "文字", "标注 文字线", "标注\u3000文字线", "7标注层"
+    ]
+  },
+  "glyph": {
+    "min_side": 0.6,
+    "max_dim": 30.0,
+    "sig_nd": 1,
+    "min_count_title": 1,
+    "min_count_notes": 2,
+    "min_count_dim": 3
+  }
+}
