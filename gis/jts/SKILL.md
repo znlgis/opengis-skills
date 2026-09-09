@@ -209,7 +209,7 @@ GeometryCollection gc = gf.createGeometryCollection(new Geometry[]{point, line, 
 
 ---
 
-$h$faq`
+## 常见问题
 
 1. **使用 GeometryFactory 创建几何**：不要直接 `new Point()`，始终通过 `GeometryFactory` 的工厂方法创建几何对象。
 2. **面必须闭合**：Polygon 的外环和内环坐标数组的首尾坐标必须相同。

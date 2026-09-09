@@ -293,7 +293,7 @@ curl -X POST https://mail.example.com/api/v1/mail/send \
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 问题 | 解决 |
 |------|------|

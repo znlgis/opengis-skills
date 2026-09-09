@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 73+ open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 75 open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
 tags:
   - gis
   - cad
@@ -30,7 +30,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域及通用工具（others），共 7 个分类、73 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域及通用工具（others），共 7 个分类、75 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -48,6 +48,8 @@ tags:
 - **需要 CSG 布尔运算建模？** → 加载 `3d/opencsg-net/SKILL.md`
 - **需要 .NET 错误追踪？** → 加载 `csharp/sentry/SKILL.md`
 - **需要 DeepSeek 智能体框架？** → 加载 `ai/deepseek-harness/SKILL.md`
+- **需要方案驱动的 GIS 分析/质检流水线？** → 加载 `gis/opengis-daf/SKILL.md`
+- **需要 OpenCode × DeepSeek 最优配置？** → 加载 `ai/my-opencode-deepseek-config/SKILL.md`
 
 > **AI 使用提示：** 优先使用下方标签系统精准定位所需技能，按需加载 1-3 个 SKILL.md，避免全量加载导致上下文膨胀。
 
@@ -55,7 +57,7 @@ tags:
 
 ## 技能索引
 
-### 🌍 GIS — 地理信息系统（23 个）
+### 🌍 GIS — 地理信息系统（24 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -82,6 +84,7 @@ tags:
 | [opengis-utils-for-java](./gis/opengis-utils-for-java/SKILL.md) | OpenGIS Java 实用工具集 | `java` `utils` `toolkit` |
 | [opengis-utils-for-net](./gis/opengis-utils-for-net/SKILL.md) | OpenGIS .NET 实用工具集 | `dotnet` `utils` `toolkit` |
 | [geopipe-agent](./gis/geopipe-agent/SKILL.md) | GIS 数据流水线 Agent（YAML 驱动） | `agent` `pipeline` `yaml` `qc` |
+| [opengis-daf](./gis/opengis-daf/SKILL.md) | 方案驱动 GIS 分析与质检框架（.NET） | `dotnet` `spatial-analysis` `qc` `pipeline` |
 
 ### 📐 CAD — 计算机辅助设计（20 个）
 
@@ -122,7 +125,7 @@ tags:
 | [dotnet-reactor](./csharp/dotnet-reactor/SKILL.md) | .NET 商业级混淆/加壳/授权 | `dotnet` `obfuscation` `security` |
 | [sentry](./csharp/sentry/SKILL.md) | Sentry .NET SDK：错误追踪与性能监控 | `dotnet` `error-tracking` `monitoring` |
 
-### 🤖 AI — LLM/Agent（9 个）
+### 🤖 AI — LLM/Agent（10 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -135,6 +138,7 @@ tags:
 | [opencode](./ai/opencode/SKILL.md) | 模型无关的终端 AI 编码代理（配置即代码） | `agent` `coding-agent` `terminal` `mcp` |
 | [docutranslate](./ai/docutranslate/SKILL.md) | 基于 LLM 的本地多格式文件翻译工具 | `llm` `translation` `pdf` `mcp` |
 | [deepseek-harness](./ai/deepseek-harness/SKILL.md) | DeepSeek Harness（dsh）：插件化智能体框架 | `agent` `deepseek` `plugin` `cordis` |
+| [my-opencode-deepseek-config](./ai/my-opencode-deepseek-config/SKILL.md) | OpenCode × DeepSeek V4 最优配置 | `opencode` `deepseek` `agent-config` |
 
 ### 📡 IoT — 物联网（1 个）
 
@@ -175,7 +179,7 @@ tags:
 |------|---------|
 | `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, clipper1, freecad, kicad, libredwg, geopipe-agent, deepseek-harness, docutranslate, hermes-agent |
 | `java` | gdal-api, geotools, jts, geometry-api-java, opengis-utils-for-java, geoserver, geoserver-cloud, ruoyi-cloud |
-| `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
+ | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, opengis-daf, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
 | `javascript` / `typescript` | cesiumjs, openlayers, qcad, chili3d, lightcad, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat |
 | `cpp` / `c` | gdal-api, occt, clipper1, clipper2, librecad, libredwg |
 | `go` | go, robotgo, robotgo-flow |
@@ -189,13 +193,13 @@ tags:
 |------|---------|
 | `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, geopandas, postgis, opengis-utils-for-java, opengis-utils-for-net, occt, xbim, clipper1, clipper2, ara3d-sdk, elements, opencsg-net |
 | `raster` | gdal, gdal-api, qgis-process, geopipe-agent, geotools, postgis, pyqgis |
-| `vector` | gdal, gdal-api, geopandas, geopipe-agent, geotools, opengis-utils-for-java, opengis-utils-for-net, postgis, pyqgis |
+| `vector` | gdal, gdal-api, geopandas, geopipe-agent, geotools, opengis-utils-for-java, opengis-utils-for-net, opengis-daf, postgis, pyqgis |
 | `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api, geotools, mapsui, openlayers, sharpmap |
 | `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, fy_layout, photo-sphere-viewer, supersplat, ara3d-sdk, elements, opencsg-net |
 | `2d` | openlayers, qcad, librecad, sharpmap, lightcad, clipper1, clipper2, fy_layout, solvespace |
 | `orm` / `database` | sod, sqlsugar, postgis |
-| `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate, deepseek-harness |
-| `pipeline` / `workflow` | dify, opengis-all, geopipe-agent, qgis-process, robotgo-flow |
+| `agent` / `llm` | dify, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate, deepseek-harness, my-opencode-deepseek-config |
+| `pipeline` / `workflow` | dify, opengis-all, geopipe-agent, opengis-daf, qgis-process, robotgo-flow |
 | `automation` / `rpa` | geoserver-rest-api, qgis-process, acme.sh, robotgo, robotgo-flow |
 | `autocad` | ifoxcad, lightningcad, tongwen |
 | `svg` / `markdown` / `pdf` | design-drawing-svg-md |

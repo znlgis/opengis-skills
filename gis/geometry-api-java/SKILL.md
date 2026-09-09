@@ -329,7 +329,7 @@ geometry.addAttribute(VertexDescription.Semantics.M);
 
 ---
 
-$h$faq`
+## 常见问题
 
 1. **坐标系一致**：进行空间运算前，确保所有几何对象使用相同的 `SpatialReference`。
 2. **简化几何**：导入外部数据后，使用 `GeometryEngine.simplify()` 确保拓扑正确。

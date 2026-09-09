@@ -203,7 +203,7 @@ gh repo edit my-dsh-plugin --add-topic dsh-plugin
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 问题 | 解决方案 |
 |------|---------|

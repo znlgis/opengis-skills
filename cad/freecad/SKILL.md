@@ -198,11 +198,11 @@ freecad   --console <<<'doc=App.newDocument(); ...'
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 问题 | 解决 |
 |------|------|
-| Toponaming 在编辑后特征丢失 | 升级到 FreeCAD 1.1.1（2026-04）（含拓扑命名修复） |
+| Toponaming 在编辑后特征丢失 | 升级到 FreeCAD ≥ 1.1.1（2026-04 引入拓扑命名修复；当前稳定版 1.1.3） |
 | 中文文件名编码 | 使用 UTF-8；Windows 下避免 GBK 路径 |
 | 导出 STEP 缺少颜色 | 用 STEP AP242 或在 ImportSettings 启用颜色 |
 | Sketcher 求解失败 | 删除冗余约束、检查 DoF |

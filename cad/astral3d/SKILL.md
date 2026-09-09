@@ -11,7 +11,7 @@ tags:
   - step
 ---
 
-> **项目地址：** <https://github.com/AstralEngine/astral3d>（仓库已404，请以 znlgis.github.io 链接为准）
+> **项目地址：** <https://github.com/mlt131220/Astral3D>（Vue3 + THREE.JS 的 WebGL 3D 引擎，npm 包名 `astral3d`）
 >
 > **演示：** <https://astral3d.com/>
 >
@@ -219,7 +219,7 @@ viewer.timeline
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 问题 | 解决 |
 |------|------|

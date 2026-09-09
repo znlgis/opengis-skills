@@ -1,6 +1,6 @@
 ---
 name: ai-skills
-description: "Use when building LLM applications, RAG knowledge bases, AI agents, terminal coding agents, multi-model orchestration, plugin-based agent harnesses, or file translation. Index of 9 skills: Dify, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, Oh-My-OpenAgent, Superpowers-zh, DeepSeek Harness."
+description: "Use when building LLM applications, RAG knowledge bases, AI agents, terminal coding agents, multi-model orchestration, plugin-based agent harnesses, or file translation. Index of 10 skills: Dify, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, Oh-My-OpenAgent, Superpowers-zh, DeepSeek Harness, My OpenCode DeepSeek Config."
 tags:
   - ai
   - llm
@@ -12,11 +12,11 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 73 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 75 技能总索引
 
 ## 概述
 
-本分类涵盖 **9 个 AI/LLM 开源项目**的技能文件：
+本分类涵盖 **10 个 AI/LLM 开源项目**的技能文件：
 
 - **LLM 应用平台**：Dify（RAG + 工作流 + Agent 一站式）
 - **智能体 / 助手**：Hermes Agent（自学习通用智能体）、OpenClaw（多通道个人 AI 助手 Gateway）
@@ -24,6 +24,7 @@ tags:
 - **插件式智能体框架**：DeepSeek Harness（dsh，Cordis 引擎驱动的插件化 Agent Harness）
 - **文件翻译**：DocuTranslate（基于 LLM 的本地多格式文件翻译工具）
 - **编排与方法论**：Oh-My-OpenAgent（OpenCode 多模型编排插件）、Superpowers-zh（中文 AI 编程方法论 Skills）
+- **Agent 配置方案**：My OpenCode DeepSeek Config（OpenCode × DeepSeek V4 最优纯配置）
 
 ### 何时加载此索引？
 
@@ -46,6 +47,7 @@ tags:
 | [oh-my-openagent](./oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） | `agent` `opencode` `orchestration` |
 | [superpowers-zh](./superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 | `methodology` `chinese` `skill` |
 | [deepseek-harness](./deepseek-harness/SKILL.md) | DeepSeek Harness（dsh）：插件化智能体框架 | `agent` `deepseek` `plugin` `cordis` `typescript` |
+| [my-opencode-deepseek-config](./my-opencode-deepseek-config/SKILL.md) | OpenCode × DeepSeek V4 最优配置（12 Agent/25 Skill/缓存纪律） | `opencode` `deepseek` `agent-config` |
 
 ---
 
@@ -60,6 +62,7 @@ tags:
 | "在终端用极简 Agent Harness 编码" | `pi/SKILL.md` |
 | "在终端用 AI 自主改代码 / 跑命令" | `opencode/SKILL.md` |
 | "配置 opencode.json / 省 Token" | `opencode/SKILL.md` |
+| "部署/调优 OpenCode×DeepSeek 配置" | `my-opencode-deepseek-config/SKILL.md` |
 | "翻译 PDF/Word/Excel/字幕等文件" | `docutranslate/SKILL.md` |
 | "用中文 TDD/审查方法论约束 AI" | `superpowers-zh/SKILL.md` |
 | "OpenCode 多模型编排 / Agent Harness" | `oh-my-openagent/SKILL.md` |

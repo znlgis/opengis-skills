@@ -329,7 +329,7 @@ String wkt = new WKTWriter().write(geom);
 
 ---
 
-$h$faq`
+## 常见问题
 
 1. **Maven 仓库**：GeoTools 不在 Maven Central 上，必须配置 OSGeo 仓库（`https://repo.osgeo.org/repository/release/`）。
 2. **EPSG 数据库**：使用 CRS 功能时，需引入 `gt-epsg-hsql`（嵌入式）或 `gt-epsg-wkt`（轻量）模块，否则 `CRS.decode()` 会抛出异常。

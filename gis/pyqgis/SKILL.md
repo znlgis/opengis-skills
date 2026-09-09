@@ -14,9 +14,9 @@ tags:
 
 > **项目地址：** <https://github.com/qgis/QGIS>
 >
-> **开发者手册：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/>
+> **开发者手册：** <https://docs.qgis.org/4.2/en/docs/pyqgis_developer_cookbook/>
 >
-> **Python API 参考：** <https://qgis.org/pyqgis/3.44/>
+> **Python API 参考：** <https://qgis.org/pyqgis/4.2/>
 >
 > **许可证：** GPL-2.0+
 

@@ -9,7 +9,7 @@ tags:
   - pico
 ---
 
-> **项目地址（资料/示例）：** <https://github.com/keyestudio/ke3036>（仓库已404，具体请以 znlgis.github.io 或 keyestudio 官方为准）
+> **项目地址（资料/示例）：** <https://github.com/keyeswiki/KE3036-Keyes-Pico-42-1->（Keyes Wiki 镜像仓库；原 keyestudio/ke3036 仓库已下线）
 >
 > **Pico 官方文档：** <https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html>
 >
@@ -309,7 +309,7 @@ while True:
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 问题 | 解决 |
 |------|------|
@@ -331,5 +331,5 @@ $h$faq`
 
 - Pico 文档：<https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html>
 - MicroPython RP2 Quickref：<https://docs.micropython.org/en/latest/rp2/quickref.html>
-- KE3036 资料：keyestudio 官网与 GitHub
+- KE3036 资料镜像：<https://github.com/keyeswiki/KE3036-Keyes-Pico-42-1->（keyestudio 原仓库已下线）
 - 中文教程（znlgis）：<https://znlgis.github.io/iot/tutorial/ke3036-keyes-pico/>

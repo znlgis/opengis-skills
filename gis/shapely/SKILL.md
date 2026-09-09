@@ -276,7 +276,7 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 问题 | 解决 |
 |------|------|

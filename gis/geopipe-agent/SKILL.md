@@ -14,9 +14,7 @@ tags:
   - python
 ---
 
-> **项目地址：** <https://github.com/znlgis/geopipe-agent>（仓库已404/私有，暂不可用）
-> 
-> ⚠ 建议：若仓库持续不可用，此 skill 仅作参考，部分 pip 安装方式可能不可用。
+> **项目地址：** <https://github.com/znlgis/GeoPipeAgent>（PyPI 包名为 `geopipe-agent`）
 >
 > **许可证：** MIT
 
@@ -456,7 +454,7 @@ pipeline:
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 问题 | 解决 |
 |------|------|

@@ -1,6 +1,6 @@
 ---
 name: gis-skills
-description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, or building web map applications. Index of 23 skills: GDAL, GeoServer, QGIS, PostGIS, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, NetTopologySuite and more."
+description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, or building web map applications. Index of 24 skills: GDAL, GeoServer, QGIS, PostGIS, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, NetTopologySuite, OpenGisDAF and more."
 tags:
   - gis
   - geospatial
@@ -12,11 +12,11 @@ tags:
   - webmapping
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 73 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 75 技能总索引
 
 ## 概述
 
-本分类涵盖 **23 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务的完整链路：
+本分类涵盖 **24 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务的完整链路：
 
 ```
 数据源 → 命令行处理 → 编程分析 → 空间数据库 → 地图服务 → 前端可视化
@@ -86,6 +86,7 @@ tags:
 | [nettopologysuite](./nettopologysuite/SKILL.md) | JTS 的 .NET 移植 | `dotnet` `geometry` |
 | [sharpmap](./sharpmap/SKILL.md) | .NET WinForms/Web 地图渲染库 | `dotnet` `legacy` `winforms` |
 | [mapsui](./mapsui/SKILL.md) | .NET 跨平台地图控件 | `dotnet` `crossplatform` `maui` |
+| [opengis-daf](./opengis-daf/SKILL.md) | 方案驱动 GIS 分析与质检框架（.NET 10 / C# 14） | `dotnet` `spatial-analysis` `qc` |
 
 ### 🧩 综合/工具集
 
@@ -112,6 +113,7 @@ tags:
 | "前端 3D 地球" | `cesiumjs/SKILL.md` |
 | "前端 2D 地图" | `openlayers/SKILL.md` |
 | "AI 驱动的 GIS 流水线" | `geopipe-agent/SKILL.md` |
+| "方案驱动的分析/质检流水线" | `opengis-daf/SKILL.md` |
 | "完整 GIS 处理链路" | `opengis-all/SKILL.md` |
 
 ---

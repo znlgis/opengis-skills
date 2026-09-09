@@ -67,8 +67,8 @@ Go 是由 Robert Griesemer、Rob Pike 和 Ken Thompson 于 2007 年在 Google �
 brew install go
 
 # Linux（官方二进制）
-wget https://go.dev/dl/go1.26.5.linux-amd64.tar.gz
-sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.26.5.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.27.1.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.27.1.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 
 # Windows
@@ -170,7 +170,7 @@ go run ./cmd/api
 
 ---
 
-$h$faq`
+## 常见问题
 
 | 陷阱 | 说明 | 解决方案 |
 |------|------|---------|
