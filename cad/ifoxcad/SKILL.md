@@ -44,7 +44,7 @@ dotnet add package IFoxCAD.Cad
 
 ### 项目模板
 
-参考官方模板：<https://gitee.com/inspirefunction/ifoxcad/tree/master/Examples>
+参考官方模板：<https://gitee.com/inspirefunction/ifoxcad>
 
 ---
 
@@ -302,4 +302,4 @@ IFoxCAD 通过条件编译支持：
 
 - 仓库：<https://gitee.com/inspirefunction/ifoxcad>
 - 文档与示例：<https://gitee.com/inspirefunction/ifoxcad/wikis>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/ifoxcad/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/IFoxCAD/>

@@ -299,4 +299,4 @@ map.SRID = 3857;
 ## 参考资源
 
 - Wiki：<https://github.com/SharpMap/SharpMap/wiki>
-- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/sharpmap/>
+- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/SharpMap/>

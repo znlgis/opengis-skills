@@ -264,4 +264,4 @@ doc.applyOperation(op);
 - 文档：<https://qcad.org/en/qcad-documentation>
 - API：<https://api.qcad.org/>
 - 论坛：<https://qcad.org/rsforum/>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/qcad/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/qcad/>

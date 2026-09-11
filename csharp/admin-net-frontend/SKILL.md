@@ -228,4 +228,4 @@ server {
 - **Element Plus 文档：** <https://element-plus.org/>
 - **Vite 文档：** <https://vitejs.dev/>
 - **Pinia 文档：** <https://pinia.vuejs.org/>
-- **vue-next-admin：** <https://lyt-top.gitee.io/vue-next-admin-doc-preview/>
+- **vue-next-admin：** <https://vue-next-admin-doc.vercel.app/>

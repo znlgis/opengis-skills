@@ -303,7 +303,7 @@ const viewer = new Viewer({
 - GitHub 仓库：<https://github.com/mistic100/Photo-Sphere-Viewer>
 - 发布说明：<https://github.com/mistic100/Photo-Sphere-Viewer/releases>
 - React wrapper：<https://www.npmjs.com/package/react-photo-sphere-viewer>
-- 中文教程（znlgis）：<https://znlgis.github.io/3d/tutorial/photo-sphere-viewer/>
+- 中文教程（znlgis）：<https://znlgis.github.io/3d/Photo-Sphere-Viewer/>
 - NPM（core）：<https://www.npmjs.com/package/@photo-sphere-viewer/core>
 
 ---

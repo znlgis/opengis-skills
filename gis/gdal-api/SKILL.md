@@ -346,5 +346,5 @@ transform.TransformPoint(point);
 - **SWIG 绑定源码：** <https://github.com/OSGeo/gdal/tree/master/swig>
 - **官方文档首页：** <https://gdal.org/en/stable/>
 - **GDAL 教程：** <https://gdal.org/en/stable/tutorials/index.html>
-- **驱动格式列表：** <https://gdal.org/en/stable/drivers/index.html>
+- **驱动格式列表：** <https://gdal.org/en/stable/drivers/vector/index.html>
 - **问题追踪：** <https://github.com/OSGeo/gdal/issues>

@@ -286,4 +286,4 @@ doc.Write(fs);
 
 - Wiki：<https://github.com/nissl-lab/npoi/wiki>
 - Apache POI（API 等价）：<https://poi.apache.org/components/spreadsheet/>
-- 中文教程（znlgis）：<https://znlgis.github.io/csharp/tutorial/npoi/>
+- 中文教程（znlgis）：<https://znlgis.github.io/csharp/npoi/>

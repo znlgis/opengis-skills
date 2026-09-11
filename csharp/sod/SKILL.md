@@ -304,4 +304,4 @@ db.UseTransaction(() => {
 ## 参考资源
 
 - 官网：<https://www.pwmis.com/sod/>
-- 中文教程（znlgis）：<https://znlgis.github.io/csharp/tutorial/sod/>
+- 中文教程（znlgis）：<https://znlgis.github.io/csharp/sod/>

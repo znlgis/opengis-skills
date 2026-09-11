@@ -478,4 +478,4 @@ pipeline:
 
 - 步骤参考：[reference/steps-reference.md](reference/steps-reference.md)
 - 管道 Schema：[reference/pipeline-schema.md](reference/pipeline-schema.md)
-- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/geopipe-agent/>
+- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/GeoPipeAgent/>

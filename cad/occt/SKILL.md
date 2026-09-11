@@ -269,4 +269,4 @@ const box = new oc.BRepPrimAPI_MakeBox_2(100, 60, 30).Shape();
 - 文档：<https://dev.opencascade.org/doc/overview/html/>
 - API：<https://dev.opencascade.org/doc/refman/html/>
 - PythonOCC：<https://github.com/tpaviot/pythonocc-core>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/occt/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/occt/>

@@ -355,4 +355,4 @@ btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
 
 - 官网：<https://reogrid.net/>
 - 仓库：<https://github.com/unvell/ReoGrid>
-- 中文教程（znlgis）：<https://znlgis.github.io/csharp/tutorial/reogrid/>
+- 中文教程（znlgis）：<https://znlgis.github.io/csharp/ReoGrid/>

@@ -254,5 +254,5 @@ cd self-hosted
 - [Sentry .NET 文档](https://docs.sentry.io/platforms/dotnet/)
 - [Sentry ASP.NET Core 指南](https://docs.sentry.io/platforms/dotnet/guides/aspnetcore/)
 - [sentry-dotnet GitHub](https://github.com/getsentry/sentry-dotnet)
-- [Sentry 自托管文档](https://docs.sentry.io/self-hosted/)
+- [Sentry 自托管文档](https://develop.sentry.dev/self-hosted/)
 - [性能监控文档](https://docs.sentry.io/product/performance/)

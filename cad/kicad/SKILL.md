@@ -242,4 +242,4 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 - 官方文档：<https://docs.kicad.org/>
 - 入门教程（中文）：<https://docs.kicad.org/master/zh/getting_started_in_kicad/getting_started_in_kicad.html>
 - pcbnew Python：<https://docs.kicad.org/doxygen-python/>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/kicad/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/KiCad/>

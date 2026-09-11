@@ -329,4 +329,4 @@ sh deploy.sh web        # 前端
 
 - 文档：<http://doc.ruoyi.vip/>
 - 仓库：<https://gitee.com/y_project/RuoYi-Cloud>
-- 中文教程（znlgis）：<https://znlgis.github.io/others/tutorial/ruoyi-cloud/>
+- 中文教程（znlgis）：<https://znlgis.github.io/others/RuoYi-Cloud/>

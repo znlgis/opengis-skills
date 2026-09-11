@@ -249,6 +249,6 @@ foreach (var p in points) if (prep.Contains(p)) ...
 ## 参考资源
 
 - 文档：<https://nettopologysuite.github.io/NetTopologySuite/>
-- API：<https://nettopologysuite.github.io/NetTopologySuite/api/>
+- API：<https://nettopologysuite.github.io/NetTopologySuite/>
 - JTS Javadoc（API 等价）：<https://locationtech.github.io/jts/javadoc>
-- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/nettopologysuite/>
+- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/NetTopologySuite/>

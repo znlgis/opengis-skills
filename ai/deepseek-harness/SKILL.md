@@ -236,6 +236,6 @@ gh repo edit my-dsh-plugin --add-topic dsh-plugin
 ## 参考资源
 
 - [DeepSeek Harness GitHub](https://github.com/deepseek-ai/deepseek-harness)
-- [Cordis 编程范式论文](https://github.com/deepseek-ai/deepseek-harness/blob/main/docs/architecture.md)
+- [架构文档](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md)
 - [DeepSeek API 文档](https://platform.deepseek.com/api-docs)
 - [Discord 社区](https://discord.gg/deepseek)

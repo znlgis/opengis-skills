@@ -286,5 +286,5 @@ Start → 用户提交申请
 ## 参考资源
 
 - 文档：<https://docs.dify.ai/>
-- 模板市场：<https://dify.ai/templates>
-- 中文教程（znlgis）：<https://znlgis.github.io/ai/tutorial/dify/>
+- 模板市场：<https://dify.ai/>
+- 中文教程（znlgis）：<https://znlgis.github.io/ai/dify/>

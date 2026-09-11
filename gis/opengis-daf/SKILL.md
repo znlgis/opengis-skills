@@ -11,6 +11,8 @@ tags:
   - geojson
   - shapefile
   - postgis
+  - vector
+  - pipeline
   - plugin
 ---
 

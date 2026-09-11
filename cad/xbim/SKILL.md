@@ -249,4 +249,4 @@ facility.WriteXls("out.xlsx", out _);     // Excel 格式（COBie 标准）
 - 文档：<https://docs.xbim.net/>
 - 示例：<https://github.com/xBimTeam/XbimEssentials/tree/master/Tests>
 - WebUI：<https://github.com/xBimTeam/XbimWebUI>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/xbim/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/Xbim/>

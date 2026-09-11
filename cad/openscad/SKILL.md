@@ -275,4 +275,4 @@ openscad -o preview.png --camera=0,0,0,55,0,25,150 --imgsize=800,600 part.scad
 - 文档：<https://openscad.org/documentation.html>
 - Cheatsheet：<https://openscad.org/cheatsheet/>
 - 用户手册（Wikibook）：<https://en.wikibooks.org/wiki/OpenSCAD_User_Manual>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/openscad/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/openscad/>

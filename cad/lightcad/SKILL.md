@@ -246,6 +246,6 @@ app.view.rotate(15);
 
 - 原仓库（已下线）：<https://github.com/light-CAD/lightcad>
 - 文档与示例：<https://lightcad.cn/docs>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/lightcad/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/LightCAD/>
 
 > 该 SKILL 基于 Web CAD 通用模式整理，具体 API 命名以最新版本仓库为准。

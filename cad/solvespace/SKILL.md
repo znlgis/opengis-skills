@@ -221,4 +221,4 @@ solvespace-cli export-view out.svg  input.slvs --view top
 
 - 帮助：<https://solvespace.com/help.pl>
 - 教程：<https://github.com/solvespace/solvespace/wiki>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/solvespace/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/solvespace/>

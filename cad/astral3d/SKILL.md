@@ -250,6 +250,6 @@ viewer.timeline
 ## 参考资源
 
 - 演示：<https://astral3d.com/>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/astral3d/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/Astral3D/>
 
 > 如官方文档/仓库地址有调整，请以 znlgis.github.io 中的最新链接为准。

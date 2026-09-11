@@ -233,4 +233,4 @@ freecad   --console <<<'doc=App.newDocument(); ...'
 - Wiki：<https://wiki.freecad.org/Main_Page>
 - Python 入门：<https://wiki.freecad.org/FreeCAD_Scripting_Basics>
 - 论坛：<https://forum.freecad.org/>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/freecad/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/FreeCAD/>

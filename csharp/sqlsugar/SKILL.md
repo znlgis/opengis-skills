@@ -298,4 +298,4 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 
 - 官方文档：<https://www.donet5.com/Home/Doc>
 - 仓库：<https://github.com/DotNetNext/SqlSugar>
-- 中文教程（znlgis）：<https://znlgis.github.io/csharp/tutorial/sqlsugar/>
+- 中文教程（znlgis）：<https://znlgis.github.io/csharp/SqlSugar/>

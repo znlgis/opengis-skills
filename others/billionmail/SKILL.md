@@ -49,7 +49,7 @@ docker compose up -d
 ### 一键脚本
 
 ```bash
-curl -sSL https://www.billionmail.com/install.sh | bash
+cd /opt && git clone https://github.com/aaPanel/BillionMail && cd BillionMail && bash install.sh
 ```
 
 ### 端口要求
@@ -315,4 +315,4 @@ curl -X POST https://mail.example.com/api/v1/mail/send \
 
 - 文档：<https://docs.billionmail.com/>
 - 仓库：<https://github.com/Billionmail/BillionMail>
-- 中文教程（znlgis）：<https://znlgis.github.io/others/tutorial/billionmail/>
+- 中文教程（znlgis）：<https://znlgis.github.io/others/BillionMail/>

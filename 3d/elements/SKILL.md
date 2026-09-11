@@ -249,6 +249,6 @@ model.ToGlTF("room.glb");
 ## 参考资源
 
 - [Elements 官方文档](https://hypar.io/Elements/)
-- [Elements 测试代码](https://github.com/hypar-io/Elements/tree/main/Elements/test) — 官方推荐的用法示例
+- [Elements 测试代码](https://github.com/hypar-io/Elements/tree/master/Elements/test) — 官方推荐的用法示例
 - [Elements Playground](https://hypar.io/Elements/Playground/) — 浏览器端实时代码编辑
-- [CHANGELOG](https://github.com/hypar-io/Elements/blob/main/CHANGELOG.md) — 版本更新记录
+- [CHANGELOG](https://github.com/hypar-io/Elements/blob/master/CHANGELOG.md) — 版本更新记录

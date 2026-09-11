@@ -222,4 +222,4 @@ doc.saveas('out.dxf')   # LibreCAD 可直接打开
 - 仓库：<https://github.com/LibreCAD/LibreCAD>
 - Wiki：<https://github.com/LibreCAD/LibreCAD/wiki>
 - 用户手册：<https://librecad.readthedocs.io/>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/librecad/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/LibreCAD/>

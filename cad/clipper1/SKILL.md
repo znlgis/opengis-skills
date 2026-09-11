@@ -14,7 +14,7 @@ tags:
 
 > **项目地址：** <https://github.com/AngusJohnson/Clipper>
 >
-> **官方文档：** <http://www.angusj.com/delphi/clipper.php>
+> **官方文档：** <https://github.com/AngusJohnson/Clipper>
 >
 > **NuGet：** `Clipper`（多个第三方移植版）
 >
@@ -241,6 +241,6 @@ c.Execute(ctUnion, solution, pftNonZero, pftNonZero);
 ## 参考资源
 
 - 仓库：<https://github.com/AngusJohnson/Clipper>
-- 文档：<http://www.angusj.com/delphi/clipper.php>
+- 文档：<https://github.com/AngusJohnson/Clipper>
 - pyclipper：<https://github.com/fonttools/pyclipper>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/clipper1/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/Clipper1/>

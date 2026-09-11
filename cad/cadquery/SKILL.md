@@ -285,4 +285,4 @@ cq.exporters.export(result, "out.svg")
 - 文档：<https://cadquery.readthedocs.io/>
 - 示例：<https://github.com/CadQuery/cadquery/tree/master/examples>
 - CQ-editor：<https://github.com/CadQuery/CQ-editor>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/cadquery/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/cadquery/>

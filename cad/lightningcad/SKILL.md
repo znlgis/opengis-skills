@@ -223,7 +223,7 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 
 - [LightningCAD 教程目录](https://znlgis.github.io/cad/LightningCAD/)
 - [AutoCAD .NET API 文档](https://help.autodesk.com/view/ACD/2022/ENU/?guid=GUID-54B4F8B5-1949-4984-ABC3-29BBBF7B4EF1)
-- [ZWCAD API 文档](https://www.zwsoft.cn/product/zwcad/developer)
+- [ZWCAD API 文档](https://www.zwsoft.cn/)
 - [NetTopologySuite](https://github.com/NetTopologySuite/NetTopologySuite)
 - [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet)
 - [WixSharp](https://github.com/oleg-shilo/wixsharp)

@@ -332,4 +332,4 @@ while True:
 - Pico 文档：<https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html>
 - MicroPython RP2 Quickref：<https://docs.micropython.org/en/latest/rp2/quickref.html>
 - KE3036 资料镜像：<https://github.com/keyeswiki/KE3036-Keyes-Pico-42-1->（keyestudio 原仓库已下线）
-- 中文教程（znlgis）：<https://znlgis.github.io/iot/tutorial/ke3036-keyes-pico/>
+- 中文教程（znlgis）：<https://znlgis.github.io/iot/KE3036-Keyes-Pico/>

@@ -332,7 +332,7 @@ shapely/
 
 - **GitHub 仓库：** <https://github.com/shapely/shapely>
 - **官方文档：** <https://shapely.readthedocs.io/>
-- **API 参考：** <https://shapely.readthedocs.io/en/stable/reference.html>
+- **API 参考：** <https://shapely.readthedocs.io/en/stable/manual.html>
 - **PyPI：** <https://pypi.org/project/shapely/>
 - **GEOS（底层 C++ 引擎）：** <https://libgeos.org/>
 - **上游中文教程：** <https://znlgis.github.io/gis/tutorial/shapely/>

@@ -245,5 +245,5 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 
 - 仓库：<https://github.com/AngusJohnson/Clipper2>
 - 文档：<http://www.angusj.com/clipper2/Docs/Overview.htm>
-- 在线示例：<https://github.com/AngusJohnson/Clipper2/tree/main/CSharp/Clipper2Lib.Examples>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/clipper2/>
+- 在线示例：<https://github.com/AngusJohnson/Clipper2/tree/main/CSharp>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/Clipper2/>

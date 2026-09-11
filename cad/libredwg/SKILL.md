@@ -14,7 +14,7 @@ tags:
 >
 > **官网：** <https://www.gnu.org/software/libredwg/>
 >
-> **手册：** <https://www.gnu.org/software/libredwg/manual/libredwg.html>
+> **手册：** <https://www.gnu.org/software/libredwg/>
 >
 > **许可证：** GPL-3.0+
 
@@ -239,7 +239,7 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 
 ## 参考资源
 
-- 手册：<https://www.gnu.org/software/libredwg/manual/libredwg.html>
+- 手册：<https://www.gnu.org/software/libredwg/>
 - 示例：<https://github.com/LibreDWG/libredwg/tree/master/examples>
 - 邮件列表：<bug-libredwg@gnu.org>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/libredwg/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/libredwg/>

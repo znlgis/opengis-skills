@@ -322,4 +322,4 @@ var jwt = App.GetConfig<JwtSettings>("JWTSettings");
 
 - 官网：<https://furion.net/>
 - 仓库：<https://gitee.com/dotnetchina/Furion>
-- 中文教程（znlgis）：<https://znlgis.github.io/csharp/tutorial/furion/>
+- 中文教程（znlgis）：<https://znlgis.github.io/csharp/Furion/>

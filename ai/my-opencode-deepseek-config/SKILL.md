@@ -8,6 +8,7 @@ tags:
   - agent-config
   - prompt-cache
   - model-routing
+  - agent
   - ai
 ---
 

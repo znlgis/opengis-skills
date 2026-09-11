@@ -10,6 +10,7 @@ tags:
   - batch
   - ci-cd
   - json
+  - workflow
   - shell
 ---
 

@@ -220,4 +220,4 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 - 仓库：<https://github.com/xiangechen/chili3d>
 - 在线：<https://chili3d.com/>
 - OCCT.js：<https://github.com/donalffons/opencascade.js>
-- 中文教程（znlgis）：<https://znlgis.github.io/cad/tutorial/chili3d/>
+- 中文教程（znlgis）：<https://znlgis.github.io/cad/chili3d/>

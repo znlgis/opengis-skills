@@ -58,7 +58,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 
 ```xml
 <properties>
-    <geotools.version><!-- 请查看 https://geotools.org/download.html 获取最新版 --></geotools.version>
+    <geotools.version><!-- 请查看 https://geotools.org/ 获取最新版 --></geotools.version>
 </properties>
 
 <dependencies>

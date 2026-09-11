@@ -281,4 +281,4 @@ viewer.trackedEntity = entity;
 - 学习中心：<https://cesium.com/learn/>
 - API：<https://cesium.com/learn/cesiumjs/ref-doc/>
 - Sandcastle：<https://sandcastle.cesium.com/>
-- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/cesiumjs/>
+- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/cesium/>

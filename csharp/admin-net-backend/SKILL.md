@@ -375,4 +375,4 @@ public class MyPluginService : IDynamicApiController, ITransient
 - **在线文档：** <https://adminnet.top/>
 - **Furion 框架：** <https://gitee.com/dotnetchina/Furion>
 - **SqlSugar 文档：** <https://www.donet5.com/Home/Doc>
-- **vue-next-admin：** <https://lyt-top.gitee.io/vue-next-admin-doc-preview/>
+- **vue-next-admin：** <https://vue-next-admin-doc.vercel.app/>
