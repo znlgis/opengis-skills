@@ -13,6 +13,8 @@ tags:
 >
 > **下载：** <https://www.eziriz.com/downloads.htm>
 >
+> **版本：** 商业闭源软件，不在 NuGet 分发；以官网下载页最新版为准（截至2026年）
+>
 > **许可证：** 商业（提供个人/企业/全球许可证）
 
 > ⚠️ 本 SKILL 仅作为技术使用说明，请确保使用 .NET Reactor 时拥有合法授权，并仅对自己拥有版权的代码使用。
@@ -181,7 +183,7 @@ GUI → Advanced：
 
 ---
 
-## .NET 5/6/7/8 注意事项
+## .NET Core / .NET 5+ 注意事项
 
 - 选择对应运行时（CoreCLR）
 - AOT 程序（NativeAOT）目前**不支持**保护，必须使用 JIT 模式
@@ -240,7 +242,7 @@ GUI → Advanced：
 | WPF XAML 绑定失败 | 排除被 XAML 引用的类型与属性 |
 | 启动慢 | Necrobit 解密成本；可关闭部分保护项 |
 | 被 AV 误报 | 联系杀软厂商加白；选择「Anti Debug = Mild」 |
-| Linux 运行报错 | Necrobit 当前对 Linux/.NET Core 支持，需用对应版本 |
+| Linux 运行报错 | Necrobit 对 Linux / .NET Core 的支持依赖较新版本，需升级后实测验证 |
 
 ---
 

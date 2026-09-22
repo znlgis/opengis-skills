@@ -50,7 +50,7 @@ LightCAD 主要特性：
 ```html
 <div id="cad" style="width:100%;height:100vh"></div>
 <script type="module">
-  // ⚠ npm 包可能已不可用，请以 znlgis 文档为准
+  // ⚠ npm 仓库目前查无 @lightcad/sdk 包（404），请以 znlgis 文档 / 源码构建为准
   import { LightCAD } from '@lightcad/sdk';
 
   const app = new LightCAD({
@@ -225,7 +225,7 @@ app.view.rotate(15);
 
 ### 工作流一：嵌入业务系统作为在线绘图组件
 
-1. `pnpm install @lightcad/sdk` 或使用 iframe 嵌入
+1. iframe 嵌入，或从源码构建（⚠ npm 仓库暂无 `@lightcad/sdk` 包，勿直接 `pnpm install`）
 2. 在页面中创建容器 `<div>`，实例化 `LightCAD` 并初始化
 3. 注册自定义命令（如绘制特殊符号/标注）
 4. 监听 `entityModified`/`selectionChanged` 事件同步数据到后端

@@ -18,6 +18,8 @@ tags:
 > **Wiki：** <https://github.com/LibreCAD/LibreCAD/wiki>
 >
 > **许可证：** GPL-2.0
+>
+> **最新稳定版：** v2.2.1.5（2026-05 发布，见 [GitHub Releases](https://github.com/LibreCAD/LibreCAD/releases)）
 
 ## 概述
 
@@ -130,13 +132,11 @@ File → Export → Export as PDF
 ## 命令行（无界面）
 
 ```bash
-# 启动并运行命令脚本（需自定义脚本插件支持）
-librecad --no-startup-window
-
-# 配合 dxf-tools / Python 脚本批处理
+# 仅支持命令行打开文件（无官方 headless / 脚本批处理模式）
+librecad drawing.dxf
 ```
 
-LibreCAD 自身脚本能力较弱；批量转换建议结合：
+LibreCAD 自身脚本能力较弱，且不提供无界面批处理模式；批量转换建议结合：
 
 - LibreDWG 转换 DWG ↔ DXF
 - `ezdxf`（Python 库）做 DXF 解析与生成

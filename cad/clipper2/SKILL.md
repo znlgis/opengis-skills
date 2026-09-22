@@ -16,6 +16,8 @@ tags:
 >
 > **官方文档：** <http://www.angusj.com/clipper2/Docs/Overview.htm>
 >
+> **最新稳定版：** 2.0.1（截至2026年9月，tag `Clipper2_2.0.1`）
+>
 > **NuGet：** `Clipper2`
 >
 > **许可证：** Boost Software License 1.0
@@ -51,7 +53,7 @@ vcpkg install clipper2
 ### JavaScript
 
 ```bash
-npm install clipper2-js
+npm install clipper2-js        # 第三方原生 TS/JS 移植；另有 WASM 移植 js-angusj-clipper
 ```
 
 ---
@@ -131,7 +133,7 @@ clipper.AddClip(clip);
 
 PolyTreeD tree = new();
 clipper.Execute(ClipType.Union, FillRule.NonZero, tree);
-PathsD result = Clipper.PolyTreeToPathsD(tree);
+PathsD result = tree.GetAllPaths(FillRule.NonZero);
 ```
 
 `PolyTree` 保留外环/内孔的层级关系，对于带孔多边形非常重要。
@@ -150,8 +152,8 @@ PathsD ramer = Clipper.RamerDouglasPeucker(paths, 0.5); // RDP 简化
 
 PathsD trim = Clipper.TrimCollinear(paths);             // 去共线点
 
-// 多边形矩形最小封闭
-PathD minRect = Clipper.MinkowskiSum(...);
+// 闵可夫斯基和/差（轮廓膨胀工具）
+PathD mink = Clipper.MinkowskiSum(pattern, path, false);
 ```
 
 ---

@@ -14,7 +14,7 @@ tags:
   - python
 ---
 
-> **项目地址：** <https://github.com/znlgis/GeoPipeAgent>（PyPI 包名为 `geopipe-agent`）
+> **项目地址：** <https://github.com/znlgis/GeoPipeAgent>（发布包名 `geopipe-agent`，截至 2026 年尚未上传 PyPI，需从源码安装）
 >
 > **许可证：** MIT
 
@@ -38,23 +38,28 @@ GeoPipeAgent 是一个 **AI 原生的 GIS 分析流水线引擎**。核心理念
 ### 安装
 
 ```bash
-pip install geopipe-agent
+git clone https://github.com/znlgis/GeoPipeAgent.git
+cd GeoPipeAgent
+pip install -e ".[analysis,network]"   # 按需启用分析/网络分析可选依赖
 ```
 
 ### 基本用法
 
 ```bash
-# 生成管道模板
-geopipe-agent template buffer > pipeline.yaml
+# 列出所有可用步骤（可按类别过滤）
+geopipe-agent list-steps --category qc
 
-# 编辑管道配置后执行
+# 查看步骤详情
+geopipe-agent describe vector.buffer
+
+# 校验 YAML 流水线（不执行）
+geopipe-agent validate pipeline.yaml
+
+# 执行流水线
 geopipe-agent run pipeline.yaml
 
-# 列出所有可用步骤
-geopipe-agent list-steps
-
-# 查看步骤帮助
-geopipe-agent help-step vector.buffer
+# 查看可用后端
+geopipe-agent backends
 ```
 
 ### 最小示例

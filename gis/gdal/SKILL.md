@@ -91,7 +91,7 @@ conda install -c conda-forge gdal
 
 ### 新式 CLI (GDAL 3.9+)
 
-GDAL 3.9 引入了统一的 CLI 接口（[查看最新稳定版](https://gdal.org/download.html)），并在后续版本持续完善，新增 `gdal vector concave-hull/convex-hull/dissolve/sort`、`gdal dataset check` 等子命令：
+GDAL 3.9 引入了统一的 CLI 接口（最新稳定版 **3.13.3**，2026-08，见 [下载页](https://gdal.org/download.html)），并在后续版本持续完善，新增 `gdal vector concave-hull/convex-hull/dissolve/sort`、`gdal dataset check` 等子命令：
 
 ```bash
 gdal <command> <subcommand> [options] <inputs>
@@ -305,7 +305,7 @@ nearblack -white input.tif -o output.tif
 | `GDAL_DISABLE_READDIR_ON_OPEN` | 禁用目录读取 | `YES` |
 | `GDAL_HTTP_TIMEOUT` | HTTP 超时（秒） | `30` |
 | `GDAL_HTTP_MAX_RETRY` | HTTP 重试次数 | `3` |
-| `GDAL_VSI_CURL_ALLOWED_EXTENSIONS` | 允许的远程文件扩展名 | `.tif,.tiff,.vrt` |
+| `CPL_VSIL_CURL_ALLOWED_EXTENSIONS` | 允许的远程文件扩展名 | `.tif,.tiff,.vrt` |
 | `AWS_ACCESS_KEY_ID` | AWS 密钥 ID | 用于 S3 访问 |
 | `AWS_SECRET_ACCESS_KEY` | AWS 密钥 | 用于 S3 访问 |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Google Cloud 凭证文件 | `/path/to/credentials.json` |

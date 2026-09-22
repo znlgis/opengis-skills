@@ -19,7 +19,7 @@ tags:
 >
 > **官方文档：** <https://github.com/go-vgo/robotgo#documentation>
 >
-> **许可证：** Apache-2.0 ｜ **最新版本：** 参见 [GitHub Releases](https://github.com/go-vgo/robotgo/releases)｜ **默认分支：** `master`
+> **许可证：** Apache-2.0 ｜ **最新版本：** v1.1.0（2026-09，稳定线）；v2.0.0-beta4（2026-09，纯 Go 预发布线）｜ **默认分支：** `master`
 >
 > **生态子库：**
 >
@@ -46,7 +46,7 @@ RobotGo 是 Go 生态中最成熟的桌面自动化库（GitHub 10.8k+ Star）�
 | 全局事件监听 | hook.Register、hook.Start、hook.Process、hook.End |
 | OpenCV 识别 | gcv.FindImgFile、gcv.FindAllImgFile、gcv.Find、gcv.FindX |
 
-> **v2.0.0-beta1（2026-07）重大变更：** 引入 Go 纯后端（`purego` build tag）替代 CGo 依赖，新增 `libei` 后端支持。v1.0.2 移除了旧版 FindBitmap / OpenBitmap / SaveBitmap 等位图函数（迁移至 `bitmap` 子库）。如需旧 API，使用 `v0.100.10`（最后一个保留旧位图 API 的版本）。
+> **v2.0.0 预发布系列（beta1→beta4，2026-07 至 2026-09）重大变更：** 引入纯 Go 后端（`purego` build tag，含 `win`/`wayland`/`libei` 变体）替代 CGo 依赖。v1.0.0（2025-12）起将 FindBitmap / OpenBitmap / SaveBitmap 等旧位图函数迁出至 `bitmap` 子库（事件函数迁至 `gohook`）。如需旧 API，使用 `v0.100.10`（最后一个保留旧位图 API 的版本）。
 
 ---
 

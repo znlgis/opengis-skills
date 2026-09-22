@@ -143,4 +143,4 @@ export OPENCODE_CONFIG_DIR="$HOME/path/to/my-opencode-deepseek-config/opencode"
 - 仓库：<https://github.com/znlgis/my-opencode-deepseek-config>
 - 配置目录：`opencode/`（`opencode.jsonc`、`dcp.jsonc`、`AGENTS.md`、`agents/`、`skills/`）
 - 借鉴来源：[oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)、[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)、[anomalyco/opencode](https://github.com/anomalyco/opencode)、[mattpocock/skills](https://github.com/mattpocock/skills)、[OpenSpec](https://github.com/Fission-AI/OpenSpec)
-- 相关 SKILL：本仓库 [deepseek-harness](../../ai/deepseek-harness/SKILL.md)（DeepSeek 官方模型配置指南）、[oh-my-openagent](../../ai/oh-my-openagent/SKILL.md)（多 agent 编排插件）
+- 相关 SKILL：本仓库 [deepseek-harness](../deepseek-harness/SKILL.md)（DeepSeek 官方智能体框架 dsh）、[oh-my-openagent](../oh-my-openagent/SKILL.md)（多 agent 编排插件）

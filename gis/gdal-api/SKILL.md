@@ -1,6 +1,6 @@
 ---
 name: gdal-api
-description: "Use when programming against GDAL/OGR in C, C++, Python, or .NET for raster/vector I/O, coordinate transformation, or custom geospatial algorithms. GDAL API: low-level programming interface for reading/writing 70+ geospatial formats."
+description: "Use when programming against GDAL/OGR in C, C++, Python, Java, or .NET for raster/vector I/O, coordinate transformation, or custom geospatial algorithms. GDAL API: low-level programming interface for reading/writing 70+ geospatial formats."
 
 tags:
   - gdal
@@ -76,17 +76,17 @@ python -c "from osgeo import gdal; print(gdal.VersionInfo())"
 ### Java 环境
 
 ```xml
-<!-- Maven 依赖 -->
+<!-- Maven 依赖（Java 绑定版本随 GDAL 次版本发布，Maven Central 当前最新 3.13.0） -->
 <dependency>
     <groupId>org.gdal</groupId>
     <artifactId>gdal</artifactId>
-    <version><!-- 请查看 Maven Central 获取最新版：https://central.sonatype.com/artifact/org.gdal/gdal --></version>
+    <version>3.13.0</version><!-- 最新版查看 https://central.sonatype.com/artifact/org.gdal/gdal -->
 </dependency>
 ```
 
 ```groovy
 // Gradle
-implementation 'org.gdal:gdal:3.13.1'
+implementation 'org.gdal:gdal:3.13.0'
 ```
 
 **注意：** Java 绑定需要在系统 `PATH`（Windows）或 `LD_LIBRARY_PATH`（Linux）中找到 `gdalalljni` 本地库。

@@ -13,7 +13,9 @@ tags:
 >
 > **官网：** <https://reogrid.net/>
 >
-> **NuGet：** `unvell.ReoGrid`、`unvell.ReoGrid.WinForm`、`unvell.ReoGrid.WPF`
+> **NuGet：** `unvell.ReoGrid.dll`（WinForms 核心）、`unvell.ReoGridWPF.dll`（WPF）、`unvell.ReoGrid8.dll`（.NET 8 版）
+>
+> **最新版本：** unvell.ReoGrid.dll 3.3.1 / unvell.ReoGridWPF.dll 3.3.0 / unvell.ReoGrid8.dll 8.1.0（截至2026-09，NuGet）
 >
 > **许可证：** MIT（V3 社区版）；商业版另购（V4）
 
@@ -39,11 +41,16 @@ ReoGrid 主要能力：
 
 ```bash
 # WinForms
-dotnet add package unvell.ReoGrid.WinForm
+dotnet add package unvell.ReoGrid.dll
 
 # WPF
-dotnet add package unvell.ReoGrid.WPF
+dotnet add package unvell.ReoGridWPF.dll
+
+# .NET 8 版本（WinForms 核心）
+dotnet add package unvell.ReoGrid8.dll
 ```
+
+> 三个包内的程序集名均为 `unvell.ReoGrid.dll`，命名空间统一是 `unvell.ReoGrid.*`。
 
 ---
 
@@ -71,7 +78,7 @@ sheet["C2"] = 95;
 ## WPF 入门
 
 ```xml
-<Window xmlns:rg="clr-namespace:unvell.ReoGrid;assembly=unvell.ReoGrid.WPF">
+<Window xmlns:rg="clr-namespace:unvell.ReoGrid;assembly=unvell.ReoGrid">
   <rg:ReoGridControl x:Name="Grid"/>
 </Window>
 ```

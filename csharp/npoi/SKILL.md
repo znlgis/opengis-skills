@@ -13,6 +13,8 @@ tags:
 >
 > **NuGet：** `NPOI`
 >
+> **最新版本：** 2.8.1（截至2026-09，NuGet）
+>
 > **官方文档：** <https://github.com/nissl-lab/npoi/wiki>
 >
 > **许可证：** Apache-2.0

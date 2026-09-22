@@ -19,6 +19,8 @@ tags:
 >
 > **NuGet（.NET 6+）：** `PWMIS.SOD`
 >
+> **最新版本：** PDF.NET.SOD 7.0.1 / PWMIS.SOD 6.0.3（截至2026-09，NuGet）
+>
 > **许可证：** Apache-2.0
 
 ## 概述

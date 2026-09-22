@@ -19,6 +19,8 @@ tags:
 > **Cheatsheet：** <https://openscad.org/cheatsheet/>
 >
 > **许可证：** GPL-2.0+
+>
+> **最新稳定版：** 2021.01（官方 release；截至2026年官网推荐开发快照构建以获得 Manifold 内核性能，见 [GitHub tags](https://github.com/openscad/openscad/tags)）
 
 ## 概述
 

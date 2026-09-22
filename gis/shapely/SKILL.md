@@ -18,6 +18,8 @@ tags:
 >
 > **PyPI：** <https://pypi.org/project/shapely/>
 >
+> **最新稳定版：** 2.1.2（PyPI，截至2026年）
+>
 > **许可证：** BSD-3-Clause
 
 ## 概述

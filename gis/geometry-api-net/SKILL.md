@@ -27,15 +27,15 @@ tags:
 
 这是一个 .NET Standard 2.0 的空间几何计算库，提供 6 种几何类型、25+ 空间运算算子和 4 种序列化格式。
 
-- **核心包**: `Esri.Geometry.Core`
-- **JSON 扩展包**: `Esri.Geometry.Json`
+- **核心包**: `OpenGIS.Esri.Geometry.Core`
+- **JSON 扩展包**: `OpenGIS.Esri.Geometry.Json`
 - **许可证**: LGPL-2.1-only
 
 ## 快速开始
 
 ```bash
-dotnet add package Esri.Geometry.Core
-dotnet add package Esri.Geometry.Json    # 可选，System.Text.Json 支持
+dotnet add package OpenGIS.Esri.Geometry.Core
+dotnet add package OpenGIS.Esri.Geometry.Json    # 可选，System.Text.Json 支持
 ```
 
 ---

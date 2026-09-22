@@ -20,7 +20,7 @@ tags:
 >
 > **NuGet：** <https://www.nuget.org/packages/Hypar.Elements>
 >
-> **许可证：** MIT
+> **许可证：** MIT ｜ **最新版本：** `2.3.0`（NuGet 最高非预发布版；2.4.0 系列尚为 alpha 预发布）
 
 ## 概述
 

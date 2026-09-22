@@ -15,7 +15,7 @@ tags:
 
 > **项目地址：** <https://github.com/NetTopologySuite/NetTopologySuite>
 >
-> **NuGet：** `NetTopologySuite`
+> **NuGet：** `NetTopologySuite`（最新稳定版 2.6.0，截至2026年）
 >
 > **官方文档：** <https://nettopologysuite.github.io/NetTopologySuite/>
 >

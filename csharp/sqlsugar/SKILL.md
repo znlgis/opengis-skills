@@ -15,6 +15,8 @@ tags:
 >
 > **NuGet：** `SqlSugar` / `SqlSugarCore`
 >
+> **最新版本：** SqlSugarCore 5.1.4.221（.NET）/ SqlSugar 5.1.4.207（.NET Framework）（截至2026-09，NuGet）
+>
 > **许可证：** MIT
 
 ## 概述
@@ -130,11 +132,11 @@ var ls = db.Queryable<User>()
            .Select(u => new { u.Id, u.Name })
            .ToList();
 
-// 分页
+// 分页（签名：ToPageList(pageIndex, pageSize, ref totalNumber)）
 int total = 0;
 var page = db.Queryable<User>()
              .Where(u => u.Age > 18)
-             .ToPageList(pageNumber: 1, pageSize: 20, totalNumber: ref total);
+             .ToPageList(1, 20, ref total);
 
 // JOIN
 var join = db.Queryable<User, Order>((u, o) => new JoinQueryInfos(
@@ -216,7 +218,7 @@ new ConnectionConfig {
 public class Log { ... }
 
 db.Insertable(log).SplitTable().ExecuteCommand();
-db.Queryable<Log>().SplitTable(t => t.InMonths(2024, 2024, 1)).ToList();
+db.Queryable<Log>().SplitTable(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31)).ToList();
 ```
 
 ---
@@ -257,7 +259,7 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 - **线程安全**：多线程场景务必用 `SqlSugarScope`（内部连接池），`SqlSugarClient` 非线程安全
 - **实体特性**：主键用 `[SugarColumn(IsPrimaryKey = true)]`，自增用 `IsIdentity = true`，雪花 ID 不要设 `IsIdentity`
 - **批量操作**：大批量插入用 `Insertable(list).UseSqlBulkCopy()` 比逐条快 10-100 倍
-- **分页查询**：用 `ToPageList(pageNumber, pageSize, ref total)` 而不是 `ToList()` 后手动分页
+- **分页查询**：用 `ToPageList(pageIndex, pageSize, ref total)` 而不是 `ToList()` 后手动分页
 - **中文乱码**：MySQL 连接字符串加 `Charset=utf8mb4`，列类型用 `utf8mb4`
 - **AOP 最佳实践**：`OnLogExecuting` 异步写日志，避免阻塞主查询流程
 

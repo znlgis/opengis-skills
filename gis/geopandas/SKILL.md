@@ -36,11 +36,11 @@ GeoPandas 是 Python 地理空间矢量数据处理的核心库，在 pandas Dat
 
 | 可选依赖 | 用途 |
 |----------|------|
-| `matplotlib` >= 3.5 | 静态地图绘制 `.plot()` |
+| `matplotlib` >= 3.7 | 静态地图绘制 `.plot()` |
 | `folium` | 交互式地图 `.explore()` |
-| `mapclassify` >= 2.7 | 分级设色分类方案 |
+| `mapclassify` >= 2.5 | 分级设色分类方案 |
 | `fiona` >= 1.8.21 | 备选文件 IO 引擎 |
-| `pyarrow` >= 15.0.0 | Parquet/Feather/Arrow 支持 |
+| `pyarrow` >= 10.0.0 | Parquet/Feather/Arrow 支持 |
 | `geopy` | 地理编码 |
 | `SQLAlchemy` >= 2.0 + `GeoAlchemy2` | PostGIS 读写 |
 | `xyzservices` | 瓦片底图服务 |

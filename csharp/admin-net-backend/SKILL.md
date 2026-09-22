@@ -16,11 +16,13 @@ tags:
 >
 > **后端代码目录：** `Admin.NET/`（.NET 解决方案）
 >
+> **当前版本：** v2.4.x（截至2026-09，upstream master `Web/package.json` 为 2.4.33；TFM `net8.0;net10.0`）
+>
 > **在线文档：** <https://adminnet.top/>
 >
 > **演示环境：** <https://demo.adminnet.top>（账号：superAdmin.NET / 密码：Admin.NET++010101）
 >
-> **许可证：** MIT / Apache-2.0
+> **许可证：** Apache-2.0（upstream 仓库 LICENSE）
 
 ## 概述
 

@@ -50,8 +50,8 @@ Chili3D 主要特性：
 git clone https://github.com/xiangechen/chili3d.git
 cd chili3d
 pnpm install
-pnpm dev          # 本地开发服务器（http://localhost:5173）
-pnpm build        # 静态构建
+pnpm dev          # 本地开发服务器（rspack dev）
+pnpm build        # 静态构建（rspack build）
 ```
 
 构建产物可直接部署到任何静态托管（Nginx / Cloudflare Pages / GitHub Pages）。
@@ -62,14 +62,18 @@ pnpm build        # 静态构建
 
 ```
 packages/
-├── chili-core/         # 模型、命令、应用框架
-├── chili-geo/          # 几何抽象、Visual
-├── chili-three/        # Three.js 渲染
-├── chili-occ/          # OCCT.js WebAssembly 桥接
-├── chili-controls/     # 草图控件、操控器
-├── chili-builder/      # 拉伸/扫掠/放样等特征构建器
-├── chili-ui/           # UI 组件
-└── chili-web/          # 主 Web 应用
+├── core/           # 模型、命令、应用框架（@chili3d/core）
+├── three/          # Three.js 渲染（@chili3d/three）
+├── wasm/           # OCCT.js WebAssembly 桥接（@chili3d/wasm）
+├── builder/        # 拉伸/旋转/扫掠/放样等特征构建器（@chili3d/builder）
+├── element/        # Web Components 控件
+├── parametric/     # 参数化功能定义
+├── ui/             # UI 组件
+├── web/            # 主 Web 应用（@chili3d/web）
+├── app/            # 应用入口
+├── storage/        # 项目存储
+├── i18n/           # 国际化
+└── ai/             # AI 助手集成
 ```
 
 ---
@@ -99,11 +103,11 @@ packages/
 ## 使用 OCCT.js 直接构造（脚本扩展）
 
 ```ts
-import { occt } from '@chili3d/occ';
+import { occt } from '@chili3d/wasm';   // OCCT.js WebAssembly 模块
 
 const oc = await occt();
 const box = new oc.BRepPrimAPI_MakeBox_2(100, 60, 30).Shape();
-// 进一步通过 chili-core 的 Visual 对象包装显示
+// 进一步通过 @chili3d/core 的 Visual 对象包装显示
 ```
 
 ---
@@ -137,7 +141,7 @@ export class MyLineCommand {
 
 ## 与 Three.js 集成
 
-Chili3D 渲染层在 `chili-three`，可定制材质、光照、PBR：
+Chili3D 渲染层在 `packages/three`（`@chili3d/three`），可定制材质、光照、PBR：
 
 ```ts
 import { ThreeView } from '@chili3d/three';
@@ -186,7 +190,7 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 | 加载 OCCT.wasm 失败 | 站点未启用 COOP/COEP；改用 `cross-origin-isolated` |
 | 无法导入 DWG | 暂不支持 DWG，先转 DXF/STEP |
 | 中文菜单 | Settings → Language 切换为中文 |
-| 性能差 | 确认 Vite 构建为 production；启用浏览器 SIMD |
+| 性能差 | 确认使用 rspack 生产构建（`pnpm build`）；启用浏览器 SIMD |
 | 模型透视错乱 | 检查相机近/远裁剪面与单位 |
 
 ---
@@ -200,9 +204,9 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
 ## AI 使用建议
 
-- **推荐工作流模式**：AI 助手应区分两种使用场景——在线建模（引导用户通过 GUI 操作）与二次开发（通过 TypeScript SDK 嵌入）。对后者，优先使用 `@chili3d/occ` 直接调用 OCCT.js 进行几何构造，而非通过 UI 层间接操作。
+- **推荐工作流模式**：AI 助手应区分两种使用场景——在线建模（引导用户通过 GUI 操作）与二次开发（通过 TypeScript SDK 嵌入）。对后者，优先使用 `@chili3d/wasm` 直接调用 OCCT.js 进行几何构造，而非通过 UI 层间接操作。
 - **关键注意事项**：① WebAssembly OCCT 需要 COOP/COEP 头，部署时必须正确配置；② `SharedArrayBuffer` 依赖 HTTPS 或 localhost；③ OCCT.js 加载较慢（首次约 5-15s），需显示加载进度；④ 浏览器内存有限，大模型应考虑服务端处理。
-- **常用代码模式**：`occt()` 初始化 → `BRepPrimAPI_MakeBox` 等构造几何 → `chili-core` 的 Visual/Document 包装 → 渲染显示。自定义命令继承 `Command` 类，通过 `app.input.getPoint()` 获取用户交互。
+- **常用代码模式**：`occt()` 初始化 → `BRepPrimAPI_MakeBox` 等构造几何 → `@chili3d/core` 的 Visual/Document 包装 → 渲染显示。自定义命令继承 `Command` 类，通过 `app.input.getPoint()` 获取用户交互。
 
 ---
 

@@ -17,7 +17,7 @@ tags:
 >
 > **NuGet：** `IFoxCAD.Cad`
 >
-> **许可证：** LGPL-2.1
+> **许可证：** MIT
 
 ## 概述
 

@@ -17,20 +17,22 @@ tags:
 >
 > **前端代码目录：** `Web/`（Vue3 应用）
 >
+> **当前版本：** v2.4.x（截至2026-09，upstream master `Web/package.json` 为 2.4.33）
+>
 > **在线文档：** <https://adminnet.top/>
 >
 > **演示环境：** <https://demo.adminnet.top>（账号：superAdmin.NET / 密码：Admin.NET++010101）
 >
-> **许可证：** MIT
+> **许可证：** Apache-2.0（upstream 仓库 LICENSE）
 
 ## 概述
 
-Admin.NET 前端基于 **vue-next-admin** 模板二次开发，采用 **Vue 3 Composition API** + **TypeScript** + **Element Plus** + **Vite 5** 技术栈。项目提供完整的企业级中后台管理界面，包括登录认证、动态菜单/路由、RBAC 权限控制、多语言、主题切换、SignalR 实时通讯等能力。
+Admin.NET 前端基于 **vue-next-admin** 模板二次开发，采用 **Vue 3 Composition API** + **TypeScript** + **Element Plus** + **Vite 7** 技术栈。项目提供完整的企业级中后台管理界面，包括登录认证、动态菜单/路由、RBAC 权限控制、多语言、主题切换、SignalR 实时通讯等能力。
 
-**核心技术栈：**
+**核心技术栈（版本对齐 upstream master，截至2026-09）：**
 - **框架：** Vue 3.5+（Composition API + `<script setup>`）
-- **语言：** TypeScript 5.x
-- **构建：** Vite 5+ / pnpm
+- **语言：** TypeScript 5.9
+- **构建：** Vite 7+ / pnpm 10
 - **UI 组件：** Element Plus 2.x
 - **路由：** Vue Router 5
 - **状态管理：** Pinia 3

@@ -18,7 +18,7 @@ tags:
 >
 > **官方文档：** <https://geoserver.org/geoserver-cloud/>
 >
-> **Docker Hub：** <https://hub.docker.com/u/geoservercloud>
+> **Docker Hub：** <https://hub.docker.com/u/geoservercloud>（镜像标签与 GeoServer 主版本对应，如 `3.0.0`）
 >
 > **许可证：** GPL-2.0
 
@@ -27,11 +27,12 @@ tags:
 GeoServer Cloud（GS Cloud）：
 
 - **微服务架构**：每种 OGC 服务为独立 Spring Boot 应用
-- **配置同步**：`spring-cloud-bus` + RabbitMQ 实时同步
+- **配置同步**：Spring Cloud Bus + RabbitMQ 实时同步（`GEOSERVER_BUS_ENABLED`）
 - **配置后端**：本地目录 / **PgConfig（推荐）** / JDBCConfig
-- **可观测**：Actuator + Prometheus + Sleuth Tracing
+- **可观测**：Actuator + Prometheus + Micrometer Tracing
 - **容器友好**：官方镜像、Helm Chart、docker-compose
 - **完全兼容社区版**：相同 Web UI、SLD、数据存储
+- **默认路径前缀**：`/geoserver/cloud`（网关 `http://localhost:9090/geoserver/cloud/...`）
 
 ---
 
@@ -40,7 +41,7 @@ GeoServer Cloud（GS Cloud）：
 | 服务 | 镜像 | 用途 |
 |------|------|------|
 | `gateway` | `geoservercloud/geoserver-cloud-gateway` | 网关 |
-| `discovery` | `geoservercloud/geoserver-cloud-discovery` | 服务发现 |
+| `discovery` | `geoservercloud/geoserver-cloud-discovery` | 服务发现（3.x 的官方 compose 改用 `hashicorp/consul`） |
 | `config` | `geoservercloud/geoserver-cloud-config` | 配置中心 |
 | `web-ui` | `geoservercloud/geoserver-cloud-webui` | 管理界面 |
 | `rest` | `geoservercloud/geoserver-cloud-rest` | REST API |
@@ -55,10 +56,15 @@ GeoServer Cloud（GS Cloud）：
 ## 快速启动（docker-compose）
 
 ```bash
-git clone https://github.com/geoserver/geoserver-cloud.git
-cd geoserver-cloud/compose
-docker compose -f compose.yml -f catalog-pgconfig.yml up -d
-# Gateway: http://localhost:9090/geoserver
+# 官方 Quick Start：下载稳定版 compose 文件（仓库内的 compose/ 目录仅供开发调试）
+wget "https://geoserver.org/geoserver-cloud/deploy/docker-compose/stable/pgconfig/compose.yml"
+docker compose pull
+docker compose up -d
+docker compose ps
+
+# Gateway: http://localhost:9090/geoserver/cloud   （Web UI）
+# Consul : http://localhost:8500                   （服务发现与控制台）
+curl -u admin:geoserver "http://localhost:9090/geoserver/cloud/rest/workspaces.json"
 ```
 
 ---
@@ -74,27 +80,53 @@ docker compose -f compose.yml -f catalog-pgconfig.yml up -d
 启用 PgConfig：
 
 ```yaml
-GEOSERVER_BACKEND_PGCONFIG_ENABLED: "true"
-GEOSERVER_BACKEND_PGCONFIG_JDBCURL: "jdbc:postgresql://pg:5432/gsconfig"
-GEOSERVER_BACKEND_PGCONFIG_USERNAME: "gs"
-GEOSERVER_BACKEND_PGCONFIG_PASSWORD: "gs"
+SPRING_PROFILES_ACTIVE: "pgconfig"   # 启用 PgConfig 后端
+PGCONFIG_HOST: "geoserverdb"
+PGCONFIG_PORT: "5432"
+PGCONFIG_DATABASE: "geoserver"
+PGCONFIG_USERNAME: "geoserver"
+PGCONFIG_PASSWORD: "geoserver"
+PGCONFIG_SCHEMA: "pgconfig"          # 启动时自动创建 schema
 ```
+
+**注意：** 走 Spring Cloud Config Server 集中下发时，以上变量加前缀 `SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_`（如 `SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_PGCONFIG_HOST`）配在 config 服务上；`standalone` profile（Kubernetes 常用）则直接写在各服务上。
 
 ---
 
 ## Kubernetes（Helm）
 
 ```bash
-helm repo add geoserver-cloud https://geoserver.github.io/geoserver-cloud/
-helm install gs geoserver-cloud/geoserver-cloud \
-  -n gis --create-namespace \
-  --set rabbitmq.enabled=true \
-  --set postgresql.enabled=true \
-  --set wms.replicaCount=3 \
-  --set wfs.replicaCount=2
-
-kubectl scale deploy gs-wms -n gis --replicas=10
+# Chart：camptocamp/helm-geoserver-cloud（chart 名 geoservercloud，最新 3.0.1）
+helm repo add geoserver-cloud https://camptocamp.github.io/helm-geoserver-cloud
+helm repo update
 ```
+
+> 官方要求把该 chart 作为**子 chart（依赖）**引入自己的 umbrella chart（不直接 `helm install`），副本数等参数写在子 chart 键 `geoservercloud` 下：
+>
+> ```yaml
+> # Chart.yaml
+> dependencies:
+>   - name: geoservercloud
+>     repository: https://camptocamp.github.io/helm-geoserver-cloud
+>     version: 3.0.1
+> ```
+>
+> ```yaml
+> # values.yaml
+> geoservercloud:
+>   global:
+>     profile: standalone,pgconfig
+>   geoserver:
+>     services:
+>       wms:
+>         replicaCount: 3
+> ```
+>
+> ```bash
+> helm dependency update && helm install my-gsc . -n gis --create-namespace -f values.yaml
+> # 临时扩缩容也可直接改 Deployment（chart 默认 nameOverride 为 gsc）
+> kubectl -n gis get deploy | grep wms
+> ```
 
 ---
 
@@ -102,13 +134,15 @@ kubectl scale deploy gs-wms -n gis --replicas=10
 
 | 路径 | 转发到 |
 |------|--------|
-| `/geoserver/wms` | wms |
-| `/geoserver/wfs` | wfs |
-| `/geoserver/wcs` | wcs |
-| `/geoserver/wps` | wps |
-| `/geoserver/gwc` | gwc |
-| `/geoserver/rest` | rest |
-| `/geoserver/web` | web-ui |
+| `/geoserver/cloud/wms` | wms |
+| `/geoserver/cloud/wfs` | wfs |
+| `/geoserver/cloud/wcs` | wcs |
+| `/geoserver/cloud/wps` | wps |
+| `/geoserver/cloud/gwc` | gwc |
+| `/geoserver/cloud/rest` | rest |
+| `/geoserver/cloud/web` | web-ui |
+
+前缀由 `GEOSERVER_BASE_PATH`（默认 compose 中为 `/geoserver/cloud`）控制，网关的 `StripBasePath` 过滤器去掉前缀后再转发（`/geoserver/cloud/wms` → 下游 `/wms`）。
 
 ---
 
@@ -117,9 +151,10 @@ kubectl scale deploy gs-wms -n gis --replicas=10
 任意修改 → REST/web-ui 发送 `RemoteApplicationEvent` 到 RabbitMQ → 所有副本订阅刷新本地 `Catalog`，秒级一致。
 
 ```yaml
-spring:
-  cloud.bus.enabled: true
-  rabbitmq.host: rabbitmq
+# 环境变量形式（compose 中使用）
+GEOSERVER_BUS_ENABLED: "true"
+RABBITMQ_HOST: rabbitmq
+RABBITMQ_PORT: "5672"
 ```
 
 ---
@@ -132,9 +167,9 @@ management:
   metrics.export.prometheus.enabled: true
 ```
 
-- Prometheus 抓 `/actuator/prometheus`
+- Prometheus 抓 `/actuator/prometheus`（Micrometer 指标，另有 `/actuator/metrics`）
 - 日志 STDOUT，配合 EFK / Loki
-- Tracing：Sleuth + Zipkin/Tempo
+- 分布式追踪非默认开启：可接 OpenTelemetry / Zipkin / Jaeger
 
 ---
 
@@ -143,7 +178,9 @@ management:
 直接挂载现有 GeoServer 数据目录平滑迁移：
 
 ```bash
-docker run -v /mnt/gsdata:/opt/app/data_dir geoservercloud/geoserver-cloud-wms:...
+docker run -e SPRING_PROFILES_ACTIVE=datadir \
+  -v /mnt/gsdata:/opt/app/data_directory \
+  geoservercloud/geoserver-cloud-wms:3.0.0
 ```
 
 ---
@@ -163,7 +200,7 @@ docker run -v /mnt/gsdata:/opt/app/data_dir geoservercloud/geoserver-cloud-wms:.
 
 | 问题 | 解决 |
 |------|------|
-| 配置不同步 | 检查 RabbitMQ + `spring.cloud.bus.enabled` |
+| 配置不同步 | 检查 RabbitMQ 可达 + `GEOSERVER_BUS_ENABLED=true` |
 | Web UI 改了 wms 没生效 | 检查事件订阅 |
 | 启动顺序错乱 | `depends_on` + 健康检查；K8s 用 `initContainers` |
 | OOM | 调整 `-Xmx`，按服务独立资源 |
@@ -175,15 +212,15 @@ docker run -v /mnt/gsdata:/opt/app/data_dir geoservercloud/geoserver-cloud-wms:.
 ### 工作流 1：从零部署高可用 GeoServer Cloud
 
 ```bash
-# 克隆仓库
-git clone https://github.com/geoserver/geoserver-cloud.git
-cd geoserver-cloud/compose
+# 下载稳定版 pgconfig compose（仓库内 compose/ 目录仅供开发调试）
+wget "https://geoserver.org/geoserver-cloud/deploy/docker-compose/stable/pgconfig/compose.yml"
 
 # 启动基础设施 + 所有微服务
-docker compose -f compose.yml -f catalog-pgconfig.yml up -d
+docker compose pull
+docker compose up -d
 
 # 验证 Gateway 可访问
-curl -u admin:geoserver http://localhost:9090/geoserver/rest/about/version.json
+curl -u admin:geoserver http://localhost:9090/geoserver/cloud/rest/about/version.json
 
 # 扩容 WMS 服务（3 副本）
 docker compose up -d --scale wms=3
@@ -192,20 +229,18 @@ docker compose up -d --scale wms=3
 ### 工作流 2：Kubernetes 生产部署 + 自动伸缩
 
 ```bash
-# 添加 Helm 仓库
-helm repo add geoserver-cloud https://geoserver.github.io/geoserver-cloud/
+# 添加 Helm 仓库（chart 名 geoservercloud，由 camptocamp 维护）
+helm repo add geoserver-cloud https://camptocamp.github.io/helm-geoserver-cloud
 helm repo update
 
-# 安装（含 RabbitMQ + PostgreSQL）
-helm install gs geoserver-cloud/geoserver-cloud \
-  -n gis --create-namespace \
-  --set rabbitmq.enabled=true \
-  --set postgresql.enabled=true \
-  --set wms.replicaCount=3 \
-  --set wfs.replicaCount=2
+# 在自己的 umbrella chart 中把 geoservercloud 声明为依赖（RabbitMQ/PostgreSQL 同样以依赖引入）
+# values.yaml 里写 geoservercloud.geoserver.services.wms.replicaCount 等参数
+helm dependency update
+helm upgrade --install gs . -n gis --create-namespace -f values.yaml
 
-# 手动伸缩 WMS
-kubectl scale deploy gs-wms -n gis --replicas=10
+# 手动伸缩 WMS（先查出 Deployment 名）
+kubectl -n gis get deploy | grep wms
+kubectl -n gis scale deploy <wms-deployment> --replicas=10
 ```
 
 ## AI 使用建议
@@ -213,16 +248,17 @@ kubectl scale deploy gs-wms -n gis --replicas=10
 ### 推荐工作流
 
 1. **确定架构**：根据业务需求选择配置后端（生产推荐 PgConfig）
-2. **部署基础设施**：先部署 RabbitMQ + PostgreSQL + Redis，再启动微服务
-3. **启动服务**：使用 docker-compose 或 Helm Chart 一键部署
-4. **验证服务**：通过 Gateway (`localhost:9090/geoserver`) 访问 Web UI
+2. **部署基础设施**：先部署 RabbitMQ + PostgreSQL（PgConfig 目录库），再启动微服务
+3. **启动服务**：下载官方稳定版 docker-compose 文件或用 Helm Chart 部署
+4. **验证服务**：通过 Gateway (`localhost:9090/geoserver/cloud`) 访问 Web UI
 5. **配置监控**：启用 Prometheus + Grafana 监控各微服务状态
 6. **弹性伸缩**：按负载独立扩缩 WMS/WFS 等服务的副本数
 
 ### 关键注意事项
 
-- **启动顺序**：先启动 discovery → config → 数据库/RabbitMQ → 各业务服务
-- **配置同步**：确保 `spring.cloud.bus.enabled=true` 且 RabbitMQ 可达
+- **启动顺序**：先启动 discovery/Consul → config → 数据库/RabbitMQ → 各业务服务
+- **配置同步**：确保 `GEOSERVER_BUS_ENABLED=true` 且 RabbitMQ 可达
+- **路径前缀**：默认 `GEOSERVER_BASE_PATH=/geoserver/cloud`，构造服务 URL 时不要漏掉
 - **PgConfig 一致性**：多副本共享同一个 PgConfig 数据库实现强一致
 - **JVM 独立调优**：每个微服务根据负载独立设置 `-Xmx`，避免 OOM
 - **不部署不需要的服务**：如不使用 WPS/WCS，直接从 docker-compose 中移除

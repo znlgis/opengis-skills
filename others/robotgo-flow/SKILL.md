@@ -21,7 +21,7 @@ tags:
 >
 > **上游中文教程：** <https://znlgis.github.io/others/robotgo-flow/>（共 19 章）
 >
-> **许可证：** MIT License
+> **许可证：** MIT License ｜ **最新版本：** v1.0.2（2026-09）
 
 ## 概述
 

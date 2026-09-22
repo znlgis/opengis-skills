@@ -34,7 +34,7 @@ GeoTools 是一个成熟、模块化的开源 Java GIS 工具库，由 OSGeo 基
 - **OGC Web 服务**：WMS / WFS / WCS 客户端
 - **几何运算**：基于 JTS Topology Suite 的全套几何计算
 
-**环境要求：** JDK 11+（GeoTools 21–30）；JDK 17+（GeoTools 31+）
+**环境要求：** JDK 8（GeoTools ≤ 28）；JDK 11（GeoTools 29–33）；JDK 17（GeoTools 34+，当前 35.x）
 
 ---
 
@@ -58,7 +58,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 
 ```xml
 <properties>
-    <geotools.version><!-- 请查看 https://geotools.org/ 获取最新版 --></geotools.version>
+    <geotools.version>35.1</geotools.version><!-- 最新稳定版；版本列表见 https://geotools.org/ -->
 </properties>
 
 <dependencies>
@@ -337,7 +337,7 @@ String wkt = new WKTWriter().write(geom);
 4. **资源释放**：`DataStore`、`Reader`、`Writer`、`MapContent` 使用后必须调用 `dispose()` 释放资源。`SimpleFeatureIterator` 需在 try-with-resources 或 finally 中关闭。
 5. **线程安全**：`DataStore` 实例是线程安全的，可在多线程间共享；但 `SimpleFeatureIterator` 不是线程安全的。
 6. **SPI 机制**：GeoTools 使用 Java SPI（ServiceLoader）自动发现 DataStore 工厂、CRS 工厂等，确保相关模块 JAR 在 classpath 中。
-7. **JTS 版本**：GeoTools 28+ 使用 `org.locationtech.jts`（而非旧版 `com.vividsolutions.jts`），注意包名差异。
+7. **JTS 版本**：GeoTools 20+ 使用 `org.locationtech.jts`（GeoTools ≤19 才用旧版 `com.vividsolutions.jts`），注意包名差异。
 8. **性能优化**：对大数据量场景，使用 `Query` 对象限制返回属性和空间范围，避免全量加载；PostGIS 场景建议开启 `preparedStatements`。
 9. **中文属性**：Shapefile 中文乱码时，创建 `ShapefileDataStore` 后调用 `store.setCharset(Charset.forName("GBK"))` 设置编码。
 
@@ -361,7 +361,7 @@ String wkt = new WKTWriter().write(geom);
 - **资源释放**：`DataStore`、`Reader`、`Writer`、`MapContent` 使用后必须调用 `dispose()`
 - **坐标轴顺序**：GeoTools 默认遵循 EPSG 规范（纬度在前），使用 `CRS.decode("EPSG:4326", true)` 强制经度在前
 - **线程安全**：`DataStore` 线程安全可共享；`SimpleFeatureIterator` 非线程安全
-- **JTS 包名**：GeoTools 28+ 使用 `org.locationtech.jts`（非旧版 `com.vividsolutions.jts`）
+- **JTS 包名**：GeoTools 20+ 使用 `org.locationtech.jts`（GeoTools ≤19 为旧版 `com.vividsolutions.jts`）
 
 ## 相关技能
 

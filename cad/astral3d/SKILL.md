@@ -13,15 +13,15 @@ tags:
 
 > **项目地址：** <https://github.com/mlt131220/Astral3D>（Vue3 + THREE.JS 的 WebGL 3D 引擎，npm 包名 `astral3d`）
 >
-> **演示：** <https://astral3d.com/>
+> **演示：** <https://3d.astraljs.com/>
 >
-> **许可证：** Apache-2.0 / MIT（视具体仓库）
+> **许可证：** Apache-2.0
 
 ## 概述
 
 Astral3D 主要特性：
 
-- **基于 Three.js / Babylon.js** 的高层封装
+- **基于 Three.js（Vue 3 生态）** 的高层封装
 - **场景编辑器**：可视化拖拽、属性面板、节点树
 - **资产管理**：模型库、材质库、HDR 环境
 - **动画与状态机**：物体动画、相机路径、时间轴
@@ -249,7 +249,7 @@ viewer.timeline
 
 ## 参考资源
 
-- 演示：<https://astral3d.com/>
+- 演示：<https://3d.astraljs.com/>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/Astral3D/>
 
 > 如官方文档/仓库地址有调整，请以 znlgis.github.io 中的最新链接为准。

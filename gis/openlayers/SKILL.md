@@ -21,6 +21,8 @@ tags:
 >
 > **示例：** <https://openlayers.org/en/latest/examples/>
 >
+> **最新稳定版：** 10.10.0（npm `ol`，截至2026年）
+>
 > **许可证：** BSD-2-Clause
 
 ## 概述

@@ -26,9 +26,9 @@ LibreDWG 解决 DWG 二进制格式的开源读写：
 - **写入版本**：稳定支持 R1.4 – R2004（R2007+ 写入仍试验性）
 - **读写**：DWG ↔ DXF（ASCII/Binary），并能转 JSON/XML/SVG
 - **命令行工具**：`dwgread`、`dwgwrite`、`dwg2dxf`、`dxf2dwg`、`dwg2SVG`、`dwgrewrite`
-- **绑定**：C API、Python（`libredwg.python`）、Common Lisp、Perl
+- **绑定**：C API、Python（`LibreDWG` 模块，SWIG 生成）、Common Lisp、Perl
 
-> 与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。最新版本请参见 [GitHub Releases](https://github.com/LibreDWG/libredwg/releases)。
+> 与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。截至2026年6月最新稳定版为 **0.14**，详见 [GitHub Releases](https://github.com/LibreDWG/libredwg/releases)。
 
 ---
 
@@ -70,11 +70,11 @@ dwg2SVG          input.dwg > out.svg
 # 列出实体统计
 dwgread input.dwg | head -50
 
-# 重写（修复/版本转换）
-dwgrewrite -v 2018 input.dwg out.dwg       # 转换为 R2018
+# 重写（修复/版本转换，--as rNNNN 指定目标版本）
+dwgrewrite --as r2018 input.dwg out.dwg    # 转换为 R2018
 ```
 
-常用 `-y` 强制覆盖，`-O` 选输出格式，`-v` 指定 DWG 版本。
+常用 `-y` 强制覆盖，`-O` 选输出格式，`-v` 为 verbose 级别（版本转换用 `--as rNNNN`）。
 
 ---
 
@@ -148,7 +148,11 @@ dwg_free(&dwg);
 ## Python 绑定
 
 ```bash
-pip install LibreDWG-python
+# Debian/Ubuntu（官方打包的 SWIG 绑定；PyPI 上没有 LibreDWG-python 包）
+sudo apt install python3-libredwg
+
+# 源码构建：configure 默认探测 SWIG，可用 --enable-python / --disable-python 控制
+./autogen.sh && ./configure --enable-python && make
 ```
 
 ```python
@@ -194,7 +198,7 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 |------|------|
 | 高版本 DWG 无法读 | 等待 LibreDWG 支持，或先用 ODA File Converter 转为 R2010 |
 | 写入失真 | 启用 `--enable-write` 编译；优先使用 DXF 出口 |
-| 中文文字乱码 | DWG 编码为 ANSI/CP936；`dwgread -c utf8` 切换 |
+| 中文文字乱码 | 编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI_936）；优先用 `dwgread -O JSON` 输出 UTF-8，或对 DXF 输出用 iconv 转码 |
 | 引用块缺失 | 解析 `INSERT` 时跟随 `BLOCK_HEADER` 引用 |
 
 ---
@@ -202,7 +206,7 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 ## AI 使用建议
 
 - **推荐工作流模式**：AI 助手应根据场景选择 LibreDWG 的使用层级——简单转换用 CLI（`dwg2dxf`/`dwgread`），数据提取用 JSON/GeoJSON 输出，复杂处理用 C API 或 Python 绑定。写入功能仍在完善，写 DWG 前考虑先写 DXF 再转换。
-- **关键注意事项**：① 高版本 DWG（R2021+）不被支持，先用 ODA File Converter 转为 R2010/R2018；② 中文文字编码默认为 ANSI/CP936，读取时可用 `dwgread -c utf8`；③ 写入需编译时启用 `--enable-write`；④ 大文件用 `--no-check` 加速读取。
+- **关键注意事项**：① 高版本 DWG（R2021+）不被支持，先用 ODA File Converter 转为 R2010/R2018；② 中文文字编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI/CP936），输出 JSON 为 UTF-8；③ 写入需编译时启用 `--enable-write`；④ 大文件用 `--no-check` 加速读取。
 - **常用代码模式**：CLI 转换：`dwg2dxf -y input.dwg` / `dwgread -O JSON input.dwg -o out.json` / `dwg2SVG input.dwg > out.svg`。C API：`dwg_read_file("input.dwg", &dwg)` → `dwg_get_first_object(&dwg, DWG_TYPE_BLOCK_HEADER)` → 遍历实体 → `dwg_free(&dwg)`。
 
 ---

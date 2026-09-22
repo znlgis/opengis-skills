@@ -34,7 +34,7 @@ Esri Geometry API for Java 是一个自包含的空间几何计算库，提供�
 <dependency>
   <groupId>com.esri.geometry</groupId>
   <artifactId>esri-geometry-api</artifactId>
-  <version><!-- 请查看 Maven Central 获取最新版：https://central.sonatype.com/artifact/com.esri.geometry/esri-geometry-api --></version>
+  <version>2.2.4</version><!-- Maven Central 最新版；上游 2.3.0 尚未发布到 Central -->
 </dependency>
 ```
 
@@ -46,7 +46,7 @@ implementation 'com.esri.geometry:esri-geometry-api:2.2.4'
 
 **环境要求：** JDK 1.7+；运行时依赖 `jackson-core`（JSON 处理）。
 
-> **维护状态提示：** `esri-geometry-api` 最新版本仍为 **2.2.4（2020-09）**，已多年未更新。若需活跃维护的几何库，新项目建议优先选用 JTS（Java）或 NetTopologySuite（.NET）。
+> **维护状态提示：** Maven Central 上最新发布版本仍是 **2.2.4（2020-09）**；上游仓库于 **2026-08 发布了 2.3.0**，但尚未发布到 Maven Central（需自行从源码构建）。若需活跃维护的几何库，新项目建议优先选用 JTS（Java）或 NetTopologySuite（.NET）。
 
 ---
 

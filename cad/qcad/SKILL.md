@@ -20,6 +20,8 @@ tags:
 > **API 参考：** <https://api.qcad.org/>
 >
 > **许可证：** GPL-3.0（社区版）；Pro 版商业许可
+>
+> **最新稳定版：** 3.33.1（截至2026年9月，GitHub tag `v3.33.1.0`，见 <https://qcad.org/en/download>）
 
 ## 概述
 

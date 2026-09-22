@@ -12,9 +12,9 @@ tags:
   - cpp
 ---
 
-> **项目地址：** <https://github.com/AngusJohnson/Clipper>
+> **项目地址（V6 官方主页）：** <https://sourceforge.net/p/polyclipping/>
 >
-> **官方文档：** <https://github.com/AngusJohnson/Clipper>
+> **说明：** 原 GitHub 仓库 `github.com/AngusJohnson/Clipper` 现重定向到 Clipper2，V6 末版为 **6.4.2**，已不再新增功能
 >
 > **NuGet：** `Clipper`（多个第三方移植版）
 >
@@ -240,7 +240,7 @@ c.Execute(ctUnion, solution, pftNonZero, pftNonZero);
 
 ## 参考资源
 
-- 仓库：<https://github.com/AngusJohnson/Clipper>
-- 文档：<https://github.com/AngusJohnson/Clipper>
+- V6 官方主页（含文档）：<https://sourceforge.net/p/polyclipping/>
+- 原 GitHub 仓库（已重定向到 Clipper2）：<https://github.com/AngusJohnson/Clipper>
 - pyclipper：<https://github.com/fonttools/pyclipper>
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/Clipper1/>

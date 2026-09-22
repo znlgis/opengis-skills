@@ -15,7 +15,7 @@ tags:
 >
 > **官方文档：** <https://docs.billionmail.com/>
 >
-> **许可证：** AGPL-3.0（社区版）
+> **许可证：** AGPL-3.0（社区版）｜ **最新版本：** v4.9（2025-12）
 
 ## 概述
 
@@ -41,7 +41,7 @@ BillionMail 主要能力：
 ```bash
 git clone https://github.com/Billionmail/BillionMail
 cd BillionMail
-cp .env.example .env
+cp env_init .env
 # 编辑 .env：DOMAIN、DB 密码、MX/SMTP 配置等
 docker compose up -d
 ```
@@ -187,7 +187,7 @@ mail-tester.com   # 免费送达率打分
 ```bash
 # 部署
 git clone https://github.com/Billionmail/BillionMail && cd BillionMail
-cp .env.example .env
+cp env_init .env
 # 编辑 .env：DOMAIN、数据库密码、SMTP 配置
 docker compose up -d
 
@@ -217,7 +217,7 @@ swaks --to test@example.com --server localhost --port 587 --tls
 # 1. 部署
 git clone https://github.com/Billionmail/BillionMail
 cd BillionMail
-cp .env.example .env
+cp env_init .env
 # 编辑 .env：DOMAIN=mail.example.com, 数据库密码
 docker compose up -d
 

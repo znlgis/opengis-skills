@@ -23,7 +23,7 @@ tags:
 >
 > **Effective Go：** <https://go.dev/doc/effective_go>
 >
-> **许可证：** BSD-3-Clause ｜ **最新稳定版：** 参见 [go.dev/dl](https://go.dev/dl/)
+> **许可证：** BSD-3-Clause ｜ **最新稳定版：** go1.27.1（2026-09，见 [go.dev/dl](https://go.dev/dl/)）
 
 ## 概述
 

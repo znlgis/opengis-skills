@@ -17,7 +17,7 @@ tags:
 >
 > **官方文档：** <https://github.com/SharpMap/SharpMap/wiki>
 >
-> **NuGet：** `SharpMap`、`SharpMap.UI.WinForms`
+> **NuGet：** `SharpMap`、`SharpMap.UI.WinForms`（SharpMap 最新稳定版 1.2.0，截至2026年）
 >
 > **许可证：** LGPL-2.1
 

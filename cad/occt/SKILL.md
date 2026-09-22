@@ -21,6 +21,8 @@ tags:
 > **教程：** <https://dev.opencascade.org/doc/overview/html/>
 >
 > **许可证：** LGPL-2.1（带例外条款）
+>
+> **最新稳定版：** 8.0.1（2026-07 发布，见 [OCCT Releases](https://github.com/Open-Cascade-SAS/OCCT/releases)）
 
 ## 概述
 

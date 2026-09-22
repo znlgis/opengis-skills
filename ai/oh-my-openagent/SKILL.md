@@ -17,7 +17,7 @@ tags:
 > **安装文档：** <https://github.com/code-yeongyu/oh-my-openagent/blob/dev/docs/guide/installation.md>
 >
 > **许可证：** SUL-1.0（Sustainable Use License，商用前请阅读条款）｜ **npm 包：** `oh-my-opencode` ｜ **作者：** YeonGyu-Kim
-> **最新版本：** v4.19.0（参见 [npm](https://www.npmjs.com/package/oh-my-openagent)）
+> **最新版本：** v4.19.4（迭代快，参见 [npm](https://www.npmjs.com/package/oh-my-openagent)，以当前版本为准）
 
 > 说明：项目以 npm 包 **`oh-my-opencode`** 发布，CLI 别名包含 `oh-my-opencode` / `oh-my-openagent` / `omo` / `lazycodex`。它是 **OpenCode 的插件**，使用前需先安装 [OpenCode](../opencode/SKILL.md)。
 

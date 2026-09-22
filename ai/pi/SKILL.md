@@ -19,7 +19,7 @@ tags:
 > **最新发布：** 参见 [GitHub Releases](https://github.com/earendil-works/pi/releases)
 >
 > **许可证：** MIT
-> **最新版本：** 参见 [npm](https://www.npmjs.com/package/@earendil-works/pi)
+> **最新版本：** 参见 [npm](https://www.npmjs.com/package/@earendil-works/pi-coding-agent)（迭代快，以 `pi --version` / npm 当前版本为准）
 
 ## 概述
 

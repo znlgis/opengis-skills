@@ -197,8 +197,9 @@ Authorization: Basic YWRtaW46Z2Vvc2VydmVy
 
 | 操作 | 方法 | 端点 | 说明 |
 |------|------|------|------|
-| 获取图层缓存设置 | GET | `/rest/layers/{layer}/gwc` | 获取图层的 GWC 缓存配置 |
-| 修改图层缓存设置 | PUT | `/rest/layers/{layer}/gwc` | 更新图层缓存配置 |
+| 获取图层缓存设置 | GET | `/gwc/rest/layers/{layer}.xml` | 获取 GWC 图层缓存配置（官方推荐 XML） |
+| 新增/修改图层缓存设置 | PUT | `/gwc/rest/layers/{layer}.xml` | 新增或修改 GWC 图层配置 |
+| 删除图层缓存设置 | DELETE | `/gwc/rest/layers/{layer}.xml` | 删除 GWC 图层配置 |
 | 清空图层缓存 (Seed) | POST | `/gwc/rest/seed/{layer}.json` | 发起缓存 seed/reseed/truncate 任务 |
 | 查看缓存任务状态 | GET | `/gwc/rest/seed/{layer}.json` | 获取缓存任务进度 |
 | 终止缓存任务 | POST | `/gwc/rest/seed/{layer}` | 终止正在运行的缓存任务 |

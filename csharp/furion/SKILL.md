@@ -17,6 +17,8 @@ tags:
 >
 > **NuGet：** `Furion`、`Furion.Pure`
 >
+> **最新版本：** `Furion` 4.9.9.95 / `Furion.Pure` 4.9.9.10（截至2026-09，NuGet）
+>
 > **许可证：** MIT + Apache-2.0
 
 ## 概述

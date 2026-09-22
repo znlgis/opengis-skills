@@ -22,7 +22,7 @@ tags:
 > **最新发布：** 参见 [GitHub Releases](https://github.com/xunbu/docutranslate/releases)
 >
 > **许可证：** Mozilla Public License 2.0 (MPL-2.0)
-> **最新版本：** v1.7.8（参见 [PyPI](https://pypi.org/project/docutranslate/)）
+> **最新版本：** v1.7.9（参见 [PyPI](https://pypi.org/project/docutranslate/)）
 
 ## 概述
 

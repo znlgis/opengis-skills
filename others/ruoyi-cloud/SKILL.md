@@ -58,9 +58,9 @@ RuoYi-Cloud
 
 | 组件 | 版本 |
 |------|------|
-| RuoYi-Cloud | 3.6.8（最新，2026-04） |
-| Spring Boot | 4.0.x（主分支）/ 3.x（springboot3 分支） |
-| Spring Cloud | 2025.1.0 |
+| RuoYi-Cloud | 3.6.8（最新，2026-03） |
+| Spring Boot | 4.0.x（v3.6.8 发布版）/ 3.x（springboot3 分支） |
+| Spring Cloud | 2025.1.x |
 | Spring Cloud Alibaba | 2025.1.0.0 |
 | JDK | 17+（Spring Boot 4 要求 17+） / 8（老分支） |
 | Maven | 3.9+（官方使用 3.11） |
@@ -81,8 +81,9 @@ git clone https://gitee.com/y_project/RuoYi-Cloud.git
 cd RuoYi-Cloud
 
 # 2. 数据库
-mysql -u root -p < sql/ry_20240629.sql
-mysql -u root -p < sql/ry_config_20240629.sql
+mysql -u root -p < sql/ry_20260321.sql
+mysql -u root -p < sql/ry_config_20260311.sql
+mysql -u root -p < sql/quartz.sql   # 定时任务表
 
 # 3. Nacos：将 nacos/config 下 .yml 推送到 Nacos
 #    或直接通过控制台导入 ZIP

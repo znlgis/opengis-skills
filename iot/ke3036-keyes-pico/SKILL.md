@@ -43,8 +43,8 @@ KE3036 套件常见组成：
 ## 工具
 
 ```bash
-pip install thonny             # 推荐 IDE
-pip install mpremote esptool   # 命令行
+pip install thonny     # 推荐 IDE
+pip install mpremote   # 命令行工具（RP2040 无需 esptool，固件用 .uf2 拖拽烧录）
 mpremote connect /dev/ttyACM0 ls
 mpremote connect /dev/ttyACM0 cp main.py :main.py
 mpremote connect /dev/ttyACM0 run main.py

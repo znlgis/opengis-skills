@@ -62,7 +62,7 @@ brew install --cask freecad
 conda install -c conda-forge freecad
 ```
 
-FreeCAD 1.x 起合并了大量长期分支（如 PartDesign Toponaming 修复）。最新稳定版请参见 [FreeCAD Releases](https://github.com/FreeCAD/FreeCAD/releases)。
+FreeCAD 1.x 起合并了大量长期分支（如 PartDesign Toponaming 修复）。当前稳定版 **1.1.3**（2026-07 发布，参见 [FreeCAD Releases](https://github.com/FreeCAD/FreeCAD/releases)）。
 
 ---
 

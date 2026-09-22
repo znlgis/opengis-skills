@@ -16,7 +16,7 @@ tags:
 >
 > **NuGet：** <https://www.nuget.org/packages/OpenCSG.NET>
 >
-> **许可证：** MIT
+> **许可证：** MIT ｜ **最新版本：** `1.1.1`（GitHub tag `v1.1.1` 与 NuGet 一致）
 
 ## 概述
 

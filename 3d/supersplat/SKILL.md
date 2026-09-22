@@ -16,7 +16,7 @@ tags:
 >
 > **在线编辑器：** <https://superspl.at/editor> ｜ **用户手册：** <https://developer.playcanvas.com/user-manual/gaussian-splatting/editing/supersplat/>
 >
-> **许可证：** MIT ｜ **最新版本：** 参见 [GitHub Releases](https://github.com/playcanvas/supersplat/releases)｜ **默认分支：** `main`
+> **许可证：** MIT ｜ **最新版本：** `v3.3.1`（2026-09，详见 [GitHub Releases](https://github.com/playcanvas/supersplat/releases)）｜ **默认分支：** `main`
 
 ## 概述
 
@@ -128,7 +128,7 @@ npm run develop        # = watch（Rollup 监听构建）+ serve（静态服务 
 | 隐藏(hidden)与删除区别 | 隐藏的点默认仍会导出，删除的点导出时被剔除 |
 | 导出文件太大 | 删噪点 + 勾选 Compress PLY + 降低 SH Bands；Web 发布优先压缩 PLY 或 SOG |
 | 本地开发看到旧版本 | Service Worker 缓存，按上文关闭缓存 / Update on reload |
-| `npm install` 失败 | 确认 Node ≥ 18 |
+| `npm install` 失败 | 确认 Node ≥ 20.19.0（`package.json` engines 要求） |
 | 该用哪种格式 | 继续编辑/归档→PLY；网页加载→压缩 PLY 或 SOG；对接特定查看器→splat/ksplat |
 | 原始 .ply 从哪来 | 3DGS 训练工具（COLMAP+gaussian-splatting、Postshot、Nerfstudio 等）产出 |
 

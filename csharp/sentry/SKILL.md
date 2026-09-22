@@ -17,6 +17,8 @@ tags:
 >
 > **NuGet：** <https://www.nuget.org/packages/Sentry>
 >
+> **最新版本：** Sentry / Sentry.AspNetCore 6.11.1（截至2026-09，NuGet）
+>
 > **许可证：** MIT
 
 ## 概述
@@ -43,7 +45,7 @@ Sentry 是一个开源的 **错误追踪与性能监控平台**，.NET SDK 支�
 | `Sentry.AspNetCore` | ASP.NET Core Web API / MVC |
 | `Sentry.Maui` | .NET MAUI 移动应用 |
 | `Sentry.AspNetCore.Blazor.WebAssembly` | Blazor WASM |
-| `Sentry.EntityFramework` | Entity Framework Core 集成 |
+| `Sentry.EntityFramework` | Entity Framework 6 集成（EF Core 查询经内置 DiagnosticSource 自动采集） |
 | `Sentry.DiagnosticSource` | DiagnosticSource 事件采集 |
 | `Sentry.OpenTelemetry` | OpenTelemetry 集成 |
 | `Sentry.Profiling` | 代码级性能剖析 |
@@ -62,8 +64,8 @@ dotnet add package Sentry.AspNetCore
 dotnet add package Sentry
 
 # 可选集成
-dotnet add package Sentry.EntityFramework     # EF Core
-dotnet add package Sentry.DiagnosticSource    # HTTP / EF Core 自动 Span
+dotnet add package Sentry.EntityFramework     # EF6（EF Core 无需此包）
+dotnet add package Sentry.DiagnosticSource    # HTTP / ADO.NET 自动 Span
 dotnet add package Sentry.OpenTelemetry       # OTel 桥接
 dotnet add package Sentry.Profiling           # 性能剖析
 ```
@@ -179,10 +181,12 @@ builder.WebHost.UseSentry(o =>
     o.TracePropagationTargets = new[] { "https://my-api.com" };
 });
 
-builder.Services.AddSentryEFCore();  // EF Core 集成
+// EF Core 查询 Span 由 SDK 内置 DiagnosticSource 集成自动采集；
+// EF6 才需要额外安装 Sentry.EntityFramework
 
 var app = builder.Build();
-app.UseSentryTracing();  // 性能中间件
+// 新版 SDK 中 ASP.NET Core 请求 Transaction 自动创建（TracesSampleRate > 0 即生效），
+// 无需再手动调用 UseSentryTracing()
 app.MapControllers();
 app.Run();
 ```
@@ -214,10 +218,10 @@ cd self-hosted
 | 问题 | 解决方案 |
 |------|---------|
 | DSN 在哪里获取？ | Sentry Dashboard → Settings → Projects → Client Keys |
-| 如何过滤敏感数据？ | 使用 `BeforeSend` 回调或 ` beforeSendTransaction` |
-| ASP.NET Core 中性能追踪不生效？ | 确保调用了 `app.UseSentryTracing()` |
+| 如何过滤敏感数据？ | 使用 `BeforeSend` 回调或 `BeforeSendTransaction` |
+| ASP.NET Core 中性能追踪不生效？ | 确保 `TracesSampleRate > 0`（新版 SDK 自动创建请求 Transaction，无需额外中间件） |
 | 如何与 OpenTelemetry 共存？ | 安装 `Sentry.OpenTelemetry`，通过 OTel 桥接 |
-| EF Core 查询没有追踪？ | 安装 `Sentry.EntityFramework` 并注册服务 |
+| EF Core 查询没有追踪？ | 确认 ADO.NET/DiagnosticSource 集成未被禁用；`Sentry.EntityFramework` 仅用于 EF6 |
 
 ---
 
@@ -227,14 +231,14 @@ cd self-hosted
 
 1. **安装 SDK**：`dotnet add package Sentry.AspNetCore`（ASP.NET Core）或 `Sentry`（基础）
 2. **配置 DSN**：在 `appsettings.json` 中设置 `Sentry:Dsn` 或环境变量 `SENTRY_DSN`
-3. **启用追踪**：添加 `SentrySdk.Init()` + `app.UseSentryTracing()`
+3. **启用追踪**：`builder.WebHost.UseSentry()`（Web）或 `SentrySdk.Init()`（控制台），并设置 `TracesSampleRate`
 4. **自动采集**：ASP.NET Core、EF Core、HttpClient 等自动采集性能数据
 5. **自定义事件**：`SentrySdk.CaptureMessage()` 或 `SentrySdk.CaptureException()`
 
 ### 关键注意事项
 
 - **DSN 必填**：无 DSN 时 SDK 静默不工作，不会抛异常
-- **性能追踪**：必须调用 `app.UseSentryTracing()`，否则无 Span 数据
+- **性能追踪**：设置 `TracesSampleRate > 0` 才会生成 Transaction/Span；新版 SDK 自动插桩，旧文档中的 `UseSentryTracing()` 中间件已无需调用
 - **采样率**：生产环境建议 `TracesSampleRate = 0.1`（10%），避免过多数据
 - **隐私过滤**：用 `BeforeSend` 回调过滤敏感数据（PII、密码等）
 - **自托管**：Docker 部署需配置 `SENTRY_SECRET_KEY` 和邮件服务

@@ -20,6 +20,8 @@ tags:
 >
 > **在线文档：** <https://docs.qgis.org/4.2/en/docs/user_manual/processing/standalone.html>
 >
+> **适用版本：** QGIS 3.16 起可用；当前稳定版 4.2.2，3.44 LTR（最新 3.44.14）（截至2026年）
+>
 > **许可证：** GPL-2.0+
 
 ## 概述

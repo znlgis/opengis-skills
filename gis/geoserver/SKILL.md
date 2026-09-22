@@ -22,7 +22,7 @@ tags:
 >
 > **许可证：** GPL-2.0
 
-> 该 SKILL 关注 GeoServer 服务端运维与配置；REST 自动化管理资源请配合 `gis/geoserver-rest-api`。
+> 该 SKILL 关注 GeoServer 服务端运维与配置；REST API 自动化管理资源请配合 `gis/geoserver-rest-api`。
 
 ## 概述
 
@@ -54,7 +54,7 @@ docker run --name gs -p 8080:8080 \
   -e SKIP_DEMO_DATA=true \
   -e EXTRA_JAVA_OPTS="-Xms512m -Xmx2g" \
   -v $PWD/data:/opt/geoserver_data \
-  docker.osgeo.org/geoserver:3.0.0
+  docker.osgeo.org/geoserver:3.0.1
 ```
 
 ### 数据目录

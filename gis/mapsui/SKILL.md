@@ -16,7 +16,9 @@ tags:
 
 > **项目地址：** <https://github.com/Mapsui/Mapsui>
 >
-> **官方文档：** <https://mapsui.com/v4/documentation/home.html>
+> **官方文档：** <https://mapsui.com/v5/documentation/index.html>
+>
+> **最新稳定版：** 5.1.0（NuGet，截至2026年）
 >
 > **许可证：** LGPL-2.1+
 
@@ -274,6 +276,6 @@ map.ZoomToExtents();
 
 ## 参考资源
 
-- 文档：<https://mapsui.com/v4/documentation/home.html>
-- 示例：<https://mapsui.com/v4/samples/>
+- 文档：<https://mapsui.com/v5/documentation/index.html>
+- 示例：<https://mapsui.com/v5/samples/>
 - 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/Mapsui/>
