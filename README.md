@@ -28,8 +28,8 @@
 
 | 层级 | 文件 | 内容 | 适用场景 |
 |------|------|------|---------|
-| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 75 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
-| **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`3d/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
+| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 80 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
+| **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`3d/SKILL.md`、`demos/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
 | **L3 项目技能** | `<category>/<project>/SKILL.md` | 单个开源项目的深度知识（API、工作流、FAQ） | 已确定使用哪个工具，需要精准的编码指导 |
 
 ### 典型使用流程
@@ -84,7 +84,9 @@ opengis-skills/
 │   └── SKILL.md     # IoT 分类索引
 ├── 3d/              # 3D / 高斯泼溅 / 全景 / BIM / CSG（5 个）
 │   └── SKILL.md     # 3D 分类索引
-└── others/          # 其它（6 个）
+├── demos/           # 项目演示（4 个：全景联动 / 地图大屏 / 水务前端 / GeoServer 图层树）
+│   └── SKILL.md     # demos 分类索引
+└── others/          # 其它（7 个）
     └── SKILL.md     # Others 分类索引
 ```
 
@@ -104,9 +106,10 @@ opengis-skills/
 | [`ai/SKILL.md`](./ai/SKILL.md) | 10 个 AI 技能概要（Dify、Pi、智能体、OpenCode、DeepSeek Harness、DocuTranslate、AI 编程方法论、OpenCode×DeepSeek 配置） | LLM 应用、智能体、终端编码代理、插件式 Agent 框架 |
 | [`iot/SKILL.md`](./iot/SKILL.md) | 1 个 IoT 技能概要（Raspberry Pi Pico） | 嵌入式、传感器 |
 | [`3d/SKILL.md`](./3d/SKILL.md) | 5 个 3D 技能概要（SuperSplat 高斯泼溅编辑器、Ara3D-SDK 高性能 .NET 三维/BIM 库、Photo-Sphere-Viewer 360° 全景、Elements BIM 编程生成库、OpenCSG.NET CSG 建模库） | 3D 高斯泼溅、AEC/BIM、全景展示、CSG 建模 |
-| [`others/SKILL.md`](./others/SKILL.md) | 6 个其它技能概要（Go 语言、RobotGo、robotgo-flow、邮件平台、Java 脚手架、acme.sh） | 通用工具、Go 开发、自动化、SSL 证书 |
+| [`others/SKILL.md`](./others/SKILL.md) | 7 个其它技能概要（Go 语言、RobotGo、robotgo-flow、邮件平台、Java 脚手架、acme.sh、CHAGS 儿童游戏合集） | 通用工具、Go 开发、自动化、SSL 证书、H5 游戏 |
+| [`demos/SKILL.md`](./demos/SKILL.md) | 4 个演示项目技能概要（map-360-demo 全景地图联动、vue3-map-dashboard 可视化大屏、ai-water-front 智慧水务前端、openlayers-vue3-demo 图层树） | Vue3 演示工程、地图可视化、学习参考 |
 
-> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 75 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
+> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 80 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
 
 ---
 
@@ -231,6 +234,19 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 
 ---
 
+## 🎯 项目演示（demos/）
+
+上游博客「项目演示」分类对应的四个可运行示例工程（Vue 3 + Vite）。
+
+| SKILL | 简介 |
+|-------|------|
+| [map-360-demo](./demos/map-360-demo/SKILL.md) | 360° 全景与 Leaflet 地图双向联动演示（Photo Sphere Viewer v5） |
+| [vue3-map-dashboard](./demos/vue3-map-dashboard/SKILL.md) | 天地图 + Element Plus 企业级数据可视化大屏 |
+| [ai-water-front](./demos/ai-water-front/SKILL.md) | OpenLayers + Dify AI 助手的智慧水务前端 |
+| [openlayers-vue3-demo](./demos/openlayers-vue3-demo/SKILL.md) | vue3-openlayers 声明式地图 + GeoServer 图层树 |
+
+---
+
 ## 🗂️ 其它（others/）
 
 | SKILL | 简介 |
@@ -241,6 +257,7 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 | [go](./others/go/SKILL.md) | Go 语言核心语法与工程实践 |
 | [robotgo](./others/robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 |
 | [robotgo-flow](./others/robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 自动化框架 |
+| [chags](./others/chags/SKILL.md) | 中国历史典故儿童游戏合集（Vue3 + Phaser，中英双语） |
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 75 open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, Go and more."
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise for 80 open-source projects. One-stop skill index with tag-based search and on-demand loading for GDAL, GeoServer, QGIS, PostGIS, JTS, CesiumJS, FreeCAD, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, SuperSplat, CHAGS, Go and more."
 tags:
   - gis
   - cad
@@ -30,7 +30,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域及通用工具（others），共 7 个分类、75 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域，以及通用工具（others）与项目演示（demos），共 8 个分类、80 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -50,6 +50,8 @@ tags:
 - **需要 DeepSeek 智能体框架？** → 加载 `ai/deepseek-harness/SKILL.md`
 - **需要方案驱动的 GIS 分析/质检流水线？** → 加载 `gis/opengis-daf/SKILL.md`
 - **需要 OpenCode × DeepSeek 最优配置？** → 加载 `ai/my-opencode-deepseek-config/SKILL.md`
+- **需要 Vue3 地图/全景演示工程参考？** → 加载 `demos/map-360-demo/SKILL.md` 或 `demos/vue3-map-dashboard/SKILL.md`
+- **需要开发儿童向 H5 小游戏（Phaser + Vue3）？** → 加载 `others/chags/SKILL.md`
 
 > **AI 使用提示：** 优先使用下方标签系统精准定位所需技能，按需加载 1-3 个 SKILL.md，避免全量加载导致上下文膨胀。
 
@@ -156,7 +158,16 @@ tags:
 | [elements](./3d/elements/SKILL.md) | Hypar Elements：纯 C# BIM 编程生成库 | `dotnet` `bim` `geometry` `ifc` `gltf` |
 | [opencsg-net](./3d/opencsg-net/SKILL.md) | OpenCSG.NET：零依赖 .NET CSG 建模库 | `dotnet` `csg` `3d` `stl` |
 
-### 🗂️ Others — 其它（6 个）
+### 🎯 项目演示 — demos（4 个）
+
+| 技能 | 简介 | 关键标签 |
+|------|------|---------|
+| [map-360-demo](./demos/map-360-demo/SKILL.md) | 360° 全景与 Leaflet 地图双向联动演示（PSV v5） | `vue` `panorama` `leaflet` |
+| [vue3-map-dashboard](./demos/vue3-map-dashboard/SKILL.md) | 天地图 + Element Plus 企业级可视化大屏 | `vue` `dashboard` `tianditu` |
+| [ai-water-front](./demos/ai-water-front/SKILL.md) | OpenLayers + Dify AI 助手的智慧水务前端 | `openlayers` `dify` `dashboard` |
+| [openlayers-vue3-demo](./demos/openlayers-vue3-demo/SKILL.md) | vue3-openlayers 声明式地图 + GeoServer 图层树 | `openlayers` `geoserver` `wms` |
+
+### 🗂️ Others — 其它（7 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -166,6 +177,7 @@ tags:
 | [go](./others/go/SKILL.md) | Go 语言核心语法与工程实践 | `go` `golang` `backend` `concurrency` |
 | [robotgo](./others/robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 | `go` `rpa` `automation` `desktop` |
 | [robotgo-flow](./others/robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 | `go` `rpa` `yaml` `windows` |
+| [chags](./others/chags/SKILL.md) | 中国历史典故儿童游戏合集（Vue3 + Phaser，17 典故） | `vue` `phaser` `game` |
 
 ---
 
@@ -180,11 +192,11 @@ tags:
 | `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, clipper1, freecad, kicad, libredwg, geopipe-agent, deepseek-harness, docutranslate, hermes-agent |
 | `java` | gdal-api, geotools, jts, geometry-api-java, opengis-utils-for-java, geoserver, geoserver-cloud, ruoyi-cloud |
  | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, opengis-daf, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
-| `javascript` / `typescript` | cesiumjs, openlayers, qcad, chili3d, lightcad, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat |
+| `javascript` / `typescript` | cesiumjs, openlayers, qcad, chili3d, lightcad, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
 | `cpp` / `c` | gdal-api, occt, clipper1, clipper2, librecad, libredwg |
 | `go` | go, robotgo, robotgo-flow |
 | `shell` | qgis-process, acme.sh |
-| `vue` | admin-net-frontend |
+| `vue` | admin-net-frontend, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
 | `micropython` | ke3036-keyes-pico |
 
 ### 按功能领域
@@ -203,6 +215,9 @@ tags:
 | `automation` / `rpa` | geoserver-rest-api, qgis-process, acme.sh, robotgo, robotgo-flow |
 | `autocad` | ifoxcad, lightningcad, tongwen |
 | `svg` / `markdown` / `pdf` | design-drawing-svg-md |
+| `panorama` | photo-sphere-viewer, map-360-demo |
+| `dashboard` / `demo` | vue3-map-dashboard, ai-water-front, map-360-demo, openlayers-vue3-demo |
+| `game` / `education` | chags |
 
 ---
 
@@ -226,6 +241,8 @@ tags:
 | "前端展示 WMS 地图图层" | `gis/openlayers/SKILL.md` 或 `gis/cesiumjs/SKILL.md` |
 | "用 CAD 画个简单的 3D 零件" | `cad/openscad/SKILL.md` 或 `cad/cadquery/SKILL.md` |
 | "用 .NET 写一个 Web API 接口" | `csharp/furion/SKILL.md` |
+| "全景图与地图双向联动怎么做？" | `demos/map-360-demo/SKILL.md` |
+| "用 Phaser + Vue3 做儿童小游戏" | `others/chags/SKILL.md` |
 
 ### 全量加载
 

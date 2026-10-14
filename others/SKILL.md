@@ -1,6 +1,6 @@
 ---
 name: others-skills
-description: "Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, or SSL/TLS certificate automation. Index of 6 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh."
+description: "Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, SSL/TLS certificate automation, or building a bilingual children's Phaser/Vue game collection. Index of 7 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh, CHAGS."
 tags:
   - email
   - self-hosted
@@ -21,11 +21,11 @@ tags:
 > **仓库地址：** <https://github.com/znlgis/opengis-skills>
 > **许可证：** MIT
 >
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 75 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
 
 ## 概述
 
-本分类当前涵盖 **6 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 的通用工具与编程语言。
+本分类当前涵盖 **7 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 与项目演示（demos）的通用工具、编程语言与独立项目。
 
 ### 何时加载此索引？
 
@@ -35,6 +35,7 @@ tags:
 - 需要自建邮件营销 / 事务邮件 / Newsletter 系统
 - 需要 Java 微服务后台管理脚手架（Spring Boot 4 / 3 + Spring Cloud）
 - 需要自动申请 / 部署 / 续期免费 SSL/TLS 证书（Let's Encrypt 等）
+- 需要开发 / 扩展儿童向 H5 游戏合集（Phaser + Vue 3，中英双语）
 - 寻找可替代商业方案的开源自托管工具
 
 ---
@@ -49,6 +50,7 @@ tags:
 | [billionmail](./billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `selfhosted` `marketing` |
 | [ruoyi-cloud](./ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `springcloud` `scaffold` |
 | [acme.sh](./acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
+| [chags](./chags/SKILL.md) | 中国历史典故儿童游戏合集（Vue3 + Phaser，中英双语） | `vue` `phaser` `game` |
 
 ---
 
@@ -71,6 +73,8 @@ tags:
 | "Nacos/Sentinel/Seata 微服务脚手架" | `ruoyi-cloud/SKILL.md` |
 | "自动申请 Let's Encrypt SSL 证书" | `acme.sh/SKILL.md` |
 | "通配符证书 / Nginx 自动续期 HTTPS" | `acme.sh/SKILL.md` |
+| "扩展 CHAGS：新增一个典故小游戏" | `chags/SKILL.md` |
+| "Phaser 场景 / 契约层 / 存档复习调度" | `chags/SKILL.md` |
 
 ---
 
