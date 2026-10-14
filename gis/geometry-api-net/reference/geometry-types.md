@@ -1,6 +1,6 @@
 # Geometry API for .NET Geometry Types Reference
 
-Geometry type system and dual API style details split from SKILL.md.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录几何类型体系与 GeometryEngine / Operator 两种 API 风格的完整说明。
 
 ---
 

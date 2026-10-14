@@ -18,7 +18,9 @@ tags:
 >
 > **NuGet 包：** `OpenGIS.Utils`
 >
-> **许可证：** Apache-2.0
+> **最新版本：** 1.1.2（截至2026-10，NuGet）
+>
+> **许可证：** LGPL-2.1-or-later
 
 ## 概述
 
@@ -28,7 +30,7 @@ tags:
 - **几何运算**：`GeometryUtil` 提供 50+ 静态方法（空间关系、集合运算、属性查询、拓扑验证）
 - **坐标系管理**：`CrsUtil` 支持 CGCS2000 系列坐标系变换与分区计算
 - **辅助工具**：编码检测、文件压缩、自然排序、数字格式化等
-- **仅 GDAL 引擎**：.NET 版本基于 GDAL/OGR 实现（与 Java 版本不同，后者同时支持 GeoTools 和 GDAL）
+- **GDAL 引擎实现**：.NET 版本全部基于 GDAL/OGR 实现（`GisEngineType.GEOTOOLS` 仅为兼容保留并重定向到 GDAL；Java 版本为 GeoTools 与 GDAL 双引擎）
 
 **环境要求：** .NET Standard 2.0+（兼容 .NET Core 2.0+、.NET 5+、.NET Framework 4.6.1+）
 
@@ -51,7 +53,7 @@ dotnet test tests/OpenGIS.Utils.Tests/
 
 ## Project Structure
 
-```
+```text
 src/OpenGIS.Utils/
 ├── Configuration/        # GdalConfiguration, LibrarySettings
 ├── DataSource/           # OguLayerUtil (high-level I/O), GtTxtUtil (National Land Survey TXT)
@@ -95,33 +97,33 @@ src/OpenGIS.Utils/
 
 ### GeometryType
 
-```
+```text
 POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, GEOMETRYCOLLECTION, UNKNOWN
 ```
 
 ### FieldDataType
 
-```
+```text
 STRING, INTEGER, LONG, DOUBLE, FLOAT, BOOLEAN, DATE, DATETIME, BINARY, UNKNOWN
 ```
 
 ### DataFormatType
 
-```
+```text
 SHP, GEOJSON, FILEGDB, POSTGIS, TXT, GEOPACKAGE, KML, DXF, UNKNOWN
 ```
 
 ### GisEngineType
 
-```
-GDAL
+```text
+GEOTOOLS, GDAL
 ```
 
-> **注意：** .NET 版本仅支持 GDAL 引擎，与 Java 版本不同（Java 版本同时支持 GEOTOOLS 和 GDAL）。
+> **注意：** .NET 版本的 `GEOTOOLS` 仅为兼容保留（`GisEngineFactory` 将其重定向到 GDAL 实现），所有格式实际都由 GDAL/OGR 处理；Java 版本为 GeoTools 与 GDAL 双引擎。
 
 ### TopologyValidationErrorType
 
-```
+```text
 ERROR, REPEATED_POINT, HOLE_OUTSIDE_SHELL, NESTED_HOLES, DISCONNECTED_INTERIOR,
 SELF_INTERSECTION, RING_SELF_INTERSECTION, NESTED_SHELLS, DUPLICATE_RINGS,
 TOO_FEW_POINTS, INVALID_COORDINATE, RING_NOT_CLOSED
@@ -322,7 +324,7 @@ string NumUtil.FormatNumber(double value, int decimals)
 
 ## Exception Hierarchy
 
-```
+```text
 System.Exception
 └── OguException (ErrorCode, Context)
     ├── DataSourceException        — Data source access errors
@@ -378,10 +380,21 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 ### 关键注意事项
 
 - **GDAL 自动初始化**：无需手动调用 `GdalConfiguration.ConfigureGdal()`
-- **GeoJSON 字符串解析不支持**：`Geojson2Wkt()` 和 `Geojson2Geometry()` 抛出 `NotSupportedException`，需从文件加载
+- **GeoJSON 字符串可直接解析**：`Geojson2Wkt()` 和 `Geojson2Geometry()` 通过 GDAL 解析裸几何、`Feature` 或 `FeatureCollection`（取第一个要素的几何），无法解析时抛 `ArgumentException`；整文件请从文件加载
 - **几何以 WKT 存储**：`OguFeature.Wkt` 存储 WKT 字符串；多数 `GeometryUtil` 方法有 `*Wkt` 变体
-- **.NET 仅支持 GDAL 引擎**：与 Java 版本不同，无 GeoTools 引擎
+- **.NET 的 GDAL 实现**：`GEOTOOLS` 枚举值仅为兼容保留并重定向到 GDAL（Java 版本为双引擎）
 - **线程安全**：GDAL 初始化线程安全，但单个 GDAL 几何对象非线程安全
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 找不到 `OguLayer` 等类型 | 安装 NuGet 包 `OpenGIS.Utils`，并引用命名空间 `OpenGIS.Utils.Engine.Model.Layer` |
+| GDAL 相关加载错误 | 无需手动初始化（库自动调用且线程安全）；确认已引用 `OpenGIS.Utils` 包（`MaxRev.Gdal.Universal` 运行时随包分发） |
+| Shapefile 中文乱码 | 读取时传入 `Encoding`（如 `Encoding.GetEncoding("GBK")`）；.NET Core 上先注册 `Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)` |
+| FileGDB 打不开 | 需 GDAL FileGDB 驱动，且路径指向 `.gdb` 目录，格式使用 `DataFormatType.FILEGDB` |
+| `Geojson2Wkt`/`Geojson2Geometry` 抛 `ArgumentException` | 仅接受裸几何、`Feature` 或 `FeatureCollection` 字符串；空串或无法解析会抛错，整文件请走 `OguLayerUtil.ReadLayer` |
+| OGR 几何内存管理 | `OgrGeometry` 实现 `IDisposable`，用完及时 `Dispose()`；或用 `*Wkt` 便捷方法避免手动管理 |
 
 ## 相关技能
 
@@ -393,9 +406,16 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 ## Important Notes
 
 1. **GDAL auto-initializes** — No manual `GdalConfiguration.ConfigureGdal()` call needed.
-2. **GeoJSON string parsing not supported** — `Geojson2Wkt()` and `Geojson2Geometry()` throw `NotSupportedException`. Load GeoJSON from files via `GdalReader` or `OguLayerUtil.ReadLayer(DataFormatType.GEOJSON, path)`.
+2. **GeoJSON string parsing is supported** — `Geojson2Wkt()` / `Geojson2Geometry()` parse bare geometry, `Feature`, or `FeatureCollection` strings (first feature's geometry wins) via the GDAL GeoJSON driver and throw `ArgumentException` for unparseable input. For whole files use `GdalReader` or `OguLayerUtil.ReadLayer(DataFormatType.GEOJSON, path)`.
 3. **Geometry uses WKT strings** — `OguFeature.Wkt` stores geometry as WKT. Use `GeometryUtil` for conversions and operations.
 4. **Thread safety** — GDAL initialization is thread-safe. Individual GDAL geometry objects are NOT thread-safe.
 5. **Cross-platform** — .NET Standard 2.0: works on .NET Core 2.0+, .NET 5+, .NET Framework 4.6.1+.
 6. **Encoding support** — `EncodingUtil` detects UTF-8, UTF-16 LE/BE, GBK, GB2312. Register CodePages with `Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)` if needed.
 7. **WKT convenience methods** — Most `GeometryUtil` methods have `*Wkt` variants that accept/return WKT strings directly, avoiding the need to manage `OgrGeometry` objects.
+
+## 参考资源
+
+- **GitHub 仓库：** <https://github.com/znlgis/opengis-utils-for-net>
+- **NuGet：** <https://www.nuget.org/packages/OpenGIS.Utils>
+- **GDAL 绑定（MaxRev.Gdal.Universal）：** <https://github.com/MaxRev-Dev/gdal.netcore>
+- **中文教程（znlgis）：** <https://znlgis.github.io/gis/tutorial/opengis-utils-for-net/>

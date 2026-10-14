@@ -1,6 +1,6 @@
 # PyQGIS Vector and Raster Layer Operations Reference
 
-Vector and raster layer operation APIs and examples split from SKILL.md.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录矢量/栅格图层操作的完整 API 与示例。
 
 ---
 

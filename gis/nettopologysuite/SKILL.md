@@ -15,7 +15,7 @@ tags:
 
 > **项目地址：** <https://github.com/NetTopologySuite/NetTopologySuite>
 >
-> **NuGet：** `NetTopologySuite`（最新稳定版 2.6.0，截至2026年）
+> **NuGet：** `NetTopologySuite`（最新稳定版 2.6.0，截至 2026-10，NuGet）
 >
 > **官方文档：** <https://nettopologysuite.github.io/NetTopologySuite/>
 >
@@ -40,8 +40,8 @@ NTS 与 JTS API 几乎一一对应（C# 命名风格）：
 ```bash
 dotnet add package NetTopologySuite
 dotnet add package NetTopologySuite.IO.GeoJSON
-dotnet add package NetTopologySuite.IO.ShapeFile
-dotnet add package ProjNet                          # 坐标变换（可选）
+dotnet add package NetTopologySuite.IO.Esri.Shapefile   # Shapefile 读写（Shapefile.ReadAllFeatures 等）
+dotnet add package ProjNet                              # 坐标变换（可选）
 ```
 
 **.NET 6+** 推荐。
@@ -217,6 +217,8 @@ foreach (var p in points) if (prep.Contains(p)) ...
 | EF Core 类型冲突 | 用 `UseNetTopologySuite()` 而非 `Microsoft.SqlServer.Types` |
 | Z/M 坐标丢失 | 配置 `WKBWriter` 的 `HandleOrdinates` |
 | Buffer 慢 | 减小 quadrantSegments、并行处理 |
+| Shapefile 读取写法报错 | 使用 `NetTopologySuite.IO.Esri.Shapefile` 包与 `NetTopologySuite.IO.Esri` 命名空间（`Shapefile.ReadAllFeatures`） |
+| 依赖版本不匹配（NTS 2.6 与旧 IO 包） | 各 IO 包选择与 NetTopologySuite 2.6 兼容的最新版本 |
 
 ---
 

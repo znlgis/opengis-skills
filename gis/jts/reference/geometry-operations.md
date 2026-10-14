@@ -1,6 +1,6 @@
 # JTS Geometry Operations and Index Reference
 
-Spatial relations, set operations, geometry analysis, format I/O and spatial indexing split from SKILL.md.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录空间关系、集合运算、几何分析、格式读写与空间索引的完整参考。
 
 ---
 

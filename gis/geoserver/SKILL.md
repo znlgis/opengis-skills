@@ -20,6 +20,8 @@ tags:
 >
 > **下载：** <https://geoserver.org/release/stable/>
 >
+> **最新版本：** 3.0.1（截至 2026-10，[官方下载](https://geoserver.org/release/stable/)）
+>
 > **许可证：** GPL-2.0
 
 > 该 SKILL 关注 GeoServer 服务端运维与配置；REST API 自动化管理资源请配合 `gis/geoserver-rest-api`。
@@ -59,7 +61,7 @@ docker run --name gs -p 8080:8080 \
 
 ### 数据目录
 
-```
+```text
 GEOSERVER_DATA_DIR/
 ├── workspaces/<ws>/<store>/...
 ├── styles/
@@ -93,7 +95,7 @@ GEOSERVER_DATA_DIR/
 
 访问 URL：
 
-```
+```text
 WMS  : /geoserver/my_ws/wms?service=WMS&version=1.1.0&request=GetMap&layers=my_ws:poi&srs=EPSG:4326&bbox=...&width=512&height=512&format=image/png
 WMTS : /geoserver/gwc/service/wmts?...&LAYER=my_ws:poi&...
 WFS  : /geoserver/my_ws/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=my_ws:poi&outputFormat=application/json
@@ -193,7 +195,7 @@ curl -u admin:geoserver -XPOST \
 
 ### 推荐工作流
 
-1. **部署 GeoServer**：优先使用 Docker 镜像 `docker.osgeo.org/geoserver:3.0.0`
+1. **部署 GeoServer**：优先使用 Docker 镜像 `docker.osgeo.org/geoserver:3.0.1`
 2. **创建 Workspace**：为每个项目创建独立工作空间实现命名隔离
 3. **添加数据存储**：根据数据类型选择 PostGIS（矢量）、Shapefile（文件矢量）、GeoTIFF（栅格）
 4. **发布图层**：设置 SRS（坐标参考系）、计算 Native Bounds、配置样式
@@ -211,7 +213,7 @@ curl -u admin:geoserver -XPOST \
 
 ### 常见配置模式
 
-```
+```text
 工作空间(Workspace)
   ├── 数据存储(Store) ─→ PostGIS / Shapefile / GeoTIFF
   │    └── 图层(Layer) ─→ 设置 SRS + 绑定样式(Style)

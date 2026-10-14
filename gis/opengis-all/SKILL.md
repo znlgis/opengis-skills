@@ -28,7 +28,7 @@ tags:
 
 本文件将五个独立的 GIS 技能模块整合为一个**端到端的 GIS 数据处理流程**，涵盖以下阶段：
 
-```
+```text
 ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
 │  阶段一       │    │  阶段二       │    │  阶段三       │    │  阶段四       │
 │  数据获取     │ →  │  数据处理     │ →  │  空间分析     │ →  │  服务发布     │
@@ -91,7 +91,7 @@ export QT_QPA_PLATFORM=offscreen
 
 ```bash
 # Docker 方式（推荐）
-docker run -d -p 8080:8080 docker.osgeo.org/geoserver:3.0.0
+docker run -d -p 8080:8080 docker.osgeo.org/geoserver:3.0.1
 
 # 验证
 curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"
@@ -419,6 +419,20 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 无显示器服务器上 qgis_process 崩溃 | 设置 `QT_QPA_PLATFORM=offscreen` |
+| GeoServer 上传 Shapefile 失败 | 打包为 ZIP，且 ZIP 根目录须含 `.shp`、`.shx`、`.dbf`、`.prj` |
+| 分析结果坐标错位 | 全链路统一 CRS：`ogr2ogr -t_srs` / `gdalwarp -t_srs` / `qgis_process run native:reprojectlayer` |
+| 找不到 `gdal_calc.py` | 安装 GDAL Python 绑定（`python3-gdal` 或 conda 的 `gdal`），或改用 `qgis_process run gdal:rastercalculator` |
+| 大栅格/大矢量导致内存不足 | 先裁剪或分块（`gdal_translate -srcwin`/`-outsize`），并调大 `GDAL_CACHEMAX`、启用 `GDAL_NUM_THREADS` |
+| GeoServer REST 返回 401/403 | 检查 HTTP Basic Auth（默认 `admin/geoserver`）与用户权限 |
+| PyQGIS 导入 `qgis.core` 失败 | 需在 QGIS 自带 Python 环境运行，或正确配置 `PYTHONPATH`/`QGIS_PREFIX_PATH` |
+
+---
+
 ## 相关技能
 
 - **gdal** — GDAL 命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
@@ -427,6 +441,8 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 - **qgis-process** — QGIS 命令行批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
 - **geoserver-rest-api** — GeoServer REST API：[../geoserver-rest-api/SKILL.md](../geoserver-rest-api/SKILL.md)
 - **geopipe-agent** — AI 驱动的 GIS 流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
+- **openlayers** — 前端 2D 地图可视化：[../openlayers/SKILL.md](../openlayers/SKILL.md)
+- **cesiumjs** — 前端 3D 地球可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
 
 ## 参考资源
 

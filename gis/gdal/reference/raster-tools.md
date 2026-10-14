@@ -1,6 +1,6 @@
 # GDAL Raster Tools Reference
 
-Detailed parameter reference and examples for GDAL raster tools.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录 GDAL 栅格工具的完整参数表与示例。
 
 ---
 

@@ -18,7 +18,7 @@ tags:
 >
 > **PyPI：** <https://pypi.org/project/shapely/>
 >
-> **最新稳定版：** 2.1.2（PyPI，截至2026年）
+> **最新版本：** 2.2.0（截至2026-10，PyPI）
 >
 > **许可证：** BSD-3-Clause
 
@@ -35,7 +35,22 @@ Shapely 是 Python 计算几何的核心库，基于 GEOS（Geometry Engine - Op
 - **格式读写**：WKT、WKB、GeoJSON
 - **双重 API**：函数式（向量化，支持 NumPy 广播）+ OOP（标量便捷）
 
-**环境要求：** Python 3.9+，Shapely 2.0+
+**环境要求：** Python 3.11+（Shapely 2.2 起；2.1 为 3.10+），NumPy >= 1.26，GEOS >= 3.10。PyPI 二进制 wheel 内含 GEOS 3.14.1。
+
+---
+
+## 环境准备
+
+```bash
+# pip（含预编译 GEOS 的 wheel）
+pip install shapely
+
+# Conda / Mamba
+conda install -c conda-forge shapely
+
+# 验证
+python -c "import shapely; print(shapely.__version__, shapely.geos_version)"
+```
 
 ---
 
@@ -213,7 +228,9 @@ Use `shapely.is_missing(obj)` to check, distinct from `shapely.is_empty(geom)`.
 
 10. **Prepared state not preserved**: After any operation producing a new geometry, `prepare()` must be called again.
 
-11. **GEOS version gates**: `concave_hull`, `constrained_delaunay_triangles`, `remove_repeated_points` require GEOS >= 3.11. `coverage_simplify`, `has_m`, `get_m` require GEOS >= 3.12.
+11. **GEOS version gates**: `concave_hull`, `constrained_delaunay_triangles`, `remove_repeated_points` require GEOS >= 3.11. `coverage_simplify`, `has_m`, `get_m` require GEOS >= 3.12. `coverage_clean` requires GEOS >= 3.14; top-level `split` requires GEOS >= 3.15 (older GEOS falls back to `shapely.ops.split`).
+
+12. **`shapely.ops.transform` deprecated**: since 2.2 use `shapely.transform` (per-coordinate) or `shapely.transform_coordseq` (per-coordinate sequence) instead. The `multithreading_enabled` decorator is also deprecated.
 
 ## Common Patterns
 
@@ -290,6 +307,7 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 | STRtree 查询返回空数组 | 检查几何是否 `None`/`Empty`；确认查询几何与索引几何的 CRS 一致 |
 | WKB 序列化丢失 LinearRing | WKB 规范不支持 LinearRing，会自动转为 LineString |
 | `to_geojson` 丢失 Z 坐标 | GeoJSON 标准不支持 Z，改用 WKB 或自定义序列化 |
+| `shapely.ops.transform` 弃用警告 | 2.2 起弃用 | 改用 `shapely.transform` 或 `shapely.transform_coordseq` |
 
 ---
 
@@ -302,7 +320,7 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 
 ## Package Structure
 
-```
+```text
 shapely/
 ├── __init__.py              # Top-level re-exports
 ├── geometry/                # OOP geometry classes

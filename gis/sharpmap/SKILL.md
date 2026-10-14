@@ -17,9 +17,11 @@ tags:
 >
 > **官方文档：** <https://github.com/SharpMap/SharpMap/wiki>
 >
-> **NuGet：** `SharpMap`、`SharpMap.UI.WinForms`（SharpMap 最新稳定版 1.2.0，截至2026年）
+> **NuGet：** `SharpMap`、`SharpMap.UI`、`SharpMap.Extensions`、`SharpMap.Web`、`SharpMap.Layers.BruTile`
 >
-> **许可证：** LGPL-2.1
+> **最新版本：** 1.2.0（截至2026-10，NuGet；发布于 2021-03，仓库未归档但维护低频）
+>
+> **许可证：** LGPL-2.1-or-later
 
 ## 概述
 
@@ -33,17 +35,19 @@ SharpMap 提供：
 - **渲染**：System.Drawing 位图 / WMS 服务输出
 - **UI 控件**：WinForms `MapBox`
 
-> **注意**：SharpMap 主要面向 .NET Framework / 较旧 .NET，新项目建议改用 Mapsui。
+> **注意**：SharpMap 核心库目标框架为 netstandard2.0，而 WinForms 控件包 `SharpMap.UI` 仅支持 .NET Framework 4.7.2；仓库未归档但维护低频。新项目建议改用 Mapsui。
 
 ---
 
 ## 安装
 
 ```bash
-dotnet add package SharpMap
-dotnet add package SharpMap.UI.WinForms
-dotnet add package SharpMap.Extensions
-dotnet add package ProjNet
+dotnet add package SharpMap                 # 核心（netstandard2.0）
+dotnet add package SharpMap.UI              # WinForms MapBox 控件（.NET Framework 4.7.2）
+dotnet add package SharpMap.Extensions      # 扩展数据源（PostGIS、OGR、SpatiaLite 等）
+dotnet add package SharpMap.Layers.BruTile  # 在线瓦片图层 TileAsyncLayer（依赖 BruTile 2.1.2）
+dotnet add package SharpMap.Web             # ASP.NET WMS 服务
+dotnet add package ProjNet4GeoAPI           # 坐标变换（实现 GeoAPI 接口；ProjNet 2.x 与 SharpMap 1.2 类型不兼容）
 ```
 
 ---
@@ -197,6 +201,9 @@ mapBox1.MouseDown += (s, e) => {
 | 文字模糊 | 设置高 DPI Aware、`MapBox.MapTransform` |
 | GDI+ 内存泄漏 | 释放 `Brush/Pen/Bitmap` |
 | Shapefile 中文乱码 | `new ShapeFile(path, true, false, Encoding.UTF8)` |
+| 找不到 `SharpMap.UI.WinForms` 包 | 该包名在 NuGet 上不存在，WinForms 控件在 `SharpMap.UI` 包中 |
+| `CoordinateTransformation` 赋值编译错误 | ProjNet 2.x 不再实现 GeoAPI 接口，改用 `ProjNet4GeoAPI` 1.4.1 |
+| 找不到 `TileAsyncLayer` | 瓦片图层不在核心包中，需安装 `SharpMap.Layers.BruTile` |
 
 ---
 

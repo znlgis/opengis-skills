@@ -18,29 +18,49 @@ tags:
 >
 > **官网：** <https://geopandas.org>
 >
+> **最新版本：** 1.2.0（截至2026-10，PyPI）
+>
 > **许可证：** BSD-3-Clause
 
 ## 概述
 
 GeoPandas 是 Python 地理空间矢量数据处理的核心库，在 pandas DataFrame 基础上扩展了几何列支持。核心类 `GeoDataFrame`（继承 `pandas.DataFrame`）和 `GeoSeries`（继承 `pandas.Series`）通过 Shapely 提供几何运算、通过 pyproj 提供坐标系管理、通过 pyogrio/fiona 提供文件 IO。
 
+## 环境准备
+
+```bash
+# Conda / Mamba（推荐，自动处理 GEOS/PROJ/GDAL 二进制依赖）
+conda install -c conda-forge geopandas
+
+# pip（各依赖有预编译 wheel 时可独立安装）
+pip install geopandas
+
+# 可选依赖（绘图/交互地图/分类/Parquet 等）
+pip install "geopandas[all]"
+
+# 验证
+python -c "import geopandas as gpd; gpd.show_versions()"
+```
+
+**环境要求：** Python >= 3.11（GeoPandas 1.2 起；1.0 为 >= 3.9）。
+
 ## 依赖关系
 
 | 核心依赖 | 最低版本 | 用途 |
 |----------|---------|------|
-| `pandas` | >= 2.0.0 | DataFrame 基类 |
-| `shapely` | >= 2.0.0 | 几何对象与运算 (GEOS) |
-| `pyproj` | >= 3.5.0 | CRS 处理与坐标变换 |
-| `pyogrio` | >= 0.7.2 | 默认文件 IO 引擎 (GDAL/OGR) |
-| `numpy` | >= 1.24 | 数组运算 |
+| `pandas` | >= 2.2.0 | DataFrame 基类 |
+| `shapely` | >= 2.1.0 | 几何对象与运算 (GEOS) |
+| `pyproj` | >= 3.7.0 | CRS 处理与坐标变换 |
+| `pyogrio` | >= 0.8 | 默认文件 IO 引擎 (GDAL/OGR) |
+| `numpy` | >= 2 | 数组运算 |
 
 | 可选依赖 | 用途 |
 |----------|------|
-| `matplotlib` >= 3.7 | 静态地图绘制 `.plot()` |
+| `matplotlib` >= 3.9 | 静态地图绘制 `.plot()` |
 | `folium` | 交互式地图 `.explore()` |
-| `mapclassify` >= 2.5 | 分级设色分类方案 |
+| `mapclassify` >= 2.7 | 分级设色分类方案 |
 | `fiona` >= 1.8.21 | 备选文件 IO 引擎 |
-| `pyarrow` >= 10.0.0 | Parquet/Feather/Arrow 支持 |
+| `pyarrow` >= 15.0.0 | Parquet/Feather/Arrow 支持 |
 | `geopy` | 地理编码 |
 | `SQLAlchemy` >= 2.0 + `GeoAlchemy2` | PostGIS 读写 |
 | `xyzservices` | 瓦片底图服务 |
@@ -196,6 +216,8 @@ gdf.plot(column=None, cmap=None, color=None, ax=None, figsize=None,
 
 `scheme` 参数需要 `mapclassify`，支持 `"quantiles"`, `"equal_interval"`, `"fisher_jenks"` 等分类方案。
 
+**1.2 变化：** 静态绘图被重写（大部分向后兼容）：`legend_kwds={"colorbar": True}` 可输出连续色带、`tiles=` 可直接叠加 contextily 底图、`add_labels` 控制坐标轴单位标签、分类绘图支持字典映射颜色；依赖内部 collections 结构的旧代码可能受影响。
+
 ### 交互式地图 (folium/leaflet)
 
 ```python
@@ -329,6 +351,7 @@ m = gdf.explore(column="population", cmap="viridis",
 | `to_file` 属性被截断 | Shapefile 字段名限制 10 字符 | 使用 GeoPackage (`.gpkg`) 或 GeoJSON |
 | `set_crs` vs `to_crs` 混淆 | `set_crs` 仅赋值不转换 | 已有 CRS 需要转换用 `to_crs()`；无 CRS 标记用 `set_crs()` |
 | Shapefile 不支持空值/日期时间 | Shapefile 格式限制 | 使用 GeoPackage 格式 |
+| `buffer(resolution=...)` 出现弃用警告 | 1.2 起 `resolution` 被弃用，向 shapely 命名惯例对齐 | 改用 `quad_segs` 参数 |
 | `DriverError` 无法写入 | 驱动不支持或文件被占用 | 检查驱动名拼写、关闭已打开的文件 |
 | `align=True` 导致意外 NaN | 二元操作默认按索引对齐 | 传入 `align=False` 或重置索引 |
 

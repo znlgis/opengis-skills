@@ -20,6 +20,8 @@ tags:
 >
 > **源码命令文档：** <https://gdal.org/en/latest/programs/>
 >
+> **最新版本：** 3.13.3（截至 2026-10，[下载页](https://gdal.org/download.html)）
+>
 > **许可证：** MIT
 
 ## 概述
@@ -91,7 +93,7 @@ conda install -c conda-forge gdal
 
 ### 新式 CLI (GDAL 3.9+)
 
-GDAL 3.9 引入了统一的 CLI 接口（最新稳定版 **3.13.3**，2026-08，见 [下载页](https://gdal.org/download.html)），并在后续版本持续完善，新增 `gdal vector concave-hull/convex-hull/dissolve/sort`、`gdal dataset check` 等子命令：
+GDAL 3.9 引入了统一的 CLI 接口（最新稳定版 **3.13.3**，2026-08 发布，见 [下载页](https://gdal.org/download.html)），并在后续版本持续完善，新增 `gdal vector concave-hull/convex-hull/dissolve/sort`、`gdal dataset check` 等子命令：
 
 ```bash
 gdal <command> <subcommand> [options] <inputs>
@@ -335,33 +337,7 @@ gdalwarp input.tif output.tif
 
 ## 数据格式支持
 
-### 矢量格式
-
-| 格式 | 扩展名 | 说明 |
-|------|--------|------|
-| Shapefile | .shp | ESRI 标准格式 |
-| GeoJSON | .geojson | Web 标准 JSON |
-| GeoPackage | .gpkg | SQLite 基础，推荐 |
-| KML | .kml | Google Maps 格式 |
-| PostGIS | N/A | 数据库矢量存储 |
-| GML | .gml | ISO 标准 XML |
-| CSV | .csv | 点数据 |
-| DXF | .dxf | CAD 格式 |
-| MapInfo | .tab | MapInfo 格式 |
-
-### 栅格格式
-
-| 格式 | 扩展名 | 说明 |
-|------|--------|------|
-| GeoTIFF | .tif, .tiff | 标准地理栅格（推荐） |
-| PNG | .png | Web 图像 |
-| JPEG | .jpg, .jpeg | 有损压缩 |
-| COG | .tif | 云优化 GeoTIFF |
-| NetCDF | .nc | 科学数据 |
-| HDF5 | .h5, .he5 | 多维数据 |
-| ASCII Grid | .asc | 简单栅格（DEM） |
-| JPEG2000 | .jp2 | 高质量压缩 |
-| ECW | .ecw | ERDAS ECW 格式 |
+常用矢量 / 栅格格式与扩展名对照见 [reference/data-formats.md](reference/data-formats.md)。
 
 ---
 
@@ -485,11 +461,27 @@ gdaltindex -recursive -of GPKG \
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| `gdalinfo` 提示 `ERROR 4: file not recognized` | 确认文件格式与扩展名匹配，必要时用 `gdalinfo --formats` 检查驱动是否可用 |
+| Python 工具（`gdal_calc.py` 等）找不到 | 这些是 Python 脚本，需安装 Python 绑定（`pip install GDAL` 或 conda） |
+| `pip install GDAL` 编译失败 | 版本需与本机 GDAL 库匹配，推荐 `conda install -c conda-forge gdal` |
+| 重投影后数据错位 | 核对源坐标系（`-s_srs`）与目标坐标系（`-t_srs`），GDAL 3+ 默认按 EPSG 轴序处理 |
+| 中文路径 / 属性乱码 | 确认系统编码，Shapefile 用 `-lco ENCODING=UTF-8` 输出 |
+| 大文件处理内存不足 | 设置 `GDAL_CACHEMAX`、使用 `-wm` 分块，避免一次镶嵌全部文件 |
+| 就地修改文件损坏 | `gdal_edit.py` 等会直接改写文件，操作前先备份 |
+| S3/HTTP 远程数据读取失败 | 检查 `/vsis3/` 凭证、`GDAL_HTTP_TIMEOUT`、`CPL_VSIL_CURL_ALLOWED_EXTENSIONS` |
+
+---
+
 ## 相关技能
 
 - **gdal-api** — GDAL 编程 API（C/C++/Python/.NET）：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
 - **qgis-process** — QGIS 命令行批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
 - **pyqgis** — QGIS Python 二次开发：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **geopandas** — Python 矢量数据处理（底层依赖 GDAL）：[../geopandas/SKILL.md](../geopandas/SKILL.md)
 - **postgis** — PostgreSQL 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
 - **opengis-all** — 一站式 GIS 全流程：[../opengis-all/SKILL.md](../opengis-all/SKILL.md)
 
@@ -498,3 +490,4 @@ gdaltindex -recursive -of GPKG \
 - **官方文档与资源：** <https://gdal.org/> | [命令行工具](https://gdal.org/en/latest/programs/) | [API](https://gdal.org/api/) | [GitHub](https://github.com/OSGeo/gdal)
 - **矢量工具详细参考：** [reference/vector-tools.md](reference/vector-tools.md)
 - **栅格工具详细参考：** [reference/raster-tools.md](reference/raster-tools.md)
+- **数据格式对照：** [reference/data-formats.md](reference/data-formats.md)

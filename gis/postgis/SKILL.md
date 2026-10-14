@@ -30,7 +30,7 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 - **坐标参考系**：内置 6000+ EPSG 投影，自动 ST_Transform
 - **数据导入导出**：与 GDAL/ogr2ogr/shp2pgsql 无缝集成
 
-**版本要求：** PostgreSQL 12–17 配合 PostGIS 3.x（最新稳定版 3.6.4，3.7 处于 RC 阶段）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
+**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.4，3.7 处于 RC 阶段，截至 2026-10）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
 
 ---
 
@@ -213,6 +213,7 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 | 距离单位不对 | 投影下是度，需转 `geography` 或投到米制 |
 | 跨经线 180° 异常 | 改用 `geography` |
 | 多边形无效 | `ST_MakeValid` 修复，`ST_IsValidReason` 诊断 |
+| `CREATE EXTENSION postgis` 报错（找不到扩展文件） | 安装对应 PostgreSQL 版本的 `postgis-<pgver>` 软件包后重试 |
 
 ---
 

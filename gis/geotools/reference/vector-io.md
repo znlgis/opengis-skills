@@ -1,6 +1,6 @@
 # GeoTools Vector I/O Reference
 
-Vector read/write and GeoJSON/WKT format examples split from SKILL.md.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录矢量数据读写（Shapefile / GeoPackage / PostGIS）与 GeoJSON、WKT/WKB 格式示例。
 
 ---
 

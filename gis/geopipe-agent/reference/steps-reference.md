@@ -12,11 +12,11 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入点矢量数据 |
-| `method` | string | ❌ | dbscan | 聚类算法 (options: dbscan, kmeans) |
-| `n_clusters` | number | ❌ | 5 | 簇数量（仅 KMeans 有效） |
-| `eps` | number | ❌ | 0.5 | 邻域半径（仅 DBSCAN 有效） |
-| `min_samples` | number | ❌ | 5 | 最小样本数（仅 DBSCAN 有效） |
+| `input` | geodataframe | Yes | — | 输入点矢量数据 |
+| `method` | string | No | dbscan | 聚类算法 (options: dbscan, kmeans) |
+| `n_clusters` | number | No | 5 | 簇数量（仅 KMeans 有效） |
+| `eps` | number | No | 0.5 | 邻域半径（仅 DBSCAN 有效） |
+| `min_samples` | number | No | 5 | 最小样本数（仅 DBSCAN 有效） |
 
 **Outputs:**
 
@@ -36,9 +36,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入点矢量数据 |
-| `resolution` | number | ❌ | 100 | 输出栅格分辨率（像素数，宽度方向） |
-| `bandwidth` | number | ❌ | — | 核函数带宽。不指定则自动估计 |
+| `input` | geodataframe | Yes | — | 输入点矢量数据 |
+| `resolution` | number | No | 100 | 输出栅格分辨率（像素数，宽度方向） |
+| `bandwidth` | number | No | — | 核函数带宽。不指定则自动估计 |
 
 **Outputs:**
 
@@ -58,11 +58,11 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入点矢量数据 |
-| `value_field` | string | ✅ | — | 用于插值的属性字段名 |
-| `method` | string | ❌ | linear | 插值方法 (options: linear, nearest, cubic, idw) |
-| `resolution` | number | ❌ | 100 | 输出栅格分辨率（像素数，宽度方向） |
-| `power` | number | ❌ | 2 | IDW 距离幂次（仅 method=idw 时有效） |
+| `input` | geodataframe | Yes | — | 输入点矢量数据 |
+| `value_field` | string | Yes | — | 用于插值的属性字段名 |
+| `method` | string | No | linear | 插值方法 (options: linear, nearest, cubic, idw) |
+| `resolution` | number | No | 100 | 输出栅格分辨率（像素数，宽度方向） |
+| `power` | number | No | 2 | IDW 距离幂次（仅 method=idw 时有效） |
 
 **Outputs:**
 
@@ -82,8 +82,8 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入点矢量数据 |
-| `envelope` | geodataframe | ❌ | — | 裁剪边界（不指定则使用点的凸包缓冲区） |
+| `input` | geodataframe | Yes | — | 输入点矢量数据 |
+| `envelope` | geodataframe | No | — | 裁剪边界（不指定则使用点的凸包缓冲区） |
 
 **Outputs:**
 
@@ -105,7 +105,7 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `path` | string | ✅ | — | 栅格数据文件路径 |
+| `path` | string | Yes | — | 栅格数据文件路径 |
 
 **Outputs:**
 
@@ -125,9 +125,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `path` | string | ✅ | — | 矢量数据文件路径 |
-| `layer` | string | ❌ | — | 图层名称（多图层文件时使用） |
-| `encoding` | string | ❌ | utf-8 | 文件编码 |
+| `path` | string | Yes | — | 矢量数据文件路径 |
+| `layer` | string | No | — | 图层名称（多图层文件时使用） |
+| `encoding` | string | No | utf-8 | 文件编码 |
 
 **Outputs:**
 
@@ -148,8 +148,8 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster_info | ✅ | — | 输入栅格数据（包含 data, profile 的字典） |
-| `path` | string | ✅ | — | 输出文件路径 |
+| `input` | raster_info | Yes | — | 输入栅格数据（包含 data, profile 的字典） |
+| `path` | string | Yes | — | 输出文件路径 |
 
 **Outputs:**
 
@@ -169,10 +169,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `path` | string | ✅ | — | 输出文件路径 |
-| `format` | string | ❌ | GeoJSON | 输出格式 (GeoJSON, Shapefile, GPKG) |
-| `encoding` | string | ❌ | utf-8 | 文件编码 |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `path` | string | Yes | — | 输出文件路径 |
+| `format` | string | No | GeoJSON | 输出格式 (GeoJSON, Shapefile, GPKG) |
+| `encoding` | string | No | utf-8 | 文件编码 |
 
 **Outputs:**
 
@@ -194,9 +194,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `addresses` | list | ✅ | — | 地址列表 |
-| `provider` | string | ❌ | nominatim | 地理编码服务提供商（nominatim, google 等） |
-| `user_agent` | string | ❌ | geopipe-agent | HTTP User-Agent 标头（Nominatim 要求） |
+| `addresses` | list | Yes | — | 地址列表 |
+| `provider` | string | No | nominatim | 地理编码服务提供商（nominatim, google 等） |
+| `user_agent` | string | No | geopipe-agent | HTTP User-Agent 标头（Nominatim 要求） |
 
 **Outputs:**
 
@@ -216,10 +216,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入线矢量数据（道路/管线网络） |
-| `center` | list | ✅ | — | 中心点坐标 [x, y] |
-| `cost_limit` | number | ✅ | — | 最大行程成本（距离或时间） |
-| `weight` | string | ❌ | — | 权重字段名。不指定则使用几何长度 |
+| `input` | geodataframe | Yes | — | 输入线矢量数据（道路/管线网络） |
+| `center` | list | Yes | — | 中心点坐标 [x, y] |
+| `cost_limit` | number | Yes | — | 最大行程成本（距离或时间） |
+| `weight` | string | No | — | 权重字段名。不指定则使用几何长度 |
 
 **Outputs:**
 
@@ -239,10 +239,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入线矢量数据（道路/管线网络） |
-| `origin` | list | ✅ | — | 起点坐标 [x, y] |
-| `destination` | list | ✅ | — | 终点坐标 [x, y] |
-| `weight` | string | ❌ | — | 权重字段名（如 'length'）。不指定则使用几何长度 |
+| `input` | geodataframe | Yes | — | 输入线矢量数据（道路/管线网络） |
+| `origin` | list | Yes | — | 起点坐标 [x, y] |
+| `destination` | list | Yes | — | 终点坐标 [x, y] |
+| `weight` | string | No | — | 权重字段名（如 'length'）。不指定则使用几何长度 |
 
 **Outputs:**
 
@@ -264,10 +264,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `required_fields` | list | ✅ | — | 必填字段名列表 |
-| `allow_empty` | boolean | ❌ | False | 是否允许空字符串（默认不允许） |
-| `severity` | string | ❌ | warning | 问题严重级别 (options: error, warning, info) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `required_fields` | list | Yes | — | 必填字段名列表 |
+| `allow_empty` | boolean | No | False | 是否允许空字符串（默认不允许） |
+| `severity` | string | No | warning | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -288,11 +288,11 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `field` | string | ✅ | — | 要检查的字段名 |
-| `allowed_values` | list | ❌ | — | 允许的值列表（枚举方式） |
-| `pattern` | string | ❌ | — | 允许的值正则表达式模式 |
-| `severity` | string | ❌ | warning | 问题严重级别 (options: error, warning, info) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `field` | string | Yes | — | 要检查的字段名 |
+| `allowed_values` | list | No | — | 允许的值列表（枚举方式） |
+| `pattern` | string | No | — | 允许的值正则表达式模式 |
+| `severity` | string | No | warning | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -313,9 +313,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `expected_crs` | string | ❌ | — | 期望的 CRS（如 'EPSG:4326'），不指定则仅检查 CRS 是否存在 |
-| `severity` | string | ❌ | error | 问题严重级别 (options: error, warning, info) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `expected_crs` | string | No | — | 期望的 CRS（如 'EPSG:4326'），不指定则仅检查 CRS 是否存在 |
+| `severity` | string | No | error | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -336,11 +336,11 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `check_geometry` | boolean | ❌ | True | 是否检查几何重复 |
-| `check_fields` | list | ❌ | — | 要检查重复的属性字段列表（不指定则不检查属性重复） |
-| `tolerance` | number | ❌ | 0.0 | 几何比较容差 |
-| `severity` | string | ❌ | warning | 问题严重级别 (options: error, warning, info) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `check_geometry` | boolean | No | True | 是否检查几何重复 |
+| `check_fields` | list | No | — | 要检查重复的属性字段列表（不指定则不检查属性重复） |
+| `tolerance` | number | No | 0.0 | 几何比较容差 |
+| `severity` | string | No | warning | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -361,9 +361,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `auto_fix` | boolean | ❌ | False | 是否自动修复无效几何（buffer(0)） |
-| `severity` | string | ❌ | error | 问题严重级别 (options: error, warning, info) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `auto_fix` | boolean | No | False | 是否自动修复无效几何（buffer(0)） |
+| `severity` | string | No | error | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -384,10 +384,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster | ✅ | — | 输入栅格数据（dict: data, transform, crs, profile） |
-| `expected_nodata` | number | ❌ | — | 期望的 NoData 值（不指定则仅检查是否设置了 NoData） |
-| `max_nodata_ratio` | number | ❌ | 0.5 | 允许的最大 NoData 像元比例（0~1），超过此比例视为异常 |
-| `severity` | string | ❌ | warning | 问题严重级别 (options: error, warning, info) |
+| `input` | raster | Yes | — | 输入栅格数据（dict: data, transform, crs, profile） |
+| `expected_nodata` | number | No | — | 期望的 NoData 值（不指定则仅检查是否设置了 NoData） |
+| `max_nodata_ratio` | number | No | 0.5 | 允许的最大 NoData 像元比例（0~1），超过此比例视为异常 |
+| `severity` | string | No | warning | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -408,11 +408,11 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster | ✅ | — | 输入栅格数据（dict: data, transform, crs, profile） |
-| `expected_x` | number | ✅ | — | 期望的 X 方向像元大小（绝对值） |
-| `expected_y` | number | ✅ | — | 期望的 Y 方向像元大小（绝对值） |
-| `tolerance` | number | ❌ | 0.0001 | 像元大小的允许偏差 |
-| `severity` | string | ❌ | warning | 问题严重级别 (options: error, warning, info) |
+| `input` | raster | Yes | — | 输入栅格数据（dict: data, transform, crs, profile） |
+| `expected_x` | number | Yes | — | 期望的 X 方向像元大小（绝对值） |
+| `expected_y` | number | Yes | — | 期望的 Y 方向像元大小（绝对值） |
+| `tolerance` | number | No | 0.0001 | 像元大小的允许偏差 |
+| `severity` | string | No | warning | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -433,11 +433,11 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster | ✅ | — | 输入栅格数据（dict: data, transform, crs, profile） |
-| `min` | number | ❌ | — | 允许的最小像素值（含），不指定则不检查下界 |
-| `max` | number | ❌ | — | 允许的最大像素值（含），不指定则不检查上界 |
-| `band` | integer | ❌ | 0 | 要检查的波段索引（0-based），默认检查第一个波段 |
-| `severity` | string | ❌ | warning | 问题严重级别 (options: error, warning, info) |
+| `input` | raster | Yes | — | 输入栅格数据（dict: data, transform, crs, profile） |
+| `min` | number | No | — | 允许的最小像素值（含），不指定则不检查下界 |
+| `max` | number | No | — | 允许的最大像素值（含），不指定则不检查上界 |
+| `band` | integer | No | 0 | 要检查的波段索引（0-based），默认检查第一个波段 |
+| `severity` | string | No | warning | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -458,10 +458,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `rules` | list | ✅ | — | 要检查的拓扑规则列表: no_overlaps, no_gaps, no_dangles |
-| `tolerance` | number | ❌ | 0.0 | 容差值（用于判定是否重叠/缝隙） |
-| `severity` | string | ❌ | error | 问题严重级别 (options: error, warning, info) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `rules` | list | Yes | — | 要检查的拓扑规则列表: no_overlaps, no_gaps, no_dangles |
+| `tolerance` | number | No | 0.0 | 容差值（用于判定是否重叠/缝隙） |
+| `severity` | string | No | error | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -482,11 +482,11 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `field` | string | ✅ | — | 要检查的数值字段名 |
-| `min` | number | ❌ | — | 允许的最小值（含），不指定则不检查下界 |
-| `max` | number | ❌ | — | 允许的最大值（含），不指定则不检查上界 |
-| `severity` | string | ❌ | warning | 问题严重级别 (options: error, warning, info) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `field` | string | Yes | — | 要检查的数值字段名 |
+| `min` | number | No | — | 允许的最小值（含），不指定则不检查下界 |
+| `max` | number | No | — | 允许的最大值（含），不指定则不检查上界 |
+| `severity` | string | No | warning | 问题严重级别 (options: error, warning, info) |
 
 **Outputs:**
 
@@ -509,8 +509,8 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster_info | ✅ | — | 输入栅格数据 |
-| `expression` | string | ✅ | — | 计算表达式，使用 B1, B2, ... 引用波段（如 '(B4-B3)/(B4+B3)'） |
+| `input` | raster_info | Yes | — | 输入栅格数据 |
+| `expression` | string | Yes | — | 计算表达式，使用 B1, B2, ... 引用波段（如 '(B4-B3)/(B4+B3)'） |
 
 **Outputs:**
 
@@ -530,10 +530,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster_info | ✅ | — | 输入栅格数据 |
-| `mask` | geodataframe | ✅ | — | 裁剪掩膜（矢量数据） |
-| `crop` | boolean | ❌ | True | 是否裁剪到掩膜范围 |
-| `nodata` | number | ❌ | 0 | 无数据填充值 |
+| `input` | raster_info | Yes | — | 输入栅格数据 |
+| `mask` | geodataframe | Yes | — | 裁剪掩膜（矢量数据） |
+| `crop` | boolean | No | True | 是否裁剪到掩膜范围 |
+| `nodata` | number | No | 0 | 无数据填充值 |
 
 **Outputs:**
 
@@ -553,10 +553,10 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster_info | ✅ | — | 输入栅格数据 |
-| `interval` | number | ✅ | — | 等值线间距 |
-| `band` | number | ❌ | 1 | 波段编号（从1开始） |
-| `base` | number | ❌ | 0 | 等值线基准值 |
+| `input` | raster_info | Yes | — | 输入栅格数据 |
+| `interval` | number | Yes | — | 等值线间距 |
+| `band` | number | No | 1 | 波段编号（从1开始） |
+| `base` | number | No | 0 | 等值线基准值 |
 
 **Outputs:**
 
@@ -576,9 +576,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster_info | ✅ | — | 输入栅格数据 |
-| `target_crs` | string | ✅ | — | 目标坐标参考系（如 EPSG:4326, EPSG:3857） |
-| `resampling` | string | ❌ | nearest | 重采样方法 (options: nearest, bilinear, cubic, lanczos) |
+| `input` | raster_info | Yes | — | 输入栅格数据 |
+| `target_crs` | string | Yes | — | 目标坐标参考系（如 EPSG:4326, EPSG:3857） |
+| `resampling` | string | No | nearest | 重采样方法 (options: nearest, bilinear, cubic, lanczos) |
 
 **Outputs:**
 
@@ -598,8 +598,8 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | raster_info | ✅ | — | 输入栅格数据 |
-| `band` | number | ❌ | 1 | 波段编号（从1开始） |
+| `input` | raster_info | Yes | — | 输入栅格数据 |
+| `band` | number | No | 1 | 波段编号（从1开始） |
 
 **Outputs:**
 
@@ -621,9 +621,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `distance` | number | ✅ | — | 缓冲区距离（单位取决于 CRS） |
-| `cap_style` | string | ❌ | round | 端点样式 (options: round, flat, square) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `distance` | number | Yes | — | 缓冲区距离（单位取决于 CRS） |
+| `cap_style` | string | No | round | 端点样式 (options: round, flat, square) |
 
 **Outputs:**
 
@@ -646,8 +646,8 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `clip_geometry` | geodataframe | ✅ | — | 裁剪范围（矢量数据） |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `clip_geometry` | geodataframe | Yes | — | 裁剪范围（矢量数据） |
 
 **Outputs:**
 
@@ -669,9 +669,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `by` | string | ❌ | — | 分组字段名。不指定则全部融合 |
-| `aggfunc` | string | ❌ | first | 属性聚合函数 (first, sum, mean, count 等) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `by` | string | No | — | 分组字段名。不指定则全部融合 |
+| `aggfunc` | string | No | first | 属性聚合函数 (first, sum, mean, count 等) |
 
 **Outputs:**
 
@@ -693,9 +693,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `overlay_layer` | geodataframe | ✅ | — | 叠加图层 |
-| `how` | string | ❌ | intersection | 叠加方式 (options: intersection, union, difference, symmetric_difference, identity) |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `overlay_layer` | geodataframe | Yes | — | 叠加图层 |
+| `how` | string | No | intersection | 叠加方式 (options: intersection, union, difference, symmetric_difference, identity) |
 
 **Outputs:**
 
@@ -717,8 +717,8 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `expression` | string | ✅ | — | Pandas query 表达式（如 'population > 1000'） |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `expression` | string | Yes | — | Pandas query 表达式（如 'population > 1000'） |
 
 **Outputs:**
 
@@ -738,8 +738,8 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `target_crs` | string | ✅ | — | 目标坐标参考系（如 EPSG:4326, EPSG:3857） |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `target_crs` | string | Yes | — | 目标坐标参考系（如 EPSG:4326, EPSG:3857） |
 
 **Outputs:**
 
@@ -761,9 +761,9 @@ Auto-generated reference of all available pipeline steps.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `input` | geodataframe | ✅ | — | 输入矢量数据 |
-| `tolerance` | number | ✅ | — | 简化容差（单位取决于 CRS） |
-| `preserve_topology` | boolean | ❌ | True | 是否保持拓扑 |
+| `input` | geodataframe | Yes | — | 输入矢量数据 |
+| `tolerance` | number | Yes | — | 简化容差（单位取决于 CRS） |
+| `preserve_topology` | boolean | No | True | 是否保持拓扑 |
 
 **Outputs:**
 

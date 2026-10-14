@@ -21,6 +21,8 @@ tags:
 >
 > **Sandcastle：** <https://sandcastle.cesium.com/>
 >
+> **最新版本：** 1.146.0（截至2026-10，npm `cesium`）
+>
 > **许可证：** Apache-2.0
 
 ## 概述
@@ -46,6 +48,8 @@ npm install cesium
 <link href="https://cdn.jsdelivr.net/npm/cesium/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/cesium/Build/Cesium/Cesium.js"></script>
 ```
+
+> **1.146 变更：** 数学/几何/时间/工具类被拆分为新包 `@cesium/core`。从 `cesium` 主包导入的代码不受影响；直接按子路径引用 `@cesium/engine` 的代码需改从 `@cesium/core` 导入（旧导出将在 1.150 移除）。
 
 ### Vite 集成
 

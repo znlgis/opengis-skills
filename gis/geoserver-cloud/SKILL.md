@@ -18,7 +18,9 @@ tags:
 >
 > **官方文档：** <https://geoserver.org/geoserver-cloud/>
 >
-> **Docker Hub：** <https://hub.docker.com/u/geoservercloud>（镜像标签与 GeoServer 主版本对应，如 `3.0.0`）
+> **Docker Hub：** <https://hub.docker.com/u/geoservercloud>（镜像标签与 GeoServer 主版本对应，如 `3.0.1.1`）
+>
+> **最新版本：** 3.0.1.1（截至 2026-10，[GitHub Releases](https://github.com/geoserver/geoserver-cloud/releases)）
 >
 > **许可证：** GPL-2.0
 
@@ -180,7 +182,7 @@ management:
 ```bash
 docker run -e SPRING_PROFILES_ACTIVE=datadir \
   -v /mnt/gsdata:/opt/app/data_directory \
-  geoservercloud/geoserver-cloud-wms:3.0.0
+  geoservercloud/geoserver-cloud-wms:3.0.1.1
 ```
 
 ---
@@ -204,6 +206,8 @@ docker run -e SPRING_PROFILES_ACTIVE=datadir \
 | Web UI 改了 wms 没生效 | 检查事件订阅 |
 | 启动顺序错乱 | `depends_on` + 健康检查；K8s 用 `initContainers` |
 | OOM | 调整 `-Xmx`，按服务独立资源 |
+| Gateway 502 / 服务不可达 | 检查目标服务健康状态与 Consul 注册（服务名解析：`wms`、`wfs` 等） |
+| 瓦片 404 / 缓存未命中 | 确认 gwc 服务已部署、`GEOSERVER_BASE_PATH` 与请求路径一致，必要时重新 seed |
 
 ---
 

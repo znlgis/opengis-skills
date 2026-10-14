@@ -18,6 +18,8 @@ tags:
 >
 > **Python API 参考：** <https://qgis.org/pyqgis/4.2/>
 >
+> **最新版本：** QGIS 4.2.3（截至 2026-10，[下载页](https://qgis.org/download/)）；LTR 3.44.15
+>
 > **许可证：** GPL-2.0+
 
 ## 概述
@@ -48,8 +50,8 @@ PyQGIS 主要包含以下模块：
 
 ### 前置条件
 
-- 安装 QGIS 3.16+（[查看 QGIS LTR/最新版](https://qgis.org/download/)）
-- Python 3.9+（QGIS 自带 Python 环境）
+- 安装 QGIS 4.2+（当前稳定版）或 3.44 LTR（长期支持版）（[查看 QGIS LTR/最新版](https://qgis.org/download/)）
+- Python 3.12+（QGIS 4.x 自带的 Python 环境）
 
 ### 在 QGIS Python 控制台中使用
 
@@ -346,6 +348,38 @@ layer.commitChanges()
 
 > Processing 算法调用、地图渲染与导出、典型工作流示例见 [reference/processing-rendering.md](reference/processing-rendering.md)
 
+## 典型工作流：缓冲区分析并导出
+
+独立脚本端到端示例（加载 → 缓冲区 → 导出 GeoJSON）：
+
+```python
+from qgis.core import QgsApplication, QgsVectorLayer
+import processing
+from processing.core.Processing import Processing
+
+# 初始化（独立脚本必需）
+qgs = QgsApplication([], False)
+qgs.setPrefixPath("/usr", True)   # Windows 示例："C:/OSGeo4W/apps/qgis"
+qgs.initQgis()
+Processing.initialize()
+
+# 加载数据
+layer = QgsVectorLayer("/data/buildings.shp", "buildings", "ogr")
+assert layer.isValid(), "图层加载失败"
+
+# 缓冲区分析（100 米，输出 GeoJSON）
+result = processing.run("native:buffer", {
+    'INPUT': layer,
+    'DISTANCE': 100,
+    'OUTPUT': '/data/buildings_buffer.geojson'
+})
+print(result['OUTPUT'])
+
+qgs.exitQgis()
+```
+
+更多工作流（批量缓冲融合、栅格裁剪、打印布局导出）见 [reference/processing-rendering.md](reference/processing-rendering.md)。
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -367,7 +401,7 @@ layer.commitChanges()
 7. **文件路径使用绝对路径**：避免工作目录不确定导致文件找不到。
 8. **大数据量优化**：使用 `QgsSpatialIndex` 加速空间查询；使用 `QgsFeatureRequest` 限制返回字段和范围。
 9. **表达式语法**：字段名用双引号 `"field"`，字符串值用单引号 `'value'`。
-10. **QGIS 版本兼容**：部分 API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；QGIS 当前稳定版为 4.2.2（截至2026年），3.44 LTR（最新 3.44.14）仍受支持。
+10. **QGIS 版本兼容**：部分 API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；QGIS 当前稳定版为 4.2.3（2026-09 发布），3.44 LTR（最新 3.44.15）仍受支持（截至 2026-10）。
 
 ### 错误处理
 
@@ -389,6 +423,21 @@ if not layer.commitChanges():
     print(f"提交失败: {errors}")
     layer.rollBack()
 ```
+
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 独立脚本 `import qgis.core` 失败 | 使用 QGIS 自带 Python 解释器（Windows 位于 `apps/Python312`），或配置 `PYTHONPATH` 指向 QGIS 的 python 目录 |
+| 图层 `isValid()` 为 false | 检查文件路径与 provider 拼写（`ogr` / `gdal` / `postgres`），打印 `layer.error().message()` 定位原因 |
+| `processing.run()` 报算法不存在 | 独立脚本先调用 `Processing.initialize()`；第三方算法需在 QGIS 中启用对应插件 |
+| 无显示环境运行崩溃 | 服务器/CI 设置 `QT_QPA_PLATFORM=offscreen` |
+| 渲染输出空白 | 检查 `QgsMapSettings` 的 extent / CRS / 输出尺寸与图层有效性 |
+| 距离/面积结果偏大或偏小 | 经纬度数据用 `QgsDistanceArea` 并设置椭球；或先投影到米制坐标系 |
+| 表达式字段引用报错 | 字段名用双引号 `"field"`，字符串值用单引号 `'value'` |
+| 中文属性乱码 | 指定数据源编码（如 CSV `?encoding=UTF-8`）；QGIS 4.x 默认 UTF-8 |
 
 ---
 

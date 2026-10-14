@@ -97,7 +97,7 @@ string geojson   = GeometryUtil.Wkt2Geojson(string wkt);
 string geojson   = GeometryUtil.Geometry2Geojson(OgrGeometry geom);
 ```
 
-> **⚠️ Limitation:** `Geojson2Wkt(string)` and `Geojson2Geometry(string)` throw `NotSupportedException`. To parse GeoJSON, load from file via `GdalReader`.
+> **Note:** `Geojson2Wkt(string)` and `Geojson2Geometry(string)` parse GeoJSON strings (bare geometry, `Feature`, or `FeatureCollection` — the first feature's geometry is used) through the GDAL GeoJSON driver. Unparseable input, or input without a geometry, raises `ArgumentException`. For whole files use `GdalReader` or `OguLayerUtil.ReadLayer(DataFormatType.GEOJSON, path)`.
 
 ### Spatial Relationships (OgrGeometry)
 

@@ -18,6 +18,8 @@ tags:
 >
 > **Maven GroupId：** `org.geotools`
 >
+> **最新版本：** 35.1（截至 2026-10，[OSGeo Maven 仓库](https://repo.osgeo.org/repository/release/)）
+>
 > **许可证：** LGPL 2.1
 >
 > **官方文档：** <https://docs.geotools.org/>
@@ -308,6 +310,45 @@ String wkt = new WKTWriter().write(geom);
 > 栅格数据（GeoTIFF）与地图渲染的完整示例见 [reference/raster-rendering.md](reference/raster-rendering.md)
 > GeoJSON 与 WKT/WKB 格式读写的完整示例见 [reference/vector-io.md](reference/vector-io.md)
 
+## 典型工作流：读取 → 过滤 → 重投影
+
+端到端示例（Java）：打开 Shapefile → CQL 空间+属性过滤 → 重投影到 Web Mercator：
+
+```java
+import org.geotools.data.*;
+import org.geotools.data.simple.*;
+import org.geotools.filter.text.cql2.CQL;
+import org.geotools.referencing.CRS;
+import org.geotools.geometry.jts.JTS;
+import org.opengis.filter.Filter;
+import org.opengis.referencing.operation.MathTransform;
+import org.locationtech.jts.geom.Geometry;
+
+// 1. 打开 Shapefile
+FileDataStore store = FileDataStoreFinder.getDataStore(new File("cities.shp"));
+SimpleFeatureSource source = store.getFeatureSource();
+
+// 2. CQL 过滤（属性 + 空间条件）
+Filter filter = CQL.toFilter(
+    "POPULATION > 1000000 AND BBOX(the_geom, 116, 39, 117, 40)");
+SimpleFeatureCollection features = source.getFeatures(filter);
+
+// 3. 逐要素重投影（WGS84 → EPSG:3857）
+MathTransform transform = CRS.findMathTransform(
+    source.getSchema().getCoordinateReferenceSystem(),
+    CRS.decode("EPSG:3857"), true);
+try (SimpleFeatureIterator iter = features.features()) {
+    while (iter.hasNext()) {
+        SimpleFeature f = iter.next();
+        Geometry projected = JTS.transform((Geometry) f.getDefaultGeometry(), transform);
+        // 处理/写出 projected
+    }
+}
+store.dispose();
+```
+
+写出 GeoJSON、创建 FeatureType 与写 Shapefile 的完整示例见 [reference/vector-io.md](reference/vector-io.md)。
+
 ## 典型应用场景
 
 | 场景 | 关键类 / 方法 |
@@ -331,15 +372,17 @@ String wkt = new WKTWriter().write(geom);
 
 ## 常见问题
 
-1. **Maven 仓库**：GeoTools 不在 Maven Central 上，必须配置 OSGeo 仓库（`https://repo.osgeo.org/repository/release/`）。
-2. **EPSG 数据库**：使用 CRS 功能时，需引入 `gt-epsg-hsql`（嵌入式）或 `gt-epsg-wkt`（轻量）模块，否则 `CRS.decode()` 会抛出异常。
-3. **坐标轴顺序**：GeoTools 默认遵循 EPSG 规范（纬度在前），调用 `CRS.decode("EPSG:4326", true)` 可强制经度在前（lon/lat 顺序）。
-4. **资源释放**：`DataStore`、`Reader`、`Writer`、`MapContent` 使用后必须调用 `dispose()` 释放资源。`SimpleFeatureIterator` 需在 try-with-resources 或 finally 中关闭。
-5. **线程安全**：`DataStore` 实例是线程安全的，可在多线程间共享；但 `SimpleFeatureIterator` 不是线程安全的。
-6. **SPI 机制**：GeoTools 使用 Java SPI（ServiceLoader）自动发现 DataStore 工厂、CRS 工厂等，确保相关模块 JAR 在 classpath 中。
-7. **JTS 版本**：GeoTools 20+ 使用 `org.locationtech.jts`（GeoTools ≤19 才用旧版 `com.vividsolutions.jts`），注意包名差异。
-8. **性能优化**：对大数据量场景，使用 `Query` 对象限制返回属性和空间范围，避免全量加载；PostGIS 场景建议开启 `preparedStatements`。
-9. **中文属性**：Shapefile 中文乱码时，创建 `ShapefileDataStore` 后调用 `store.setCharset(Charset.forName("GBK"))` 设置编码。
+| 问题 | 解决 |
+|------|------|
+| 找不到 gt-* 依赖（无法解析） | GeoTools 不在 Maven Central，必须在 `pom.xml` 配置 OSGeo 仓库（`https://repo.osgeo.org/repository/release/`） |
+| `CRS.decode()` 抛出异常 | 引入 `gt-epsg-hsql`（嵌入式）或 `gt-epsg-wkt`（轻量）模块提供 EPSG 数据库 |
+| 经纬度顺序与预期相反 | GeoTools 默认遵循 EPSG 规范（纬度在前）；`CRS.decode("EPSG:4326", true)` 强制经度在前 |
+| 文件句柄泄漏 / 数据未写盘 | `DataStore`、`Reader`、`Writer`、`MapContent` 使用后必须 `dispose()`；`SimpleFeatureIterator` 用 try-with-resources 关闭 |
+| 多线程处理迭代器异常 | `DataStore` 线程安全可共享；`SimpleFeatureIterator` 非线程安全，每线程独立使用 |
+| `DataStoreFinder.getDataStore()` 返回 null | 确保对应模块 JAR 在 classpath（GeoTools 通过 Java SPI 自动发现工厂） |
+| 升级后包名报错 | GeoTools 20+ 使用 `org.locationtech.jts`（≤19 为 `com.vividsolutions.jts`） |
+| 大数据量查询慢 | 用 `Query` 限制返回属性与空间范围，避免全量加载；PostGIS 建议开启 `preparedStatements` |
+| Shapefile 中文乱码 | 创建 `ShapefileDataStore` 后调用 `store.setCharset(Charset.forName("GBK"))` 设置编码 |
 
 ---
 

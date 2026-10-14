@@ -14,7 +14,9 @@ tags:
   - python
 ---
 
-> **项目地址：** <https://github.com/znlgis/GeoPipeAgent>（发布包名 `geopipe-agent`，截至 2026 年尚未上传 PyPI，需从源码安装）
+> **项目地址：** <https://github.com/znlgis/GeoPipeAgent>
+>
+> **最新版本：** 0.1.0（截至2026-10，源码 `pyproject.toml`；发布包名 `geopipe-agent` 尚未上传 PyPI，需从源码安装）
 >
 > **许可证：** MIT
 
@@ -25,8 +27,8 @@ GeoPipeAgent 是一个 **AI 原生的 GIS 分析流水线引擎**。核心理念
 **核心能力：**
 
 - **声明式流水线**：YAML 定义分析步骤，AI 友好
-- **丰富步骤库**：矢量分析、栅格分析、网络分析、空间聚类、数据质检
-- **多后端支持**：native_python（基于 geopandas/shapely/rasterio）和 qgis_process
+- **丰富步骤库**：33 个内置步骤，覆盖矢量分析、栅格分析、网络分析、空间聚类、数据质检
+- **多后端支持**：7 种后端可切换（native_python / gdal_cli / gdal_python / qgis_process / pyqgis / generic_cli / curl_api），按环境自动检测可用性
 - **质检框架**：10 种 QC 检查，支持错误/警告/信息三级
 - **结构化报告**：JSON 输出，含统计信息和 QC 汇总
 - **步骤引用**：`$step_id.output` 语法实现步骤间数据传递
@@ -442,7 +444,7 @@ pipeline:
 - **步骤 ID 规则**：只能用小写字母、数字、下划线和连字符，不能含点号（`.` 保留用于属性引用）
 - **引用链完整性**：确保每个 `$step_id` 引用的步骤在当前步骤之前定义
 - **QC 链式调用**：QC 步骤可串联（`qc.check1 → qc.check2 → qc.check3`），问题汇总到管道报告的 `qc_summary` 中
-- **后端选择**：简单分析用 `native_python`（无外部依赖），复杂分析使用 `qgis_process` 后端
+- **后端选择**：默认 `native_python`（纯 Python，无外部依赖）；可在步骤上用 `backend: <名称>` 指定 gdal_cli / gdal_python / qgis_process / pyqgis / generic_cli / curl_api，用 `geopipe-agent backends` 查看当前环境可用后端
 - **路径使用绝对路径**：避免工作目录问题
 - **大数据注意**：管道在内存中运行，超大栅格建议先裁剪
 
@@ -478,6 +480,7 @@ pipeline:
 - **pyqgis** — QGIS Python 绑定：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
 - **geopandas** — Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
 - **postgis** — 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
+- **opengis-daf** — .NET 方案驱动的分析/质检框架（同类流水线工具）：[../opengis-daf/SKILL.md](../opengis-daf/SKILL.md)
 
 ## 参考资源
 

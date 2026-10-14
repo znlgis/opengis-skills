@@ -1,6 +1,6 @@
-# GDAL Python Vector API Reference
+# GDAL Vector API Reference
 
-Vector read/write, format conversion, geometry ops and GeoPackage details split from SKILL.md.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录 C++/Python/Java/C# 四种语言的矢量读写、格式转换、几何操作与 GeoPackage 示例。
 
 ---
 

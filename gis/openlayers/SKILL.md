@@ -21,7 +21,7 @@ tags:
 >
 > **示例：** <https://openlayers.org/en/latest/examples/>
 >
-> **最新稳定版：** 10.10.0（npm `ol`，截至2026年）
+> **最新版本：** 10.11.0（截至2026-10，npm `ol`）
 >
 > **许可证：** BSD-2-Clause
 
@@ -242,6 +242,9 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 | WMS 不显示 | 检查 CORS、`LAYERS` 名、`SRS` 参数 |
 | 字体未生效 | 加载字体后再创建 Text 样式 |
 | MVT 字段缺失 | 使用 `MVT({ featureClass: Feature })` |
+| 矢量图层完全不显示 | 图层未设置样式时默认不渲染，需为图层 `setStyle()` |
+| 点击拾取不到要素 | `map.forEachFeatureAtPixel` 设置 `hitTolerance`（触摸设备/细小要素场景） |
+| 运行时报 `ol/...` 模块找不到 | 确认使用 npm 包 `ol` 并配置打包器（或改用官方全量构建 `dist/ol.js`） |
 
 ---
 

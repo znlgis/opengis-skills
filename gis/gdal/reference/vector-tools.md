@@ -1,6 +1,6 @@
 # GDAL Vector Tools Reference
 
-Detailed parameter reference and examples for OGR vector tools (`ogrinfo`, `ogr2ogr`).
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录 OGR 矢量工具（`ogrinfo`、`ogr2ogr`）的完整参数表与高级示例。
 
 ---
 
@@ -71,7 +71,7 @@ ogrinfo -json cities.shp | jq '.layers[0].features[0]'
 
 ## ogr2ogr — Vector Format Conversion and Processing
 
-**描述**: GDAL 最强大的矢量工具。可在各种格式间转换、重投影、过滤、合并矢量数据。
+**描述**: GDAL 最核心的矢量工具。可在各种格式间转换、重投影、过滤、合并矢量数据。
 
 **基本用法**：
 

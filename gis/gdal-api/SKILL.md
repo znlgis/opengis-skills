@@ -27,6 +27,8 @@ tags:
 >
 > **C# API 参考：** <https://gdal.org/en/stable/api/csharp/index.html>
 >
+> **最新版本：** 3.13.3（截至 2026-10，[下载页](https://gdal.org/download.html)）；Java 绑定（Maven Central）3.13.0
+>
 > **许可证：** MIT
 
 ## 概述
@@ -247,6 +249,34 @@ transform.TransformPoint(point);
 > 常用栅格数据格式与创建选项详见 [reference/raster-api.md](reference/raster-api.md)
 > 常用矢量数据格式详见 [reference/vector-api.md](reference/vector-api.md)
 
+## 典型工作流：矢量筛选与坐标变换
+
+端到端示例（Python）：读取 Shapefile → 空间 + 属性过滤 → 写出 GeoJSON：
+
+```python
+from osgeo import gdal, ogr, osr
+
+gdal.UseExceptions()                      # 启用异常模式，便于排错
+
+src_ds = ogr.Open("cities.shp")
+layer = src_ds.GetLayer(0)
+layer.SetSpatialFilterRect(116.0, 39.5, 117.0, 40.5)   # 空间粗筛（走空间索引）
+layer.SetAttributeFilter("POPULATION > 1000000")        # 属性过滤
+
+dst_srs = osr.SpatialReference()
+dst_srs.ImportFromEPSG(4326)
+
+gdal.VectorTranslate(
+    "cities_filtered.geojson", src_ds,
+    format="GeoJSON", dstSRS=dst_srs,
+    layers=[layer.GetName()]
+)
+
+src_ds = None                             # 释放数据源
+```
+
+栅格端到端（读取 → 重投影 → 压缩写出）等价流程见 [reference/raster-api.md](reference/raster-api.md)。
+
 ## 典型应用场景
 
 | 场景 | C++ | Python | Java | C# |
@@ -264,36 +294,24 @@ transform.TransformPoint(point);
 
 ---
 
-## 常见注意事项
+## 常见问题
 
-### 通用注意事项
-
-1. **驱动注册**：使用任何 GDAL 功能前，必须调用注册函数。C++ 和 Python 使用 `GDALAllRegister()`，Java 使用 `gdal.AllRegister()`，C# 使用 `Gdal.AllRegister()`。矢量操作还需 `OGRRegisterAll()` / `ogr.RegisterAll()`。
-2. **资源释放**：C++ 使用 `GDALClose()` / `OGRFeature::DestroyFeature()`；Python 赋值 `None` 触发释放；Java 调用 `.delete()`；C# 调用 `.Dispose()`。未释放资源可能导致文件损坏。
-3. **坐标轴顺序**：GDAL 3.0+ 默认遵循 EPSG 规范（纬度在前），可通过 `OGRSpatialReference::SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)` 强制经度在前。
-4. **线程安全**：GDAL 全局状态非线程安全，多线程环境需注意：每个线程使用独立的 `GDALDataset`；避免并发写入同一数据集。
-5. **大文件处理**：对大型栅格使用分块读写（`RasterIO` 指定窗口），避免一次性读取整个影像到内存。
-6. **错误处理**：使用 `CPLGetLastErrorMsg()`（C++）、`gdal.GetLastErrorMsg()`（Python）获取详细错误信息。
-
-### C++ 特有注意事项
-
-7. **内存管理**：使用 `CPLFree()` 释放 GDAL 分配的 C 字符串（如 `exportToWkt` 返回的 WKT）。几何对象使用 `OGRGeometryFactory::destroyGeometry()` 销毁。
-8. **编译链接**：确保使用 `gdal-config --cflags --libs` 或 CMake `find_package(GDAL)` 正确配置编译参数。
-
-### Python 特有注意事项
-
-9. **异常模式**：默认 GDAL Python 不抛出异常。启用异常模式：`gdal.UseExceptions()`（推荐在脚本开头调用）。
-10. **NumPy 集成**：`band.ReadAsArray()` 直接返回 NumPy 数组，`band.WriteArray(array)` 直接写入，是 Python 最大的便利之一。
-
-### Java 特有注意事项
-
-11. **本地库加载**：必须确保 `gdalalljni`（Linux: `libgdalalljni.so`，Windows: `gdalalljni.dll`）在 `java.library.path` 中。
-12. **Vector 参数**：Java 绑定中许多方法使用 `java.util.Vector<String>` 传递选项参数。
-
-### C# 特有注意事项
-
-13. **平台运行时**：需要根据目标平台引入对应的 NuGet 运行时包（Linux / Windows / macOS），否则本地库加载失败。
-14. **字符串编码**：C# 绑定中字符串参数默认使用 UTF-8 编码，处理中文路径时注意编码一致性。
+| 类别 | 问题 | 解决 |
+|---|---|---|
+| 通用 | 功能调用报「驱动未注册」 | 先注册：C++/Python `GDALAllRegister()`；Java `gdal.AllRegister()`；C# `Gdal.AllRegister()`；矢量另需 `OGRRegisterAll()` / `ogr.RegisterAll()` |
+| 通用 | 文件损坏 / 写入未生效 | 及时释放资源：C++ `GDALClose()`、`OGRFeature::DestroyFeature()`；Python 赋值 `None`；Java `.delete()`；C# `.Dispose()` |
+| 通用 | 经纬度顺序颠倒 | GDAL 3.0+ 默认纬度在前；用 `OGRSpatialReference::SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)` 强制经度在前 |
+| 通用 | 多线程下崩溃 | GDAL 全局状态非线程安全：每个线程使用独立 `GDALDataset`，避免并发写同一数据集 |
+| 通用 | 大栅格内存溢出 | 用 `RasterIO` 指定窗口分块读写，避免一次性读入整个影像 |
+| 通用 | 报错信息不明确 | C++ 用 `CPLGetLastErrorMsg()`，Python 用 `gdal.GetLastErrorMsg()` 获取详细错误 |
+| C++ | WKT 等 C 字符串泄漏 | 用 `CPLFree()` 释放（如 `exportToWkt` 返回值）；几何用 `OGRGeometryFactory::destroyGeometry()` |
+| C++ | 编译 / 链接失败 | 用 `gdal-config --cflags --libs` 或 CMake `find_package(GDAL)` 配置编译参数 |
+| Python | 出错却不抛异常 | 脚本开头调用 `gdal.UseExceptions()` 启用异常模式 |
+| Python | 如何高效读写像素 | `band.ReadAsArray()` / `band.WriteArray(array)` 直接与 NumPy 数组互转 |
+| Java | `UnsatisfiedLinkError` | 确保 `gdalalljni`（Linux `libgdalalljni.so`、Windows `gdalalljni.dll`）在 `java.library.path` 中 |
+| Java | 选项参数如何传递 | 许多方法使用 `java.util.Vector<String>` 传递选项参数 |
+| C# | 本地库加载失败 | 按目标平台引入对应 NuGet 运行时包（Linux / Windows / macOS） |
+| C# | 中文路径乱码 | 字符串参数默认 UTF-8，注意编码一致性 |
 
 ---
 

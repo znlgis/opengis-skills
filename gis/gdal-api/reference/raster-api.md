@@ -1,6 +1,6 @@
-# GDAL Python Raster API Reference
+# GDAL Raster API Reference
 
-Raster read/write, format conversion and reprojection details split from SKILL.md.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录 C++/Python/Java/C# 四种语言的栅格读写、格式转换与重投影完整示例。
 
 ---
 

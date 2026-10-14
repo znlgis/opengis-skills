@@ -17,6 +17,8 @@ tags:
 >
 > **官方文档：** <https://github.com/znlgis/geometry-api-net/wiki>
 >
+> **NuGet：** `OpenGIS.Esri.Geometry.Core`（最新 1.0.9，截至 2026-10）
+>
 > **注意：** 原 Esri 仓库（github.com/Esri/geometry-api-net）已不再维护（404）。此分支由 znlgis 社区维护，已重命名为 OpenGIS.Esri.Geometry。
 >
 > **许可证：** LGPL-2.1
@@ -25,7 +27,7 @@ tags:
 
 ## 概述
 
-这是一个 .NET Standard 2.0 的空间几何计算库，提供 6 种几何类型、25+ 空间运算算子和 4 种序列化格式。
+这是一个 .NET Standard 2.0 的空间几何计算库，提供 6 种几何类型、28 个空间运算算子（含 DE-9IM 驱动的 9 个谓词、多边形布尔运算、缓冲/简化/MakeValid 与大地测量）和 4 种序列化格式（WKT/EWKT、WKB/EWKB、GeoJSON、Esri JSON），核心引擎已与 PostGIS/GEOS 交叉验证。
 
 - **核心包**: `OpenGIS.Esri.Geometry.Core`
 - **JSON 扩展包**: `OpenGIS.Esri.Geometry.Json`
@@ -79,7 +81,7 @@ Geometry geometry = WktImportOperator.ImportFromWkt("POINT (10.5 20.7)");
 ```csharp
 // 导出（默认小端序）
 byte[] wkb = WkbExportOperator.ExportToWkb(geometry);
-byte[] wkb = WkbExportOperator.ExportToWkb(geometry, bigEndian: true);
+byte[] wkbBigEndian = WkbExportOperator.ExportToWkb(geometry, bigEndian: true);
 
 // 导入（自动检测字节序）
 Geometry geometry = WkbImportOperator.ImportFromWkb(wkbBytes);
@@ -320,6 +322,19 @@ dotnet run --project samples/OpenGIS.Esri.Geometry.Samples
 - **GeoJSON 导出规则**：单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`
 - **Operator 使用 Lazy 单例**：所有 Operator 类通过 `Instance` 属性获取单例实例
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| NuGet 安装后找不到命名空间 | 同时安装 `OpenGIS.Esri.Geometry.Core` 与（可选）`OpenGIS.Esri.Geometry.Json`；命名空间为 `OpenGIS.Esri.Geometry.Core.*` |
+| Polygon 面积 / 包含判断异常 | 环必须闭合（首尾点相同），可先用 `GeometryEngine.Simplify` 修复 |
+| 浮点坐标比较误差 | 内部容差 `GeometryConstants.DefaultTolerance`（1e-10），为内部常量、不可外部配置 |
+| 集合运算返回值类型不符预期 | 返回 `Geometry` 基类，需按实际类型做类型转换后使用 |
+| 无法 `new` 算子实例 | 所有 Operator 类通过 `Instance` 属性获取 Lazy 单例 |
+| 修改 `GetRing()` / `GetPath()` 结果报错 | 返回 `IReadOnlyList<Point>` 只读视图，需要复制后修改 |
+| `GeodesicDistance` 结果异常 | 基于 WGS84（Vincenty 公式），输入必须是经纬度坐标；`GeodesicArea` 使用球面超量公式 |
+| GeoJSON 导出类型与预期不符 | 单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`；Envelope 导出为 `Polygon` |
+
 ## 相关技能
 
 - **nettopologysuite** — .NET JTS 移植（几何计算核心）：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
@@ -327,12 +342,9 @@ dotnet run --project samples/OpenGIS.Esri.Geometry.Samples
 - **geometry-api-java** — Java 版本 Esri Geometry API：[../geometry-api-java/SKILL.md](../geometry-api-java/SKILL.md)
 - **jts** — JTS Topology Suite：[../jts/SKILL.md](../jts/SKILL.md)
 
-## 注意事项
+## 参考资源
 
-1. **Polygon 环必须闭合**：首尾点必须相同
-2. **浮点容差**：内部使用 `GeometryConstants.DefaultTolerance`（1e-10）进行浮点比较，该值为内部常量，不可外部配置
-3. **返回类型需转换**：集合运算返回 `Geometry` 基类，需根据实际类型做类型转换
-4. **Operator 使用 Lazy 单例**：所有 Operator 类通过 `Instance` 属性获取单例实例
-5. **集合 getter 返回只读视图**：`GetRing()`, `GetPath()` 等返回 `IReadOnlyList<Point>`
-6. **大地测量基于 WGS84**：`GeodesicDistance` 使用 Vincenty 公式，`GeodesicArea` 使用球面超量公式
-7. **GeoJSON 导出规则**：单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`；Envelope 导出为 `Polygon`
+- **GitHub 仓库：** <https://github.com/znlgis/geometry-api-net>
+- **官方 Wiki：** <https://github.com/znlgis/geometry-api-net/wiki>
+- **NuGet：** <https://www.nuget.org/packages/OpenGIS.Esri.Geometry.Core>
+- **中文教程（znlgis）：** <https://znlgis.github.io/gis/tutorial/geometry-api-net/>

@@ -36,7 +36,8 @@ All available as `shapely.<function>(geometry, ...)`.
 | `node(geom)` | Full noding of linear geometry |
 | `remove_repeated_points(geom, tolerance=0.0)` | Remove duplicate vertices (GEOS >= 3.11) |
 | `maximum_inscribed_circle(geom, tolerance=1.0)` | Largest inscribed circle |
-| `minimum_width(geom)` | Minimum width line |
+| `minimum_width(geom)` | Minimum width line (2.2 新增) |
+| `split(geom, splitter)` | Split a geometry by another (2.2 新增；GEOS >= 3.15，旧版回退 `shapely.ops.split`) |
 | `orient_polygons(geom, sign=1.0)` | Enforce ring orientation |
 
 ## Spatial Predicates
@@ -83,6 +84,7 @@ All return `bool` (or bool array). Available as `shapely.<function>(a, b)` or `a
 | `symmetric_difference(a, b, grid_size=None)` | XOR of A and B |
 | `coverage_union(a, b)` | Optimized union for non-overlapping polygons |
 | `coverage_union_all(geometries)` | N-way coverage union |
+| `coverage_clean(geometries, gap_width=0.0, snapping_distance=-1, merge_strategy="longest_border")` | Cleanse a polygonal coverage (gaps/overlaps) (2.2 新增；GEOS >= 3.14) |
 
 All binary operations support optional `grid_size` for precision snapping.
 
@@ -180,6 +182,8 @@ shapely.transform(geom, func, include_z=True)
 
 # Per-ring transform (may change coordinate count)
 shapely.transform_coordseq(geom, func)
+
+# 注意：shapely.ops.transform 自 2.2 起弃用，改用以上两个函数
 ```
 
 ## Linear Referencing
@@ -190,5 +194,6 @@ shapely.line_locate_point(line, point, normalized=False)
 shapely.line_merge(multilinestring, directed=False)
 shapely.shared_paths(a, b)
 shapely.shortest_line(a, b)
+shapely.get_segments(geom)   # 提取 LineString/LinearRing 的逐段线段（2.2 新增）
 ```
 

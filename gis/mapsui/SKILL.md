@@ -18,9 +18,9 @@ tags:
 >
 > **官方文档：** <https://mapsui.com/v5/documentation/index.html>
 >
-> **最新稳定版：** 5.1.0（NuGet，截至2026年）
+> **最新版本：** 5.1.0（截至2026-10，NuGet）
 >
-> **许可证：** LGPL-2.1+
+> **许可证：** MIT
 
 ## 概述
 
@@ -194,9 +194,11 @@ MapControl.Info += (s, e) => {
 | 问题 | 解决 |
 |------|------|
 | WPF 无图 | NuGet 缺 `Mapsui.Wpf` 或没设置 `MapControl.Map` |
+| 找不到 `Mapsui.UI.Wpf` 包 | NuGet 包名为 `Mapsui.Wpf`（v3 起启用该名称；程序集仍为 `Mapsui.UI.Wpf.dll`） |
 | 投影错误 | `SphericalMercator.FromLonLat` 转换 |
 | MAUI 空白 | `MauiProgram` 中 `UseSkiaSharp()` + `UseMapsui()` |
 | Shapefile 中文乱码 | 指定 Encoding |
+| `GeometryFeature` / 瓦片类型找不到 | 矢量要素需安装 `Mapsui.Nts`，瓦片图层需安装 `Mapsui.Tiling` |
 
 ---
 

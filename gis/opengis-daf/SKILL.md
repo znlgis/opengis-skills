@@ -13,7 +13,6 @@ tags:
   - postgis
   - vector
   - pipeline
-  - plugin
 ---
 
 > **项目地址：** <https://github.com/znlgis/opengis-daf>
@@ -22,7 +21,7 @@ tags:
 >
 > **文档：** <https://github.com/znlgis/opengis-daf/tree/main/docs>（快速入门、方案配置指南、算子参考、CLI 参考）
 >
-> **底层依赖：** GDAL/OGR 3.x、NetTopologySuite 2.6、Npgsql 10、Serilog 4.3
+> **底层依赖：** GDAL/OGR 3.x、NetTopologySuite 2.6、Npgsql 10、Serilog 4.4
 
 ## 概述
 
@@ -228,9 +227,19 @@ dotnet demo/plugin/OpenGisDAF.PluginHostDemo/bin/Release/net10.0/OpenGisDAF.Plug
 
 ---
 
+## 相关技能
+
+- **nettopologysuite** — .NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **opengis-utils-for-net** — 底层 GDAL C# 绑定工具库（Git 子模块）：[../opengis-utils-for-net/SKILL.md](../opengis-utils-for-net/SKILL.md)
+- **geopipe-agent** — YAML 驱动的 AI 原生流水线（同类分析/质检框架）：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
+- **qgis-process** — QGIS 命令行批处理（分析算子备选）：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+
+---
+
 ## 参考资源
 
 - 仓库与文档：<https://github.com/znlgis/opengis-daf>（`docs/quickstart.md`、`docs/plan-config-guide.md`、`docs/operator-reference.md`、`docs/cli-reference.md`）
 - 自包含教程 Demo：<https://github.com/znlgis/opengis-daf/tree/main/demo>（"新星市"规划分析：6 步 DAG 主线、QC 评分、SHP 闭环、失败策略、插件开发）
 - 底层几何库：本仓库 [NetTopologySuite SKILL](../nettopologysuite/SKILL.md)、[GDAL 元技能](../opengis-all/SKILL.md)
 - 配套工具库：<https://github.com/znlgis/opengis-utils-for-net>（Git 子模块，GDAL C# 绑定）
+- 中文教程（znlgis）：<https://znlgis.github.io/gis/tutorial/opengis-daf/>

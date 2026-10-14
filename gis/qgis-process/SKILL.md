@@ -20,7 +20,7 @@ tags:
 >
 > **在线文档：** <https://docs.qgis.org/4.2/en/docs/user_manual/processing/standalone.html>
 >
-> **适用版本：** QGIS 3.16 起可用；当前稳定版 4.2.2，3.44 LTR（最新 3.44.14）（截至2026年）
+> **最新版本：** QGIS 4.2.3；3.44 LTR 最新 3.44.15（截至2026-10，GitHub Releases；`qgis_process` 自 QGIS 3.16 起可用）
 >
 > **许可证：** GPL-2.0+
 
@@ -38,6 +38,23 @@ tags:
 
 - 安装 QGIS 3.16+（`qgis_process` 从 QGIS 3.16 开始可用）
 - 确保 `qgis_process` 可执行文件在 `PATH` 中
+
+### 安装方式
+
+```bash
+# Ubuntu/Debian
+sudo apt install qgis
+
+# Conda（跨平台）
+conda install -c conda-forge qgis
+
+# Docker（官方镜像，含 qgis_process；stable=4.2、ltr=3.44）
+docker run --rm -v "$PWD:/data" qgis/qgis:ltr qgis_process --version
+
+# Windows：通过 OSGeo4W 安装器安装 QGIS，随后在 "OSGeo4W Shell" 中运行 qgis_process
+```
+
+> **提示：** Windows 下手动运行的场景，将 QGIS 安装目录的 `bin`（如 `C:\Program Files\QGIS 3.44\bin` 或 `C:\OSGeo4W\bin`）加入 `PATH`。
 
 ### 无窗口系统（Headless 服务器）
 
@@ -57,7 +74,7 @@ qgis_process --version
 
 ## 命令行语法
 
-```
+```text
 qgis_process [--help] [--version] [--json] [--verbose] [--no-python] [--skip-loading-plugins] [command] [algorithm id | model path | script path] [parameters]
 ```
 
@@ -334,6 +351,21 @@ qgis_process run /path/to/my_script.py -- INPUT=data.shp OUTPUT=result.shp
 
 ---
 
+## 常见问题
+
+| 问题 | 解决方案 |
+|------|---------|
+| 提示 `command not found: qgis_process` | 将 QGIS 的 `bin` 目录加入 `PATH`；Windows 下改用 OSGeo4W Shell 运行 |
+| 无显示器的服务器上崩溃或卡住 | 设置环境变量 `QT_QPA_PLATFORM=offscreen` |
+| `Algorithm <id> not found!` | 用 `qgis_process list` 确认算法 ID 与 Provider 前缀（如 `native:`、`gdal:`） |
+| 缺少必填参数 | 先用 `qgis_process help <id> --json` 查看参数名、类型与默认值 |
+| 枚举参数报错 | 枚举值需传数字索引，`help --json` 中的 `available_options` 提供索引映射 |
+| 多值参数只生效一项 | 在 `--` 之后多次指定同一参数（如 `LAYERS=a.shp LAYERS=b.shp`） |
+| 路径含空格或中文时报错 | 使用绝对路径并对参数值加引号 |
+| 启动速度慢 | 不需要 Python/插件时添加 `--no-python` 与 `--skip-loading-plugins` |
+
+---
+
 ## 相关技能
 
 - **pyqgis** — QGIS Python 绑定：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
@@ -371,3 +403,12 @@ qgis_process run /path/to/my_script.py -- INPUT=data.shp OUTPUT=result.shp
 | `showAlgorithmHelp(id)` | 显示算法帮助（支持文本和 JSON 输出） |
 | `execute(algId, parameters, ...)` | 执行算法核心逻辑 |
 | `loadPlugins()` | 加载 Python 插件 |
+
+## 参考资源
+
+- **QGIS 源码：** <https://github.com/qgis/QGIS>
+- **qgis_process 用户手册：** <https://docs.qgis.org/4.2/en/docs/user_manual/processing/standalone.html>
+- **Processing 算法参考：** <https://docs.qgis.org/4.2/en/docs/user_manual/processing_algs/>
+- **QGIS 下载（LTR/稳定版）：** <https://qgis.org/download/>
+- **QGIS 文档仓库：** <https://github.com/qgis/QGIS-Documentation>
+- **中文教程（znlgis）：** <https://znlgis.github.io/gis/tutorial/qgis/>

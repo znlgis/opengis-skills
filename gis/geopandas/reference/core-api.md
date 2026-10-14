@@ -138,7 +138,7 @@ gpd.GeoSeries(data=None, index=None, crs=None, **kwargs)
 
 #### 二元谓词 → Series[bool]
 
-```
+```text
 contains(other, align=None)          covers(other, align=None)
 covered_by(other, align=None)        crosses(other, align=None)
 disjoint(other, align=None)          intersects(other, align=None)
@@ -152,7 +152,7 @@ relate_pattern(other, pattern)
 
 #### 二元几何运算 → GeoSeries
 
-```
+```text
 difference(other, align=None)          intersection(other, align=None)
 symmetric_difference(other, align=None) union(other, align=None)
 shortest_line(other, align=None)       snap(other, tolerance, align=None)
@@ -161,7 +161,7 @@ shared_paths(other, align=None)
 
 #### 距离方法 → Series[float]
 
-```
+```text
 distance(other, align=None)
 hausdorff_distance(other, align=None)
 frechet_distance(other, align=None)
@@ -169,21 +169,21 @@ frechet_distance(other, align=None)
 
 #### 线性参考
 
-```
+```text
 interpolate(distance, normalized=False)  → GeoSeries (线上的点)
 project(other, normalized=False)         → Series[float] (沿线距离)
 ```
 
 #### 聚合方法
 
-```
+```text
 union_all(method="unary", grid_size=None)  → 单个 Shapely geometry
 intersection_all()                         → 单个 Shapely geometry
 ```
 
 #### 仿射变换 → GeoSeries
 
-```
+```text
 affine_transform(matrix)
 translate(xoff=0.0, yoff=0.0, zoff=0.0)
 rotate(angle, origin="center", use_radians=False)

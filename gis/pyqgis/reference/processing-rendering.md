@@ -1,6 +1,6 @@
 # PyQGIS Processing, Rendering and Workflows Reference
 
-Processing algorithm invocation, map rendering/export and typical workflow examples split from SKILL.md.
+> 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录 Processing 算法调用、地图渲染/导出与典型工作流示例。
 
 ---
 

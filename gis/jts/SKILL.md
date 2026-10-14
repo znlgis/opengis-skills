@@ -18,6 +18,8 @@ tags:
 >
 > **Maven Central：** `org.locationtech.jts:jts-core`
 >
+> **最新版本：** 1.20.0（截至 2026-10，[Maven Central](https://central.sonatype.com/artifact/org.locationtech.jts/jts-core)）
+>
 > **许可证：** Eclipse Public License 2.0 / Eclipse Distribution License 1.0（BSD 风格）
 >
 > **Javadoc：** <https://locationtech.github.io/jts/javadoc>
@@ -187,6 +189,30 @@ GeometryCollection gc = gf.createGeometryCollection(new Geometry[]{point, line, 
 
 > 空间关系、集合运算、几何分析、格式读写与空间索引的完整参考见 [reference/geometry-operations.md](reference/geometry-operations.md)
 
+## 典型工作流：WKT → 缓冲区 → 空间判断 → GeoJSON
+
+```java
+import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.prep.PreparedGeometry;
+import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.geojson.GeoJsonWriter;
+
+// 1. 从 WKT 解析输入几何
+Geometry polygon = new WKTReader().read("POLYGON((0 0,10 0,10 10,0 10,0 0))");
+
+// 2. 缓冲区分析并校验有效性
+Geometry buffered = polygon.buffer(2.0);
+boolean valid = buffered.isValid();
+
+// 3. 点在面内判断（批量场景先做 PreparedGeometry 预处理）
+PreparedGeometry prep = PreparedGeometryFactory.prepare(polygon);
+boolean hit = prep.contains(new GeometryFactory().createPoint(new Coordinate(5, 5)));
+
+// 4. 导出 GeoJSON
+String geoJson = new GeoJsonWriter().write(buffered);
+```
+
 ## 典型应用场景
 
 | 场景 | 关键类 / 方法 |
@@ -211,15 +237,17 @@ GeometryCollection gc = gf.createGeometryCollection(new Geometry[]{point, line, 
 
 ## 常见问题
 
-1. **使用 GeometryFactory 创建几何**：不要直接 `new Point()`，始终通过 `GeometryFactory` 的工厂方法创建几何对象。
-2. **面必须闭合**：Polygon 的外环和内环坐标数组的首尾坐标必须相同。
-3. **坐标顺序**：JTS 使用 `(x, y)` 即 `(经度, 纬度)` 的顺序，注意与某些 GIS 系统的 `(纬度, 经度)` 区分。
-4. **几何有效性**：从外部导入的几何数据应使用 `geometry.isValid()` 检查有效性，无效几何可用 `GeometryFixer.fix()` 修复。
-5. **SRID 不参与计算**：JTS 的 SRID 仅作为元数据标记，不影响空间运算；JTS 所有计算都在笛卡尔平面上进行，不处理投影。
-6. **性能优化**：批量空间查询使用 `STRtree`；重复空间关系判断使用 `PreparedGeometry`；大量几何合并使用 `UnaryUnionOp`。
-7. **线程安全**：`GeometryFactory` 是线程安全的；`Geometry` 对象本身不可变，可安全共享；但 Reader/Writer 实例非线程安全，需为每个线程创建独立实例。
-8. **包名迁移**：JTS 1.15+ 包名由 `com.vividsolutions.jts` 迁移为 `org.locationtech.jts`，注意旧代码升级。
-9. **OverlayNG**：对于叠加运算（intersection / union / difference），推荐使用 `OverlayNGRobust`，它比传统叠加引擎更加鲁棒，能处理更多边界情况。
+| 问题 | 解决 |
+|------|------|
+| 无法直接 `new Point(...)` / 构造几何 | 始终通过 `GeometryFactory` 的工厂方法创建几何对象 |
+| 面数据无效（环未闭合） | Polygon 外环与内环坐标数组首尾必须相同 |
+| 经纬度顺序写反 | JTS 使用 `(x, y)` 即 `(经度, 纬度)`，注意与 `(纬度, 经度)` 的系统区分 |
+| 外部几何 `isValid()` 为 false | 用 `GeometryFixer.fix()` 修复后再参与运算 |
+| 跨坐标系计算结果失真 | JTS 的 SRID 仅是元数据，所有计算在笛卡尔平面进行，不处理投影 |
+| 批量空间查询慢 | 用 `STRtree` 建索引；重复关系判断用 `PreparedGeometry`；大量合并用 `UnaryUnionOp` |
+| 多线程复用 Reader/Writer 出错 | `GeometryFactory` 与 `Geometry` 线程安全；`WKTReader` / `WKTWriter` 等非线程安全，每线程独立创建 |
+| 叠加运算抛 TopologyException | 优先用 `OverlayNGRobust.overlay()`，比传统叠加引擎更鲁棒 |
+| 旧代码升级后 import 报错 | JTS 1.15+ 包名由 `com.vividsolutions.jts` 迁移为 `org.locationtech.jts` |
 
 ---
 
@@ -258,6 +286,6 @@ GeometryCollection gc = gf.createGeometryCollection(new Geometry[]{point, line, 
 - **Maven Central：** <https://mvnrepository.com/artifact/org.locationtech.jts>
 - **LocationTech 主页：** <https://locationtech.org/projects/technology.jts>
 - **版本历史：** <https://github.com/locationtech/jts/blob/master/doc/JTS_Version_History.md>
-- **衍生项目 — GEOS（C++ 移植）：** <https://trac.osgeo.org/geos>
+- **衍生项目 — GEOS（C++ 移植）：** <https://libgeos.org/>
 - **衍生项目 — NetTopologySuite（.NET 移植）：** <https://github.com/NetTopologySuite/NetTopologySuite>
 - **衍生项目 — JSTS（JavaScript 移植）：** <https://github.com/bjornharrtell/jsts>

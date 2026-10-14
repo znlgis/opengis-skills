@@ -17,7 +17,7 @@ tags:
 >
 > **官方文档：** <https://github.com/znlgis/opengis-utils-for-java#readme>
 >
-> **Maven 坐标：** `com.znlgis.ogu4j:ogu4j:1.0.0`
+> **Maven 坐标：** `com.znlgis.ogu4j:ogu4j:1.0.0`（截至2026-10 尚未发布到 Maven Central，需从源码 `mvn install` 安装到本地仓库）
 >
 > **许可证：** LGPL-2.1-or-later
 
@@ -36,12 +36,46 @@ tags:
 
 ---
 
+## 环境准备
+
+```bash
+# 前置：JDK 17+ 与 Maven 3.8+
+java -version
+mvn -version
+
+# 克隆并构建（安装到本地 Maven 仓库）
+git clone https://github.com/znlgis/opengis-utils-for-java.git
+cd opengis-utils-for-java
+mvn install -DskipTests
+```
+
+在业务项目的 `pom.xml` 中引入依赖（GeoTools 依赖通过 osgeo 仓库解析）：
+
+```xml
+<repositories>
+    <repository>
+        <id>osgeo</id>
+        <url>https://repo.osgeo.org/repository/release/</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>com.znlgis.ogu4j</groupId>
+    <artifactId>ogu4j</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+**环境要求：** JDK 17+；GDAL 引擎需本地原生 GDAL 库（与 `org.gdal:gdal` 绑定版本 3.13.0 匹配）；纯 GeoTools 引擎无需原生库。验证：`mvn dependency:tree` 中出现 `com.znlgis.ogu4j:ogu4j:1.0.0`，且代码中 `import com.znlgis.ogu4j.datasource.OguLayerUtil;` 可编译。
+
+---
+
 ## Project Structure
 
-```
+```text
 com.znlgis.ogu4j
 ├── datasource/                  # High-level data I/O
-│   ├── OguLayerUtil             # ★ Primary entry point for reading/writing layers
+│   ├── OguLayerUtil             # Primary entry point for reading/writing layers
 │   └── GtTxtUtil                # National land TXT format support
 ├── engine/                      # GIS engine core
 │   ├── GisEngine                # Engine interface
@@ -60,7 +94,7 @@ com.znlgis.ogu4j
 │   │   ├── LayerReader          # read(path, layerName, attributeFilter, spatialFilterWkt)
 │   │   └── LayerWriter          # write(layer, path, layerName, options)
 │   ├── model/
-│   │   ├── layer/               # ★ Core data model
+│   │   ├── layer/               # Core data model
 │   │   │   ├── OguLayer         # Layer: name, wkid, geometryType, fields, features
 │   │   │   ├── OguFeature       # Feature: id, geometry (WKT), attributes
 │   │   │   ├── OguField         # Field definition: name, alias, dataType, length
@@ -80,7 +114,7 @@ com.znlgis.ogu4j
 │       ├── ShpUtil              # Shapefile encoding & field name handling
 │       └── GdalCmdUtil          # GDAL command-line wrapper (ogrinfo)
 ├── geometry/
-│   └── GeometryUtil             # ★ 60+ geometry operation methods
+│   └── GeometryUtil             # 60+ geometry operation methods
 ├── exception/
 │   ├── OguException             # Base checked exception
 │   ├── DataSourceException      # Data source connection failures
@@ -103,13 +137,13 @@ com.znlgis.ogu4j
 
 | Format | DataFormatType | GeoTools | GDAL | Read | Write | Notes |
 |--------|---------------|----------|------|------|-------|-------|
-| Shapefile | `SHP` | ✅ | ✅ | ✅ | ✅ | Field names limited to 10 chars |
-| GeoJSON | `GEOJSON` | ✅ | ✅ | ✅ | ✅ | |
-| FileGDB | `FILEGDB` | ❌ | ✅ | ✅ | ✅ | Requires GDAL native library |
-| PostGIS | `POSTGIS` | ✅ | ✅ | ✅ | ✅ | Connection string as path |
-| National Land TXT | `TXT` | ✅ | ❌ | ✅ | ✅ | Use `GtTxtUtil` directly |
-| WKT | `WKT` | ✅ | ❌ | ✅ | ❌ | Geometry-only format |
-| ESRI JSON | `ESRIJSON` | ❌ | ❌ | ✅* | ❌ | *Via `GeometryUtil` conversion |
+| Shapefile | `SHP` | Yes | Yes | Yes | Yes | Field names limited to 10 chars |
+| GeoJSON | `GEOJSON` | Yes | Yes | Yes | Yes | |
+| FileGDB | `FILEGDB` | No | Yes | Yes | Yes | Requires GDAL native library |
+| PostGIS | `POSTGIS` | Yes | Yes | Yes | Yes | Connection string as path |
+| National Land TXT | `TXT` | Yes | No | Yes | Yes | Use `GtTxtUtil` directly |
+| WKT | `WKT` | Yes | No | Yes | No | Geometry-only format |
+| ESRI JSON | `ESRIJSON` | No | No | Yes* | No | *Via `GeometryUtil` conversion |
 
 ---
 
@@ -219,7 +253,7 @@ com.znlgis.ogu4j
 
 ## Exception Hierarchy
 
-```
+```text
 Exception
 └── OguException                      # Base checked exception
     ├── DataSourceException           # Data source connection/access failure
@@ -304,6 +338,19 @@ RuntimeException
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| `mvn install` 依赖解析失败 | 配置 osgeo 仓库（GeoTools 依赖不在 Maven Central）；确认 Maven 3.8+ 与 JDK 17+ |
+| 找不到 `com.znlgis.ogu4j:ogu4j` 依赖 | 该库尚未发布到 Maven Central，先在本仓库执行 `mvn install` 安装到本地仓库 |
+| 运行时报 GDAL 相关 `UnsatisfiedLinkError` | 本地缺少与 `org.gdal:gdal` 3.13.0 匹配的原生 GDAL；安装 GDAL 3.13.x，或改用 `GisEngineType.GEOTOOLS` |
+| FileGDB 读写失败 | FileGDB 仅 GDAL 引擎支持：安装原生 GDAL 并使用 `GisEngineType.GDAL` 或 `AUTO` |
+| Shapefile 字段名被截断 | DBF 规范限制 10 字符，使用 `ShpUtil.formatFieldName()` 自动截断 |
+| PostGIS 连接失败 | 检查连接串格式（`PG: host=... port=... dbname=... user=... password=... active_schema=...`）与 schema 名称 |
+
+---
+
 ## 相关技能
 
 - **geotools** — Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
@@ -350,3 +397,10 @@ OguLayerUtil.writeLayer(
     "/data/output.geojson", null, null, GisEngineType.AUTO
 );
 ```
+
+## 参考资源
+
+- **GitHub 仓库：** <https://github.com/znlgis/opengis-utils-for-java>
+- **OSGeo 发布仓库（GeoTools 依赖）：** <https://repo.osgeo.org/repository/release/>
+- **GeoTools 官网：** <https://geotools.org/>
+- **中文教程（znlgis）：** <https://znlgis.github.io/gis/tutorial/opengis-utils-for-java/>
