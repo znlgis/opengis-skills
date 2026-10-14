@@ -126,35 +126,50 @@ PathsD inner = Clipper.InflatePaths(outline, -10,
 需要更精细控制（PolyTree、ZFill 回调等）：
 
 ```csharp
-ClipperD clipper = new(2);   // 2 = 浮点保留 2 位小数精度
+ClipperD clipper = new(2);   // 参数是浮点舍入精度（默认 2 位小数）
 
-clipper.AddSubject(subj);
+clipper.AddSubject(subj);    // 重载接收 PathD 或 PathsD
 clipper.AddClip(clip);
 
 PolyTreeD tree = new();
 clipper.Execute(ClipType.Union, FillRule.NonZero, tree);
-PathsD result = tree.GetAllPaths(FillRule.NonZero);
+
+// 遍历层级：PolyTreeD/D 节点可 foreach，节点上是 Polygon 与 Count
+foreach (PolyPathD node in tree) {
+    bool hole = node.IsHole;             // 该节点是不是孔
+    PathD? poly = node.Polygon;          // 根节点 Polygon 为 null
+}
+
+// 只要扁平结果：PolyTreeToPathsD 把树压平
+PathsD flat = Clipper.PolyTreeToPathsD(tree);
 ```
 
-`PolyTree` 保留外环/内孔的层级关系，对于带孔多边形非常重要。
+`PolyTreeD` 保留外环/内孔的层级关系，对于带孔多边形非常重要；注意**没有** `GetAllPaths` 这种取法，压平用 `Clipper.PolyTreeToPathsD(tree)`，保留层级就自己遍历 `PolyPathD` 的 `Count` / 索引器 / `IsHole`。
 
 ---
 
 ## 实用工具
 
 ```csharp
-double area = Clipper.Area(path);                       // 有符号面积
-PointD c    = Clipper.Centroid(path);                   // 形心
+double area = Clipper.Area(path);                       // 有符号面积（PathD 或 PathsD 都有重载）
 RectD bbox  = Clipper.GetBounds(paths);                 // 包围盒
 
 PathsD simp = Clipper.SimplifyPaths(paths, 0.5);        // 简化（容差）
 PathsD ramer = Clipper.RamerDouglasPeucker(paths, 0.5); // RDP 简化
 
-PathsD trim = Clipper.TrimCollinear(paths);             // 去共线点
+PathD trim = Clipper.TrimCollinear(path, 2);            // 去共线点（PathD 版要传精度）
+
+bool inside = Clipper.PointInPolygon(new PointD(1, 1), path)
+              == PointInPolygonResult.IsInside;         // 点在多边形内判定
+
+PathD rev = Clipper.ReversePath(path);                   // 反向缠绕
+bool ccw = Clipper.IsPositive(path);                     // 缠绕方向判定
 
 // 闵可夫斯基和/差（轮廓膨胀工具）
 PathD mink = Clipper.MinkowskiSum(pattern, path, false);
 ```
+
+注意 C# 绑定里**没有** `Centroid`（形心）这类几何量函数，需要形心就自己按 `Area` 加权算或用包围盒/中点（`Clipper.MidPoint`）代替。
 
 ---
 
@@ -213,6 +228,7 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 | 偏移变形 | 调整 `JoinType` 与 `MiterLimit` |
 | 浮点精度异常 | 改用 `Path64` 或 `ClipperD(precision)` |
 | 与 Clipper1 不兼容 | API 已变化，参考迁移指南 |
+| 找不到 `Centroid` / `GetAllPaths` | C# 绑定没有这两个函数：形心自行按 `Area` 加权计算，PolyTree 压平用 `Clipper.PolyTreeToPathsD(tree)` |
 
 ---
 

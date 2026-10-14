@@ -20,7 +20,7 @@ tags:
 >
 > **许可证：** GPL-2.0+
 >
-> **最新稳定版：** 2021.01（官方 release；截至2026年官网推荐开发快照构建以获得 Manifold 内核性能，见 [GitHub tags](https://github.com/openscad/openscad/tags)）
+> **最新稳定版：** 2021.01（GitHub 最后一个正式 Release）。日常实操普遍用**快照/测试版**：仓库最新标签为 `openscad-2026.10-TEST3`，官网下载页的 Snapshots 提供各平台每日构建，Manifold 内核与新增函数（如 `offset` 的 3D 模式、`polyline()` 等）只在快照里可用，见 [tags](https://github.com/openscad/openscad/tags) 与 [downloads](https://openscad.org/downloads.html)
 
 ## 概述
 

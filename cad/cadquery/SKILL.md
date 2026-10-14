@@ -46,7 +46,7 @@ pip install cadquery
 pip install cq-editor
 ```
 
-> 当前稳定版 **2.8.0**（截至2026年9月，参见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)）。PyPI 包要求 **Python ≥ 3.11**；conda-forge 通道同步发布（几何依赖 `cadquery-ocp`，基于 OCCT）。
+> 当前稳定版 **2.8.0**（GitHub Release 2026-06-20，PyPI 2026-06-21，参见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)）。PyPI 包要求 **Python ≥ 3.11**，几何依赖 `cadquery-ocp`（2.8.0 锁 `>=7.9.3.1,<8.0`，即 OCCT 7.9.x）；conda-forge 通道同步发布。
 
 ---
 

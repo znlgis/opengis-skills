@@ -59,7 +59,7 @@ conda install -c conda-forge pythonocc-core
 
 ---
 
-## 核心命名空间
+## 核心 API：包与命名空间
 
 | 包 | 内容 |
 |----|------|
@@ -243,9 +243,12 @@ const box = new oc.BRepPrimAPI_MakeBox_2(100, 60, 30).Shape();
 | 问题 | 解决 |
 |------|------|
 | 布尔运算失败 | `ShapeFix_Shape` 修复输入；调整容差 |
-| STEP 中文乱码 | OCCT 7.6+ 设置 `STEPControl_Reader::SetReadProgress` 与 UTF-8 |
+| STEP 里的中文文字/属性丢失 | STEP 的非 ASCII 文本走转义序列与字符集声明，读写两端口径不一致就丢字。先用 `Interface_Static::Names()` 列出当前版本可用的 STEP/XCAF 参数再按名设置，不要凭记忆写参数名；模型侧要保证文字实体带可用的字体子集，否则改由 XCAF 属性层携带文本 |
 | 拷贝 Shape 后位置错乱 | 注意 `TopoDS_Shape` 是引用，深拷贝用 `BRepBuilderAPI_Copy` |
 | 显示无图 | AIS 上下文未启动 OpenGL；检查 `OCC.Display.SimpleGui` |
+| 圆角/倒角偶发失败或结果吞掉相邻面 | 半径超过局部几何可承受范围；先用 `BRepOffsetAPI_MakeOffset`/分析边长，再分批改半径，并保证相交的圆角顺序稳定 |
+| 大装配加载慢、内存高 | 用 `XCAFDoc` 装配结构 + 按需 `TransferRoots`，避免 `OneShape()` 合并成单一 Shape；配合 `BRepTools::Clean` 与三角网缓存 |
+| PythonOCC 与 C++ 行为不一致 | 版本口径不同：PythonOCC 的发行版（社区构建/OCC 官方 pip 包）滞后于 OCCT C++ 版本；先打印 `OCCT.Version_SimpleVersion()` 再决定 API 分支 |
 
 ---
 

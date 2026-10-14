@@ -40,6 +40,20 @@ LightningCAD 是一套面向装配式建筑围护结构深化设计的 CAD 插�
 
 ---
 
+## 环境准备
+
+| 项 | 要求 |
+|----|------|
+| 操作系统 | 64 位 Windows（AutoCAD 2019/2020 受支持的版本及以上） |
+| 运行时 | .NET Framework 4.8 |
+| CAD 平台 | AutoCAD R23.0 / R23.1（2019/2020），或 ZWCAD 2022+，二选一即可 |
+| 授权 | 30 天试用，注册登录后由桌面客户端管理（SM2 国密加密认证，5 分钟心跳校验） |
+| 安装包 | WixSharp 打包的 MSI，随桌面客户端分发（非开源，无公开仓库与 NuGet 包） |
+
+安装与激活流程：安装并启动桌面客户端 → 邮箱注册 / 登录 → 客户端自动扫描本机 CAD 并注册插件 → 客户端通过 .scr 脚本拉起 CAD 加载插件。插件加载失败时优先检查 CAD 的 `TRUSTEDPATHS` 信任路径与 .NET Framework 4.8 是否就位。日志在 `%AppData%\FsLt\Logs\`（Serilog）。
+
+---
+
 ## 技术架构
 
 ### 技术栈
@@ -64,7 +78,7 @@ LightningCAD 是一套面向装配式建筑围护结构深化设计的 CAD 插�
 
 使用条件编译符号为 AutoCAD 和 ZWCAD 编译独立 DLL：
 
-```
+```text
 AC_2019/    → AutoCAD R23.0 (2019)
 AC_2020/    → AutoCAD R23.1 (2020)
 ZW_2022/    → ZWCAD 2022+

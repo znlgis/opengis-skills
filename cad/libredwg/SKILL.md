@@ -200,6 +200,10 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 | 写入失真 | 启用 `--enable-write` 编译；优先使用 DXF 出口 |
 | 中文文字乱码 | 编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI_936）；优先用 `dwgread -O JSON` 输出 UTF-8，或对 DXF 输出用 iconv 转码 |
 | 引用块缺失 | 解析 `INSERT` 时跟随 `BLOCK_HEADER` 引用 |
+| 脚本里 `dwg2dxf` 卡在"覆盖已存在文件"确认 | 加 `-y` 免确认（`dwg2dxf -y`、`dxf2dwg -y`），CI 里必带 |
+| 只装了 `libredwg-dev` 却没有 `dwgread` | Debian/Fedora 把命令行工具单独打包：`libredwg-tools`（另有 `libredwg0` 运行库）；只装开发包不会带来 CLI |
+| 写出的 DWG 其它软件打不开 | DWG 写入器（`dxf2dwg`/`dwgwrite`，需 `./configure --enable-write` 构建）覆盖面仍不完整；稳妥做法是停在 DXF：`dwg2dxf` 读出 → 编辑 DXF → 交 AutoCAD/ODA 侧另存 DWG |
+| GeoJSON 里线型丢失或几何不闭合 | GeoJSON 只导出可平面化的几何；需要保形状先 `dwg2SVG` 或 `dwg2dxf`，在 DXF 层面做处理再回转 |
 
 ---
 

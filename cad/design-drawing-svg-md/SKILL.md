@@ -14,9 +14,13 @@ tags:
 
 > **技能定位：** 设计图 SVG+MD 双载体记录方法论——把"会画不懂"的矢量 PDF 工程图，转化为大模型能准确理解、指认与复刻的交付物。
 >
+> **项目地址：** 无上游项目仓库——本技能为内部方法论，正文与配套脚本、参考文档均位于本仓库 `cad/design-drawing-svg-md/`，随仓库以 MIT 分发（见 [LICENSE](../../LICENSE)）。
+>
 > **方法来源：** 一套钢结构施工图数字化执行方案的固化与泛化；文中数字为示例值或多图实测值，执行时以实际图纸实测为准。
 >
 > **适用输入：** 矢量线画 + 无文字层的 PDF 工程图（彩色分层或单色均可）。
+>
+> **依赖版本：** Python 3.10+（脚本使用 `str | None` 等 3.10 语法）＋ PyMuPDF ＋ NumPy ＋ SciPy ＋ Pillow；PyMuPDF 与 Pillow 的具体版本由 `07_validate.py` 在测量当时写入 `validate.json`，报告读回而非另行探测，保证与交付物同源。
 >
 > **脚本资产：** 本仓库 `scripts/` 目录附带可直接复跑的泛化脚本——共用库 [scripts/common.py](scripts/common.py)、入口配置 [scripts/config.example.json](scripts/config.example.json)、十一阶段脚本 `01_extract.py` … `09_verify_deliverables.py`（执行顺序与门禁见 [reference/pipeline.md](reference/pipeline.md)）。
 
@@ -45,11 +49,48 @@ A0 钢结构施工图（无文字层的矢量线画）为典型用例；任何"�
 
 ---
 
+## 环境准备
+
+```bash
+# Python 3.10+
+pip install pymupdf numpy scipy pillow
+
+# 配置：从样例复制后按本机改路径与图层口径
+cd scripts
+cp config.example.json config.json      # 或运行时 --config /path/to/config.json
+```
+
+`common.py` 的配置解析顺序：命令行 `--config <path>` / `--config=<path>` 优先，否则回退脚本同目录的 `config.json`；两者都找不到时报错退出并提示。`config.json` 覆盖模块级常量（PDF 目录、页面尺寸与旋转、图号前缀、颜色→层映射、OCG 名单、字形阈值、字体路径），因此同一套脚本可换图复用而无需改代码。
+
+需要按本机改的关键项：
+
+| 配置项 | 说明 |
+|---|---|
+| `paths.pdf_dir` / `paths.out` | 源 PDF 目录与输出根目录 |
+| `sheets` | 图号列表（含版本后缀，如 `… R00`），也是命令行传的图号 |
+| `page.w_pt/h_pt/rotation` | 页面尺寸与回正方向，A0 竖放为 `ccw90`、`pt_per_mm=2.83465` |
+| `drawing_no_prefixes` | 图号前缀，用于从标题栏文本中识别本图 |
+| `layering.color_layer` / `ocg_*` | 颜色兜底映射与 OCG 语义名单，换企业模板时必改 |
+| `fonts.cjk` | 中文字体绝对路径，示例值为 `C:/Windows/Fonts/simhei.ttf`，Linux/macOS 须换成本机字体 |
+
+单图执行入口统一为 `python <阶段脚本>.py <图号>`，全链顺序（有依赖，乱序会得到零标签字典）：
+
+```text
+01 → 02 → 03(--all / --contact-sheets / --label-sheets) → 03c → 03d
+   → 03b → 05 → 06 → 04 → 07 → 08 → 09
+```
+
+细节与覆写防护见 [reference/pipeline.md](reference/pipeline.md) §2。
+
+---
+
 ## 核心概念
 
 ### 双载体定位
 
-```
+##### 双载体定位
+
+```text
 原图 PDF（矢量线画 / 无文字层 / 彩色分层）
    │  提取（fitz.get_drawings + 分层：OCG 语义优先 + 颜色兜底）
    ▼
@@ -121,7 +162,7 @@ MD（魂·阅读主线） ◄── ID 互联（view/dim/balloon/prim-id + cross
 
 MD 参数坐标（x, y）= 视图局部 mm，原点 = 视图 bbox 左下角，X 右 Y 上；s = 2.83465 / 比例分母（pt/mm）：
 
-```
+```text
 X_L = x·s + tx          Y_L = −y·s + ty
 页面 pt（竖放）：x_p = W − Y_L          y_p = X_L
 ```
@@ -133,7 +174,7 @@ X_L = x·s + tx          Y_L = −y·s + ty
 
 ---
 
-## 生产与校验流水线（11 步）
+## 典型工作流：生产与校验流水线（11 步）
 
 完整职责、脚本执行顺序、关键依赖与门禁矩阵见 [reference/pipeline.md](reference/pipeline.md)；本节只留步骤索引 + 门禁矩阵。文中数字均为多图实测值。**语义步骤号 ≠ 执行顺序**（如 06 SVG 生成在 04 MD 增补之前执行），执行顺序以 [reference/pipeline.md](reference/pipeline.md) §2 为准。
 
@@ -249,6 +290,43 @@ X_L = x·s + tx          Y_L = −y·s + ty
 | 为对齐基线数字而调参/加机制 | 基线不吻合先做参数扫描取证，证不可弥合后按「记录并解释」登记，不改机制凑数 |
 | 校验由生成器自判（「自己说自己通过」） | 官方 09 之外另立不复用其判定的审计（spec_audit + final_audit）；FAIL 先定性（口径错 / 真缺陷）再动手 |
 | metadata 裸 JSON 含中文/特殊字符破坏 XML | 用 `<![CDATA[...]]>` 包裹 |
+
+---
+
+## 最佳实践
+
+1. **先跑门禁再读图**：任何交付前先过 `09_verify_deliverables.py` 的硬门禁；门禁不过就回对应阶段修正，不放行、不手工补数字。
+2. **基线只解释不调参**：视图数、逐层图元数是聚类与分层的输出。与参照值不符时先做参数扫描取证，证明确属机制差异后登记"记录并解释"，禁止为凑数字加机制。
+3. **改签名函数必从 `01` 起重跑**：glyph sid 由 `01` 落盘，后续脚本只读不重算；从中间步骤重跑会让改动静默失效。
+4. **同源生成，禁手改**：crosswalk 与 SVG `<metadata>` 由脚本从 MD 生成；手改任一份会造成双载体漂移。
+5. **渲染口径固定**：校验、叠合、消费固定同一渲染器与版本，`scale=2.0`；反向重绘降采样会糊到无法叠合。
+6. **不清项显式登记**：读不出、冲突的值进 MD 的 unclear 章，不臆造材料/重量；BOM 缺失时降级为"未提供 + 已识别零件编号"。
+7. **换版走流水线**：R00→R01 重跑全链并 diff 出变更单，ID 与版本号绑定，避免只改 MD 不改 SVG。
+8. **审计独立于生成器**：`spec_audit` / `final_audit` 从磁盘交付物与源 PDF 重算，FAIL 先定性（口径错还是真缺陷）再动手。
+
+---
+
+## 常见问题
+
+| 问题 | 原因与处置 |
+|---|---|
+| 脚本报"找不到配置" | 未传 `--config` 且脚本同目录无 `config.json`；复制 `config.example.json` 为 `config.json` 或显式传路径 |
+| 分层只有五层 | title-block 没独立成层：确认 OCG 名单里能命中 `PDM_Title`，否则按 `layering.ocg_*` 补企业模板的图层名 |
+| 字典全零标签 | 执行顺序错。`03b` 必须在 `03c`/`03d` 之后（它读 `glyph_labels.json`），且 `03` 要跑 `--contact-sheets` 才能更新 `templates.json` |
+| 竖排文字坐标整体错位 | 竖排归一化式写成了 `(y, 1−x)`；正确为 `(x,y)→(1−y,x)`，并用逐视图 `self_check` 双界断言拦截 |
+| 严格 IoU 只有 0.1 上下 | 发丝线抗锯齿导致的假性偏低；叠合改用 2px 膨胀的 recall/precision/F1，门禁只看 recall≥0.99 |
+| 中文字体缺字 | `fonts.cjk` 还是 Windows 路径；改为本机字体（`03d` 加载失败会回退位图字体，不致命但行格图标签可能缺字） |
+| SVG 里细线消失 | 渲染器吞掉 `shape-rendering=crispEdges` 的细线；交付 SVG 不带该属性，并剔除无描边的纯白背景矩形 |
+| 计数链对不上 | `drawings→bg→kept→SVG path→MD prim_ids` 五个口径要逐项对账，差异常来自整页白底矩形与 path 合并 |
+
+---
+
+## 相关技能
+
+- **libredwg** — DWG/DXF 读写与 libredwg-python 映射，有文字层的正式图纸可直接走该路径：[../libredwg/SKILL.md](../libredwg/SKILL.md)
+- **qcad** — DXF 编辑与命令行转换（`qcad -autoclose` 导出矢量格式）：[../qcad/SKILL.md](../qcad/SKILL.md)
+- **clipper2** — 多边形布尔与偏移，叠合容差/膨胀类计算的库化替代：[../clipper2/SKILL.md](../clipper2/SKILL.md)
+- **ifoxcad** — AutoCAD .NET 二次开发与图纸数据提取：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 
 ---
 

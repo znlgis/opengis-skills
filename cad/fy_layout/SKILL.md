@@ -17,7 +17,11 @@ tags:
 >
 > **所属平台：** 飞扬集成设计平台（LightCAD / LightBIM）
 >
-> **许可证：** CC-BY-NC 4.0
+> **许可证：** CC-BY-NC 4.0（README「授权协议」章，非商业使用）
+>
+> **版本：** 仓库无公开 Release/Tag，以 master 为准（最后推送 2026-03-16）；插件工程锁 `net8.0-windows`，而平台主仓 [lightcad1](https://github.com/znlgis/lightcad1) 已迁到 .NET 10，两套 SDK DLL 不可混用
+>
+> **配套教程：** <https://znlgis.github.io/cad/LightCAD/>（飞扬平台 20 章）
 
 ## 概述
 
@@ -65,7 +69,7 @@ cd FY_Layout
 
 ## 项目结构
 
-```
+```text
 FY_Layout/
 ├── LightBIM.sln                  # 解决方案文件
 ├── Libs/                         # 飞扬平台 SDK DLL（LightCAD.Core、LightCAD.Drawing 等）
@@ -353,7 +357,8 @@ public static TabItem LayoutItem = new TabItem
 | `OpenOuterLine` | OPL | `OpenLineAction` | `ExecCreateOpenLine` | 绘制开门边线 |
 | `PlateBuilding` | W | `PlateBuildingAction` | `ExecCreate` | 编辑板房布置 |
 | `SetBuildGroup` | W | `PlateBuildGroupAction` | `SetGroup` | 设置板房楼栋分组 |
-| `PlateUBuild` | W | `PlateBuildGroupAction` | `ExecCreate` | 创建板房楼栋 ⚠ 快捷键 W 与 Fence/PlateBuilding/SetBuildGroup 冲突 |
+| `PlateUBuild` | W | `PlateBuildGroupAction` | `ExecCreate` | 创建板房楼栋 ⚠ 快捷键 W 已被 Fence/PlateBuilding/SetBuildGroup/jisuang 共用，实际生效以后注册的为准 |
+| `jisuang` | W | — | — | 占位命令，方法体全部注释、仅返回 `CommandResult.Succ()`（示例留下的骨架，勿当作可用功能） |
 | `SelRedLinesForArrange` | SRFA | `TemComAttriAction` | `ExecCreate` | 选择红线生成排布方案 |
 | `DrawOrAdjust` | DRAD | `DrawOrAdjustAction` | `ExecCreate` | 绘制或调整 |
 
@@ -361,6 +366,44 @@ public static TabItem LayoutItem = new TabItem
 
 > Action 模式、Provider 模式与典型二次开发场景的完整说明见 [reference/action-provider.md](reference/action-provider.md)
 > 常用数学库 API 完整参考见 [reference/math-api.md](reference/math-api.md)
+
+## 典型工作流
+
+### 工作流一：跑通示例插件
+
+1. `git clone https://github.com/znlgis/FY_Layout.git`，用 VS2022（17.5.5+）打开 `LightBIM.sln`
+2. 确认 `QdLayout` / `QdLayoutProvider` 引用的是 `Libs/` 下的飞扬 SDK DLL（不是 NuGet 上的同名包）
+3. 生成解决方案，插件 DLL 输出到 `Build/`，Provider 输出到 `Build/Providers`
+4. 启动 `飞扬主程序/lightcad.EXE`，新建图纸后在命令行输入 `Fence`（或别名 `W`）验证围栏绘制
+5. 依次试 `LW`（草坪多段线）、`LWRC`（草坪矩形）、`PB`（拟建建筑），并切到三维视图确认实体生成
+6. VS 菜单「调试 → 附加到进程」选中 `lightcad` 进程，在 `FenceAction.ExecCreate` 上下断点跟一遍交互
+
+### 工作流二：新增一个场布元素（以"临时板房配电箱"为例）
+
+1. 在 `QdLayout/` 下新建目录，按 `QdLawnDef`/`QdLawn` 复制骨架：`ElementType` 定义 + 元素类（继承 `LcElement`，实现属性读写与序列化）
+2. `ElementType` 的 GUID 用 `Guid.ParseExact("…", "B")` 写死且全局唯一，`Name`/`DispalyName` 与已有元素不重名
+3. 在 `QdLayoutProvider` 里加 Shape/Solid Provider：输入轮廓与参数，输出 `Curve2dGroupCollection` / `Solid3dCollection`，Provider UUID 同样唯一
+4. 写 `XxxAction : ` 平台 Action 基类，实现 `ExecCreatePoly` / `ExecCreateRec` 两类交互，几何变换前先 `Clone()`
+5. 在 `LayoutCmds.cs` 加 `[CommandMethod(Name = "…", ShortCuts = "…")]`，方法体只做 `new XxxAction(docEditor).ExecCreate(args); return CommandResult.Succ();`
+6. 在插件入口 `ILcPlugin.Loaded()` 注册元素类型与 Action 字典，`Completed()` 里 `AppRuntime.UISystem.AddInitTabItems` 挂 TabItem/TabButton
+7. 重新生成 → 启动主程序 → 命令行执行新命令 → 附加进程调试确认二维形状与三维实体都出图
+
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 找不到 `LightCAD.Core` 等引用 | 示例工程引用 `Libs/` 目录内的飞扬主体 DLL，需保留仓库原始结构；不要把 SDK 换成 NuGet 包 |
+| 插件加载但命令不出现 | 命令需 `[CommandClass]` 标注类 + `[CommandMethod]` 标注方法；确认输出 DLL 与 `plugins.json` 指向同一目录 |
+| 输入 `W` 出来的不是围栏 | `W` 被 `Fence`/`PlateBuilding`/`SetBuildGroup`/`PlateUBuild`/`jisuang` 共用，别名解析结果取决于注册顺序；给新命令换唯一别名，别沿用 `W` |
+| 二维有线、三维空白 | Shape Provider 与 Solid Provider 是两处注册，检查 `QdLayoutProvider` 是否输出到 `Build/Providers` 且被主程序扫到 |
+| 元素位置越改越乱 | 对 `Vector3`/曲线对象做变换前必须 `Clone()`，直接改会污染源数据 |
+| 菜单没挂上 | `TabItem` 只能在 `Completed()` 注册，`Loaded()` 阶段 UI 系统尚未就绪 |
+| 主程序闪退且日志提到序列化 | `ElementType` GUID 被改动导致老图纸读不出；GUID 一经发布不可变 |
+| 附加进程断不住点 | 需先启动 `lightcad.EXE` 再附加；插件 DLL 要以 Debug 配置生成并携带 pdb |
+
+---
 
 ## AI 使用建议
 

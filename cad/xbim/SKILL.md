@@ -205,6 +205,10 @@ facility.WriteXls("out.xlsx", out _);     // Excel 格式（COBie 标准）
 | 几何精度异常 | 设置 `ModelFactors`；用 OCCT `ShapeFix` |
 | Linux 上几何 | 使用 .NET 几何引擎（受限），或迁移至 `Xbim.WebUI` |
 | 模型大于 2GB | 切换为 Esent 后端，分批处理 |
+| `.wexbim` 里看不到构件 | 几何要先构建：`new Xbim3DModelContext(model).CreateContext()`，再 `Write`；几何引擎仅 Windows x64 可用 |
+| 调不到 `ToCobieLiteUkAsync()` | COBie 支持在 `Xbim.CobieLiteUk` 包里，`Xbim.Essentials` 不含，需单独安装 |
+| 打开 IFC4x3 文件不识别 | 用 6.x 的 `Xbim.Ifc4x3`（6.x 已支持 IFC4x3_ADD2），5.x 及更早不支持 |
+| 另存的 IFC 缺少应用与作者信息 | `IfcStore.Create` / `Open` 时传 `XbimEditorCredentials`（应用名、标识、作者） |
 
 ---
 

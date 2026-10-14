@@ -19,6 +19,8 @@ tags:
 > **API（Python）：** <https://docs.kicad.org/doxygen-python/>
 >
 > **许可证：** GPL-3.0+
+>
+> **最新稳定版：** 10.0.6（GitHub 上最新的已发布 Release，2026-08-29，见 [Releases](https://github.com/KiCad/kicad-source-mirror/releases)）；镜像仓库已出现 `10.0.7` 标签，安装时以 [kicad.org/download](https://www.kicad.org/download/) 的平台包为准。版本号 `10.99.0` 是下一大版本（11.0）系列的开发版
 
 ## 概述
 
@@ -36,7 +38,7 @@ KiCad 主要程序：
 | BOM 工具 | 物料清单 |
 | CLI（KiCad 7+） | 自动化（`kicad-cli`） |
 
-当前最新稳定版为 **10.0.x**（截至2026年9月，见 [KiCad Downloads](https://www.kicad.org/download/)）。KiCad 7+ 相对 6.x 的改进：
+当前稳定线为 **10.0.x**（最新 10.0.6，见文首版本行）。KiCad 7+ 相对 6.x 的改进：
 
 - 全新原生 Python API（`pcbnew`），支持脚本扩展
 - 标准 IPC-2581 输出
@@ -96,7 +98,7 @@ brew install --cask kicad
 
 ## 制造输出（Gerber + Drill）
 
-```
+```text
 File → Plot
   Layers: F.Cu, B.Cu, F.Mask, B.Mask, F.Silkscreen, B.Silkscreen, Edge.Cuts (+ inner)
   Format: Gerber (X2 推荐)
@@ -112,7 +114,7 @@ File → Plot
 
 ---
 
-## CLI 自动化（KiCad 7+）
+## 命令行自动化（CLI，KiCad 7+）
 
 ```bash
 # 原理图导出 PDF
@@ -158,32 +160,9 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 
 ---
 
-## 性能与最佳实践
-
-1. **使用项目级符号/封装库**，便于版本管理
-2. **网络类（Net Class）**预设差分对 / 高速信号宽度间距
-3. **覆铜后及时 Refill Zones (`B`)** 检查
-4. **DRC** 在每次重要修改后运行；不要忽略红色错误
-5. **3D 模型**：使用 STEP 比 WRL 体积小且更适合 STEP 联合导出
-6. **多人协作**：用 Git LFS 管理 .kicad_pcb；避免冲突
-
----
-
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 元件找不到 footprint | 在 Symbol 属性中绑定 footprint，或用 CvPcb 重新分配 |
-| 中文丝印 | 选支持中文的 TTF（KiCad 6+ 起支持 TTF/OTF）；更早版本仅 stroke 字体 |
-| Gerber 不全 | 板厂常需要 `F.Mask/B.Mask/F.Silk/B.Silk/Edge.Cuts/F.Cu/B.Cu` + 钻孔 |
-| 覆铜失效 | 重新 Refill；检查热焊盘连接 |
-| 嘉立创不识别 | 输出格式选 X2；勾选 `Plot pad on silk` 关闭 |
-
----
-
 ## 典型工作流
 
-```
+```text
 新建 Project (.kicad_pro)
     │
     ├── 1. 原理图 (.kicad_sch)：放置元件 → 连线 → 注释 → 总线 → 分页
@@ -219,6 +198,29 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 4. `kicad-cli pcb export drill project/board.kicad_pcb -o gerber/`
 5. `kicad-cli pcb export pos project/board.kicad_pcb --format csv -o pos.csv`
 6. 打包 Gerber + Drill 为 ZIP 上传至构建产物
+
+---
+
+## 性能与最佳实践
+
+1. **使用项目级符号/封装库**，便于版本管理
+2. **网络类（Net Class）**预设差分对 / 高速信号宽度间距
+3. **覆铜后及时 Refill Zones (`B`)** 检查
+4. **DRC** 在每次重要修改后运行；不要忽略红色错误
+5. **3D 模型**：使用 STEP 比 WRL 体积小且更适合 STEP 联合导出
+6. **多人协作**：用 Git LFS 管理 .kicad_pcb；避免冲突
+
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 元件找不到 footprint | 在 Symbol 属性中绑定 footprint，或用 CvPcb 重新分配 |
+| 中文丝印 | 选支持中文的 TTF（KiCad 6+ 起支持 TTF/OTF）；更早版本仅 stroke 字体 |
+| Gerber 不全 | 板厂常需要 `F.Mask/B.Mask/F.Silk/B.Silk/Edge.Cuts/F.Cu/B.Cu` + 钻孔 |
+| 覆铜失效 | 重新 Refill；检查热焊盘连接 |
+| 嘉立创不识别 | 输出格式选 X2；勾选 `Plot pad on silk` 关闭 |
 
 ---
 

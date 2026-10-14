@@ -219,6 +219,10 @@ c.Execute(ctUnion, solution, pftNonZero, pftNonZero);
 | 偏移产生自相交 | 偏移前 `SimplifyPolygon` |
 | 闭合 path 多余首尾点 | Clipper 不需要重复首点 |
 | Mac/Linux 编译失败 | 启用 `use_int32`/`use_xyz` 对应宏 |
+| 布尔结果丢了孔洞层级 | `Execute` 的出参换成 `PolyTree`（顶层 `Childs` 为外环、其子节点为孔），不要用扁平的 `List<List<IntPoint>>` |
+| 外扩后尖角被削平或出现毛刺 | 按形状选 `JoinType`：尖角用 `jtMiter`（配合 `MiterLimit`）、圆弧用 `jtRound`、平角用 `jtSquare`；内缩毛刺先 `CleanPolygon` |
+| 开放线偏移结果不是预期条带 | `EndType` 必须是 `etOpenButt`/`etOpenSquare`/`etOpenRound`，误用 `etClosedPolygon` 会把线首尾闭合 |
+| 面积正负号看不懂 | `Clipper.Area` 的符号就是朝向：正为外环、负为孔；需要翻转用 `ReversePath`，判断用 `Orientation` |
 
 ---
 

@@ -23,6 +23,8 @@ tags:
 > **Python API：** <https://wiki.freecad.org/FreeCAD_Scripting_Basics>
 >
 > **许可证：** LGPL-2.0+
+>
+> **最新稳定版：** 1.1.4（2026-09-28，1.1.x 系列最后一个维护版本，见 [GitHub Releases](https://github.com/FreeCAD/FreeCAD/releases)）
 
 ## 概述
 
@@ -62,7 +64,7 @@ brew install --cask freecad
 conda install -c conda-forge freecad
 ```
 
-FreeCAD 1.x 起合并了大量长期分支（如 PartDesign Toponaming 修复）。当前稳定版 **1.1.3**（2026-07 发布，参见 [FreeCAD Releases](https://github.com/FreeCAD/FreeCAD/releases)）。
+FreeCAD 1.x 起合并了大量长期分支（如 PartDesign Toponaming 修复）。当前稳定版 **1.1.4**（2026-09-28 发布，官方说明这是 1.1.x 系列最后一个维护版本；该版包含两处「打开恶意构造的 FCStd 文件」相关的文件处理安全修复，旧版均受影响，建议升级，参见 [FreeCAD Releases](https://github.com/FreeCAD/FreeCAD/releases)）。
 
 ---
 
@@ -202,7 +204,7 @@ freecad   --console <<<'doc=App.newDocument(); ...'
 
 | 问题 | 解决 |
 |------|------|
-| Toponaming 在编辑后特征丢失 | 升级到 FreeCAD ≥ 1.1.1（2026-04 引入拓扑命名修复；当前稳定版 1.1.3） |
+| Toponaming 在编辑后特征丢失 | 升级到 FreeCAD ≥ 1.1.1（2026-04 引入拓扑命名修复；当前稳定版 1.1.4） |
 | 中文文件名编码 | 使用 UTF-8；Windows 下避免 GBK 路径 |
 | 导出 STEP 缺少颜色 | 用 STEP AP242 或在 ImportSettings 启用颜色 |
 | Sketcher 求解失败 | 删除冗余约束、检查 DoF |

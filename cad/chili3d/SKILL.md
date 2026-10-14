@@ -1,6 +1,6 @@
 ---
 name: chili3d
-description: "Use when building browser-based 3D CAD applications with WebAssembly — STEP/B-Rep visualization, measurement tools, sectioning. Chili3D: pure Web 3D CAD built on OCCT.js compiled to WASM with TypeScript API."
+description: "Use when building or extending browser-based 3D CAD in TypeScript with Chili3D — npm-workspaces source build (rspack), chili-wasm Open CASCADE bindings, command and Plugin contracts with .chiliplugin packaging, STEP/IGES/BREP/STL exchange, ribbon and i18n contributions, measurement tools. Chili3D: a pure-web parametric CAD that runs OCCT in the browser."
 tags:
   - web
   - 3d
@@ -14,21 +14,27 @@ tags:
 
 > **项目地址：** <https://github.com/xiangechen/chili3d>
 >
-> **在线体验：** <https://chili3d.com/>
+> **在线体验：** <https://chili3d.com/>（Cloudflare 部署：<https://chili3d.pages.dev>）
 >
 > **许可证：** AGPL-3.0
+>
+> **最新稳定版：** 0.7.1（GitHub tag `0.7.1`，2026-09-19；仓库内各包版本一致，npm 上仅 `@chili3d/core` 已发布 0.7.0）
+>
+> **中文教程：** <https://znlgis.github.io/cad/chili3d/>
 
 ## 概述
 
 Chili3D 主要特性：
 
-- **纯前端 CAD**：基于 Three.js + OCCT.js（WebAssembly）
-- **参数化建模**：草图、特征树、约束求解
-- **基础几何**：立方体、圆柱、棱柱、扫掠、放样、布尔
-- **修饰**：圆角、倒角、抽壳
-- **数据交换**：STEP / IGES / BREP / STL / OBJ / glTF
-- **保存格式**：自有 JSON 项目格式
-- **国际化**：内置中/英文
+- **纯前端 CAD**：基于 Three.js + 自研 `chili-wasm`（Emscripten 直接绑定 Open CASCADE，源码在仓库 `cpp/`，不是 opencascade.js）
+- **参数化建模**：草图、特征树、捕捉与追踪（对象捕捉 / 工作平面捕捉 / 轴追踪 / 特征点识别）
+- **基础几何**：立方体、圆柱、圆锥、球、棱锥、环面；2D 直线/圆弧/圆/椭圆/矩形/多边形/贝塞尔
+- **构造运算**：布尔（并/差/交）、拉伸、旋转、扫掠、放样、偏移曲面与厚实体、线性/圆形阵列、形状检查与修复
+- **编辑**：倒角、圆角、修剪、打断、分割、缝合、简化、特征移除、子形状操作、复合体炸开
+- **测量**：角度、长度、长度和 / 面积和 / 体积和
+- **数据交换**：STEP / IGES / BREP / STL 导入导出，完整撤销重做事务栈
+- **插件系统**：`plugins/` 内置 helloworld-js / helloworld-ts / macro / visual-programming 示例，`.chiliplugin` 拖拽安装
+- **国际化**：内置中/英文，Office 风格 Ribbon
 
 ---
 
@@ -36,118 +42,182 @@ Chili3D 主要特性：
 
 直接打开 <https://chili3d.com/>：
 
-1. 选择「新建」或导入 STEP/IGES
+1. 选择「新建」或导入 STEP/IGES/BREP
 2. 左侧工具栏：Sketch / Box / Cylinder / Sphere / ...
 3. 右侧属性面板：编辑参数、变换
-4. 顶部菜单：Boolean / Fillet / Chamfer / Shell
-5. 文件 → 导出（STEP/STL/glTF）
+4. 顶部 Ribbon：Boolean / Fillet / Chamfer / Offset / Array
+5. 文件 → 导出（STEP / IGES / BREP / STL）
 
 ---
 
-## 本地部署 / 二次开发
+## 环境准备：本地部署与二次开发
+
+仓库使用 npm workspaces（根目录有 `package-lock.json`），Node + npm 即可：
 
 ```bash
 git clone https://github.com/xiangechen/chili3d.git
 cd chili3d
-pnpm install
-pnpm dev          # 本地开发服务器（rspack dev）
-pnpm build        # 静态构建（rspack build）
+npm install
+
+npm run dev           # rspack dev server，http://localhost:8080
+npm run build         # 生产构建
+
+npm run test          # Rstest + Happy-DOM 全量测试
+npm run testc         # 带覆盖率
+npm run check         # Biome lint + 自动修复
+npm run format        # Biome + clang-format（TS 与 C++）
 ```
 
-构建产物可直接部署到任何静态托管（Nginx / Cloudflare Pages / GitHub Pages）。
+自研 WASM 模块已随仓库提供（`packages/wasm/lib`），只有需要改 C++ 绑定时才重新编译：
+
+```bash
+npm run setup:wasm    # 一次性准备 Emscripten/CMake 依赖
+npm run build:wasm    # cmake --preset release 编译，产物回拷到 wasm 包 lib
+```
+
+Docker 部署（`compose.yml` 已在仓库根）：
+
+```bash
+docker compose up -d  # 构建并在 http://localhost:8080 提供服务
+```
+
+构建产物是静态站点，可直接部署到 Nginx / Cloudflare Pages / GitHub Pages。
 
 ---
 
 ## 项目结构
 
-```
-packages/
-├── core/           # 模型、命令、应用框架（@chili3d/core）
-├── three/          # Three.js 渲染（@chili3d/three）
-├── wasm/           # OCCT.js WebAssembly 桥接（@chili3d/wasm）
-├── builder/        # 拉伸/旋转/扫掠/放样等特征构建器（@chili3d/builder）
-├── element/        # Web Components 控件
-├── parametric/     # 参数化功能定义
-├── ui/             # UI 组件
-├── web/            # 主 Web 应用（@chili3d/web）
-├── app/            # 应用入口
-├── storage/        # 项目存储
-├── i18n/           # 国际化
-└── ai/             # AI 助手集成
+```text
+chili3d/
+├── cpp/                    # chili-wasm：CMake + Emscripten 绑定 Open CASCADE
+│   └── src/                # opencascade.cpp / factory.cpp / converter.cpp / shape.cpp / mesher.cpp ...
+├── plugins/                # 插件示例（npm workspaces 的一部分）
+│   ├── helloworld-js/ helloworld-ts/ macro/ visual-programming/
+├── packages/
+│   ├── core/               # 模型、命令、应用框架（@chili3d/core）
+│   ├── three/              # Three.js 渲染（@chili3d/three）
+│   ├── wasm/               # chili-wasm 的 TS 封装（@chili3d/wasm）
+│   ├── builder/            # 拉伸/旋转/扫掠/放样等特征构建器（@chili3d/builder）
+│   ├── element/            # Web Components 控件（@chili3d/element）
+│   ├── parametric/         # 参数化功能定义
+│   ├── ui/                 # UI 组件
+│   ├── web/                # 主 Web 应用（@chili3d/web）
+│   ├── app/                # 应用入口（@chili3d/app）
+│   ├── storage/            # 项目存储
+│   ├── i18n/               # 国际化
+│   └── ai/                 # AI 助手集成（@chili3d/ai，依赖 @anthropic-ai/sdk 与 openai）
+├── rspack.config.ts        # 打包与 dev server
+├── rstest.config.ts        # 测试（rstest + happy-dom）
+└── biome.json              # lint / format（4 空格、110 列、双引号）
 ```
 
 ---
 
-## 嵌入到自有应用
+## 二次开发的正确姿势
 
-```html
-<div id="cad" style="width:100%;height:100vh"></div>
-<script type="module">
-  import { Application } from '@chili3d/web';
-  const app = new Application(document.getElementById('cad'));
-  await app.start();
-</script>
-```
+Chili3D 是**应用 + 插件**模型，不是可 `npm install` 的嵌入式 SDK：`@chili3d/*` 中只有 `@chili3d/core` 发布到了 npm（0.7.0），`web/wasm/app/builder` 等仍是工作区包。因此二次开发有两条路：
 
-或作为 iframe：
+1. **写插件**（推荐）：在 `plugins/` 下建包，导出 `Plugin` 对象，`npm run package` 产出 `.chiliplugin`，拖拽进应用安装。
+2. **改源码**：fork 仓库，在 `packages/*` 内扩展（`npm run build` 会同时构建应用与 `plugins/`）。
+
+整站嵌入自有系统时可用 iframe，但 WASM 依赖 `SharedArrayBuffer`，宿主站点必须返回 COOP/COEP 头：
 
 ```html
 <iframe src="https://chili3d.com/" allow="cross-origin-isolated"
         style="width:100%;height:100vh;border:0"></iframe>
 ```
 
-> WebAssembly OCC 需要启用 `SharedArrayBuffer`，要求站点设置 `Cross-Origin-Opener-Policy: same-origin` 与 `Cross-Origin-Embedder-Policy: require-corp`。
-
----
-
-## 使用 OCCT.js 直接构造（脚本扩展）
-
-```ts
-import { occt } from '@chili3d/wasm';   // OCCT.js WebAssembly 模块
-
-const oc = await occt();
-const box = new oc.BRepPrimAPI_MakeBox_2(100, 60, 30).Shape();
-// 进一步通过 @chili3d/core 的 Visual 对象包装显示
-```
+> 需配置 `Cross-Origin-Opener-Policy: same-origin` 与 `Cross-Origin-Embedder-Policy: require-corp`（或本地 dev server 已是 cross-origin isolated）。
 
 ---
 
 ## 命令系统
 
-Chili3D 命令通过 `Command` 注册：
+命令是 `ICommand` 实现类，用 `command()` 装饰器注册到 `CommandStore`；元数据是 `CommandData`（`key` / `icon` / `toggle` / `helpText` / `helpUrl` / `isApplicationCommand`）：
 
 ```ts
-import { Command } from '@chili3d/core';
+import { command, type I18nKeys, type IApplication, type ICommand, PubSub } from '@chili3d/core';
 
-@Command({ id: 'my.line', display: '我的直线' })
-export class MyLineCommand {
-    async execute(app) {
-        const p1 = await app.input.getPoint('选择起点');
-        const p2 = await app.input.getPoint('选择终点');
-        app.activeView.document.add(LineFactory.byPoints(p1, p2));
+@command({
+    key: 'demo.hello' as any,                       // key 属于 CommandKeys 联合类型
+    icon: { type: 'path', value: 'icons/hello.svg' }, // 也可传 svg/png/url 或字符串
+    helpText: 'demo.hello.description' as any,
+})
+export class HelloWorldCommand implements ICommand {
+    async execute(application: IApplication): Promise<void> {
+        // 应用级通知走 PubSub 默认实例，文案 key 交给 i18n
+        PubSub.default.pub('showToast', 'demo.hello.message' as I18nKeys);
     }
 }
 ```
+
+`IApplication` 暴露 `mainWindow` `dataExchange` `visualFactory` `shapeProvider` `services` `storage` `views` `documents` `pluginManager` `lastCommand` `executingCommand` `activeView`，以及 `newDocument(name)` / `openDocument(id)` / `loadDocument(data)` / `loadFileFromUrl(url)`。需要中途取消的命令继承 `CancelableCommand`（实现 `ICancelableCommand`，带 `cancel()` 与 `disposeStack`）。
+
+---
+
+## 插件契约（Plugin）
+
+`@chili3d/core` 的 `Plugin` 类型是声明式的：把命令、Ribbon、i18n、服务与「AI 手册章节」一次性交给框架。
+
+```ts
+// plugins/my-plugin/src/index.ts
+import type { CommandKeys, Plugin } from '@chili3d/core';
+import { MyCommand } from './commands/my';
+
+const MyPlugin: Plugin = {
+    commands: [MyCommand],
+    ribbons: [
+        {
+            tabName: 'ribbon.tab.manager',
+            groups: [{ groupName: 'ribbon.group.other', items: ['demo.hello' as CommandKeys] }],
+        },
+    ],
+    // 追加到 AI 助手读取的应用手册，让助手知道按钮做什么
+    guide: [{ name: 'My Plugin', content: 'The “My” button …' }],
+    i18nResources: [
+        { language: 'zh-CN', display: '简体中文', translation: { 'command.demo.hello': 'TS 插件' } },
+    ],
+};
+
+export default MyPlugin;
+```
+
+配套文件：`manifest.json`（`name` / `version` / `main: dist/main.js` / `engines.chili3d: ">=0.6"` / `importmap`）与 `importmap.json`（插件运行时外部模块映射）。
+
+---
+
+## 直接调用几何内核
+
+`@chili3d/wasm` 提供 `initWasm()`：浏览器里由 Emscripten 自己取 `.wasm`，Node（如 MCP 服务与集成测试）需传入 `wasmBinary`：
+
+```ts
+import { initWasm } from '@chili3d/wasm';
+
+// 浏览器
+const wasm = await initWasm();
+// Node：需要把二进制读出来
+// const wasm = await initWasm({ wasmBinary: fs.readFileSync('packages/wasm/lib/chili-wasm.wasm') });
+
+// wasm 上挂的是 OCCT 暴露出来的 BRep* / Geom* 类，构造结果再交给 @chili3d/wasm 的
+// converter / factory / shapeProvider 转成 Chili3D 的 shape 与可视对象
+```
+
+`@chili3d/wasm` 的导出面：`initWasm`（wasm.ts）、`converter`、`factory`、`shapeProvider`，另有 `geometry` / `shape` / `surface` / `curve` / `stlWriter` 等内部模块；C++ 侧入口是 `cpp/src/opencascade.cpp`。
 
 ---
 
 ## 文件 I/O
 
-- **保存项目**：菜单 File → Save → `.chili` JSON
-- **导出**：File → Export → STEP/IGES/BREP/STL/OBJ/glTF
-- **导入**：File → Import → 同上 + .chili
+- **项目文件**：应用内保存为 Chili3D 自有 JSON 文档（`IStorage` + `Serialized`），支持完整撤销/重做
+- **导入**：File → Import → STEP / IGES / BREP / STL
+- **导出**：File → Export → STEP / IGES / BREP / STL
+- **插件包**：`.chiliplugin`（拖拽安装）
 
 ---
 
-## 与 Three.js 集成
+## 渲染层（@chili3d/three）
 
-Chili3D 渲染层在 `packages/three`（`@chili3d/three`），可定制材质、光照、PBR：
-
-```ts
-import { ThreeView } from '@chili3d/three';
-const view = ThreeView.fromCanvas(canvas);
-view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-```
+渲染包内是 `threeView.ts` / `threeGeometry.ts` / `threeGeometryFactory.ts` / `threeHelper.ts` / `threeHighlighter.ts` / `materials.ts` / `meshExporter.ts` / `cameraController.ts` / `threeAnnotation.ts` / `outlinePass.js`，负责把 shape 转成 three 几何、高亮、剖面、导出与相机控制。改材质与高亮行为从这里入手，命令与文档逻辑保持在 `@chili3d/core`，不要把 OCCT 调用写进 UI 层。
 
 ---
 
@@ -162,24 +232,31 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 5. 使用布尔运算（Union/Cut/Intersect）组合多个实体
 6. 导出为 STEP/STL 用于下游加工或 3D 打印
 
-### 工作流二：嵌入业务系统作为 Web CAD 组件
+### 工作流二：开发一个插件并装入应用
 
-1. 在项目中安装 `@chili3d/web` 包
-2. 在页面中创建容器 `<div>`，实例化 `Application`
-3. 通过 Command 系统注册自定义绘图命令
-4. 监听文档变更事件，同步模型数据到后端
-5. 利用 OCCT.js 直接构造几何进行批量参数化生成
-6. 构建为静态资源部署到生产环境
+1. 复制 `plugins/helloworld-ts` 作骨架（`manifest.json` + `importmap.json` + `src/index.ts` + `src/commands/`）
+2. 用 `@command({ key, icon, helpText })` 定义命令类，实现 `ICommand.execute(application)`
+3. 在 `Plugin` 对象里声明 `commands` / `ribbons` / `i18nResources` / `guide`
+4. `npm install && npm run build && npm run package` 产出 `.chiliplugin`
+5. 打开 Chili3D，把 `.chiliplugin` 拖进窗口 → Ribbon 出现按钮，点击执行
+6. `npm run test` 与 `npm run check` 通过后提交（Biome：4 空格、110 列、双引号）
+
+---
+
+## 适用场景
+
+- 适合：教育、Web 演示、轻量 3D 建模、插件化定制、浏览器内 STEP/IGES 查看与转换
+- 不适合：大型工业装配、需要严格约束求解的参数化家族建模（仍推荐 FreeCAD / 桌面 OCCT 应用）
 
 ---
 
 ## 性能要点
 
-1. WebAssembly OCCT 单线程（除非启用 pthreads + COOP/COEP）
-2. 大模型加载前先压缩 STEP，导入后转 BREP 缓存
-3. 渲染端使用 LOD：用 BVH 或 Decimator 减面
-4. 频繁布尔操作建议在 Worker 线程中执行
-5. 浏览器内存限制：模型大小通常不超过 100MB STEP
+1. WASM 内核走 `SharedArrayBuffer`，未启用 COOP/COEP 时退化为单线程
+2. 大模型先压缩 STEP，导入后转 BREP 缓存
+3. 渲染端关注 `@chili3d/three` 的几何转换与高亮开销，避免每帧重建 BRep 网格
+4. 频繁布尔运算放在命令内一次性提交，减少撤销栈与网格重生成次数
+5. 浏览器内存有限，STEP 源文件建议控制在百 MB 以内，超出部分服务端处理
 
 ---
 
@@ -187,41 +264,36 @@ view.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
 | 问题 | 解决 |
 |------|------|
-| 加载 OCCT.wasm 失败 | 站点未启用 COOP/COEP；改用 `cross-origin-isolated` |
-| 无法导入 DWG | 暂不支持 DWG，先转 DXF/STEP |
-| 中文菜单 | Settings → Language 切换为中文 |
-| 性能差 | 确认使用 rspack 生产构建（`pnpm build`）；启用浏览器 SIMD |
-| 模型透视错乱 | 检查相机近/远裁剪面与单位 |
-
----
-
-## 适用场景
-
-✅ 教育、Web 演示、轻量 3D 建模、定制配置器、嵌入业务系统
-❌ 大型工业装配、复杂曲面（仍推荐 FreeCAD/OCCT 桌面）
+| 加载 chili-wasm 失败 | 站点未启用 COOP/COEP；确认响应头与 `cross-origin-isolated` |
+| Node 里 `initWasm()` 取不到 wasm | 浏览器外的环境需显式传 `wasmBinary`（Emscripten 无法 fetch） |
+| 无法导入 DWG | 目前不支持 DWG，先转 DXF/STEP |
+| 中文菜单 | 在语言设置中切换中文（内置 zh-CN 资源） |
+| 构建慢或内存溢出 | 用 `npm run build`（rspack 生产构建）；确认未跑 dev 模式产物 |
+| 插件不出现按钮 | 检查 `manifest.json` 的 `main` 路径、`importmap.json` 映射，以及 Ribbon `items` 是否为已注册命令 key |
+| 改 C++ 绑定后无效果 | 需要 `npm run setup:wasm` + `npm run build:wasm`，产物才会回拷到 wasm 包 lib |
 
 ---
 
 ## AI 使用建议
 
-- **推荐工作流模式**：AI 助手应区分两种使用场景——在线建模（引导用户通过 GUI 操作）与二次开发（通过 TypeScript SDK 嵌入）。对后者，优先使用 `@chili3d/wasm` 直接调用 OCCT.js 进行几何构造，而非通过 UI 层间接操作。
-- **关键注意事项**：① WebAssembly OCCT 需要 COOP/COEP 头，部署时必须正确配置；② `SharedArrayBuffer` 依赖 HTTPS 或 localhost；③ OCCT.js 加载较慢（首次约 5-15s），需显示加载进度；④ 浏览器内存有限，大模型应考虑服务端处理。
-- **常用代码模式**：`occt()` 初始化 → `BRepPrimAPI_MakeBox` 等构造几何 → `@chili3d/core` 的 Visual/Document 包装 → 渲染显示。自定义命令继承 `Command` 类，通过 `app.input.getPoint()` 获取用户交互。
+- **推荐工作流模式**：区分「在线建模（引导 GUI 操作）」与「插件开发（TypeScript 写命令）」。插件路径优先复用 `plugins/helloworld-ts` 骨架，按 `Plugin` 契约声明能力，不要臆造应用级启动 API。
+- **关键注意事项**：① COOP/COEP 与 `SharedArrayBuffer` 是运行前提；② WASM 首次加载较慢，需要进度反馈；③ 命令 `key` 属于 `CommandKeys` 联合类型，新增命令要同步 i18n key；④ 浏览器内存有限，大模型应服务端预处理。
+- **常用代码模式**：`@command(...)` 定义命令 → `application.activeView` / `application.documents` 操作当前文档 → `PubSub.default.pub('showToast', key)` 通知 → 几何构造经 `@chili3d/wasm` 的 factory/converter 得到 shape → `@chili3d/core` 的 visual 层显示。
 
 ---
 
 ## 相关技能
 
-- **astral3d** — Web 3D 可视化与数字孪生框架：[../astral3d/SKILL.md](../astral3d/SKILL.md)
-- **lightcad** — 轻量 Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
-- **occt** — 底层 OCCT 几何内核（C++/PythonOCC）：[../occt/SKILL.md](../occt/SKILL.md)
-- **freecad** — 桌面参数化 CAD（同基于 OCCT）：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **astral3d** — Web 3D 可视化与数字孪生框架（glTF/IFC 展示侧）：[../astral3d/SKILL.md](../astral3d/SKILL.md)
+- **occt** — 桌面 C++ 几何内核（chili-wasm 绑定的同一内核）：[../occt/SKILL.md](../occt/SKILL.md)
+- **freecad** — 桌面参数化 CAD（同样基于 OCCT）：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **openscad** — 脚本化 CSG 建模（代码建模范式对照）：[../openscad/SKILL.md](../openscad/SKILL.md)
 
 ---
 
 ## 参考资源
 
 - 仓库：<https://github.com/xiangechen/chili3d>
-- 在线：<https://chili3d.com/>
-- OCCT.js：<https://github.com/donalffons/opencascade.js>
+- 在线应用：<https://chili3d.com/> ｜ Cloudflare 部署：<https://chili3d.pages.dev>
+- 插件示例：仓库 `plugins/helloworld-ts`、`plugins/helloworld-js`
 - 中文教程（znlgis）：<https://znlgis.github.io/cad/chili3d/>
