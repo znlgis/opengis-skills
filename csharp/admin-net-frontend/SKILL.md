@@ -92,7 +92,7 @@ Web/
 
 ### 前置要求
 
-- **Node.js：** >= 18.0.0
+- **Node.js：** ^20.19.0 || >=22.12.0（Vite 7 官方要求；upstream `engines` 字段仍标注 >=18.0.0，安装 Vite 7 时以本要求为准）
 - **包管理器：** pnpm（推荐 10.x）
 
 ### 安装与启动
@@ -126,6 +126,18 @@ VITE_API_URL = /
 ```
 
 ---
+
+## 核心 API 速查
+
+| API / 对象 | 入口 | 说明 |
+|-----------|------|------|
+| API 客户端 | `getAPI(XxxApi)` | 调用 `src/api-services/` 中由后端 Swagger 自动生成的客户端 |
+| 手写请求 | `request({ url, method, params })` | `src/api/` 中的 axios 封装 |
+| 按钮权限 | `v-auth="'xxx:action'"` | 指令控制按钮显示；`useUserStore().userInfo.authBtnList` 可编程式判断 |
+| 状态管理 | Pinia store（`src/stores/`） | 如 `useUserStore` 管理 token 与用户信息 |
+| 实时通讯 | `@microsoft/signalr` HubConnection | 连接后端 `/hubs/*`，`withAutomaticReconnect()` 断线重连 |
+| 国际化 | `useI18n().t()` / 模板 `$t()` | 语言文件位于 `lang/` |
+| API 代码生成 | `api_build/` 脚本（`node index.js`） | 从后端 Swagger 生成 TypeScript API 客户端 |
 
 > 核心模块的完整说明见 [reference/core-modules.md](reference/core-modules.md)
 > 页面开发模板、常用组件与样式主题的完整内容见 [reference/page-templates.md](reference/page-templates.md)
@@ -173,7 +185,7 @@ server {
 
 ### 工作流一：启动与联调
 
-1. Node.js >= 18 + pnpm，`cd Web` 后 `pnpm install`
+1. Node.js ^20.19.0 || >=22.12.0 + pnpm，`cd Web` 后 `pnpm install`
 2. 按环境改 `.env.development` 的 `VITE_API_URL` 指向后端地址
 3. `pnpm run dev` 起开发服务器；后端 Swagger 有变更时先跑 `api_build` 重新生成 API 客户端
 4. 登录联调：密码等敏感数据经 `sm-crypto-v2` 做 SM2 加密后提交
@@ -210,7 +222,7 @@ server {
 
 ### 推荐工作流
 
-1. **环境准备**：Node.js >= 18 + pnpm → `pnpm install` → `pnpm run dev`
+1. **环境准备**：Node.js ^20.19.0 || >=22.12.0 + pnpm → `pnpm install` → `pnpm run dev`
 2. **新增页面**：`src/views/` 下新建目录和 `.vue` 文件 → 后端管理界面配菜单（路由路径 + 组件路径）→ 前端自动加载
 3. **API 对接**：后端 Swagger 更新后运行 `api_build` 脚本自动生成 TypeScript API 客户端 → 用 `getAPI(XxxApi)` 调用
 4. **权限控制**：后端菜单配置按钮权限标识 → 前端用 `v-auth="'xxx:action'"` 指令控制按钮显示
@@ -245,7 +257,7 @@ server {
 5. **环境变量前缀**：Vite 项目中自定义环境变量必须以 `VITE_` 开头
 6. **国密加密**：登录密码等敏感数据前端使用 `sm-crypto-v2` 做 SM2 加密后传输
 7. **SignalR 连接**：需正确配置 Nginx 代理 WebSocket（`/hubs` 路径）
-8. **Node 版本**：要求 Node.js >= 18.0.0
+8. **Node 版本**：要求 Node.js ^20.19.0 || >=22.12.0（Vite 7 官方要求）
 
 ---
 

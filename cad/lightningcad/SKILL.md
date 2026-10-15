@@ -1,6 +1,6 @@
 ---
 name: lightningcad
-description: "Use when doing architectural facade panel layout and detailing in AutoCAD or ZWCAD — panel numbering, shop drawing generation, material optimization. LightningCAD: building envelope detailing plugin for AutoCAD/ZWCAD."
+description: "Use when doing architectural facade panel layout and detailing in AutoCAD, ZWCAD or GstarCAD — panel numbering, shop drawing generation, material optimization. LightningCAD: building envelope detailing plugin for AutoCAD/ZWCAD/GstarCAD."
 tags:
   - autocad
   - zwcad
@@ -14,13 +14,15 @@ tags:
   - plugin
 ---
 
-> **产品定位：** 商业软件（非开源），基于 AutoCAD 2019/2020 与 ZWCAD 2022+ 的建筑围护深化设计插件
+> **产品定位：** 商业软件（非开源），面向装配式建筑围护结构深化设计的 CAD 插件，支持 AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）等平台
+>
+> **项目主页/官网：** <https://shandianweihu.com/>
 >
 > **上游文档：** <https://znlgis.github.io/cad/LightningCAD/>
 >
 > **许可证：** 专有商业软件（30 天试用授权，含 SM2 国密加密认证）
 >
-> **运行时：** .NET Framework 4.8 ｜ **CAD 平台：** AutoCAD R23.0/R23.1、ZWCAD 2022+
+> **运行时：** .NET Framework 4.8 ｜ **CAD 平台：** AutoCAD、中望 CAD、浩辰 CAD 等
 
 ## 概述
 
@@ -44,9 +46,9 @@ LightningCAD 是一套面向装配式建筑围护结构深化设计的 CAD 插�
 
 | 项 | 要求 |
 |----|------|
-| 操作系统 | 64 位 Windows（AutoCAD 2019/2020 受支持的版本及以上） |
+| 操作系统 | 64 位 Windows |
 | 运行时 | .NET Framework 4.8 |
-| CAD 平台 | AutoCAD R23.0 / R23.1（2019/2020），或 ZWCAD 2022+，二选一即可 |
+| CAD 平台 | 支持 AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）等平台（具体受支持版本以官网为准） |
 | 授权 | 30 天试用，注册登录后由桌面客户端管理（SM2 国密加密认证，5 分钟心跳校验） |
 | 安装包 | WixSharp 打包的 MSI，随桌面客户端分发（非开源，无公开仓库与 NuGet 包） |
 

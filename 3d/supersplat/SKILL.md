@@ -31,6 +31,8 @@ SuperSplat 是「3D 高斯泼溅领域的 Photoshop + 发布平台」：完全�
 
 > 3DGS 由 Inria 2023 年论文《3D Gaussian Splatting for Real-Time Radiance Field Rendering》提出，相比 NeRF 具备实时渲染、训练快、画质高的优势。
 
+> **可嵌入查看器：** `@playcanvas/supersplat-viewer`（npm 包，当前 1.37.0）是 PlayCanvas 提供的可嵌入网页的高斯泼溅查看器，用于在自有网页中加载并展示导出的高斯模型。
+
 ---
 
 ## 环境准备

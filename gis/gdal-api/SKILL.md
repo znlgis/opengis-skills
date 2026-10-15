@@ -115,7 +115,7 @@ GDAL API 在四种语言中保持一致的类结构，下表列出核心类及�
 | 类 | C++ 头文件 / 模块 | 用途 |
 |---|---|---|
 | `GDALDriver` | `gdal_priv.h` / `osgeo.gdal` | 栅格驱动——注册格式、创建数据集 |
-| `GDALDataset` | `gdal_priv.h` / `osgeo.gdal` | ★ 栅格数据集——打开、读写、获取元数据 |
+| `GDALDataset` | `gdal_priv.h` / `osgeo.gdal` | （推荐）栅格数据集——打开、读写、获取元数据 |
 | `GDALRasterBand` | `gdal_priv.h` / `osgeo.gdal` | 栅格波段——读写像素、获取统计信息 |
 | `GDALColorTable` | `gdal_priv.h` / `osgeo.gdal` | 颜色表——索引颜色映射 |
 | `GDALRasterAttributeTable` | `gdal_priv.h` / `osgeo.gdal` | 栅格属性表 |
@@ -125,8 +125,8 @@ GDAL API 在四种语言中保持一致的类结构，下表列出核心类及�
 | 类 | C++ 头文件 / 模块 | 用途 |
 |---|---|---|
 | `OGRSFDriver` / `GDALDriver` | `ogrsf_frmts.h` / `osgeo.ogr` | 矢量驱动 |
-| `GDALDataset` / `OGRDataSource` | `ogrsf_frmts.h` / `osgeo.ogr` | ★ 矢量数据源——管理图层集合 |
-| `OGRLayer` | `ogrsf_frmts.h` / `osgeo.ogr` | ★ 矢量图层——读写要素、空间过滤 |
+| `GDALDataset` / `OGRDataSource` | `ogrsf_frmts.h` / `osgeo.ogr` | （推荐）矢量数据源——管理图层集合 |
+| `OGRLayer` | `ogrsf_frmts.h` / `osgeo.ogr` | （推荐）矢量图层——读写要素、空间过滤 |
 | `OGRFeature` | `ogr_feature.h` / `osgeo.ogr` | 矢量要素——属性 + 几何 |
 | `OGRFeatureDefn` | `ogr_feature.h` / `osgeo.ogr` | 要素定义——字段结构 |
 | `OGRFieldDefn` | `ogr_feature.h` / `osgeo.ogr` | 字段定义——名称、类型 |
@@ -136,8 +136,8 @@ GDAL API 在四种语言中保持一致的类结构，下表列出核心类及�
 
 | 类 | C++ 头文件 / 模块 | 用途 |
 |---|---|---|
-| `OGRSpatialReference` | `ogr_spatialref.h` / `osgeo.osr` | ★ 空间参考系统——定义 CRS |
-| `OGRCoordinateTransformation` | `ogr_spatialref.h` / `osgeo.osr` | ★ 坐标变换——在不同 CRS 间转换坐标 |
+| `OGRSpatialReference` | `ogr_spatialref.h` / `osgeo.osr` | （推荐）空间参考系统——定义 CRS |
+| `OGRCoordinateTransformation` | `ogr_spatialref.h` / `osgeo.osr` | （推荐）坐标变换——在不同 CRS 间转换坐标 |
 
 ### 各语言模块 / 命名空间对照
 
@@ -337,12 +337,12 @@ src_ds = None                             # 释放数据源
 
 | 场景 | Python | C++ | Java | C# |
 |------|--------|-----|------|-----|
-| 数据处理脚本 | ★ 首选 | | | |
-| 生产级服务 | | ★ 首选 | ★ | ★ |
-| GIS 桌面插件 | ★ | | | |
-| .NET 企业应用 | | | | ★ |
-| Android GIS | | | ★ | |
-| 嵌入式系统 | | ★ | | |
+| 数据处理脚本 | （推荐）首选 | | | |
+| 生产级服务 | | （推荐）首选 | （推荐） | （推荐） |
+| GIS 桌面插件 | （推荐） | | | |
+| .NET 企业应用 | | | | （推荐） |
+| Android GIS | | | （推荐） | |
+| 嵌入式系统 | | （推荐） | | |
 
 ## 相关技能
 

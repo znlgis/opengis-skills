@@ -75,12 +75,12 @@ FY_Layout/
 ├── Libs/                         # 飞扬平台 SDK DLL（LightCAD.Core、LightCAD.Drawing 等）
 ├── 飞扬主程序/                    # 飞扬主程序 lightcad.EXE
 ├── Build/                        # 编译输出目录
-├── QdLayout/                     # ★ 插件主体项目
+├── QdLayout/                     # 重点：插件主体项目
 │   ├── QdLayout.csproj
 │   ├── GlobalUsing.cs            # 全局 using 声明
-│   ├── LayoutPlugin.cs           # ★ 插件入口（ILcPlugin 实现）
-│   ├── LayoutCmds.cs             # ★ 命令注册（[CommandClass] / [CommandMethod]）
-│   ├── LayoutElementType.cs      # ★ 场布元素类型定义
+│   ├── LayoutPlugin.cs           # 重点：插件入口（ILcPlugin 实现）
+│   ├── LayoutCmds.cs             # 重点：命令注册（[CommandClass] / [CommandMethod]）
+│   ├── LayoutElementType.cs      # 重点：场布元素类型定义
 │   ├── LcCurveChangeLoop.cs      # 曲线转换为闭合环工具类
 │   ├── Barrier/                  # 防护栏杆
 │   ├── Berm/                     # 出土道路
@@ -98,7 +98,7 @@ FY_Layout/
 │   ├── Road/                     # 城市道路 / 交叉路口
 │   ├── Site/                     # 场地
 │   └── TemplateArrange/          # 模板排布方案
-└── QdLayoutProvider/             # ★ 形状/实体提供者项目
+└── QdLayoutProvider/             # 重点：形状/实体提供者项目
     ├── QdLayoutProvider.csproj
     ├── GlobalUsing.cs
     ├── QdLayoutProviderRegist.cs # Provider 注册入口（IDllProviderImporter）
@@ -121,7 +121,7 @@ FY_Layout/
 
 | DLL | 命名空间 | 用途 |
 |-----|---------|------|
-| `LightCAD.Core.dll` | `LightCAD.Core` | ★ 核心——元素类型 `ElementType`、文档 `LcDocument`、运行时 `LcRuntime`、组件定义等 |
+| `LightCAD.Core.dll` | `LightCAD.Core` | 重点：核心——元素类型 `ElementType`、文档 `LcDocument`、运行时 `LcRuntime`、组件定义等 |
 | `LightCAD.Drawing.dll` | `LightCAD.Drawing` | 绘图文档——图层、图纸、绘制管理 |
 | `LightCAD.Drawing.Actions.dll` | `LightCAD.Drawing.Actions` | 绘图交互动作基类——`IDocumentEditor`、点拾取、线拾取等 |
 | `LightCAD.MathLib.dll` | `LightCAD.MathLib` | 数学库——`Vector2`、`Vector3`、`Line2d`、`Arc2d`、`Polyline2d`、`Color` 等 |
@@ -357,7 +357,7 @@ public static TabItem LayoutItem = new TabItem
 | `OpenOuterLine` | OPL | `OpenLineAction` | `ExecCreateOpenLine` | 绘制开门边线 |
 | `PlateBuilding` | W | `PlateBuildingAction` | `ExecCreate` | 编辑板房布置 |
 | `SetBuildGroup` | W | `PlateBuildGroupAction` | `SetGroup` | 设置板房楼栋分组 |
-| `PlateUBuild` | W | `PlateBuildGroupAction` | `ExecCreate` | 创建板房楼栋 ⚠ 快捷键 W 已被 Fence/PlateBuilding/SetBuildGroup/jisuang 共用，实际生效以后注册的为准 |
+| `PlateUBuild` | W | `PlateBuildGroupAction` | `ExecCreate` | 创建板房楼栋（注意：快捷键 W 已被 Fence/PlateBuilding/SetBuildGroup/jisuang 共用，实际生效以后注册的为准） |
 | `jisuang` | W | — | — | 占位命令，方法体全部注释、仅返回 `CommandResult.Succ()`（示例留下的骨架，勿当作可用功能） |
 | `SelRedLinesForArrange` | SRFA | `TemComAttriAction` | `ExecCreate` | 选择红线生成排布方案 |
 | `DrawOrAdjust` | DRAD | `DrawOrAdjustAction` | `ExecCreate` | 绘制或调整 |

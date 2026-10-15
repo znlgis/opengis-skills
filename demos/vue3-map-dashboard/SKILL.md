@@ -251,6 +251,15 @@ Dashboard.vue
 - **图表组件**：自研 ECharts 等图表组件时，`onUnmounted` 移除 window resize 监听并 `dispose()` 实例
 - **文档滞后**：README/教程中的 Vite 5 与 echarts-vendor 分包配置与当前仓库（Vite 8 + Rolldown codeSplitting、无 echarts）不一致，以 `package.json` 与源码为准
 
+## AI 使用建议
+
+1. **架构入口**：先读 `src/views/Dashboard.vue`（编排与 `Promise.all` 并行初始化）和三个 composable（`usePersonnel` / `useWeather` / `useRealtimeData`），组件集中在 `src/components/`。
+2. **常见改造点**：地图中心 / 缩放 / 深色样式改 `src/config/map.config.js`；配色改 `src/config/theme.config.js`；更新间隔、重试次数、日志开关改 `src/config/dashboard.config.js`，不要散落魔法数字。
+3. **密钥管理**：天地图 key 经 `.env`（`VITE_TIANDITU_KEY`）注入 `index.html` script 标签；和风天气 key 在 `map.config.js`；两者都不要提交仓库。
+4. **工具复用**：日志 / 计时用 `src/utils/logger.js`，缓存用 `src/utils/cache.js`（过期 + 容量上限），拼音搜索用 `src/utils/search.js`；新增数据模块参考「新增一个可复用的数据模块」工作流。
+5. **遵守既有约定**：composable 在 `onUnmounted` 清理定时器；回调式 API（如 `T.Geocoder`）保留超时兜底模式；免费额度下依赖缓存与控制刷新间隔。
+6. **注意文档滞后**：README / 教程提到的 Vite 5 与 echarts 分包与当前仓库不符（实际 Vite 8 + Rolldown codeSplitting、未内置 echarts），以 `package.json` 与源码为准；要图表需自行安装 echarts 并放入 `ChartCard` 插槽。
+
 ## 常见问题
 
 | 问题 | 解决方案 |

@@ -282,6 +282,15 @@ watch(markers, (val) => {
 - **Cubemap 六面映射**：采用 three.js 命名（px/nx/py/ny/pz/nz），PSV 按材质顺序 [left,right,top,bottom,back,front] 对应 [px,nx,py,ny,pz,nz]
 - **导入合并策略**：校验数组结构、过滤非法标记、丢弃场景不存在与 link 目标缺失的标记、重新分配 id
 
+## AI 使用建议
+
+1. **核心文件**：`src/components/PsvContainer.vue` 是唯一直接操作 Photo Sphere Viewer 的组件（创建 / 销毁 viewer、注册全部插件），联动状态在 `src/composables/useAppState.ts`，场景与默认标记数据在 `src/data/scenes.ts`。
+2. **常见改造点**：换全景内容改 `src/data/scenes.ts`（新场景放入 `public/`，等距圆柱场景补 `links` 接入虚拟导览）；坐标换算算法集中在 `src/utils/geo.ts`；类型定义在 `src/types/index.ts`。
+3. **联动约定**：标记的 `position`（yaw/pitch）与 `data.plan.coordinates` 通过同一 id 关联全景与地图；全景 / 地图点击统一 emit `marker-click` 由 `App.vue` 分发（info 旋转视角、link 切换场景）。
+4. **不要用 `configureLeaflet`**：会导致默认 OSM 底图不加载（灰色空面板）；地图点击监听用 `planPlugin.getLeaflet().on('click', ...)`。
+5. **持久化与导入**：标记存 localStorage（key `map-360-demo:markers:v1`），改标记结构时同步更新 `isValidMarker` 校验与「恢复默认」逻辑；导入会过滤非法数据并重新分配 id。
+6. **插件细节参考**：PSV 插件（markers / plan / virtual-tour 等）的配置与 API 见同批 `3d/photo-sphere-viewer` 技能。
+
 ## 常见问题
 
 | 问题 | 解决方案 |

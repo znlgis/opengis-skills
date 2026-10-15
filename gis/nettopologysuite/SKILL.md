@@ -244,6 +244,15 @@ foreach (var p in points) if (prep.Contains(p)) ...
 - **WKB vs WKT**：WKB 比 WKT 更快更紧凑，数据库交互优先使用 WKB
 - **Z/M 坐标**：`WKBWriter` 需配置 `HandleOrdinates` 保留 Z/M 坐标
 
+## NTS 家族与相关库
+
+| 包 | 用途 |
+|----|------|
+| `NetTopologySuite.IO.VectorTiles` | Mapbox Vector Tiles（MVT）读写 |
+| `NetTopologySuite.IO.GeoJSON` | GeoJSON 读写 |
+| `NetTopologySuite.IO.Esri` | Shapefile（ESRI）读写 |
+| `ProjNet4GeoAPI` | 坐标参考系与投影变换 |
+
 ## 相关技能
 
 - **jts** — JTS Topology Suite（Java 原版）：[../jts/SKILL.md](../jts/SKILL.md)

@@ -69,8 +69,8 @@ Go 是由 Robert Griesemer、Rob Pike 和 Ken Thompson 于 2007 年在 Google �
 brew install go
 
 # Linux（官方二进制）
-wget https://go.dev/dl/go1.27.1.linux-amd64.tar.gz
-sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.27.1.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.27.2.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.27.2.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 
 # Windows
@@ -84,7 +84,7 @@ go env GOROOT          # Go 安装目录
 go env GOPATH          # Go 工作区（默认 ~/go）
 go env GOPROXY         # 模块代理（国内推荐 https://goproxy.cn）
 go env GOSUMDB         # 校验数据库（默认 sum.golang.org）
-go env GO111MODULE     # 模块模式（on，Go 1.22+ 默认）
+go env GO111MODULE     # 模块模式（on，Go 1.16 起默认开启）
 
 # 国内加速
 go env -w GOPROXY=https://goproxy.cn,direct
@@ -118,6 +118,19 @@ go env -w GOSUMDB=sum.golang.google.cn
 | 测试 | `testing` | table-driven 测试、`t.Run` 子测试、`go test -race/-bench`；1.25+ `testing/synctest` 测并发 |
 | 性能剖析 | `runtime/pprof` / `net/http/pprof` | CPU/内存/阻塞剖析 |
 | 模块 | `go mod` | `go mod init/tidy`、`go get`、`go work`（1.18+ workspace） |
+
+---
+
+## 常用生态库
+
+| 库 | 用途 | 仓库 |
+|----|------|------|
+| gin | 高性能 Web 框架，路由与中间件 | <https://github.com/gin-gonic/gin> |
+| testify | 测试断言与 mock（`assert`/`require`/`mock`） | <https://github.com/stretchr/testify> |
+| lib/pq | PostgreSQL 驱动（`database/sql`） | <https://github.com/lib/pq> |
+| go-sql-driver/mysql | MySQL 驱动（`database/sql`） | <https://github.com/go-sql-driver/mysql> |
+| go-redis | Redis 客户端 | <https://github.com/redis/go-redis> |
+| gohook | 键鼠事件钩子（桌面自动化） | <https://github.com/robotn/gohook> |
 
 ---
 

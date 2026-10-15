@@ -303,6 +303,15 @@ export default defineConfig({
 - 首次启动 GeoServer 容器需初始化数据目录，等待 1-2 分钟再访问。
 - 右键菜单等控件对触屏设备支持有限，移动端需另行适配。
 
+## AI 使用建议
+
+1. **两个核心文件**：`src/components/DemoMap.vue`（声明式地图 + 动态图层树 + 控件）与 `src/geoserver/Layers.js`（REST 封装，`GeoServerRestApi.js` 为聚合入口）；`main.js` 只做组件库注册。
+2. **常见改造点**：换 GeoServer 地址 / 端口改 `vite.config.js` 代理的 `target` 并同步认证头；调整默认可见图层改 `DemoMap.vue` 中 `visible` 初值（示例为 `ne:countries` 默认可见）。
+3. **命名空间别混淆**：`Map` / `Layers` / `Sources` / `MapControls` 是 vue3-openlayers 的组件命名空间而非 ol 类，与原生 ol API（参见 `gis/openlayers` 技能）混用时注意对象类型不同。
+4. **数据清洗**：`getLayerGroup(name)` 返回的 `publishables.published` 可能混入非图层对象，必须过滤 `@type !== 'layer'`；图层默认 `visible: false` 惰性加载，不要改成全部可见。
+5. **代理约定**：前端只用相对路径 `/geoserver/...`，Basic 认证由 Vite 代理注入；生产部署换 Nginx 反向代理并同样注入 `Authorization`。
+6. **扩展方向**：沿用 `src/geoserver/` 的封装模式继续实现工作区 / 图层增删改查，即可达成教程规划的「树状服务管理」。
+
 ## 常见问题
 
 | 问题 | 解决方案 |

@@ -30,6 +30,7 @@ GeoPandas 是 Python 地理空间矢量数据处理的核心库，在 pandas Dat
 
 ```bash
 # Conda / Mamba（推荐，自动处理 GEOS/PROJ/GDAL 二进制依赖）
+# 推荐使用 conda-forge/miniforge 发行版（比 Anaconda 轻量）
 conda install -c conda-forge geopandas
 
 # pip（各依赖有预编译 wheel 时可独立安装）

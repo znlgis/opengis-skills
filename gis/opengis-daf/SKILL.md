@@ -237,6 +237,22 @@ dotnet demo/plugin/OpenGisDAF.PluginHostDemo/bin/Release/net10.0/OpenGisDAF.Plug
 
 ---
 
+## AI 使用建议
+
+### 推荐工作流
+
+1. **先读文档与 Demo**：优先阅读 `docs/quickstart.md`、`docs/plan-config-guide.md`、`docs/operator-reference.md`、`docs/cli-reference.md`，并对照 `demo/`（`demo/run-demo.ps1` / `run-demo.sh`）理解方案结构
+2. **先校验、再质检、后分析**：先用 `daf validate --plan <path>` 校验 21 条规则，再用 `qcMode: true` 的质检方案生成 `{plan}.qc-report.json` 修复数据，最后跑分析方案
+3. **串联用 upstream**：多步流程用 `InputBinding.type: "upstream"` 引用上游 item 输出，由 DAG 自动拓扑排序调度
+
+### 关键注意事项
+
+- **核心概念**：方案（AnalysisPlan）由 `items[]`（每项一次算子调用）与 `inputs`/`parameters`/`output` 组成，算子通过 `upstream` 绑定串成 DAG
+- **常见错误**：插件目录勿复制 `OpenGisDAF.Core.dll`（Type 不同源会被静默跳过）；`buffer` 单位与数据坐标系一致（度数坐标系需先 `coordinate_transform` 转米制投影）；PostGIS 目标表已存在会报错，绝不静默覆盖
+- **退出码**：`0` 成功、`1` 任何失败或跳过，便于 CI 判断
+
+---
+
 ## 相关技能
 
 - **nettopologysuite** — .NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)

@@ -43,7 +43,7 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 sudo apt install postgresql-17-postgis-3 postgresql-17-postgis-3-scripts
 
 # CentOS/RHEL
-sudo yum install postgis34_17
+sudo yum install postgis36_17
 
 # macOS
 brew install postgis

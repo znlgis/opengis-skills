@@ -11,6 +11,8 @@ tags:
 
 > **产品定位：** 商业闭源 .NET 代码保护与授权工具（Eziriz 出品；非开源项目，无公开仓库）
 >
+> **项目主页：** <https://www.eziriz.com/>（Eziriz 商业产品官网）
+>
 > **官网：** <https://www.eziriz.com/dotnet_reactor.htm>
 >
 > **下载：** <https://www.eziriz.com/downloads.htm>

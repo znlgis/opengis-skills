@@ -237,6 +237,7 @@ gh repo edit my-dsh-plugin --add-topic dsh-plugin
 ## 参考资源
 
 - [DeepSeek Harness GitHub](https://github.com/deepseek-ai/deepseek-harness)
+- [Cordis 设计论文《A Programming Paradigm for Spatiotemporal Composability》](https://github.com/cordiverse/paper)
 - [架构文档](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md)
 - [DeepSeek API 文档](https://platform.deepseek.com/api-docs)
 - [Discord 社区](https://discord.gg/deepseek)

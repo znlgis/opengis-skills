@@ -1,6 +1,6 @@
 ---
 name: tongwen
-description: "Use when translating engineering CAD drawings between languages — DWG text extraction, glossary-driven translation workspace, QA gating, lossless write-back. Tongwen (同文): local-first CAD/BIM translation suite with an AutoCAD 2019/2021/2025/2026 plugin, a TW_-command set, and a headless BatchCli for pipeline use."
+description: "Use when translating engineering CAD drawings between languages — DWG text extraction, glossary-driven translation workspace, QA gating, lossless write-back. Tongwen: local-first CAD/BIM translation suite with an AutoCAD 2019/2021/2025/2026 plugin, a TW_-command set, and a headless BatchCli for pipeline use."
 tags:
   - autocad
   - cad
@@ -243,12 +243,12 @@ Tongwen.Server --port 5000
 
 ## 质量检查能力
 
-QA 由三种验证器组成，发现按**四级风险**分级（🚫 阻断 / 🔴 高 / 🟠 中 / 🟡 低），报告可导出 JSON 与 CSV；工作区内实时展示风险，详情面板逐条查阅。
+QA 由三种验证器组成，发现按**四级风险**分级（阻断 / 高风险 / 中等风险 / 低风险），报告可导出 JSON 与 CSV；工作区内实时展示风险，详情面板逐条查阅。
 
 | 验证器 | 检查什么 | 典型发现与等级 |
 |--------|----------|----------------|
-| `PlaceholderValidator` 占位符验证 | 译文中的格式占位符是否与原文一一对应 | 占位符缺失 / 多余 / 数量同但类型顺序不一致 → 🚫 阻断 |
-| `TerminologyValidator` 术语验证 | 术语表约束是否被遵守 | 强制术语未译 → 🔴 高 |
+| `PlaceholderValidator` 占位符验证 | 译文中的格式占位符是否与原文一一对应 | 占位符缺失 / 多余 / 数量同但类型顺序不一致 → 阻断级 |
+| `TerminologyValidator` 术语验证 | 术语表约束是否被遵守 | 强制术语未译 → 高风险 |
 | `LengthOverflowValidator` 长度溢出验证 | 译文预计包围盒相对原文包围盒的溢出比例（按几何估算，不按字符数） | 按溢出程度分档定级 |
 
 **关键安全机制：** 占位符类问题属阻断级，**修复前同文会阻止该翻译单元回写**——面板显示阻断时对应文字不会写入图纸，这是最后一道保障。

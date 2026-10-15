@@ -36,6 +36,7 @@ QCAD 由两部分组成：
 - 图层、块、视图、布局、打印
 - DXF/DWG/PDF/SVG 输入输出
 - ECMAScript（QtScript / V8）脚本扩展
+- 脚本接口：QCAD 提供 ECMAScript（JavaScript）脚本接口用于二次开发，相关仓库为 [qcad/qtjsapi](https://github.com/qcad/qtjsapi) 与 [qcad/qcadjsapi](https://github.com/qcad/qcadjsapi)
 - 命令行：`qcad` 本体 + Pro 版附带的控制台工具（`dwginfo`、`dwg2pdf`、`dwg2svg`、`dwg2bmp` 等，见「命令行批处理」）
 
 ---

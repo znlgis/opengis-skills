@@ -37,6 +37,38 @@ xBIM 模块矩阵：
 | `Xbim.CobieLiteUk` | COBie 数据交换 |
 | `Xbim.Presentation` | WPF 三维展示 |
 
+### 生态家族包
+
+xBIM 由多个独立仓库组成生态家族，常用包如下：
+
+| 包 | 说明 |
+|----|------|
+| [XbimEssentials](https://github.com/xBimTeam/XbimEssentials) | 核心库：IFC 实体模型、读写与事务 |
+| [XbimGeometry](https://github.com/xBimTeam/XbimGeometry) | 基于 OCCT 的几何引擎 |
+| [XbimWindowsUI](https://github.com/xBimTeam/XbimWindowsUI) | WPF 桌面三维查看器与控件 |
+| [XbimWebUI](https://github.com/xBimTeam/XbimWebUI) | WebGL 浏览器查看器（`xbim-viewer`） |
+| [XbimSamples](https://github.com/xBimTeam/XbimSamples) | 官方示例代码 |
+| [Xbim.IDS.Validator](https://github.com/xBimTeam/Xbim.IDS.Validator) | IDS（信息交付规范）校验 |
+| [XbimCobieExpress](https://github.com/xBimTeam/XbimCobieExpress) | COBie 数据交换 |
+| [XbimBCF](https://github.com/xBimTeam/XbimBCF) | BCF（BIM 协同问题）读写 |
+
+---
+
+## 核心 API
+
+xBIM 的核心 API 集中在 `IfcStore`、`Instances` 与几何上下文三处：
+
+| API | 用途 |
+|-----|------|
+| `IfcStore.Open(path)` | 打开 .ifc/.ifczip/.ifcxml 模型 |
+| `IfcStore.Create(creds, schema, storeType)` | 新建 IFC 模型 |
+| `model.Instances` | 按类型查询 / 创建实体（`OfType<T>()` / `New<T>()`） |
+| `model.BeginTransaction(name)` / `txn.Commit()` | 事务化修改 |
+| `model.SaveAs(path)` | 另存为 ifc / ifczip / xbim |
+| `Xbim3DModelContext` | 解析几何、导出 WexBIM |
+
+各 API 的完整示例见下文各节。
+
 ---
 
 ## 安装

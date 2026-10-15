@@ -358,6 +358,16 @@ pnpm audit:i18n # 文案 / 版面有改动时，人工看一眼两种语言下�
 
 ---
 
+## AI 使用建议
+
+1. **先读契约再动手**：修改任何代码前先看 `packages/game-kit/src/contract.ts`（GameModule / GameContext / 事件协议）与 `packages/content` 的 zod schema；游戏包与外壳只通过契约耦合，不要互相直接引用。
+2. **新增典故按「内容先立住」的顺序**：先写典故 JSON + 英文补丁并跑 `pnpm content:check`，再复用现有模板写游戏包（`defineGame` 三段式），最后在外壳 `apps/site/src/registry.ts` 注册。
+3. **三处对账别遗漏**：内容 JSON / `allusions/index.ts` / `registry.ts`（+ apps/site 依赖）必须一致，`registry.test.ts` 会兜底校验；`manifest.id` 与内容 `id` 不一致时挂载即抛错。
+4. **遵守平台边界与测试约束**：逻辑层禁用 `Math.random` / `Date.now`（时钟走 `services.now()`），游戏内不直接碰 `localStorage` / `fetch`；Phaser 实例用 `shallowRef` / `markRaw` 持有、离场 `await unmount()`。
+5. **以门禁为准**：改动完成前跑 `pnpm verify`（typecheck → lint → test → content:check → build → size）与 `pnpm e2e`；双语 / 版面有改动再跑 `pnpm audit:i18n` 人工巡检。
+
+---
+
 ## 常见问题
 
 | 问题 | 解决方案 |

@@ -169,4 +169,5 @@ Pi 默认继承启动进程权限，不自带强制权限沙箱。生产建议�
 - 文档：<https://pi.dev/docs/latest>
 - Releases：<https://github.com/earendil-works/pi/releases>
 - npm 包：<https://www.npmjs.com/package/@earendil-works/pi-coding-agent>
+- 官方 CLI 工具集（以「CLI + README」渐进式披露替代 MCP 的方案）：<https://github.com/badlogic/agent-tools>
 - 上游中文教程：<https://znlgis.github.io/ai/pi/>

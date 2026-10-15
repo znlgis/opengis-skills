@@ -30,6 +30,7 @@ LibreCAD 主要特性：
 - 文件：DXF（R12/R2007 读写）、PDF/SVG/PNG（导出）、DWG（通过 ODA File Converter 或 LibreDWG 转换）
 - 跨平台：Windows、macOS、Linux
 - 国际化：含完善的中文界面
+- 底层文件读写：由 [libdxfrw](https://github.com/LibreCAD/libdxfrw) 提供——LibreCAD 的 C++ DXF/DWG 读写库，承担 DXF 解析与 DWG 转换
 
 > 读写 DWG 原生支持有限，建议先用 LibreDWG 或 ODA 转 DXF。
 

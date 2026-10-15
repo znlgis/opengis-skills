@@ -41,7 +41,7 @@ PyQGIS 主要包含以下模块：
 | `qgis.analysis` | 空间分析——插值、网络分析、栅格计算等 |
 | `qgis.processing` | Processing 算法调用入口（`processing.run()`） |
 | `qgis.server` | QGIS Server Python 插件接口 |
-| `qgis.3d` | 3D 地图视图相关类 |
+| `qgis._3d` | 3D 地图视图相关类 |
 | `qgis.PyQt` | PyQt5/PyQt6 兼容层 |
 
 ---

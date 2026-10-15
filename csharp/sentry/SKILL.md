@@ -259,4 +259,5 @@ cd self-hosted
 - [Sentry ASP.NET Core 指南](https://docs.sentry.io/platforms/dotnet/guides/aspnetcore/)
 - [sentry-dotnet GitHub](https://github.com/getsentry/sentry-dotnet)
 - [Sentry 自托管文档](https://develop.sentry.dev/self-hosted/)
+- 自托管架构组件：事件上报先经 Relay（接收/过滤/采样/限流/脱敏网关），查询侧由 Snuba（基于 ClickHouse）提供事件搜索与聚合
 - [性能监控文档](https://docs.sentry.io/product/performance/)

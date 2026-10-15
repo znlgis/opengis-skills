@@ -79,7 +79,7 @@ implementation 'org.locationtech.jts.io:jts-io-common:1.20.0'
 
 | 模块 | artifactId | 用途 |
 |---|---|---|
-| jts-core | `jts-core` | ★ 核心——几何模型、算法、空间操作、索引 |
+| jts-core | `jts-core` | （推荐）核心——几何模型、算法、空间操作、索引 |
 | jts-io-common | `jts-io-common` | 通用 I/O：WKT、WKB、GeoJSON 读写 |
 | jts-io-ora | `jts-io-ora` | Oracle Spatial SDO_GEOMETRY 读写——源码模块，需 `-Pall`（oracle profile）本地构建，未发布到 Maven Central |
 | jts-io-sde | `jts-io-sde` | ArcSDE 几何读写——源码保留，构建中已注释禁用，无发布产物 |
@@ -90,7 +90,7 @@ implementation 'org.locationtech.jts.io:jts-io-common:1.20.0'
 
 | 类 | 包 | 用途 |
 |---|---|---|
-| `GeometryFactory` | `org.locationtech.jts.geom` | ★ **推荐入口**——创建所有几何对象的工厂 |
+| `GeometryFactory` | `org.locationtech.jts.geom` | **推荐入口**——创建所有几何对象的工厂 |
 | `Geometry` | `org.locationtech.jts.geom` | 几何抽象基类，提供空间操作与关系判断方法 |
 | `Point` | `org.locationtech.jts.geom` | 点（0 维） |
 | `LineString` | `org.locationtech.jts.geom` | 线串（1 维） |

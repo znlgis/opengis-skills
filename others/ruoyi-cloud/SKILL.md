@@ -63,7 +63,7 @@ RuoYi-Cloud
 | Spring Cloud | 2025.1.x |
 | Spring Cloud Alibaba | 2025.1.0.0 |
 | JDK | 17+（Spring Boot 4 要求 17+） / 8（老分支） |
-| Maven | 3.9+（官方使用 3.11） |
+| Maven | 3.9+（官方最新稳定为 3.10.0） |
 | MySQL | 5.7+ / 8.0 |
 | Redis | 5.0+ |
 | Nacos | 2.x |
@@ -80,9 +80,9 @@ RuoYi-Cloud
 git clone https://gitee.com/y_project/RuoYi-Cloud.git
 cd RuoYi-Cloud
 
-# 2. 数据库
-mysql -u root -p < sql/ry_20260321.sql
-mysql -u root -p < sql/ry_config_20260311.sql
+# 2. 数据库（以下为 master 现行文件名；按旧 tag 获取时文件名不同）
+mysql -u root -p < sql/ry_20260417.sql
+mysql -u root -p < sql/ry_config_20260918.sql
 mysql -u root -p < sql/quartz.sql   # 定时任务表
 
 # 3. Nacos：将 nacos/config 下 .yml 推送到 Nacos

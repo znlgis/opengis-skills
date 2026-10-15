@@ -35,20 +35,20 @@ LibreDWG 解决 DWG 二进制格式的开源读写：
 ## 安装
 
 ```bash
-# Debian/Ubuntu
-sudo apt install libredwg-dev libredwg0      # 库 + 头文件
-sudo apt install libredwg-tools              # CLI
-
-# Fedora
-sudo dnf install libredwg-tools libredwg-devel
-
-# macOS
+# macOS（Homebrew，当前为 0.14）
 brew install libredwg
 
-# 源码
+# 源码构建（上游 README 流程；DWG 写入默认启用，需关闭时用 --disable-write）
 git clone https://github.com/LibreDWG/libredwg
-./autogen.sh && ./configure --enable-write && make && sudo make install
+cd libredwg
+./autogen.sh          # 从 git 检出源码时执行
+./configure           # 可选：--disable-bindings / --disable-docs / --disable-shared
+make
+make check
+sudo make install
 ```
+
+> Debian/Ubuntu 与 Fedora 官方仓库均未提供 LibreDWG 包（不存在 `libredwg-dev`/`libredwg-tools`），Linux 请按上述源码方式构建。
 
 ---
 
@@ -148,12 +148,11 @@ dwg_free(&dwg);
 ## Python 绑定
 
 ```bash
-# Debian/Ubuntu（官方打包的 SWIG 绑定；PyPI 上没有 LibreDWG-python 包）
-sudo apt install python3-libredwg
-
-# 源码构建：configure 默认探测 SWIG，可用 --enable-python / --disable-python 控制
-./autogen.sh && ./configure --enable-python && make
+# 源码构建：SWIG 绑定默认启用（需先装 SWIG），可用 --disable-bindings / --disable-python 关闭
+./autogen.sh && ./configure && make && sudo make install
 ```
+
+> PyPI 上没有 LibreDWG-python 包，Linux 发行版官方仓库也未打包绑定，Python 绑定须随源码一起构建。
 
 ```python
 import LibreDWG as dwg
@@ -197,12 +196,12 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 | 问题 | 解决 |
 |------|------|
 | 高版本 DWG 无法读 | 等待 LibreDWG 支持，或先用 ODA File Converter 转为 R2010 |
-| 写入失真 | 启用 `--enable-write` 编译；优先使用 DXF 出口 |
+| 写入失真 | 确认编译时未加 `--disable-write`（DWG 写入默认启用）；优先使用 DXF 出口 |
 | 中文文字乱码 | 编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI_936）；优先用 `dwgread -O JSON` 输出 UTF-8，或对 DXF 输出用 iconv 转码 |
 | 引用块缺失 | 解析 `INSERT` 时跟随 `BLOCK_HEADER` 引用 |
 | 脚本里 `dwg2dxf` 卡在"覆盖已存在文件"确认 | 加 `-y` 免确认（`dwg2dxf -y`、`dxf2dwg -y`），CI 里必带 |
-| 只装了 `libredwg-dev` 却没有 `dwgread` | Debian/Fedora 把命令行工具单独打包：`libredwg-tools`（另有 `libredwg0` 运行库）；只装开发包不会带来 CLI |
-| 写出的 DWG 其它软件打不开 | DWG 写入器（`dxf2dwg`/`dwgwrite`，需 `./configure --enable-write` 构建）覆盖面仍不完整；稳妥做法是停在 DXF：`dwg2dxf` 读出 → 编辑 DXF → 交 AutoCAD/ODA 侧另存 DWG |
+| Linux 上找不到 `dwgread` | Debian/Fedora 官方仓库不提供 LibreDWG 包；须从源码 `make install`，CLI 工具（`dwgread`/`dwg2dxf` 等）随源码一并安装 |
+| 写出的 DWG 其它软件打不开 | DWG 写入器（`dxf2dwg`/`dwgwrite`，写入默认启用，除非 configure 加了 `--disable-write`）覆盖面仍不完整；稳妥做法是停在 DXF：`dwg2dxf` 读出 → 编辑 DXF → 交 AutoCAD/ODA 侧另存 DWG |
 | GeoJSON 里线型丢失或几何不闭合 | GeoJSON 只导出可平面化的几何；需要保形状先 `dwg2SVG` 或 `dwg2dxf`，在 DXF 层面做处理再回转 |
 
 ---
@@ -210,7 +209,7 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 ## AI 使用建议
 
 - **推荐工作流模式**：AI 助手应根据场景选择 LibreDWG 的使用层级——简单转换用 CLI（`dwg2dxf`/`dwgread`），数据提取用 JSON/GeoJSON 输出，复杂处理用 C API 或 Python 绑定。写入功能仍在完善，写 DWG 前考虑先写 DXF 再转换。
-- **关键注意事项**：① 高版本 DWG（R2021+）不被支持，先用 ODA File Converter 转为 R2010/R2018；② 中文文字编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI/CP936），输出 JSON 为 UTF-8；③ 写入需编译时启用 `--enable-write`；④ 大文件用 `--no-check` 加速读取。
+- **关键注意事项**：① 高版本 DWG（R2021+）不被支持，先用 ODA File Converter 转为 R2010/R2018；② 中文文字编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI/CP936），输出 JSON 为 UTF-8；③ DWG 写入默认启用（configure 加 `--disable-write` 才关闭）；④ 大文件用 `--no-check` 加速读取。
 - **常用代码模式**：CLI 转换：`dwg2dxf -y input.dwg` / `dwgread -O JSON input.dwg -o out.json` / `dwg2SVG input.dwg > out.svg`。C API：`dwg_read_file("input.dwg", &dwg)` → `dwg_get_first_object(&dwg, DWG_TYPE_BLOCK_HEADER)` → 遍历实体 → `dwg_free(&dwg)`。
 
 ---

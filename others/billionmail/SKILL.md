@@ -49,7 +49,7 @@ docker compose up -d
 ### 一键脚本
 
 ```bash
-cd /opt && git clone https://github.com/aaPanel/BillionMail && cd BillionMail && bash install.sh
+cd /opt && git clone https://github.com/Billionmail/BillionMail && cd BillionMail && bash install.sh
 ```
 
 ### 端口要求

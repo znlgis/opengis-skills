@@ -18,7 +18,7 @@ tags:
 >
 > **许可证：** Apache-2.0（README 声明个人学习与二次开发免费、商业使用需授权，以仓库为准）
 >
-> **最新版本：** `1.0.0`（GitHub tag / Release 2025-10-04，与 npm 包 `astral3d` 版本一致；master 仍在持续开发，截至 2026-10）
+> **最新版本：** `1.0.0`（GitHub tag / Release 2025-10-04，与 npm 包 `astral3d` 版本一致；main 分支仍在持续开发，截至 2026-10）
 >
 > **中文教程（12 章）：** <https://znlgis.github.io/cad/Astral3D/>
 

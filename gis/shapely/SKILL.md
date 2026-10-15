@@ -46,6 +46,7 @@ Shapely 是 Python 计算几何的核心库，基于 GEOS（Geometry Engine - Op
 pip install shapely
 
 # Conda / Mamba
+# 推荐使用 conda-forge/miniforge 发行版（比 Anaconda 轻量）
 conda install -c conda-forge shapely
 
 # 验证

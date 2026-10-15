@@ -1,6 +1,6 @@
 ---
 name: my-opencode-deepseek-config
-description: "Use when deploying, tuning, or extending the OpenCode × DeepSeek V4 optimal configuration (orchestrator routing, 12 agents, thinking tiers, prompt-cache prefix discipline, DCP compaction, permissions baseline, 25 skills, slash commands) — installing to another machine, adding an agent or skill, adjusting model routing/cost, or troubleshooting why an agent routes/compacts/thinks a certain way."
+description: "Use when deploying, tuning, or extending the OpenCode × DeepSeek V4 optimal configuration (orchestrator routing, 12 agents, thinking tiers, prompt-cache prefix discipline, limit.input compaction windows, permissions baseline, 23 skills, slash commands) — installing to another machine, adding an agent or skill, adjusting model routing/cost, or troubleshooting why an agent routes/compacts/thinks a certain way."
 
 tags:
   - opencode
@@ -28,8 +28,8 @@ OpenCode 多 Agent 框架下 DeepSeek V4 模型族（Pro + Flash + Flash-Vision�
 
 - 默认主 Agent `orchestrator`（意图门控 + 模型感知路由 + 后备链）；第二 primary `solo`（单模型内联执行、零委派）
 - 3 模型矩阵：`deepseek/deepseek-v4-pro`（深度推理/审查/重型实现）、`deepseek/deepseek-v4-flash`（路由/规划/常规执行，**provider 层关 thinking + temperature 0**）、`deepseek/deepseek-v4-flash-vision-exp`（多模态）
-- 12 个 Agent、25 个技能（按需加载）、17 个 slash 命令、`subagent_depth: 3`、`share: "disabled"`
-- 上下文双引擎：内置 compaction（opencode.jsonc，自动触发 + prune 旧工具输出）+ DCP 插件（dcp.jsonc，主动去重 + 按模型成本分级压缩阈值）
+- 12 个 Agent、23 个技能（按需加载）、18 个 slash 命令、`subagent_depth: 3`、`share: "disabled"`
+- 上下文压缩：仅内置 compaction（opencode.jsonc）——`limit.input` 显式声明工作窗口（flash 115K / pro 148K，触发点 = `limit.input − compaction.buffer`），保留尾部 `keep.tokens: 12000`；无第三方压缩插件
 
 **环境要求：** OpenCode ≥ v1.18.x；后台子智能体委派需环境变量 `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true`（未设置时后台委派报错，应退回前台串行）。
 
@@ -93,17 +93,18 @@ export OPENCODE_CONFIG_DIR="$HOME/path/to/my-opencode-deepseek-config/opencode"
 
 - **字节稳定前缀**：agent 提示词、AGENTS.md、规则顺序保持不变；时间戳/随机 ID/动态文件列表等易变内容置于 payload **尾部**
 - **冻结工具集**：不在会话中途重排 tool schema 或注入规则
-- 插件固定版本（superpowers `#v6.3.0`、DCP `@3.1.15`）防自动更新导致前缀漂移
-- DCP `modelMaxLimits`/`modelMinLimits`：pro 更早压缩、flash 更晚压缩
+- 插件固定版本（superpowers `#v7.0.0`）防自动更新导致前缀漂移
+- 压缩窗口按模型分档：`limit.input` 显式声明（flash 115K / pro 148K），pro 更早压缩、flash 更晚压缩
 
 ---
 
-## Slash 命令（17 个）
+## Slash 命令（18 个）
 
 | 命令 | 目标 | 用途 |
 |------|------|------|
 | `/deep` `/quick` `/ui` `/vision` `/plan` `/oracle` | 对应 agent | 直达路由：重型实现 / 轻量编辑 / 前端 / 图像 / 规划 / 溯源 |
-| `/review [PR号]` | reviewer | PR 模式回帖 GitHub（gh-cli），无参审查本地 diff；>500 有效行先报 scoped 计划 |
+| `/review [PR号]` | light-orchestrator（code-review）→ 按需升级 reviewer | flash 初检，命中升级条件转 pro reviewer；带 PR 号回帖 GitHub（gh-cli），无参审查本地 diff；>500 有效行先报 scoped 计划 |
+| `/deep-review [PR号]` | reviewer | 强制 pro 全量审查（跳过 flash 初检）；带 PR 号时回帖 GitHub |
 | `/commit` | light-orchestrator | Conventional Commits 提交信息 |
 | `/release` | deep-worker（git-release） | Tag 发布准备 |
 | `/reflect` | oracle（reflect） | 发现摩擦 → 配置优化建议 |
@@ -142,18 +143,18 @@ export OPENCODE_CONFIG_DIR="$HOME/path/to/my-opencode-deepseek-config/opencode"
 
 1. **保住提示缓存前缀**：agent 提示词、`AGENTS.md`、规则顺序保持字节稳定，时间戳/随机 ID/动态文件列表放到 payload 尾部；插件锁版本防前缀漂移
 2. **按成本分层路由**：trivial 任务留给 flash 关思考，例行任务 flash + low，深推理才升 pro（pro = 3× flash）；`cache_read` 便宜约 30×，命中就是省钱
-3. **压缩阈值按模型分档**：pro 更早压缩、flash 更晚压缩（DCP 的 `modelMaxLimits`/`modelMinLimits`）
+3. **压缩窗口按模型分档**：用 `limit.input` 显式声明工作窗口（flash 115K / pro 148K，触发点 = `limit.input − compaction.buffer`），pro 更早压缩、flash 更晚压缩
 4. **只读 Agent 真只读**：`edit: deny` + bash 白名单，skills 白名单默认 deny 按职责放行
 5. **配置改动后同步**：`~/.config/opencode` 若是独立副本，改完仓库源要跑 `scripts\sync-config.ps1`
 
 ---
 
-## 技能清单（25 个，`opencode/skills/`）
+## 技能清单（23 个，`opencode/skills/`）
 
 按需加载（原生 `skill` 工具），代表性分组：
 
-- **过程纪律**：`grilling`、`wait-what`、`diagnosing-bugs`、`verification` 类（superpowers 插件另提供 brainstorming/TDD/systematic-debugging）
-- **代码质量**：`code-review`、`security-review`、`simplify`、`remove-deadcode`、`codebase-design`、`domain-modeling`、`grill-with-docs`
+- **过程纪律**：`grilling`（已合并原 `wait-what` / `grill-with-docs`）、`diagnosing-bugs`（superpowers 插件另提供 brainstorming/TDD/systematic-debugging）
+- **代码质量**：`code-review`、`security-review`、`simplify`、`remove-deadcode`、`codebase-design`、`domain-modeling`
 - **Git/GitHub**：`git-master`、`git-release`、`resolving-merge-conflicts`、`gh-cli`、`to-tickets`、`triage`
 - **文档/知识**：`verify-with-docs`、`writing-for-agents`、`codemap`、`handoff`、`reflect`、`office-docs`、`vision-prep`、`opencode-config`、`spec-workflow`
 
@@ -171,6 +172,16 @@ export OPENCODE_CONFIG_DIR="$HOME/path/to/my-opencode-deepseek-config/opencode"
 
 ---
 
+## AI 使用建议
+
+- 用户提到「OpenCode + DeepSeek 最优配置」「orchestrator 路由 / 思考分档」「提示缓存纪律」时加载本技能。
+- 回答路由问题时先讲分层原则：trivial → flash 关思考、routine → flash + low、deep/uncertain → pro；flash 无法胜任再升级 pro。
+- 涉及成本时引用 pro = 3× flash、`cache_read` 便宜约 30×，并提醒保住字节稳定前缀（插件锁 `#v7.0.0`）。
+- 上下文压缩只走内置 compaction：用 `limit.input` 声明窗口（flash 115K / pro 148K），不要再建议 DCP 插件或 `dcp.jsonc`。
+- 新增 Agent/Skill 时同步 skills 白名单与技能名册；改动全局配置副本后运行 `scripts\sync-config.ps1`。
+
+---
+
 ## 相关技能
 
 - **opencode** — 本配置方案的宿主客户端，配置字段以它为准：[../opencode/SKILL.md](../opencode/SKILL.md)
@@ -182,5 +193,5 @@ export OPENCODE_CONFIG_DIR="$HOME/path/to/my-opencode-deepseek-config/opencode"
 ## 参考资源
 
 - 仓库：<https://github.com/znlgis/my-opencode-deepseek-config>
-- 配置目录：`opencode/`（`opencode.jsonc`、`dcp.jsonc`、`AGENTS.md`、`agents/`、`skills/`）
+- 配置目录：`opencode/`（`opencode.jsonc`、`AGENTS.md`、`agents/`、`skills/`）
 - 借鉴来源：[oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)、[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)、[anomalyco/opencode](https://github.com/anomalyco/opencode)、[mattpocock/skills](https://github.com/mattpocock/skills)、[OpenSpec](https://github.com/Fission-AI/OpenSpec)

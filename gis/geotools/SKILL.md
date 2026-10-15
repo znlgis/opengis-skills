@@ -127,7 +127,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 
 | 模块 | artifactId | 用途 |
 |---|---|---|
-| gt-main | `gt-main` | ★ 核心接口与实现——Feature / DataStore / Filter |
+| gt-main | `gt-main` | （推荐）核心接口与实现——Feature / DataStore / Filter |
 | gt-api | `gt-api` | 高层 API 接口定义（Feature、CRS、Filter 等） |
 | gt-referencing | `gt-referencing` | 坐标参考系统定义与转换 |
 | gt-epsg-hsql | `gt-epsg-hsql` | 嵌入式 EPSG 数据库（基于 HSQL） |
@@ -149,7 +149,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 
 | 类 / 接口 | 包 | 用途 |
 |---|---|---|
-| `DataStore` | `org.geotools.data` | ★ 矢量数据源的统一抽象入口 |
+| `DataStore` | `org.geotools.data` | （推荐）矢量数据源的统一抽象入口 |
 | `DataStoreFinder` | `org.geotools.data` | 通过参数自动定位并创建 DataStore |
 | `FileDataStoreFinder` | `org.geotools.data` | 快速打开单文件数据源（Shapefile 等） |
 | `SimpleFeatureType` | `org.opengis.feature.simple` | 要素类型定义（字段名、类型、CRS） |
@@ -163,7 +163,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 | `GeometryFactory` | `org.locationtech.jts.geom` | 创建几何对象的工厂 |
 | `JTSFactoryFinder` | `org.geotools.geometry.jts` | GeoTools 推荐的 GeometryFactory 获取方式 |
 | `JTS` | `org.geotools.geometry.jts` | JTS 几何工具类（坐标转换、Envelope 转换等） |
-| `CRS` | `org.geotools.referencing.CRS` | ★ 坐标参考系统工具类（解码 EPSG、查找转换） |
+| `CRS` | `org.geotools.referencing.CRS` | （推荐）坐标参考系统工具类（解码 EPSG、查找转换） |
 | `CoordinateReferenceSystem` | `org.opengis.referencing.crs` | CRS 接口 |
 | `MathTransform` | `org.opengis.referencing.operation` | 坐标转换数学变换 |
 | `Filter` | `org.opengis.filter` | OGC 过滤器接口 |

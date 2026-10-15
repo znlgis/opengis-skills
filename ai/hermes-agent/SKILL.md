@@ -17,7 +17,7 @@ tags:
 > **官网 / 文档：** <https://nousresearch.com/> ｜ <https://hermes-agent.nousresearch.com/docs>
 >
 > **许可证：** MIT ｜ **语言：** Python（≥ 3.11）
-> **最新版本：** v2026.9.24（日历版本号，见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
+> **最新版本：** v0.22.1（语义化版本，2026-10-14 发布，见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
 
 ## 概述
 
@@ -81,6 +81,7 @@ Hermes 区别于普通 Agent 的关键在于「学习」：
 - **记忆(Memory)**：把重要事实持久化，跨会话保留；它会「提醒自己」去固化知识。
 - **历史检索**：能搜索自己过去的对话，复用上下文与结论。
 - **用户画像**：跨会话累积，对「你是谁、偏好什么」建立越来越准的模型。
+- **可选 Honcho 记忆 Provider**：接入 [plastic-labs/honcho](https://github.com/plastic-labs/honcho) 做辩证用户建模（dialectic user modeling），把零散事实提炼为动态用户画像；仓库内置 `plugins/memory/honcho/` 实现，执行 `uv pip install -e ".[honcho]"` 后以 `hermes plugins enable memory:honcho` 启用。
 
 > 这意味着 Hermes 越用越「懂你」，适合作为长期个人/团队助手，而非一次性任务工具。
 

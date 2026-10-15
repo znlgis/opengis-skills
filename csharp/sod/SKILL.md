@@ -43,9 +43,23 @@ SOD 由 PDF.NET 演化而来，主要特点：
 ```bash
 dotnet add package PDF.NET.SOD
 # 或对应数据库 Provider：
-dotnet add package PDF.NET.SOD.MySQL
-dotnet add package PDF.NET.SOD.PostgreSQL
+dotnet add package PDF.NET.SOD.MySQL.Provider
+dotnet add package PDF.NET.SOD.PostgreSQL.Provider
 ```
+
+---
+
+## 核心 API 速查
+
+| 对象 | 入口 | 说明 |
+|------|------|------|
+| 数据访问入口 | `MyDB.GetDBHelperByConnectionName(name)` / `MyDB.GetDBHelperByConnectionString(cs, provider)` | 返回 `AdoHelper`（`db`），屏蔽底层 Provider 差异 |
+| 实体基类 | `EntityBase` | `TableName` / `IdentityName` / `PrimaryKeys`；属性用 `getProperty<T>()` / `setProperty()` |
+| 实体 CRUD | `new EntityQuery<T>(db)` | `Insert` / `Update`（仅脏字段）/ `Delete` / `GetList` / `GetEntity` |
+| OQL 链式查询 | `OQL.From(entity).Select(...).Where(...).OrderBy(...).END` | 支持多表连接、分组、聚合；`oql.Limit(pageSize, pageIndex)` 分页 |
+| SQL-MAP | `new SqlMapper(db).ExecuteList<T>("Map.Statement", param)` | XML 写 SQL（MyBatis 风格），SqlMapTool 可生成强类型 DAL |
+| 原生 SQL | `db.ExecuteDataSet(...)` / `db.ExecuteNonQuery(...)` / `db.GetParameter(...)` | 用 AdoHelper 直接执行 |
+| 事务 | `db.BeginTransaction()` → `db.Commit()` / `db.Rollback()` | 或 `db.UseTransaction(() => { ... })` |
 
 ---
 

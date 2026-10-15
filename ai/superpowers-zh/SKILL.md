@@ -28,7 +28,7 @@ superpowers-zh 不是代码库或语言框架，而是一套面向 AI 编程工�
 2. **让 AI 用工程纪律工作**：用 TDD、系统化调试、完成前验证、代码审查约束「看起来能跑」的草率实现。
 3. **让中文团队直接落地**：在完整汉化基础上补充中文代码审查、中文 Git 工作流、中文技术文档与提交规范等本土化能力。
 
-包内含 `skills/`、`agents/`、`commands/`、`hooks/` 与一键安装脚本 `bin/superpowers-zh.js`。它在 obra/superpowers（英文上游，250k+ ⭐）基础上完整汉化（14 个翻译 skills）并新增 4 个中国原创 skills（另有 2 个上游历史保留 skills，全仓共 20 个），支持 Claude Code / GitHub Copilot CLI / Hermes Agent / Cursor / Claw Code / Windsurf / Kiro / Gemini CLI / OpenCode / Qoder 等 26 款工具。
+包内含 `skills/`、`agents/`、`commands/`、`hooks/` 与一键安装脚本 `bin/superpowers-zh.js`。它在 obra/superpowers（英文上游，250k+ 星标）基础上完整汉化（14 个翻译 skills）并新增 4 个中国原创 skills（另有 2 个上游历史保留 skills，全仓共 20 个），支持 Claude Code / GitHub Copilot CLI / Hermes Agent / Cursor / Claw Code / Windsurf / Kiro / Gemini CLI / OpenCode / Qoder 等 26 款工具。
 
 ---
 

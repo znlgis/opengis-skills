@@ -287,4 +287,5 @@ Start → 用户提交申请
 
 - 文档：<https://docs.dify.ai/>
 - 模板市场：<https://dify.ai/>
+- Cloudflare Workers 自定义工具模板：<https://github.com/crazywoola/dify-tools-worker>（开箱即用的工具框架，自动生成 OpenAPI 文档，部署后导入 Dify 自定义工具）
 - 中文教程（znlgis）：<https://znlgis.github.io/ai/dify/>

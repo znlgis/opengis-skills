@@ -27,6 +27,7 @@ OmO 不是新模型，也不是 Cursor/Claude Code 的克隆，而是把开源 A
 
 - **多模型编排**：不同模型各司其职并行运转——Claude Opus 做总指挥（编排）、GPT 深度推理、Kimi 加速、Gemini 处理前端/视觉、Grok Code Fast 做代码检索。
 - **并行后台智能体**：把任务分派给多个后台 agent 并行处理。
+- **Hashline 编辑**：借鉴 [can1357/oh-my-pi](https://github.com/can1357/oh-my-pi) 的哈希行定位技术（LINE#ID 校验），编辑前校验内容哈希，杜绝「改错行」。
 - **精心打造的 LSP / AST 工具**：基于 `ast-grep` 与 LSP 的结构化代码检索与编辑（比纯文本 grep 更准），内置 MCP（ast-grep-mcp、git-bash-mcp、lsp-tools-mcp）。
 - **电池全包**：开箱即用的 agents、commands、skills、rules-engine、comment-checker 等。
 - **跨平台**：随包提供 darwin/linux/windows 各架构二进制。
