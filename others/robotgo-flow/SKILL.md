@@ -41,7 +41,7 @@ robotgo-flow 是一款基于 [robotgo](https://github.com/go-vgo/robotgo) 实现
 
 ---
 
-## 环境与构建
+## 环境准备与构建
 
 | 组件 | 版本要求 | 说明 |
 |------|---------|------|
@@ -262,4 +262,10 @@ go test ./internal/action/ -v
 - 项目仓库：<https://github.com/znlgis/robotgo-flow>
 - robotgo 底层库：<https://github.com/go-vgo/robotgo>
 - 上游中文教程（19 章）：<https://znlgis.github.io/others/robotgo-flow/>
-- 相关技能：[../robotgo/SKILL.md](../robotgo/SKILL.md)（robotgo 库本身）
+
+---
+
+## 相关技能
+
+- **robotgo** — 底层 Go 桌面自动化库（本工具的引擎）：[../robotgo/SKILL.md](../robotgo/SKILL.md)
+- **go** — 用 Go 二次开发该工具链时的语言基础：[../go/SKILL.md](../go/SKILL.md)

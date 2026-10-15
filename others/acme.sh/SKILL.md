@@ -32,7 +32,7 @@ acme.sh 是全球使用最广泛的 ACME 客户端之一（GitHub 47k+ Star）�
 - **证书部署**：内置 100+ deploy hook（nginx、ssh、docker、panel、CDN、路由器等）。
 - **证书类型**：单域名、多域名 SAN、通配符 `*.example.com`、ECC（ec-256/384）与 RSA 双证书。
 
-> ⚠️ **不要用 root 直接运行 `git` 仓库里的 `./acme.sh`**：请先 `--install` 到 `~/.acme.sh`，由安装后的副本管理证书与 cron。
+> **注意：** **不要用 root 直接运行 `git` 仓库里的 `./acme.sh`**：请先 `--install` 到 `~/.acme.sh`，由安装后的副本管理证书与 cron。
 
 ---
 
@@ -228,6 +228,12 @@ crontab -l | grep acme.sh
 - 通配符需求一律走 DNS-01 + 对应 `dns_xxx` 服务商 hook，并提示用户设置对应环境变量。
 - 强调“用 `--install-cert` + `--reloadcmd`”而非手动复制文件，确保续期后自动生效。
 - 调试场景优先建议 `--staging` 与 `--debug 2`，避免命中 CA 频率限制。
+
+---
+
+## 相关技能
+
+- **billionmail** — 自建邮件平台，同样用 ACME 签发与续期 TLS 证书：[../billionmail/SKILL.md](../billionmail/SKILL.md)
 
 ---
 

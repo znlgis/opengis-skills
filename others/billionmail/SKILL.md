@@ -34,7 +34,7 @@ BillionMail 主要能力：
 
 ---
 
-## 部署
+## 安装部署
 
 ### Docker Compose（推荐）
 
@@ -61,7 +61,7 @@ cd /opt && git clone https://github.com/aaPanel/BillionMail && cd BillionMail &&
 | 110 / 995 | POP3（可选） |
 | 80 / 443 | Web 控制台 + WebMail |
 
-⚠️ 多数云厂商默认封锁 25/587 端口，需提交工单解封；建议使用海外 VPS 或专用邮件 IP。
+ 多数云厂商默认封锁 25/587 端口，需提交工单解封；建议使用海外 VPS 或专用邮件 IP。
 
 ---
 

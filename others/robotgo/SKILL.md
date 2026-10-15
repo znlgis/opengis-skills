@@ -12,14 +12,13 @@ tags:
   - keyboard
   - clipboard
   - gui
-  - testing
 ---
 
 > **项目地址：** <https://github.com/go-vgo/robotgo>
 >
 > **官方文档：** <https://github.com/go-vgo/robotgo#documentation>
 >
-> **许可证：** Apache-2.0 ｜ **最新版本：** v1.1.0（2026-09，稳定线）；v2.0.0-beta4（2026-09，纯 Go 预发布线）｜ **默认分支：** `master`
+> **许可证：** Apache-2.0 ｜ **最新版本：** v1.3.5（2026-10-07，稳定线）；v2.0.0-beta4（纯 Go 预发布线）｜ **默认分支：** `master`
 >
 > **生态子库：**
 >
@@ -445,6 +444,13 @@ robotgo.KeySleep = 50                      // 键盘操作后等待 50ms
 ## RobotGo-Pro（商业版）
 
 RobotGo-Pro 是非开源商业版本，提供 JavaScript、Python、Lua 等多语言绑定，包含技术支持和新特性。本技能仅覆盖开源 Go 版本。
+
+---
+
+## 相关技能
+
+- **robotgo-flow** — 基于 RobotGo 的 YAML 桌面自动化工作流（上层封装）：[../robotgo-flow/SKILL.md](../robotgo-flow/SKILL.md)
+- **go** — RobotGo 使用的 Go 语言本身（并发、模块与工具链）：[../go/SKILL.md](../go/SKILL.md)
 
 ---
 

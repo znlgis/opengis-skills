@@ -23,7 +23,7 @@ tags:
 >
 > **Effective Go：** <https://go.dev/doc/effective_go>
 >
-> **许可证：** BSD-3-Clause ｜ **最新稳定版：** go1.27.1（2026-09，见 [go.dev/dl](https://go.dev/dl/)）
+> **许可证：** BSD-3-Clause ｜ **最新稳定版：** go1.27.2（2026-10，见 [go.dev/dl](https://go.dev/dl/)；1.27.0 于 2026-08-19 发布）
 
 ## 概述
 
@@ -54,7 +54,9 @@ Go 是由 Robert Griesemer、Rob Pike 和 Ken Thompson 于 2007 年在 Google �
 | 1.22 | 2024 | 循环变量每次迭代新作用域、增强 ServeMux 路由 |
 | 1.23 | 2024 | range over func（迭代器函数）、unique 包 |
 | 1.24 | 2025 | 泛型类型别名、Swiss Table map 优化、weak 指针 |
-| 1.26 | 2026 | GC 默认启用新算法、工具链增强 |
+| 1.25 | 2025 | 容器感知 GOMAXPROCS、`testing/synctest`、trace flight recorder、实验性新 GC 与 `encoding/json/v2` |
+| 1.26 | 2026 | 新 GC 默认启用、cgo 调用加速、实验性 goroutine 泄漏剖析、`crypto/hpke` |
+| 1.27 | 2026 | 分配器提速、`encoding/json/v2` 转正、`crypto/mldsa`（后量子）、新 `uuid` 包 |
 
 ---
 
@@ -99,6 +101,25 @@ go env -w GOSUMDB=sum.golang.google.cn
 
 > 基础语法、方法与接口、并发、错误处理与泛型的完整讲解见 [reference/language-basics.md](reference/language-basics.md)
 > 包管理与工程化、标准库速查、Web 开发、数据库与测试的完整内容见 [reference/stdlib-web-db.md](reference/stdlib-web-db.md)
+
+## 核心 API / 标准库速查
+
+| 主题 | 入口 | 说明 |
+|------|------|------|
+| 并发 | `go f()` / `chan T` / `select` | goroutine + channel（CSP）；`sync.WaitGroup`、`sync.Mutex`、`sync.Once`、`sync.Map` |
+| 取消与超时 | `context.Context` | `context.WithCancel/WithTimeout/WithValue`，I/O 函数第一个参数传 ctx |
+| HTTP 服务 | `net/http` | `http.HandleFunc` / `http.ServeMux`（1.22+ 支持方法与路径模式）/ `http.Client` |
+| JSON | `encoding/json` | `json.Marshal/Unmarshal`、struct tag；1.25+ 有实验性 `encoding/json/v2`，1.27 转正 |
+| 数据库 | `database/sql` | `sql.Open` + 驱动（如 `go-sql-driver/mysql`）、`QueryContext/ExecContext` |
+| 错误处理 | `errors` + `fmt` | `fmt.Errorf("...: %w", err)` 包装、`errors.Is/As/Join` |
+| 泛型 | 类型参数（方括号） | `func Map[T, U any]` 这样声明，形参照常用圆括号；调用时 `Map[int, string]` 可省略部分推断 |
+| 集合工具 | `slices` / `maps` / `cmp` | `slices.Sort`、`maps.Clone`、`cmp.Compare`（1.21+） |
+| 日志 | `log/slog` | 结构化日志（1.21+），`slog.Info("msg", "k", v)` |
+| 测试 | `testing` | table-driven 测试、`t.Run` 子测试、`go test -race/-bench`；1.25+ `testing/synctest` 测并发 |
+| 性能剖析 | `runtime/pprof` / `net/http/pprof` | CPU/内存/阻塞剖析 |
+| 模块 | `go mod` | `go mod init/tidy`、`go get`、`go work`（1.18+ workspace） |
+
+---
 
 ## 典型工作流
 
@@ -181,6 +202,13 @@ go run ./cmd/api
 | defer 在循环中 | 大量 defer 堆积不执行 | 提取为函数或立即调用 |
 | map 并发写 panic | 多 goroutine 同时写同一 map | 用 `sync.Map` 或加锁 |
 | 浮点数比较 | `0.1 + 0.2 != 0.3` | 使用 tolerance 比较 |
+
+---
+
+## 相关技能
+
+- **robotgo** — 用 Go 做桌面自动化（键鼠/屏幕/窗口控制）：[../robotgo/SKILL.md](../robotgo/SKILL.md)
+- **robotgo-flow** — 基于 RobotGo 的 YAML 工作流自动化：[../robotgo-flow/SKILL.md](../robotgo-flow/SKILL.md)
 
 ---
 

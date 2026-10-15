@@ -35,7 +35,7 @@ RuoYi-Cloud 主要特性：
 
 ## 模块结构
 
-```
+```text
 RuoYi-Cloud
 ├── ruoyi-gateway        # API 网关
 ├── ruoyi-auth           # 认证服务
@@ -54,7 +54,7 @@ RuoYi-Cloud
 
 ---
 
-## 环境与依赖
+## 环境准备与依赖
 
 | 组件 | 版本 |
 |------|------|
@@ -109,7 +109,7 @@ npm run dev   # http://localhost:80
 
 每个微服务启动时从 Nacos 拉取：
 
-```
+```text
 ruoyi-gateway-dev.yml
 ruoyi-auth-dev.yml
 ruoyi-system-dev.yml
@@ -125,7 +125,7 @@ sentinel-ruoyi-gateway.json # Sentinel 限流规则
 
 请求流程：
 
-```
+```text
 Client → Gateway
   ├─ 路由匹配（lb://ruoyi-system）
   ├─ AuthFilter：从 Header 取 token，调 redis 校验
@@ -265,6 +265,33 @@ sh deploy.sh web        # 前端
 2. **统一基础包名**：`com.ruoyi` 替换为公司域名（IDE 重构）
 3. **按需删除模块**：不需要 Seata 可移除依赖
 4. **多租户**：基于 MyBatis Plus 拦截器或 ShardingSphere 改造
+
+---
+
+---
+
+## 典型工作流
+
+### 工作流一：本地跑起来
+
+1. 装齐环境：JDK 17+、Maven 3.9+、MySQL 5.7+/8.0、Redis 5.0+、Nacos 2.x、Node.js 18+
+2. 初始化数据库：导入 `sql/ry_*.sql` 与 `sql/quartz.sql`（定时任务表）
+3. 起基础设施：`docker compose -f docker/docker-compose.yml up -d`（含 mysql/redis/nacos）；再把 `nacos/config` 下的 `.yml` 通过控制台导入
+4. `mvn clean install -DskipTests` 后按顺序启动：gateway → auth → modules-system → 其它模块
+5. 前端 `ruoyi-ui`：`npm install` → `npm run dev`，用默认账号登录验证网关与认证链路
+
+### 工作流二：新增一个业务模块
+
+1. 在 `ruoyi-modules/` 下新建模块（如 `ruoyi-modules-mybiz`），不要改 system 模块，便于后续升级
+2. 在 Nacos 里加该服务的 `.yml`（spring.application.name、namespace、group 与其它服务保持一致）
+3. 网关加路由（`lb://ruoyi-mybiz`），按需加 Sentinel 规则
+4. 表设计好后用代码生成器生成 Entity/Mapper/Service/Controller 与 Vue 页面，再补业务逻辑
+
+### 工作流三：认证与限流排查
+
+1. 请求链路确认：Client → Gateway（路由匹配 → AuthFilter 校验 Redis 里的 token → Sentinel）→ 目标服务
+2. 401 排查：核对 Redis 中 token 的 TTL 与 JWT 过期时间是否一致、机器时间是否同步
+3. 限流排查：看 Nacos 上的 `sentinel-*.json` 规则是否生效、服务名是否对应
 
 ---
 
