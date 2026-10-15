@@ -75,7 +75,7 @@ src/OpenGIS.Utils/
 
 ---
 
-## Namespaces
+## 核心 API：命名空间与主要类型
 
 | Namespace | Key Classes |
 |---|---|
@@ -369,13 +369,6 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 
 ## AI 使用建议
 
-### 推荐工作流
-
-1. **读取数据**：使用 `OguLayerUtil.ReadLayer()` 统一入口读取各类矢量格式
-2. **几何运算**：使用 `GeometryUtil.Wkt2Geometry()` 转换后操作，或直接用 `*Wkt` 后缀方法
-3. **坐标转换**：使用 `CrsUtil.Transform()` 进行坐标系变换（CGCS2000 系列）
-4. **写出结果**：使用 `OguLayerUtil.WriteLayer()` 写出为目标格式
-5. **格式转换**：使用 `OguLayerUtil.ConvertFormat()` 一步完成
 
 ### 关键注意事项
 
@@ -384,6 +377,16 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 - **几何以 WKT 存储**：`OguFeature.Wkt` 存储 WKT 字符串；多数 `GeometryUtil` 方法有 `*Wkt` 变体
 - **.NET 的 GDAL 实现**：`GEOTOOLS` 枚举值仅为兼容保留并重定向到 GDAL（Java 版本为双引擎）
 - **线程安全**：GDAL 初始化线程安全，但单个 GDAL 几何对象非线程安全
+
+## 典型工作流
+
+1. **读取数据**：使用 `OguLayerUtil.ReadLayer()` 统一入口读取各类矢量格式
+2. **几何运算**：使用 `GeometryUtil.Wkt2Geometry()` 转换后操作，或直接用 `*Wkt` 后缀方法
+3. **坐标转换**：使用 `CrsUtil.Transform()` 进行坐标系变换（CGCS2000 系列）
+4. **写出结果**：使用 `OguLayerUtil.WriteLayer()` 写出为目标格式
+5. **格式转换**：使用 `OguLayerUtil.ConvertFormat()` 一步完成
+
+---
 
 ## 常见问题
 

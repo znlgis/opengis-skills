@@ -47,8 +47,8 @@ tags:
 | [go](./go/SKILL.md) | Go 语言核心语法与工程实践 | `go` `golang` `backend` `concurrency` |
 | [robotgo](./robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 | `go` `rpa` `automation` `desktop` |
 | [robotgo-flow](./robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 | `go` `rpa` `yaml` `windows` |
-| [billionmail](./billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `selfhosted` `marketing` |
-| [ruoyi-cloud](./ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `springcloud` `scaffold` |
+| [billionmail](./billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `marketing` `smtp` `self-hosted` |
+| [ruoyi-cloud](./ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `spring-cloud` `microservices` `rbac` |
 | [acme.sh](./acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
 | [chags](./chags/SKILL.md) | 中国历史典故儿童游戏合集（Vue3 + Phaser，中英双语） | `vue` `phaser` `game` |
 

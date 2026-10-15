@@ -230,7 +230,7 @@ gdf.explore(column=None, cmap=None, color=None, m=None,
 
 ---
 
-## 常用模式速查
+## 典型工作流与常用模式
 
 ### 创建 GeoDataFrame
 

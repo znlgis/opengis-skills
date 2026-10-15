@@ -39,7 +39,7 @@ GeoServer 提供：
 
 ---
 
-## 部署
+## 安装部署
 
 ### 二进制
 
@@ -167,6 +167,17 @@ curl -u admin:geoserver -XPOST \
 
 ---
 
+## 典型工作流
+
+1. **部署 GeoServer**：优先使用 Docker 镜像 `docker.osgeo.org/geoserver:3.0.1`
+2. **创建 Workspace**：为每个项目创建独立工作空间实现命名隔离
+3. **添加数据存储**：根据数据类型选择 PostGIS（矢量）、Shapefile（文件矢量）、GeoTIFF（栅格）
+4. **发布图层**：设置 SRS（坐标参考系）、计算 Native Bounds、配置样式
+5. **验证服务**：通过 Layer Preview 或直接构造 WMS/WFS 请求测试
+6. **优化性能**：启用 GeoWebCache 预切片、PostGIS 建空间索引、调整 JVM 参数
+
+---
+
 ## 性能优化
 
 1. JVM：`-Xms2g -Xmx4g -XX:+UseG1GC`
@@ -193,14 +204,6 @@ curl -u admin:geoserver -XPOST \
 
 ## AI 使用建议
 
-### 推荐工作流
-
-1. **部署 GeoServer**：优先使用 Docker 镜像 `docker.osgeo.org/geoserver:3.0.1`
-2. **创建 Workspace**：为每个项目创建独立工作空间实现命名隔离
-3. **添加数据存储**：根据数据类型选择 PostGIS（矢量）、Shapefile（文件矢量）、GeoTIFF（栅格）
-4. **发布图层**：设置 SRS（坐标参考系）、计算 Native Bounds、配置样式
-5. **验证服务**：通过 Layer Preview 或直接构造 WMS/WFS 请求测试
-6. **优化性能**：启用 GeoWebCache 预切片、PostGIS 建空间索引、调整 JVM 参数
 
 ### 关键注意事项
 

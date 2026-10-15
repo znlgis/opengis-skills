@@ -55,7 +55,7 @@ GeoServer Cloud（GS Cloud）：
 
 ---
 
-## 快速启动（docker-compose）
+## 环境准备与快速启动（docker-compose）
 
 ```bash
 # 官方 Quick Start：下载稳定版 compose 文件（仓库内的 compose/ 目录仅供开发调试）

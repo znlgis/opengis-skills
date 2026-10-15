@@ -116,7 +116,7 @@ python3 my_pyqgis_script.py
 
 ---
 
-## 核心类一览
+## 核心 API 一览
 
 ### 项目与应用
 

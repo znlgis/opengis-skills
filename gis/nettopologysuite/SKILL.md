@@ -48,7 +48,7 @@ dotnet add package ProjNet                              # 坐标变换（可选�
 
 ---
 
-## 几何工厂
+## 核心 API：几何工厂
 
 ```csharp
 using NetTopologySuite.Geometries;
@@ -194,6 +194,16 @@ double[] xy = ct.MathTransform.Transform(new[] { 116.397, 39.908 });
 
 ---
 
+## 典型工作流
+
+1. **创建几何工厂**：使用 `new GeometryFactory(new PrecisionModel(), 4326)` 创建工厂，SRID 指定坐标系
+2. **创建几何对象**：通过工厂方法 `CreatePoint()`、`CreateLineString()`、`CreatePolygon()` 创建几何
+3. **空间运算**：直接调用几何对象方法 `Intersects()`、`Intersection()`、`Buffer()` 等
+4. **格式读写**：使用 `WKTReader`/`WKTWriter`、`GeoJsonConverterFactory` 进行序列化
+5. **EF Core 集成**：`UseNetTopologySuite()` 启用空间查询翻译为 SQL
+
+---
+
 ## 性能优化
 
 1. 共享 `GeometryFactory`，固定 SRID
@@ -224,13 +234,6 @@ foreach (var p in points) if (prep.Contains(p)) ...
 
 ## AI 使用建议
 
-### 推荐工作流
-
-1. **创建几何工厂**：使用 `new GeometryFactory(new PrecisionModel(), 4326)` 创建工厂，SRID 指定坐标系
-2. **创建几何对象**：通过工厂方法 `CreatePoint()`、`CreateLineString()`、`CreatePolygon()` 创建几何
-3. **空间运算**：直接调用几何对象方法 `Intersects()`、`Intersection()`、`Buffer()` 等
-4. **格式读写**：使用 `WKTReader`/`WKTWriter`、`GeoJsonConverterFactory` 进行序列化
-5. **EF Core 集成**：`UseNetTopologySuite()` 启用空间查询翻译为 SQL
 
 ### 关键注意事项
 

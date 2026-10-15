@@ -103,6 +103,22 @@ curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json
 
 > 阶段一（数据获取与信息查询）与阶段二（数据处理与转换）的完整操作手册见 [reference/data-stages.md](reference/data-stages.md)
 
+## 核心 API 与命令速查
+
+| 阶段 | 工具 | 入口 |
+|------|------|------|
+| 数据获取/元数据 | GDAL CLI | `ogrinfo -json`（矢量）、`gdalinfo -json`（栅格） |
+| 格式转换 | GDAL CLI | `ogr2ogr`（矢量）、`gdal_translate`（栅格） |
+| 坐标统一 | GDAL CLI | `ogr2ogr -t_srs` / `gdalwarp -t_srs` |
+| 空间分析 | qgis_process / PyQGIS | `qgis_process run <alg> --json` / `processing.run(...)` |
+| 栅格波段运算 | GDAL CLI | `gdal_calc.py`（NumPy 语法） |
+| 编程集成 | GDAL API / PyQGIS | `osgeo.ogr`/`osgeo.gdal`、`QgsApplication` + `QgisInterface` |
+| 服务发布 | GeoServer REST API | HTTP + JSON（工作空间 → 数据存储 → 图层 → 样式） |
+
+> 各阶段完整示例见 [reference/data-stages.md](reference/data-stages.md) 与 [reference/workflow-cheatsheets.md](reference/workflow-cheatsheets.md)。
+
+---
+
 ## 阶段三：空间分析
 
 ### 3.1 缓冲区分析
@@ -367,6 +383,17 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 > 阶段四（发布 GIS 地图服务）的完整 GeoServer REST 操作见 [reference/data-stages.md](reference/data-stages.md)
 > 端到端工作流示例、内置算法速查、GDAL 命令速查、数据格式与环境变量见 [reference/workflow-cheatsheets.md](reference/workflow-cheatsheets.md)
 
+## 典型工作流
+
+1. **探索数据**：`ogrinfo -json` / `gdalinfo -json` — 获取结构化元数据
+2. **格式转换**：`ogr2ogr` / `gdal_translate` — 统一数据格式
+3. **坐标统一**：`ogr2ogr -t_srs` / `gdalwarp -t_srs` — 统一坐标系
+4. **空间分析**：`qgis_process run` / `processing.run()` — 执行分析算法
+5. **结果验证**：`ogrinfo -json` / `gdalinfo -json` — 验证输出
+6. **发布服务**：GeoServer REST API — 上传并发布地图服务
+
+---
+
 ## 常用环境变量
 
 | 变量 | 说明 | 示例 |
@@ -395,14 +422,6 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 | 服务发布 | GeoServer REST API | 唯一选择，HTTP 接口标准 |
 | CI/CD 自动化 | qgis_process + GDAL CLI + curl | 命令行驱动，JSON 输出 |
 
-### 推荐完整工作流
-
-1. **探索数据**：`ogrinfo -json` / `gdalinfo -json` — 获取结构化元数据
-2. **格式转换**：`ogr2ogr` / `gdal_translate` — 统一数据格式
-3. **坐标统一**：`ogr2ogr -t_srs` / `gdalwarp -t_srs` — 统一坐标系
-4. **空间分析**：`qgis_process run` / `processing.run()` — 执行分析算法
-5. **结果验证**：`ogrinfo -json` / `gdalinfo -json` — 验证输出
-6. **发布服务**：GeoServer REST API — 上传并发布地图服务
 
 ### 关键注意事项
 

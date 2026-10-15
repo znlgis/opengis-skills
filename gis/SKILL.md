@@ -12,13 +12,13 @@ tags:
   - webmapping
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 75 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
 
 ## 概述
 
 本分类涵盖 **24 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务的完整链路：
 
-```
+```text
 数据源 → 命令行处理 → 编程分析 → 空间数据库 → 地图服务 → 前端可视化
  (GDAL)   (GDAL CLI)   (JTS/PyQGIS)  (PostGIS)  (GeoServer) (OpenLayers/Cesium)
 ```
@@ -39,7 +39,7 @@ tags:
 |------|------|---------|
 | [gdal](./gdal/SKILL.md) | GDAL 命令行：栅格/矢量处理事实标准 | `cli` `raster` `vector` `conversion` |
 | [gdal-api](./gdal-api/SKILL.md) | GDAL/OGR 编程 API（C/C++/Python/.NET） | `api` `python` `cpp` `dotnet` |
-| [qgis-process](./qgis-process/SKILL.md) | QGIS 命令行批处理 | `cli` `processing` `headless` |
+| [qgis-process](./qgis-process/SKILL.md) | QGIS 命令行批处理 | `cli` `processing` `qgis` `raster` |
 | [geopipe-agent](./geopipe-agent/SKILL.md) | AI 原生 GIS 数据流水线（YAML 驱动） | `agent` `pipeline` `yaml` `qc` |
 
 ### 🗄️ 空间数据库
@@ -55,7 +55,7 @@ tags:
 | [jts](./jts/SKILL.md) | Java Topology Suite 几何引擎 | `java` `geometry` `spatial` |
 | [geometry-api-java](./geometry-api-java/SKILL.md) | Esri Geometry API for Java | `java` `esri` `geometry` |
 | [geometry-api-net](./geometry-api-net/SKILL.md) | Esri Geometry API for .NET | `dotnet` `esri` `geometry` |
-| [shapely](./shapely/SKILL.md) | Python 几何对象与运算 | `python` `geometry` `analysis` |
+| [shapely](./shapely/SKILL.md) | Python 几何对象与运算 | `python` `geometry` `geos` `wkt` |
 | [geopandas](./geopandas/SKILL.md) | Python 矢量空间数据处理 | `python` `pandas` `vector` |
 
 ### 🌐 地图服务器
@@ -63,7 +63,7 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [geoserver](./geoserver/SKILL.md) | 开源地图服务器（WMS/WFS/WMTS/WCS） | `server` `wms` `wfs` `ogc` |
-| [geoserver-rest-api](./geoserver-rest-api/SKILL.md) | GeoServer REST API 自动化管理 | `rest` `automation` `publish` |
+| [geoserver-rest-api](./geoserver-rest-api/SKILL.md) | GeoServer REST API 自动化管理 | `rest` `automation` `api` `http` |
 | [geoserver-cloud](./geoserver-cloud/SKILL.md) | GeoServer 云原生微服务架构 | `cloud` `kubernetes` `docker` |
 
 ### 🖥️ QGIS 生态
@@ -77,25 +77,25 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [cesiumjs](./cesiumjs/SKILL.md) | 高性能 3D 地球可视化 | `javascript` `3d` `webgl` |
-| [openlayers](./openlayers/SKILL.md) | 高性能 Web 2D 地图库 | `javascript` `webmapping` `2d` |
+| [openlayers](./openlayers/SKILL.md) | 高性能 Web 2D 地图库 | `javascript` `2d` `web` `map` |
 
 ### 📦 .NET GIS 组件
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [nettopologysuite](./nettopologysuite/SKILL.md) | JTS 的 .NET 移植 | `dotnet` `geometry` |
-| [sharpmap](./sharpmap/SKILL.md) | .NET WinForms/Web 地图渲染库 | `dotnet` `legacy` `winforms` |
-| [mapsui](./mapsui/SKILL.md) | .NET 跨平台地图控件 | `dotnet` `crossplatform` `maui` |
-| [opengis-daf](./opengis-daf/SKILL.md) | 方案驱动 GIS 分析与质检框架（.NET 10 / C# 14） | `dotnet` `spatial-analysis` `qc` |
+| [sharpmap](./sharpmap/SKILL.md) | .NET WinForms/Web 地图渲染库 | `dotnet` `winforms` `csharp` `2d` |
+| [mapsui](./mapsui/SKILL.md) | .NET 跨平台地图控件 | `dotnet` `maui` `csharp` `map` |
+| [opengis-daf](./opengis-daf/SKILL.md) | 方案驱动 GIS 分析与质检框架（.NET 10 / C# 14） | `dotnet` `spatial-analysis` `gis` `csharp` |
 
 ### 🧩 综合/工具集
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [opengis-all](./opengis-all/SKILL.md) | **一站式 GIS 全流程索引** | `entrypoint` `workflow` `fullstack` |
-| [geotools](./geotools/SKILL.md) | Java GIS 工具集 | `java` `geotools` `feature` |
-| [opengis-utils-for-java](./opengis-utils-for-java/SKILL.md) | OpenGIS Java 实用工具集 | `java` `utils` `toolkit` |
-| [opengis-utils-for-net](./opengis-utils-for-net/SKILL.md) | OpenGIS .NET 实用工具集 | `dotnet` `utils` `toolkit` |
+| [geotools](./geotools/SKILL.md) | Java GIS 工具集 | `java` `gis` `ogc` `wms` |
+| [opengis-utils-for-java](./opengis-utils-for-java/SKILL.md) | OpenGIS Java 实用工具集 | `java` `gis` `geotools` `jts` |
+| [opengis-utils-for-net](./opengis-utils-for-net/SKILL.md) | OpenGIS .NET 实用工具集 | `dotnet` `csharp` `gdal` `ogr` |
 
 ---
 

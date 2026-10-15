@@ -106,7 +106,7 @@ dotnet add package MaxRev.Gdal.WindowsRuntime.Minimal  # Windows
 
 ---
 
-## 核心类一览
+## 核心 API 一览
 
 GDAL API 在四种语言中保持一致的类结构，下表列出核心类及其作用：
 

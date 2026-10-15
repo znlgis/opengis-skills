@@ -52,7 +52,7 @@ dotnet add package ProjNet4GeoAPI           # 坐标变换（实现 GeoAPI 接�
 
 ---
 
-## 核心对象
+## 核心 API：核心对象
 
 | 类型 | 说明 |
 |------|------|

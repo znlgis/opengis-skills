@@ -11,6 +11,7 @@ tags:
   - webmapping
   - geoserver
   - wms
+  - demo
 ---
 
 > **项目地址：** <https://github.com/znlgis/openlayers-vue3-demo>

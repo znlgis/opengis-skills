@@ -42,7 +42,7 @@ dotnet add package OpenGIS.Esri.Geometry.Json    # 可选，System.Text.Json 支
 
 ---
 
-## 命名空间
+## 核心 API 与命名空间
 
 | 命名空间 | 用途 |
 |---------|------|

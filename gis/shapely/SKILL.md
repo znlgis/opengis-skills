@@ -232,7 +232,7 @@ Use `shapely.is_missing(obj)` to check, distinct from `shapely.is_empty(geom)`.
 
 12. **`shapely.ops.transform` deprecated**: since 2.2 use `shapely.transform` (per-coordinate) or `shapely.transform_coordseq` (per-coordinate sequence) instead. The `multithreading_enabled` decorator is also deprecated.
 
-## Common Patterns
+## 典型工作流与常用模式（Common Patterns）
 
 ### Point-in-polygon test for many points
 ```python

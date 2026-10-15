@@ -191,8 +191,8 @@ tags:
 |------|---------|
 | `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, clipper1, freecad, kicad, libredwg, geopipe-agent, deepseek-harness, docutranslate, hermes-agent |
 | `java` | gdal-api, geotools, jts, geometry-api-java, opengis-utils-for-java, geoserver, geoserver-cloud, ruoyi-cloud |
- | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, sharpmap, mapsui, opengis-utils-for-net, opengis-daf, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
-| `javascript` / `typescript` | cesiumjs, openlayers, qcad, chili3d, lightcad, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
+ | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, lightcad, sharpmap, mapsui, opengis-utils-for-net, opengis-daf, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
+| `javascript` / `typescript` | cesiumjs, openlayers, qcad, chili3d, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
 | `cpp` / `c` | gdal-api, occt, clipper1, clipper2, librecad, libredwg |
 | `go` | go, robotgo, robotgo-flow |
 | `shell` | qgis-process, acme.sh |

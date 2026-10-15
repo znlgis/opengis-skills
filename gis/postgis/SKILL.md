@@ -64,7 +64,7 @@ SELECT PostGIS_Full_Version();         -- 验证
 
 ---
 
-## 核心数据类型
+## 核心 API：数据类型与函数
 
 | 类型 | 说明 | 适用场景 |
 |------|------|---------|
@@ -191,6 +191,17 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 
 ---
 
+## 典型工作流
+
+1. **安装扩展**：`CREATE EXTENSION postgis;` 启用空间功能
+2. **建表**：包含 `geometry(Point, 4326)` 或 `geography(Point, 4326)` 类型的几何列
+3. **建索引**：`CREATE INDEX ON table USING GIST(geom)` —— 必建空间索引
+4. **导入数据**：使用 `shp2pgsql`（Shapefile）、`ogr2ogr`（通用）、`raster2pgsql`（栅格）
+5. **空间查询**：用 `&&` 先做包围盒粗筛（走 GiST 索引），再用 `ST_Within`/`ST_Intersects` 精筛
+6. **验证结果**：`EXPLAIN ANALYZE` 查看查询计划，确认索引被使用
+
+---
+
 ## 性能优化
 
 1. **必建空间索引**：`USING GIST(geom)`
@@ -219,14 +230,6 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 
 ## AI 使用建议
 
-### 推荐工作流
-
-1. **安装扩展**：`CREATE EXTENSION postgis;` 启用空间功能
-2. **建表**：包含 `geometry(Point, 4326)` 或 `geography(Point, 4326)` 类型的几何列
-3. **建索引**：`CREATE INDEX ON table USING GIST(geom)` —— 必建空间索引
-4. **导入数据**：使用 `shp2pgsql`（Shapefile）、`ogr2ogr`（通用）、`raster2pgsql`（栅格）
-5. **空间查询**：用 `&&` 先做包围盒粗筛（走 GiST 索引），再用 `ST_Within`/`ST_Intersects` 精筛
-6. **验证结果**：`EXPLAIN ANALYZE` 查看查询计划，确认索引被使用
 
 ### 关键注意事项
 

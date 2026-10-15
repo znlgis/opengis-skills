@@ -224,6 +224,17 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 
 ---
 
+## 典型工作流
+
+1. **创建 Map**：`new Map({ target, layers, view })` → 设置投影和初始中心
+2. **添加底图**：`TileLayer` + `OSM`/`XYZ`/`TileWMS` Source
+3. **加载矢量数据**：`VectorLayer` + `VectorSource` + `GeoJSON`/`MVT` Format
+4. **应用样式**：使用 `Style` 函数按属性动态渲染
+5. **添加交互**：`Draw`/`Modify`/`Select`/`Snap` Interaction
+6. **性能优化**：`declutter` 避让标注、`renderMode: 'image'` 静态图层
+
+---
+
 ## 性能优化
 
 1. 大量要素 → `WebGLPointsLayer` 或 MVT
@@ -250,14 +261,6 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 
 ## AI 使用建议
 
-### 推荐工作流
-
-1. **创建 Map**：`new Map({ target, layers, view })` → 设置投影和初始中心
-2. **添加底图**：`TileLayer` + `OSM`/`XYZ`/`TileWMS` Source
-3. **加载矢量数据**：`VectorLayer` + `VectorSource` + `GeoJSON`/`MVT` Format
-4. **应用样式**：使用 `Style` 函数按属性动态渲染
-5. **添加交互**：`Draw`/`Modify`/`Select`/`Snap` Interaction
-6. **性能优化**：`declutter` 避让标注、`renderMode: 'image'` 静态图层
 
 ### 关键注意事项
 

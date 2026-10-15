@@ -12,7 +12,7 @@ tags:
   - security
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 75 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
 
 ## 概述
 
@@ -37,12 +37,12 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [furion](./furion/SKILL.md) | .NET 极简企业级 Web 框架 | `dotnet` `webapi` `framework` |
-| [admin-net-backend](./admin-net-backend/SKILL.md) | Admin.NET 后端（基于 Furion） | `dotnet` `backend` `admin` |
+| [admin-net-backend](./admin-net-backend/SKILL.md) | Admin.NET 后端（基于 Furion） | `dotnet` `webapi` `rbac` `multitenant` |
 | [admin-net-frontend](./admin-net-frontend/SKILL.md) | Admin.NET 前端（Vue 3） | `vue` `frontend` `admin` |
 | [sqlsugar](./sqlsugar/SKILL.md) | 国产高性能多数据库 ORM | `orm` `dotnet` `database` |
 | [sod](./sod/SKILL.md) | PDF.NET SOD：ORM + SQL-MAP + OQL | `orm` `dotnet` `database` |
 | [npoi](./npoi/SKILL.md) | .NET Excel/Word 读写 | `excel` `office` `dotnet` |
-| [reogrid](./reogrid/SKILL.md) | .NET 电子表格控件 | `dotnet` `spreadsheet` `ui` |
+| [reogrid](./reogrid/SKILL.md) | .NET 电子表格控件 | `dotnet` `spreadsheet` `winforms` `wpf` |
 | [dotnet-reactor](./dotnet-reactor/SKILL.md) | .NET 商业级混淆/加壳/授权 | `dotnet` `obfuscation` `security` |
 | [sentry](./sentry/SKILL.md) | Sentry .NET SDK：错误追踪与性能监控 | `dotnet` `error-tracking` `monitoring` `performance` |
 

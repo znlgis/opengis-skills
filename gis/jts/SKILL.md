@@ -40,7 +40,7 @@ JTS Topology Suite（简称 JTS）是 LocationTech 项目组下的开源 Java �
 
 ---
 
-## 快速集成
+## 环境准备与快速集成
 
 ### Maven
 

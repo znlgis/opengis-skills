@@ -40,7 +40,7 @@ OpenGIS Data Analysis Framework（简称 OpenGisDAF / `daf`）是一个**方案�
 
 ---
 
-## 快速上手
+## 环境准备与快速上手
 
 ```bash
 # 克隆（必须带子模块）
@@ -210,6 +210,16 @@ dotnet demo/plugin/OpenGisDAF.PluginHostDemo/bin/Release/net10.0/OpenGisDAF.Plug
 ### PostGIS 输出
 
 `output.adapterType: "postgis"` + `connectionConfig`。`encryptedPassword` 必须是当前用户上下文生成的 DPAPI（Windows）/ AES-256-GCM（Linux/macOS，密钥文件权限 0600）密文，**不能填明文**；密文无效立即失败且错误信息不回显密文。
+
+---
+
+## 最佳实践
+
+1. **先质检、后分析**：无效几何（蝴蝶结多边形等）参与 clip 求交会抛 `TopologyException` 且要素被跳过；先跑 `qcMode: true` 的质检方案拿到 `{plan}.qc-report.json`，修完数据再跑分析方案
+2. **失败策略按依赖关系选**：默认 `stopOnAny` 遇错即停；无依赖的独立项用 `continueIndependent` 让失败项的下游跳过、其余照跑
+3. **重试范围要清楚**：`maxRetries`/`retryInterval`/`exponentialBackoff` 只对执行期运行时错误（`ERR_RT_*`，如超时）生效；调度层错误（如输入文件不存在）直接失败不重试
+4. **凭据只放密文**：PostGIS 输出的 `encryptedPassword` 必须是当前用户上下文生成的密文（Windows DPAPI / Linux、macOS AES-256-GCM 且密钥文件 0600），明文会被拒绝且错误信息不回显
+5. **方案可复现**：`id`/`version` 语义化并纳入版本管理，`isIntermediate` 标清楚中间产物，便于重跑与比对
 
 ---
 

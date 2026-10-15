@@ -229,6 +229,16 @@ viewer.trackedEntity = entity;
 
 ---
 
+## 典型工作流
+
+1. **初始化 Viewer**：使用 `Cesium.Viewer` 创建三维地球，设置地形和影像提供者
+2. **加载数据**：根据数据类型选择合适 API——GeoJSON/CZML 用 `DataSource`，3D 瓦片用 `Cesium3DTileset`，单模型用 `Entity.model`
+3. **设置相机**：使用 `camera.flyTo()` 定位到目标区域
+4. **添加交互**：通过 `ScreenSpaceEventHandler` 处理点击拾取
+5. **性能优化**：根据场景复杂度启用 `requestRenderMode`、调整 `maximumScreenSpaceError`
+
+---
+
 ## 性能优化
 
 1. 大量静态要素优先用 Primitive 而非 Entity
@@ -255,13 +265,6 @@ viewer.trackedEntity = entity;
 
 ## AI 使用建议
 
-### 推荐工作流
-
-1. **初始化 Viewer**：使用 `Cesium.Viewer` 创建三维地球，设置地形和影像提供者
-2. **加载数据**：根据数据类型选择合适 API——GeoJSON/CZML 用 `DataSource`，3D 瓦片用 `Cesium3DTileset`，单模型用 `Entity.model`
-3. **设置相机**：使用 `camera.flyTo()` 定位到目标区域
-4. **添加交互**：通过 `ScreenSpaceEventHandler` 处理点击拾取
-5. **性能优化**：根据场景复杂度启用 `requestRenderMode`、调整 `maximumScreenSpaceError`
 
 ### 关键注意事项
 

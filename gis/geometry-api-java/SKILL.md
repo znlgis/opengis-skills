@@ -28,7 +28,7 @@ Esri Geometry API for Java 是一个自包含的空间几何计算库，提供�
 
 ---
 
-## 快速集成
+## 环境准备与快速集成
 
 ### Maven
 
@@ -52,7 +52,7 @@ implementation 'com.esri.geometry:esri-geometry-api:2.2.4'
 
 ---
 
-## 核心类一览
+## 核心 API 一览
 
 | 类 | 包 | 用途 |
 |---|---|---|

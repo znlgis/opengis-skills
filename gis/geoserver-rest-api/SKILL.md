@@ -43,7 +43,7 @@ REST API 的典型用途包括：
 
 ---
 
-## 认证方式
+## 环境准备与认证方式
 
 所有写操作（POST / PUT / DELETE）均需认证。GeoServer 默认使用 HTTP Basic Auth：
 

@@ -70,7 +70,7 @@ mvn install -DskipTests
 
 ---
 
-## Project Structure
+## 核心 API：包结构与入口类
 
 ```text
 com.znlgis.ogu4j
@@ -359,7 +359,7 @@ RuntimeException
 - **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
 - **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
 
-## Typical Workflow Example
+## 典型工作流示例
 
 ```java
 import com.znlgis.ogu4j.datasource.OguLayerUtil;
