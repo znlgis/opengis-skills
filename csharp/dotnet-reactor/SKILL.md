@@ -9,6 +9,8 @@ tags:
   - security
 ---
 
+> **产品定位：** 商业闭源 .NET 代码保护与授权工具（Eziriz 出品；非开源项目，无公开仓库）
+>
 > **官网：** <https://www.eziriz.com/dotnet_reactor.htm>
 >
 > **下载：** <https://www.eziriz.com/downloads.htm>
@@ -17,7 +19,7 @@ tags:
 >
 > **许可证：** 商业（提供个人/企业/全球许可证）
 
-> ⚠️ 本 SKILL 仅作为技术使用说明，请确保使用 .NET Reactor 时拥有合法授权，并仅对自己拥有版权的代码使用。
+> **说明：** 本 SKILL 仅作为技术使用说明，请确保使用 .NET Reactor 时拥有合法授权，并仅对自己拥有版权的代码使用。
 
 ## 概述
 
@@ -48,14 +50,14 @@ tags:
 
 1. **Files** → Add Files：添加要保护的 .exe / .dll
 2. **Protection** 选项卡：
-   - **Necrobit Protection**（IL 加密）✅ 推荐
-   - **Anti ILDASM** ✅
-   - **Anti Tampering** ✅
-   - **Obfuscation** → 重命名 ✅
-   - **Control Flow Obfuscation** ✅
-   - **String Encryption** ✅
+   - **Necrobit Protection**（IL 加密，推荐必开）
+   - **Anti ILDASM**
+   - **Anti Tampering**
+   - **Obfuscation** → 重命名
+   - **Control Flow Obfuscation**
+   - **String Encryption**
    - **Resource Encryption / Compression**（按需）
-   - **Anti Debug** ✅
+   - **Anti Debug**
 3. **Native EXE File**（可选）：将 EXE 编译为原生壳
 4. **Output Path**：输出目录
 5. 点击 **Protect**
@@ -200,6 +202,25 @@ GUI → Advanced：
 | ConfuserEx 2 | 开源 | 中 | 维护活跃度低 |
 | Obfuscar | 开源 | 仅重命名 | 简单稳定 |
 | Eazfuscator.NET | 商业 | 高 | 收费 |
+
+---
+
+## 典型工作流
+
+### 工作流一：首次保护一个发布包
+
+1. 在 GUI 里 Add Files 加入待保护的 .exe / .dll
+2. Protection 选项卡逐项勾选：Necrobit（IL 加密）+ Obfuscation + Control Flow + String Encryption + Anti ILDASM/Anti Tampering，按需再加资源加密
+3. 用排除规则把反射、序列化、XAML 绑定用到的类型排除掉
+4. 设 Output Path 后点 Protect，备份原始程序集，只分发保护后的版本
+5. 对保护后的产物跑一遍回归测试（反射、序列化、插件加载最容易被影响）
+
+### 工作流二：接入 CI / MSBuild
+
+1. GUI 里调好参数后保存 `.nrproj`（XML），提交进仓库
+2. 构建脚本调用 `dotNET_Reactor.Console -project xxx.nrproj`，或直接传 `-file/-targetfile/-necrobit/-obfuscation/...` 参数
+3. MSBuild 用 `AfterTargets="Build"` 的 Exec 任务自动执行
+4. 构建完在流水线上跑冒烟测试，确认保护没有破坏启动与授权校验
 
 ---
 

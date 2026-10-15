@@ -17,7 +17,7 @@ tags:
 >
 > **NuGet：** `Furion`、`Furion.Pure`
 >
-> **最新版本：** `Furion` 4.9.9.95 / `Furion.Pure` 4.9.9.10（截至2026-09，NuGet）
+> **最新版本：** `Furion` 4.9.9.96 / `Furion.Pure` 4.9.9.10（截至2026-10，NuGet；`5.0.0-preview.*` 为预览线，未转正）
 >
 > **许可证：** MIT + Apache-2.0
 
@@ -269,6 +269,30 @@ public class JwtSettings { public string ValidIssuer { get; set; } = ""; }
 
 var jwt = App.GetConfig<JwtSettings>("JWTSettings");
 ```
+
+---
+
+## 典型工作流
+
+### 工作流一：从空项目到可调用的 API
+
+1. `dotnet new webapi` 建项目，引入 `Furion` 包
+2. 入口三步：`builder.Inject()` → `builder.Services.AddControllers().AddInject()` → `app.UseInject()`
+3. 写服务：实现 `IDynamicApiController`，配 `ITransient`/`IScoped`/`ISingleton` 之一，接口自动按方法名映射成 HTTP 端点
+4. 打开 Swagger 核对分组与动词，命名不匹配的用 `[HttpPost]` 等特性覆盖
+5. 需要鉴权时接入 `JWTSettings` + `AddJwt<JwtHandler>()` + `[Authorize]`
+
+### 工作流二：加数据库与定时任务
+
+1. 选 ORM：SqlSugar（`AddSqlSugar`）或 EF Core（`AddDatabaseAccessor`）
+2. 定时任务实现 `IJob`，远程调用用 `IHttpDispatchProxy`，跨模块解耦用 `IEventSubscriber`
+3. 配置从 `appsettings.json` 经 Furion 配置体系读取，不直接 `Configuration["..."]` 硬编码
+
+### 工作流三：规范化响应与异常处理
+
+1. 默认所有接口包装成 `{statusCode, succeeded, data, errors}`，前端统一按此解析
+2. 需要裸返回时通过配置关闭规范化
+3. 业务异常抛 Furion 的友好异常类型，由框架统一转成响应
 
 ---
 

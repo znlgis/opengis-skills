@@ -244,6 +244,31 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 
 ---
 
+## 典型工作流
+
+### 工作流一：新项目从建库到查询
+
+1. 建客户端：Web/DI 场景注入 `SqlSugarScope`，脚本类单次使用可用 `SqlSugarClient`（配 `IsAutoCloseConnection = true`）
+2. 定义实体：`[SugarTable("表名")]` + `[SugarColumn(IsPrimaryKey = true)]`（自增加 `IsIdentity = true`，雪花 ID 则不要设）
+3. `db.CodeFirst.InitTables<T>()` 建表/更新结构
+4. 增删改查用链式 API：`Insertable` / `Updateable` / `Deleteable` / `Queryable`
+5. 列表查询用 `ToPageList(pageIndex, pageSize, ref total)` 分页
+
+### 工作流二：接数据库现成表（DB First）
+
+1. 用 `db.DbFirst` 系列方法按表生成实体类
+2. 需要改映射时在生成结果上加 `[SugarColumn(ColumnName=...)]` 调整
+3. 查询照常走链式 API，不写 SQL
+
+### 工作流三：上生产前的高可用配置
+
+1. 读写分离：配 `SlaveConnectionConfigs`，写主读从
+2. 大表按时间分表：标 `[SplitTable]`，查询时用分表 API
+3. 打开 AOP：`db.Aop.OnLogExecuting` 异步落日志，接慢 SQL 监控
+4. 百万级导入改用 `Insertable(list).UseSqlBulkCopy()`，并确认目标库支持批量协议
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流

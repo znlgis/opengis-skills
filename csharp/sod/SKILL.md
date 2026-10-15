@@ -256,6 +256,29 @@ db.UseTransaction(() => {
 
 ---
 
+## 典型工作流
+
+### 工作流一：建实体并完成一次 CRUD
+
+1. 实体继承 `EntityBase`，标好 `TableName`、`IdentityName`、`PrimaryKeys`，属性一律用 `getProperty<T>()` / `setProperty()` 声明
+2. 新增用 `EntityQuery<T>` 的 `Instance` + `Insert()`，插入后从实体上取回填的自增主键
+3. 改单个字段用 `setProperty` 后 `Update()`，只提交变更字段
+4. 删除/按条件批量操作走 OQL，或直接用 `AdoHelper` 执行原生 SQL
+
+### 工作流二：复杂查询与分页
+
+1. 条件复杂时用 OQL 链式 API 拼查询，固定 SQL 场景写 SQL-MAP XML 并用 SqlMapTool 生成强类型 DAL
+2. 分页用 `oql.Limit(pageSize, pageIndex)`，不要 `ToList()` 后手工分页
+3. 慢查询打开 `MyDB.SQL_LOG_INFO` 看输出，必要时调 `CommandTimeOut`
+
+### 工作流三：换数据库 / 读写分离
+
+1. 换库只需要改连接字符串的 `providerName`（SqlServer / MySql / PostgreSQL / DaMeng 等）
+2. 读写分离：分别配主从连接串，写走 master、读走 slave
+3. 事务要在同一个 `AdoHelper` 实例里 `BeginTransaction()` → 操作 → `Commit()`/`Rollback()`
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -293,6 +316,7 @@ db.UseTransaction(() => {
 | 自增主键未填回 | `IdentityName` 设置正确 |
 | 中文乱码 | 数据库用 utf8mb4 / NVARCHAR |
 | 事务跨连接失败 | 使用同一 `AdoHelper` 实例 |
+| OQL 查全表把内存吃满 | 改用 `oql.Limit(pageSize, pageIndex)` 分页，避免 `ToList()` 全量取回 |
 
 ---
 

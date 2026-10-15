@@ -17,7 +17,7 @@ tags:
 >
 > **NuGet：** <https://www.nuget.org/packages/Sentry>
 >
-> **最新版本：** Sentry / Sentry.AspNetCore 6.11.1（截至2026-09，NuGet）
+> **最新版本：** Sentry / Sentry.AspNetCore 6.12.1（截至2026-10，NuGet）
 >
 > **许可证：** MIT
 

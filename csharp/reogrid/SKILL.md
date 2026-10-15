@@ -54,6 +54,20 @@ dotnet add package unvell.ReoGrid8.dll
 
 ---
 
+## 核心 API 速查
+
+| 对象 | 入口 | 说明 |
+|------|------|------|
+| 控件 | `ReoGridControl`（WinForms / WPF） | 宿主控件，`Dock = DockStyle.Fill` 铺满 |
+| 工作表 | `grid.CurrentWorksheet` / `grid.Worksheets` | 当前表与表集合 |
+| 单元格 / 区域 | `sheet["A1"]` / `sheet["A2:C4"]` / `sheet.SetRangeData(...)` | 索引器按地址读写，支持区域赋值 |
+| 区域样式 | `RangePosition` + `sheet.SetRangeStyles(...)` | 见「样式」章 |
+| 公式 | `sheet["C2"] = "=A2*B2"` / `sheet.Recalculate()` | 重算需显式触发 |
+| 文件 IO | `unvell.ReoGrid.IO`（Excel / CSV 导入导出） | 见「Excel 文件读写」章 |
+| 脚本 | ReoScript | 内置脚本引擎，见「脚本」章 |
+
+---
+
 ## WinForms 入门
 
 ```csharp
@@ -349,6 +363,7 @@ btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
 | WPF 高 DPI 模糊 | 启用 `PerMonitorV2` DPI |
 | 公式不计算 | 调用 `sh.Recalculate()` |
 | Excel 打开样式丢失 | 仅支持核心样式，复杂样式建议直接 NPOI 处理 |
+| 写入几万行卡顿 | 用 `SetRangeData(...)` 批量赋值替代逐格赋值，并减少 `Recalculate()` 的调用次数 |
 
 ---
 

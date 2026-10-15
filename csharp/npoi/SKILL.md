@@ -53,6 +53,21 @@ dotnet add package NPOI
 
 ---
 
+## 核心 API 速查
+
+| 对象 | 入口 | 说明 |
+|------|------|------|
+| 工作簿 | `new XSSFWorkbook()` / `new HSSFWorkbook()` / `new SXSSFWorkbook(rowAccessWindow)` | xlsx / xls / 流式写大文件 |
+| 读任意格式 | `WorkbookFactory.Create(stream)` | 按魔数自动识别 xls/xlsx |
+| 表 | `wb.CreateSheet(name)` / `wb.GetSheetAt(i)` / `wb.GetSheet(name)` | |
+| 行 / 单元格 | `sh.CreateRow(i)` / `row.CreateCell(j)` | |
+| 单元格值 | `cell.SetCellValue(...)` / `cell.CellType` | 枚举 `CellType.String/Numeric/Boolean/Formula/Blank` |
+| 样式 | `wb.CreateCellStyle()` + `wb.CreateFont()` + `wb.CreateDataFormat()` | |
+| 公式求值 | `wb.GetCreationHelper().CreateFormulaEvaluator()` | 读公式结果用它，不要自己解析 |
+| Word | `XWPFDocument` / `XWPFParagraph` | .docx 读写 |
+
+---
+
 ## 写入 Excel（xlsx）
 
 ```csharp
@@ -231,6 +246,30 @@ doc.Write(fs);
 4. **大文件读**用 `XSSFEventModel`（SAX）以减少内存
 5. **xls 行数上限 65536**，xlsx 上限 1048576
 6. **避免在循环内 `wb.CreateCellStyle()`**
+
+---
+
+## 典型工作流
+
+### 工作流一：导出报表（写 xlsx）
+
+1. `new XSSFWorkbook()` → `CreateSheet()`，先铺数据：`CreateRow()` / `CreateCell()` / `SetCellValue()`
+2. 再设样式：循环外建好 `ICellStyle` / `IFont` / `IDataFormat` 实例复用，日期列套带日期格式的样式
+3. 有公式要提前 `CreateFormulaEvaluator().EvaluateAll()` 把结果算出来
+4. `FileStream` 写出后关闭；服务端环境无需装 Office（纯托管）
+
+### 工作流二：导入解析（读 xls/xlsx）
+
+1. `FileStream` → `WorkbookFactory.Create(fs)` 自动识别格式
+2. `GetSheetAt(0)`（或按名字取表）→ 遍历 `Row`/`Cell`
+3. 按 `CellType` 分支取值：`String`/`Numeric`/`Boolean`/`Formula`（公式用 `IFormulaEvaluator` 求值）
+4. 数据入库前做格式校验，行数接近上限时（xls 65536 / xlsx 1048576）考虑拆分
+
+### 工作流三：百万行导出
+
+1. 写用 `new SXSSFWorkbook(rowAccessWindowSize: 1000)` 流式滚动，只保留窗口内的行在内存
+2. 用完后 `Dispose()` 清理临时文件
+3. 读大文件改用 `XSSFEventModel`（SAX）遍历
 
 ---
 

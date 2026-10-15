@@ -16,7 +16,7 @@ tags:
 >
 > **后端代码目录：** `Admin.NET/`（.NET 解决方案）
 >
-> **当前版本：** v2.4.x（截至2026-09，upstream master `Web/package.json` 为 2.4.33；TFM `net8.0;net10.0`）
+> **当前版本：** v2.4.x（upstream 分支 `v2` 的 `Web/package.json` 为 2.4.33，仓库最近推送 2026-03-30；后端 TFM `net8.0;net10.0`）
 >
 > **在线文档：** <https://adminnet.top/>
 >
@@ -43,7 +43,7 @@ Admin.NET 后端基于 **.NET 8 / .NET 10** 构建，核心依赖 **Furion** 框
 
 ## 项目结构
 
-```
+```text
 Admin.NET/                         # 后端解决方案根目录
 ├── Admin.NET.sln                  # Visual Studio 解决方案文件
 ├── Admin.NET.Core/                # 核心框架层
@@ -214,7 +214,7 @@ public abstract class EntityTenant : EntityBaseData
 
 ### JWT 登录流程
 
-```
+```http
 POST /api/sysAuth/login
 Content-Type: application/json
 
@@ -228,7 +228,7 @@ Content-Type: application/json
 
 ### 使用 Token
 
-```
+```http
 Authorization: Bearer {accessToken}
 ```
 
@@ -305,15 +305,51 @@ public class MyPluginService : IDynamicApiController, ITransient
 
 ---
 
+## 典型工作流
+
+### 工作流一：从零跑起来
+
+1. 克隆仓库，按 `appsettings.json` 配置数据库连接（及 Redis/JWT）
+2. `dotnet run` 启动：首次启动自动建库建表并写入种子数据，无需手工执行 SQL
+3. 用种子账号登录 `/api/sysAuth/login` 拿 `accessToken`，在 Swagger 里验证接口
+
+### 工作流二：新增一个业务模块
+
+1. 在应用层新建实体：按需要继承 `EntityBase` / `EntityBaseData` / `EntityTenant`
+2. 新建服务：继承 `BaseService<T>` 或实现 `IDynamicApiController`，方法加 `[DisplayName("操作名")]` 自动注册权限
+3. 新建 DTO，接口打 `[ApiDescriptionSettings("GroupName")]` 分组
+4. 用代码生成：Swagger 或管理界面选表 → 一键生成 Entity/Service/DTO + 前端页面，再按业务改
+
+### 工作流三：打包与部署
+
+1. 确认 `appsettings.json` 的数据库、Redis、JWT 配置
+2. `dotnet publish` 产出发布包
+3. 用仓库自带的 Dockerfile 容器化，或部署到 IIS / Nginx
+
+---
+
 ## 开发流程最佳实践
 
-```
+```text
 1. 建议每个业务系统单独创建一个工程（参考 Admin.NET.Application 层的结构）
 2. 自建应用层引用 Admin.NET.Core 层（不修改核心工程名）
 3. Admin.NET.Web.Entry 引用新建的应用层工程
 4. 接口 / 服务 / 控制器采用合并模式，不影响自建应用层的使用
 5. 可随主仓库升级而升级，避免冲突
 ```
+
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 首次启动要不要手工建库 | 不需要：启动时自动建库建表并注入种子数据，只要连接串有建库权限 |
+| 主键设了数据库自增导致冲突 | Admin.NET 主键用 `Yitter.IdGenerator` 雪花 ID，实体主键不要配自增列 |
+| 调用 `Delete` 后数据还在库里 | 继承 `EntityBaseData` 的实体默认软删除（`IsDelete`），要真删用 `DeleteByIdAsync` |
+| 接口没进 Swagger 分组 | 服务/方法上补 `[ApiDescriptionSettings("GroupName", Order = 100)]` |
+| 前端按钮权限不生效 | 后端方法上要有 `[DisplayName("操作名")]`，前端配合 `v-auth` 指令使用 |
+| 多租户数据串了 | 实体需继承 `EntityTenant`，才会按 `TenantId` 自动隔离 |
 
 ---
 

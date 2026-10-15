@@ -17,7 +17,7 @@ tags:
 >
 > **前端代码目录：** `Web/`（Vue3 应用）
 >
-> **当前版本：** v2.4.x（截至2026-09，upstream master `Web/package.json` 为 2.4.33）
+> **当前版本：** v2.4.x（upstream 分支 `v2` 的 `Web/package.json` 为 2.4.33，仓库最近推送 2026-03-30）
 >
 > **在线文档：** <https://adminnet.top/>
 >
@@ -45,7 +45,7 @@ Admin.NET 前端基于 **vue-next-admin** 模板二次开发，采用 **Vue 3 Co
 
 ## 项目结构
 
-```
+```text
 Web/
 ├── public/                        # 公共静态资源
 ├── lang/                          # 国际化语言文件
@@ -166,6 +166,43 @@ server {
     }
 }
 ```
+
+---
+
+## 典型工作流
+
+### 工作流一：启动与联调
+
+1. Node.js >= 18 + pnpm，`cd Web` 后 `pnpm install`
+2. 按环境改 `.env.development` 的 `VITE_API_URL` 指向后端地址
+3. `pnpm run dev` 起开发服务器；后端 Swagger 有变更时先跑 `api_build` 重新生成 API 客户端
+4. 登录联调：密码等敏感数据经 `sm-crypto-v2` 做 SM2 加密后提交
+
+### 工作流二：新增一个业务页面
+
+1. 在 `src/views/` 下新建目录与 `.vue` 页面
+2. 后端管理界面配菜单：填路由路径 + 组件路径（对应 `src/views/` 下文件路径，不含 `.vue` 后缀，大小写敏感）
+3. 按钮权限：后端配按钮权限标识 → 页面里用 `v-auth="'xxx:action'"` 控制显示
+4. 调接口：`getAPI(XxxApi)` 调用自动生成的 API 客户端
+
+### 工作流三：构建部署
+
+1. `pnpm run build` → 产物在 `dist/`
+2. Nginx：`try_files $uri $uri/ /index.html` 支持 SPA 路由，`/api` 反代后端
+3. 实时通知需额外把 `/hubs` 配成 WebSocket 代理（`Upgrade`/`Connection` 头），否则 SignalR 不工作
+
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| npm / yarn 装依赖失败 | 项目用 `pnpm-workspace.yaml`，必须用 pnpm（推荐 10.x） |
+| `import.meta.env` 读不到自定义变量 | Vite 只暴露 `VITE_` 前缀的变量，改名后重启 dev server |
+| 菜单点开 404 / 白屏 | 后端菜单的组件路径要对上 `src/views/` 下实际文件路径（不含 `.vue`，大小写敏感） |
+| 按钮该隐藏却没隐藏 | `v-auth` 的标识与后端按钮权限标识必须完全一致 |
+| 接口类型过期、字段对不上 | 后端接口改过后重新运行 `api_build` 生成 API 客户端 |
+| 站内通知/实时消息不来 | Nginx 未代理 WebSocket：给 `/hubs` 加 `Upgrade`/`Connection: upgrade` 配置 |
 
 ---
 
