@@ -19,7 +19,7 @@ tags:
 >
 > **许可证：** CC-BY-NC 4.0（README「授权协议」章，非商业使用）
 >
-> **版本：** 仓库无公开 Release/Tag，以 master 为准（最后推送 2026-03-16）；插件工程锁 `net8.0-windows`，而平台主仓 [lightcad1](https://github.com/znlgis/lightcad1) 已迁到 .NET 10，两套 SDK DLL 不可混用
+> **版本：** 仓库无公开 Release/Tag，以 master 为准（最后推送 2026-03-16）；插件工程（`QdLayout`）与平台主仓 [lightcad1](https://github.com/znlgis/lightcad1) 都是 `net8.0-windows` / `net8.0` 目标，引用平台 DLL 时保持同一 TFM，不要混用其它 .NET 版本的 SDK DLL
 >
 > **配套教程：** <https://znlgis.github.io/cad/LightCAD/>（飞扬平台 20 章）
 

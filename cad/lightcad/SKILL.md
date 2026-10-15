@@ -25,7 +25,7 @@ tags:
 
 ## 概述
 
-LightCAD（飞扬集成设计平台）是一套基于 .NET 10 / C# 开发的开源建筑工程设计软件，目标是把二维设计、三维设计、BIM 设计、智能设计与协同设计融合为一体，为建筑设计行业提供 BIM 正向设计支撑能力。项目采用严格的分层架构（MathLib → Core → RenderUtils → Drawing → Runtime → UI），既可作为完整 CAD 平台使用，也可作为二次开发底座。核心特性：
+LightCAD（飞扬集成设计平台）是一套基于 .NET 8 / C# 开发的开源建筑工程设计软件，目标是把二维设计、三维设计、BIM 设计、智能设计与协同设计融合为一体，为建筑设计行业提供 BIM 正向设计支撑能力。项目采用严格的分层架构（MathLib → Core → RenderUtils → Drawing → Runtime → UI），既可作为完整 CAD 平台使用，也可作为二次开发底座。核心特性：
 
 - **完整 2D/3D 能力**：直线、圆弧、多段线、样条等二维图元；拉伸、旋转、放样、融合等参数化实体建模
 - **多渲染后端**：Three.js4Net（WebGL）与 OpenTK（OpenGL）
@@ -42,8 +42,8 @@ LightCAD（飞扬集成设计平台）是一套基于 .NET 10 / C# 开发的开�
 | 项 | 要求 |
 |----|------|
 | 操作系统 | Windows 10（1909+）/ Windows 11 64 位 |
-| 开发工具 | Visual Studio 2026（.NET 桌面开发工作负载）或 `dotnet` CLI |
-| SDK | .NET 10 SDK |
+| 开发工具 | Visual Studio 2022（17.5.5+，.NET 桌面开发工作负载）或 `dotnet` CLI |
+| SDK | .NET 8 SDK |
 | 硬件 | 8GB 内存起（推荐 16GB+），支持 OpenGL 3.3 的显卡 |
 
 ### 获取源码与编译（命令行方式）
@@ -180,7 +180,7 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 
 ### 工作流一：从源码构建并运行平台
 
-1. 安装 .NET 10 SDK 与 VS2026（.NET 桌面开发工作负载）
+1. 安装 .NET 8 SDK 与 Visual Studio 2022（17.5.5+，.NET 桌面开发工作负载）
 2. `git clone --depth 1 https://github.com/znlgis/lightcad1.git`
 3. `dotnet restore LightCAD1.sln` → `dotnet build LightCAD1.sln -c Debug`
 4. 启动 `LightCAD.WinForm`，在命令行窗口输入 `LINE` 画一条直线验证交互
@@ -188,7 +188,7 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 
 ### 工作流二：开发一个行业插件（元素 + 命令 + Action）
 
-1. 新建类库项目（`net10.0-windows`），引用平台项目或 `Libs/` 下的 SDK DLL（LightCAD.Core、LightCAD.Runtime、LightCAD.Drawing.Actions、LightCAD.MathLib 等）
+1. 新建类库项目（`net8.0-windows`，与平台工程 TFM 保持一致），引用平台项目或 `Libs/` 下的 SDK DLL（LightCAD.Core、LightCAD.Runtime、LightCAD.Drawing.Actions、LightCAD.MathLib 等）
 2. 定义 `ElementType` 静态集合（唯一 Guid、Name、`DispalyName`、`ClassType`），实体类继承 `LcElement`
 3. 实现 `ILcPlugin`：在 `Loaded()` 注册元素类型与 2D/3D Action，在 `Completed()` 挂接菜单 Tab
 4. 用 `[CommandClass]`/`[CommandMethod]` 编写用户命令，内部驱动 Action 完成交互绘制
@@ -213,8 +213,8 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 | 问题 | 解决 |
 |------|------|
 | 编译报「找不到 ThreeJs4Net.dll / OpenTK.dll」 | 确认仓库 `src/Libs/` 下 DLL 完整（部分二进制依赖未随 Git 提供时需从发布包获取） |
-| `The current .NET SDK does not support targeting .NET 10` | 安装最新 .NET 10 SDK |
-| WinForms 项目在非 Windows 上编译失败 | `net10.0-windows` 项目仅支持 Windows 编译与运行 |
+| `The current .NET SDK does not support targeting .NET 8` | 安装 .NET 8 SDK（平台全部工程为 `net8.0` / `net8.0-windows` 目标） |
+| WinForms 项目在非 Windows 上编译失败 | `net8.0-windows` 项目仅支持 Windows 编译与运行 |
 | NuGet 还原失败（NU1301） | 检查网络或配置国内 NuGet 镜像源 |
 | 插件不加载 | 检查 `plugins.json` 的 `folders` 配置、DLL 是否位于扫描目录、是否实现 `ILcPlugin` |
 | 命令行输入命令无响应 | 确认平台已启动文档（文档未初始化时命令框架不执行） |
