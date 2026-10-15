@@ -1,6 +1,6 @@
 ---
 name: gis-skills
-description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, or building web map applications. Index of 24 skills: GDAL, GeoServer, QGIS, PostGIS, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, NetTopologySuite, OpenGisDAF and more."
+description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, or building web map applications. Index of 32 skills: GDAL, GeoServer, QGIS, PostGIS, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, Leaflet, MapServer, QGIS Server, PROJ, PDAL, Mapbox GL JS, deck.gl and more."
 tags:
   - gis
   - geospatial
@@ -12,11 +12,11 @@ tags:
   - webmapping
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 96 技能总索引
 
 ## 概述
 
-本分类涵盖 **24 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务的完整链路：
+本分类涵盖 **32 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务的完整链路：
 
 ```text
 数据源 → 命令行处理 → 编程分析 → 空间数据库 → 地图服务 → 前端可视化
@@ -41,6 +41,9 @@ tags:
 | [gdal-api](./gdal-api/SKILL.md) | GDAL/OGR 编程 API（C/C++/Python/.NET） | `api` `python` `cpp` `dotnet` |
 | [qgis-process](./qgis-process/SKILL.md) | QGIS 命令行批处理 | `cli` `processing` `qgis` `raster` |
 | [geopipe-agent](./geopipe-agent/SKILL.md) | AI 原生 GIS 数据流水线（YAML 驱动） | `agent` `pipeline` `yaml` `qc` |
+| [proj](./proj/SKILL.md) | 坐标转换与投影库（CRS/EPSG，GDAL 底层引擎） | `crs` `reprojection` `cli` `epsg` |
+| [grass-gis](./grass-gis/SKILL.md) | 模块化 GIS 栅格/矢量分析套件 | `gis` `raster` `vector` `python` |
+| [pdal](./pdal/SKILL.md) | 点云数据处理库（LAS/LAZ，点云界 GDAL） | `point-cloud` `lidar` `pipeline` `cli` |
 
 ### 🗄️ 空间数据库
 
@@ -65,6 +68,8 @@ tags:
 | [geoserver](./geoserver/SKILL.md) | 开源地图服务器（WMS/WFS/WMTS/WCS） | `server` `wms` `wfs` `ogc` |
 | [geoserver-rest-api](./geoserver-rest-api/SKILL.md) | GeoServer REST API 自动化管理 | `rest` `automation` `api` `http` |
 | [geoserver-cloud](./geoserver-cloud/SKILL.md) | GeoServer 云原生微服务架构 | `cloud` `kubernetes` `docker` |
+| [mapserver](./mapserver/SKILL.md) | C 语言 OGC 地图服务引擎（mapfile 驱动） | `server` `wms` `wfs` `mapfile` |
+| [qgis-server](./qgis-server/SKILL.md) | QGIS 项目直发 OGC 服务的服务端组件 | `server` `qgis` `wms` `fcgi` |
 
 ### 🖥️ QGIS 生态
 
@@ -78,6 +83,9 @@ tags:
 |------|------|---------|
 | [cesiumjs](./cesiumjs/SKILL.md) | 高性能 3D 地球可视化 | `javascript` `3d` `webgl` |
 | [openlayers](./openlayers/SKILL.md) | 高性能 Web 2D 地图库 | `javascript` `2d` `web` `map` |
+| [leaflet](./leaflet/SKILL.md) | 轻量级移动端 Web 2D 地图库 | `javascript` `web` `2d` `map` |
+| [mapbox-gl-js](./mapbox-gl-js/SKILL.md) | WebGL 矢量瓦片地图库（需 access token） | `javascript` `webgl` `vector-tiles` `map` |
+| [deck-gl](./deck-gl/SKILL.md) | GPU 大规模地理数据可视化框架 | `javascript` `webgl` `visualization` `geo` |
 
 ### 📦 .NET GIS 组件
 

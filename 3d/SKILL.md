@@ -1,6 +1,6 @@
 ---
 name: 3d-skills
-description: "Use when working with 3D Gaussian Splatting (3DGS), .ply model cleanup/compression/publishing, interactive 360-degree panorama visualization and virtual tours, AEC/BIM 3D data processing, or CSG solid modeling. Index of 5 skills: SuperSplat, Photo-Sphere-Viewer, Ara3D-SDK, Elements, and OpenCSG.NET."
+description: "Use when working with 3D Gaussian Splatting (3DGS), .ply model cleanup/compression/publishing, interactive 360-degree panorama visualization and virtual tours, AEC/BIM 3D data processing, CSG solid modeling, or point cloud/mesh processing with Open3D. Index of 6 skills: SuperSplat, Photo-Sphere-Viewer, Ara3D-SDK, Elements, OpenCSG.NET, and Open3D."
 tags:
   - 3d
   - gaussian-splatting
@@ -14,7 +14,7 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 96 技能总索引
 
 ## 概述
 
@@ -25,6 +25,7 @@ tags:
 - **AEC/BIM 三维 SDK**：Ara3D-SDK（.NET 8 高性能几何/网格/BIM 处理、SIMD 数学、多格式 I/O、Studio 插件）
 - **BIM 编程生成库**：Elements（Hypar Elements，纯 C# 创建建筑构件，无需 Revit/Rhino）
 - **CSG 建模库**：OpenCSG.NET（零依赖 .NET 构造实体几何库，布尔运算 + STL 导出）
+- **点云/网格处理库**：Open3D（Intel 开源 3D 数据处理，配准/重建/可视化，C++ 内核 + Python API）
 
 ### 何时加载此索引？
 
@@ -49,6 +50,7 @@ tags:
 | [ara3d-sdk](./ara3d-sdk/SKILL.md) | 面向 AEC 的高性能 .NET 三维/BIM 库集合（.NET 8） | `bim` `aec` `dotnet` `geometry` `ifc` |
 | [elements](./elements/SKILL.md) | Hypar Elements：纯 C# BIM 编程生成库 | `dotnet` `bim` `aec` `geometry` `ifc` `gltf` |
 | [opencsg-net](./opencsg-net/SKILL.md) | OpenCSG.NET：零依赖 .NET CSG 建模库 | `dotnet` `csg` `3d` `geometry` `stl` |
+| [open3d](./open3d/SKILL.md) | Intel 开源 3D 数据处理库（点云/网格） | `point-cloud` `mesh` `registration` `python` |
 
 ---
 

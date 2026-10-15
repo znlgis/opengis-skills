@@ -1,6 +1,6 @@
 ---
 name: ai-skills
-description: "Use when building LLM applications, RAG knowledge bases, AI agents, terminal coding agents, multi-model orchestration, plugin-based agent harnesses, or file translation. Index of 10 skills: Dify, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, Oh-My-OpenAgent, Superpowers-zh, DeepSeek Harness, My OpenCode DeepSeek Config."
+description: "Use when building LLM applications, RAG knowledge bases, AI agents, terminal coding agents, multi-model orchestration, plugin-based agent harnesses, or file translation. Index of 14 skills: Dify, LangChain, LlamaIndex, Ollama, Transformers, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, DeepSeek Harness and more."
 tags:
   - ai
   - llm
@@ -12,13 +12,15 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 96 技能总索引
 
 ## 概述
 
-本分类涵盖 **10 个 AI/LLM 开源项目**的技能文件：
+本分类涵盖 **14 个 AI/LLM 开源项目**的技能文件：
 
 - **LLM 应用平台**：Dify（RAG + 工作流 + Agent 一站式）
+- **应用框架**：LangChain（LCEL + LangGraph 工具调用 Agent）、LlamaIndex（文档 RAG/索引/Workflow）
+- **本地推理与模型库**：Ollama（本地 LLM 运行与 OpenAI 兼容 API）、Hugging Face Transformers（模型定义、推理与微调）
 - **智能体 / 助手**：Hermes Agent（自学习通用智能体）、OpenClaw（多通道个人 AI 助手 Gateway）
 - **终端编码代理**：Pi（极简 Agent Harness）、OpenCode（模型无关、配置即代码的 AI coding agent）
 - **插件式智能体框架**：DeepSeek Harness（dsh，Cordis 引擎驱动的插件化 Agent Harness）
@@ -39,6 +41,10 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [dify](./dify/SKILL.md) | 开源 LLM 应用开发平台（RAG + 工作流 + Agent） | `llm` `rag` `workflow` `agent` |
+| [langchain](./langchain/SKILL.md) | LLM 应用框架（LCEL + LangGraph Agent） | `llm` `agent` `rag` `python` |
+| [llamaindex](./llamaindex/SKILL.md) | 私有数据 RAG/索引框架（Workflow/Agent） | `llm` `rag` `indexing` `python` |
+| [ollama](./ollama/SKILL.md) | 本地大模型运行与推理（OpenAI 兼容 API） | `llm` `local-inference` `rest-api` `gguf` |
+| [huggingface-transformers](./huggingface-transformers/SKILL.md) | HF 模型推理与微调框架（pipeline/Trainer） | `transformers` `pytorch` `nlp` `fine-tuning` |
 | [hermes-agent](./hermes-agent/SKILL.md) | 自学习通用型 AI 智能体（终端优先） | `agent` `self-improving` `terminal` |
 | [openclaw](./openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway | `agent` `gateway` `assistant` |
 | [pi](./pi/SKILL.md) | 极简可扩展终端 AI 编码代理（Agent Harness） | `agent` `coding-agent` `terminal` `typescript` |

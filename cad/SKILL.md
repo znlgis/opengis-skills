@@ -1,6 +1,6 @@
 ---
 name: cad-skills
-description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 20 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, KiCad, SolveSpace, QCAD, xBIM, Clipper2, TongWen and more."
+description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 21 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, Blender, KiCad, SolveSpace, QCAD, xBIM, Clipper2, TongWen and more."
 tags:
   - cad
   - 3d-modeling
@@ -12,11 +12,11 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 96 技能总索引
 
 ## 概述
 
-本分类涵盖 **20 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
+本分类涵盖 **21 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
 
 ```
 几何内核 → 参数化建模 → CAD 应用 → 数据交换 → 可视化
@@ -50,6 +50,7 @@ tags:
 | [cadquery](./cadquery/SKILL.md) | Python 脚本化参数化 3D CAD | `python` `occt` `3d` `parametric` |
 | [solvespace](./solvespace/SKILL.md) | 轻量参数化 2D/3D CAD | `parametric` `3d` `2d` `cad` |
 | [chili3d](./chili3d/SKILL.md) | 纯 Web 3D CAD（Three.js + 自研 chili-wasm/OCCT） | `web` `typescript` `wasm` `3d` |
+| [blender](./blender/SKILL.md) | 开源 3D 创作套件（Python bpy API） | `3d` `python` `bpy` `gltf` |
 
 ### 📐 2D CAD 与制图
 

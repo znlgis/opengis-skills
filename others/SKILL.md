@@ -1,6 +1,6 @@
 ---
 name: others-skills
-description: "Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, SSL/TLS certificate automation, or building a bilingual children's Phaser/Vue game collection. Index of 7 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh, CHAGS."
+description: "Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, SSL/TLS certificate automation, Docker Compose multi-container orchestration, or building a bilingual children's Phaser/Vue game collection. Index of 8 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh, CHAGS, Docker Compose."
 tags:
   - email
   - self-hosted
@@ -21,11 +21,11 @@ tags:
 > **仓库地址：** <https://github.com/znlgis/opengis-skills>
 > **许可证：** MIT
 >
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 80 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 96 技能总索引
 
 ## 概述
 
-本分类当前涵盖 **7 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 与项目演示（demos）的通用工具、编程语言与独立项目。
+本分类当前涵盖 **8 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 与项目演示（demos）的通用工具、编程语言与独立项目。
 
 ### 何时加载此索引？
 
@@ -51,6 +51,7 @@ tags:
 | [ruoyi-cloud](./ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `spring-cloud` `microservices` `rbac` |
 | [acme.sh](./acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
 | [chags](./chags/SKILL.md) | 中国历史典故儿童游戏合集（Vue3 + Phaser，中英双语） | `vue` `phaser` `game` |
+| [docker-compose](./docker-compose/SKILL.md) | 声明式多容器 Docker 编排（compose.yaml） | `docker` `containers` `orchestration` `yaml` |
 
 ---
 
