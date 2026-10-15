@@ -16,9 +16,11 @@ tags:
 > **官网 / 文档：** <https://openclaw.ai> ｜ <https://docs.openclaw.ai>
 >
 > **许可证：** MIT ｜ **语言：** TypeScript
+>
+> **最新版本：** v2026.10.3（2026-10-13，日历版本号，见 [Releases](https://github.com/openclaw/openclaw/releases)）
 > **发布频道：** latest / beta / dev（参见 [GitHub Releases](https://github.com/openclaw/openclaw/releases)）
 
-> ⚠️ OpenClaw 的助手可以执行命令、读写文件、控制设备并接入你的私人聊天账号。**对外暴露前**务必阅读官方 [Security](https://docs.openclaw.ai/gateway/security) 与 [Exposure runbook](https://docs.openclaw.ai/gateway/security/exposure-runbook)，并配置沙箱与访问控制。
+> **注意：** OpenClaw 的助手可以执行命令、读写文件、控制设备并接入你的私人聊天账号。**对外暴露前**务必阅读官方 [Security](https://docs.openclaw.ai/gateway/security) 与 [Exposure runbook](https://docs.openclaw.ai/gateway/security/exposure-runbook)，并配置沙箱与访问控制。
 
 ## 概述
 
@@ -80,7 +82,7 @@ openclaw gateway --port 18789 --verbose   # 默认端口 18789
 
 ---
 
-## 安全与沙箱（重点）
+## 核心概念：信任边界与沙箱
 
 - **默认最小权限**：保持危险工具（`browser`/`canvas`/`nodes`/`cron`/`gateway`）默认 deny，仅按需开启。
 - **远程暴露分层加固**：优先用 [Tailscale](https://docs.openclaw.ai/gateway/tailscale) 等私有网络，而非裸公网；务必读 [Remote access](https://docs.openclaw.ai/gateway/remote) 与 Exposure runbook。
@@ -125,6 +127,14 @@ pnpm gateway:watch           # 开发期按需重建运行时
 - 先澄清：**接哪些通道**、**用什么模型**、**是否需要节点/语音/Canvas**、**是否对外暴露**。
 - 生成命令以 `openclaw onboard` 为起点，配置写 `~/.openclaw/openclaw.json`；强调最小权限沙箱与暴露前加固。
 - 不要把 OpenClaw 误描述为桌面操作/Computer Use 工具——它是多通道助手 Gateway。
+
+---
+
+## 相关技能
+
+- **opencode** — 终端编码 Agent（本地开发场景常配合使用）：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **hermes-agent** — 带记忆/技能闭环的终端 Agent，另一类本地优先设计：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **pi** — 终端编码 Agent，权限模型对比参考：[../pi/SKILL.md](../pi/SKILL.md)
 
 ---
 

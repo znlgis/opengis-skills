@@ -35,7 +35,7 @@ DocuTranslate 是一款**基于大语言模型（LLM）的本地文件翻译工�
 - **多 AI 平台**：兼容 OpenAI 兼容协议的主流平台，支持高并发翻译与自定义提示词。
 - **多种使用形态**：开箱即用的 Web UI、RESTful API、Client SDK、MCP Server，以及 Windows/Mac 便携整合包（<40MB）。
 
-> ⚠️ 翻译 `pdf` 时会先转换为 markdown，**会丢失原始版式**。对版式有严格要求者请注意。
+> **注意：** 翻译 `pdf` 时会先转换为 markdown，**会丢失原始版式**。对版式有严格要求者请注意。
 
 > DocuTranslate 迭代很快，命令、字段与参数请以当前版本的 `docutranslate --help`、Web 界面、`http://127.0.0.1:8010/docs` 及仓库最新代码为准。
 
@@ -241,6 +241,13 @@ SSE 模式下客户端配置端点：`http://127.0.0.1:8000/mcp/sse`。
 | 支持 `doc`/`xls` 吗？ | 暂不支持旧版二进制格式，仅 `docx`/`xlsx`。 |
 | 如何只解析不翻译？ | SDK 传 `skip_translate=True`。 |
 | 触发平台限流？ | 降低 `concurrent`，设置 `rpm`/`tpm` 限速。 |
+
+---
+
+## 相关技能
+
+- **dify** — LLM 应用平台（RAG 知识库 / 工作流 / 工具调用）：[../dify/SKILL.md](../dify/SKILL.md)
+- **opencode** — 终端 AI 编码 Agent，可作为 DocuTranslate MCP 的宿主：[../opencode/SKILL.md](../opencode/SKILL.md)
 
 ---
 

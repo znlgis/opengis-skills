@@ -16,6 +16,8 @@ tags:
 >
 > **英文上游：** <https://github.com/obra/superpowers>
 >
+> **最新版本：** npm 包 1.7.14（2026-09-28，`npx superpowers-zh` 拉的就是它）；仓库 git tag 已到 v5.1.0，两者版本号不同步，以 npm 为准
+>
 > **许可证：** MIT ｜ **npm 包：** 参见 [npm](https://www.npmjs.com/package/superpowers-zh)｜ **运行要求：** Node.js ≥ 20
 
 ## 概述
@@ -41,7 +43,7 @@ npx superpowers-zh
 
 ---
 
-## Skill 机制与方法论闭环
+## 核心概念：Skill 机制与方法论闭环
 
 每个 Skill 都有**名称 + 触发描述 + 详细流程**。当 AI 工具支持 Skill 发现或自定义指令时，会在对应场景加载这些流程，用流程约束行动。核心方法论按软件交付链路组织：
 
@@ -93,6 +95,14 @@ npx superpowers-zh
 - 它是**方法论约束层**，与具体编码工具（OpenCode、Claude Code、Hermes 等）正交，可叠加使用。
 - 安装用 `npx superpowers-zh`（Node ≥ 20）；强调「澄清→设计→计划→TDD→调试→验证→审查→收尾」闭环。
 - 鼓励 AI 在动手前主动加载「需求澄清/计划」Skill，在收尾前加载「完成前验证」Skill。
+
+---
+
+## 相关技能
+
+- **opencode** — 常被叠加使用的编码客户端之一：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **hermes-agent** — 终端 Agent，技能机制与记忆闭环可与之配合：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **pi** — 另一款终端编码 Agent：[../pi/SKILL.md](../pi/SKILL.md)
 
 ---
 

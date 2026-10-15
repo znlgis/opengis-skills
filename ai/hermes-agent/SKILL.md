@@ -17,7 +17,7 @@ tags:
 > **官网 / 文档：** <https://nousresearch.com/> ｜ <https://hermes-agent.nousresearch.com/docs>
 >
 > **许可证：** MIT ｜ **语言：** Python（≥ 3.11）
-> **最新版本：** 参见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)
+> **最新版本：** v2026.9.24（日历版本号，见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
 
 ## 概述
 
@@ -147,6 +147,14 @@ hermes cron --schedule "0 9 * * *" "daily-brief"    # 定时任务
 - 强调其差异点：**学习闭环（技能+记忆+历史+用户画像）**，而非普通工具调用框架。
 - 安装走官方 `install.sh`（Linux/macOS/WSL2/Termux/Nix），用 `hermes setup/model/tools/doctor` 完成初始化与排错。
 - 复杂任务建议用子代理协作 + MCP 扩展；长期使用价值来自记忆与技能的持续积累。
+
+---
+
+## 相关技能
+
+- **pi** — 终端编码 Agent（另一套工具链与权限模型）：[../pi/SKILL.md](../pi/SKILL.md)
+- **opencode** — 终端 AI 编码 Agent（OpenCode 生态）：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **superpowers-zh** — 中文方法论文档层，可叠加在 Hermes 的工作流之上：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 
 ---
 

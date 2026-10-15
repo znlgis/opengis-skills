@@ -14,7 +14,7 @@ tags:
 
 > **项目地址：** <https://github.com/znlgis/my-opencode-deepseek-config>
 >
-> **许可证：** MIT License（最新 tag：v4.0.0）
+> **许可证：** MIT License（最新 tag：v4.0.1）
 >
 > **文档：** <https://github.com/znlgis/my-opencode-deepseek-config/blob/main/README.md>（中英双语）
 >
@@ -111,7 +111,40 @@ export OPENCODE_CONFIG_DIR="$HOME/path/to/my-opencode-deepseek-config/opencode"
 | `/codemap` `/learn` `/simplify` `/rmslop` | explore / deep-worker / oracle+light-orchestrator / deep-worker | 结构图 / 经验沉淀 AGENTS.md / 行为保持简化 / 死代码清理 |
 | `/spec-propose` `/spec-apply` | planner / deep-worker（spec-workflow） | 规约驱动变更：提案 → 按 tasks 实现归档 |
 
-典型工作流：新功能 `/spec-propose → /spec-apply → /review`；排障 `/oracle → /deep → /rmslop → /commit`。
+---
+
+## 典型工作流
+
+### 工作流一：新功能（规约驱动）
+
+1. `/spec-propose` 交给 `planner`：澄清意图、拆解任务、产出提案
+2. `/spec-apply` 交给 `deep-worker`：按 tasks 逐项实现（重型多文件改动走 pro）
+3. `/review` 交给只读 `reviewer`：本地 diff 单遍审查（带 PR 号则回帖 GitHub）
+4. `/commit` 由 `light-orchestrator` 生成 Conventional Commits 提交信息
+
+### 工作流二：排障与清理
+
+1. `/oracle` 只读根因分析（pro）
+2. `/deep` 让 `deep-worker` 落地修复
+3. `/rmslop` 清死代码，`/simplify` 做行为保持的简化
+4. `/commit` 收尾；摩擦较大时 `/reflect` 让 oracle 给出配置优化建议
+
+### 工作流三：换一台机器复现环境
+
+1. `git clone` 仓库，用 `OPENCODE_CONFIG_DIR`（或符号链接）指向 `opencode/` 子目录
+2. `/connect` 填 DeepSeek Key（或设 `DEEPSEEK_API_KEY`）
+3. 后台委派前设 `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true`
+4. `/models` 确认 `deepseek/deepseek-v4-pro`，Agent 列表确认 12 个齐全
+
+---
+
+## 最佳实践
+
+1. **保住提示缓存前缀**：agent 提示词、`AGENTS.md`、规则顺序保持字节稳定，时间戳/随机 ID/动态文件列表放到 payload 尾部；插件锁版本防前缀漂移
+2. **按成本分层路由**：trivial 任务留给 flash 关思考，例行任务 flash + low，深推理才升 pro（pro = 3× flash）；`cache_read` 便宜约 30×，命中就是省钱
+3. **压缩阈值按模型分档**：pro 更早压缩、flash 更晚压缩（DCP 的 `modelMaxLimits`/`modelMinLimits`）
+4. **只读 Agent 真只读**：`edit: deny` + bash 白名单，skills 白名单默认 deny 按职责放行
+5. **配置改动后同步**：`~/.config/opencode` 若是独立副本，改完仓库源要跑 `scripts\sync-config.ps1`
 
 ---
 
@@ -138,9 +171,16 @@ export OPENCODE_CONFIG_DIR="$HOME/path/to/my-opencode-deepseek-config/opencode"
 
 ---
 
+## 相关技能
+
+- **opencode** — 本配置方案的宿主客户端，配置字段以它为准：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **oh-my-openagent** — 另一套主打多模型协同的 OpenCode 方案：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
+- **superpowers-zh** — 中文方法论 Skill 集，可并入本方案的 skills/ 目录：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
+
+---
+
 ## 参考资源
 
 - 仓库：<https://github.com/znlgis/my-opencode-deepseek-config>
 - 配置目录：`opencode/`（`opencode.jsonc`、`dcp.jsonc`、`AGENTS.md`、`agents/`、`skills/`）
 - 借鉴来源：[oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)、[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)、[anomalyco/opencode](https://github.com/anomalyco/opencode)、[mattpocock/skills](https://github.com/mattpocock/skills)、[OpenSpec](https://github.com/Fission-AI/OpenSpec)
-- 相关 SKILL：本仓库 [deepseek-harness](../deepseek-harness/SKILL.md)（DeepSeek 官方智能体框架 dsh）、[oh-my-openagent](../oh-my-openagent/SKILL.md)（多 agent 编排插件）

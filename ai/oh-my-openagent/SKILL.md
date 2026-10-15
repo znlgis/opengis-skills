@@ -17,7 +17,7 @@ tags:
 > **安装文档：** <https://github.com/code-yeongyu/oh-my-openagent/blob/dev/docs/guide/installation.md>
 >
 > **许可证：** SUL-1.0（Sustainable Use License，商用前请阅读条款）｜ **npm 包：** `oh-my-opencode` ｜ **作者：** YeonGyu-Kim
-> **最新版本：** v4.19.4（迭代快，参见 [npm](https://www.npmjs.com/package/oh-my-openagent)，以当前版本为准）
+> **最新版本：** v5.1.33（2026-10-13，GitHub tag 与 npm `oh-my-opencode` 同步；`beta` 5.1.0 为预发布线。迭代快，以 npm 当前版本为准）
 
 > 说明：项目以 npm 包 **`oh-my-opencode`** 发布，CLI 别名包含 `oh-my-opencode` / `oh-my-openagent` / `omo` / `lazycodex`。它是 **OpenCode 的插件**，使用前需先安装 [OpenCode](../opencode/SKILL.md)。
 
@@ -54,7 +54,7 @@ bunx oh-my-opencode install
 bunx oh-my-opencode install --no-tui
 ```
 
-> ⚠️ 官方安装手册特别提示：让 Agent 获取安装文档时务必用 `curl` 而非 WebFetch——WebFetch 会做摘要，丢掉 `--openai`、subscription、`max20` 等关键标志：
+> **注意：** 官方安装手册特别提示：让 Agent 获取安装文档时务必用 `curl` 而非 WebFetch——WebFetch 会做摘要，丢掉 `--openai`、subscription、`max20` 等关键标志：
 >
 > ```bash
 > curl -fsSL https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/heads/dev/docs/guide/installation.md
@@ -62,7 +62,7 @@ bunx oh-my-opencode install --no-tui
 
 ---
 
-## 核心理念与组成
+## 核心概念与组成
 
 | 组成 | 作用 |
 |------|------|
@@ -105,6 +105,14 @@ bunx oh-my-opencode install --no-tui
 - 始终先确认 **OpenCode 已安装**，再 `bunx oh-my-opencode install`；可同时加载 [opencode](../opencode/SKILL.md) 技能。
 - 获取/复述安装命令时保留全部标志，不要摘要化（按官方提示用 `curl`）。
 - 强调它是「插件 + 编排层」，价值在多模型分工与结构化代码工具，而非又一个模型。
+
+---
+
+## 相关技能
+
+- **opencode** — OmO 依托的开源 AI 编程客户端：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **my-opencode-deepseek-config** — 另一套 OpenCode 多 Agent 配置（DeepSeek 模型族）：[../my-opencode-deepseek-config/SKILL.md](../my-opencode-deepseek-config/SKILL.md)
+- **superpowers-zh** — 方法论约束层，与模型编排互补：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 
 ---
 

@@ -211,13 +211,14 @@ gh repo edit my-dsh-plugin --add-topic dsh-plugin
 | 如何配置代理？ | 在环境变量中设置 `HTTP_PROXY` / `HTTPS_PROXY` |
 | 插件如何调试？ | 使用 `pnpm dsh web --debug` 启用调试模式 |
 | 与 OpenCode 有何区别？ | dsh 是 DeepSeek 官方框架，OpenCode 是模型无关的社区工具 |
+| 处于 Developer Preview，接口会变吗？ | 会：以仓库最新代码与 CHANGELOG 为准，锁定版本使用，升级前先跑一遍自己的插件/脚本 |
 
 ---
 
 ## AI 使用建议
 
 - 用户提到「DeepSeek Harness」「dsh」「Cordis 插件框架」时加载本技能
-- 当前为 **Developer Preview**，API 可能有 Breaking Changes，以仓库最新代码为准
+- 当前为 **Developer Preview**（最新 tag `dsh-v0.2.1-alpha.3`），API 可能有 Breaking Changes，以仓库最新代码为准
 - 推荐使用 `npx @deepseek-ai/dsh web` 快速启动 Web UI 体验
 - 插件开发遵循 Cordis 范式：Service → Component → Plugin 三层抽象
 - 多模型选择：`deepseek-chat`（快速通用）vs `deepseek-reasoner`（深度推理）

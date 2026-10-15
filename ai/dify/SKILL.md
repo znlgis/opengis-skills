@@ -16,7 +16,7 @@ tags:
 > **官方文档：** <https://docs.dify.ai/>
 >
 > **许可证：** Dify Open Source License（基于 Apache-2.0 + 附加条款）
-> **最新版本：** 参见 [GitHub Releases](https://github.com/langgenius/dify/releases)
+> **最新版本：** 1.17.1（截至 2026-10-11 的最新 Release，见 [GitHub Releases](https://github.com/langgenius/dify/releases)）
 
 ## 概述
 
@@ -34,7 +34,7 @@ Dify 提供：
 
 ---
 
-## 部署（Docker Compose）
+## 安装部署（Docker Compose）
 
 ```bash
 git clone https://github.com/langgenius/dify

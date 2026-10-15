@@ -17,9 +17,9 @@ tags:
 > **官网 / 文档：** <https://opencode.ai> ｜ **配置 Schema：** <https://opencode.ai/config.json> ｜ **TUI Schema：** <https://opencode.ai/tui.json>
 >
 > **许可证：** MIT
-> **版本：** 迭代快，以本机 `opencode --version` 为准
+> **版本：** 迭代快，以本机 `opencode --version` 为准（2026-10-11 上游最新 Release 为 v1.19.0）
 
-> ⚠️ OpenCode 迭代非常快，命令、配置字段与模型名称请以你当前版本的 `opencode --help`、TUI 内 `/help` 及在线 JSON Schema 为准。
+> **注意：** OpenCode 迭代非常快，命令、配置字段与模型名称请以你当前版本的 `opencode --help`、TUI 内 `/help` 及在线 JSON Schema 为准。
 
 ## 概述
 
@@ -87,9 +87,9 @@ opencode serve --port 4096                         # 启动 HTTP Server（配合
 
 ## 配置体系（核心）
 
-OpenCode 支持 **JSON / JSONC**（带注释）。务必加 `$schema` 获得校验与补全：
+OpenCode 支持 **JSON / JSONC**（带注释）。务必加 `$schema` 获得校验与补全。项目根配置文件 `opencode.json`：
 
-```jsonc title="opencode.json"
+```jsonc
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "anthropic/claude-sonnet-4-5",
@@ -118,7 +118,7 @@ OpenCode 支持 **JSON / JSONC**（带注释）。务必加 `$schema` 获得校�
 
 ### TUI 专属配置（`tui.json`）
 
-```jsonc title="tui.json"
+```jsonc
 {
   "$schema": "https://opencode.ai/tui.json",
   "theme": "tokyonight",
@@ -133,7 +133,7 @@ OpenCode 支持 **JSON / JSONC**（带注释）。务必加 `$schema` 获得校�
 
 ## 自定义 Agent / 命令 / 工具
 
-```jsonc title="opencode.json"
+```jsonc
 {
   "$schema": "https://opencode.ai/config.json",
   "default_agent": "build",
@@ -215,6 +215,15 @@ opencode run "升级依赖并修复由此产生的编译错误"
 - 配置问题先排查「合并 vs 替换」与优先级；主题/键位归 `tui.json`，行为/模型/权限归 `opencode.json`。
 - 生成配置时始终带 `"$schema"`，并优先用细粒度 `permission` 收敛 `bash`/`webfetch` 风险。
 - 由于版本迭代快，生成命令/字段后提醒用户以本机 `--help` 与在线 Schema 校验。
+
+---
+
+## 相关技能
+
+- **oh-my-openagent** — 基于 OpenCode 的多模型协同配置方案：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
+- **my-opencode-deepseek-config** — OpenCode + DeepSeek 的纯配置实践（Agent/技能/命令清单）：[../my-opencode-deepseek-config/SKILL.md](../my-opencode-deepseek-config/SKILL.md)
+- **superpowers-zh** — 中文方法论 Skill 层，可在 OpenCode 中加载：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
+- **deepseek-harness** — DeepSeek 官方智能体框架（对比另一类 Agent 设计）：[../deepseek-harness/SKILL.md](../deepseek-harness/SKILL.md)
 
 ---
 

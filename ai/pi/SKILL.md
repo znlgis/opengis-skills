@@ -19,7 +19,7 @@ tags:
 > **最新发布：** 参见 [GitHub Releases](https://github.com/earendil-works/pi/releases)
 >
 > **许可证：** MIT
-> **最新版本：** 参见 [npm](https://www.npmjs.com/package/@earendil-works/pi-coding-agent)（迭代快，以 `pi --version` / npm 当前版本为准）
+> **最新版本：** npm `latest` 1.2.0（另有 `legacy-node20` 0.74.2 通道）；迭代快，以 `pi --version` / npm 当前版本为准
 
 ## 概述
 
@@ -152,6 +152,14 @@ Pi 默认继承启动进程权限，不自带强制权限沙箱。生产建议�
 - 回答部署问题时先确认是 **个人本地使用** 还是 **团队隔离部署**。
 - 涉及权限控制时明确说明：Pi 默认不提供强制沙箱，应结合容器方案。
 - 涉及版本差异时提醒以 `pi --version` 与 Releases 页面为准。
+
+---
+
+## 相关技能
+
+- **opencode** — 同类终端编码 Agent，可对比其配置体系与权限模型：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **hermes-agent** — 带自学习闭环的终端 Agent：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
+- **superpowers-zh** — 与具体客户端正交的方法论层（澄清→计划→TDD→验证）：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 
 ---
 
