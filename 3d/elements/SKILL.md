@@ -214,6 +214,7 @@ model.ToGlTF("room.glb");
 | 如何导出到 Revit？ | 通过 IFC 格式中转：Elements → IFC → Revit |
 | 几何操作在不同平台结果不一致？ | 使用 `IsAlmostEqualTo()` 等精度辅助方法，避免直接 `==` 比较 |
 | 如何创建自定义建筑元素？ | 继承 `Element` 类，用 JSON Schema 定义属性，用 CodeGeneration 生成代码 |
+| NuGet 该装哪个版本？ | 稳定线是 2.3.0；2.4.0 系列还都是 `-alpha.*` 预发布，生产项目留在 2.3.0 |
 
 ---
 

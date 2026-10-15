@@ -12,7 +12,7 @@ tags:
   - virtual-tour
 ---
 
-> **仓库地址：** <https://github.com/mistic100/Photo-Sphere-Viewer>
+> **项目地址：** <https://github.com/mistic100/Photo-Sphere-Viewer>
 >
 > **文档：** <https://photo-sphere-viewer.js.org>
 >
@@ -294,6 +294,54 @@ const viewer = new Viewer({
 
 ---
 
+---
+
+## 典型工作流
+
+### 工作流一：单场景全景查看器
+
+1. `npm install @photo-sphere-viewer/core`，页面里放一个容器并设好宽高
+2. `new Viewer({ container, panorama, navbar, caption })` 初始化，`defaultYaw`/`defaultPitch`/`defaultZoomLvl` 定初始机位
+3. 需要热点就加 `MarkersPlugin`（`markers: [{ id, position: { yaw, pitch }, image | html, tooltip }]`）
+4. 监听 `ready` / `click` / `position-updated` 事件接业务逻辑
+5. 切换图片用 `setPanorama(url, options)`（可带过渡动画），销毁页面时 `destroy()` 释放 Three.js 资源
+
+### 工作流二：多场景虚拟导览
+
+1. 装 `virtual-tour-plugin`（+ `markers-plugin`，导览箭头依赖它）
+2. `VirtualTourPlugin.withConfig({ nodes, startNodeId, positionMode })`：每个 node 有自己的 `panorama` 与 `links`
+3. 需要底部缩略图导航再叠 `GalleryPlugin`
+4. 用 `viewer.getPlugin(VirtualTourPlugin).gotoNode(id)` 做程序化跳转
+
+### 工作流三：大图 / 360° 视频 / 双鱼眼
+
+1. 大图分块：`equirectangular-tiles-adapter`（或 cubemap 版），配好多级 `tiles` 尺寸
+2. 视频：`equirectangular-video-adapter`（`panorama: { source }`）+ `video-plugin` 出控制条
+3. 双鱼眼相机原片：`dual-fisheye-adapter`
+4. 裁剪过的全景图用 `panoData`（fullWidth/fullHeight/croppedX/Y...）告诉适配器原图与裁剪关系，或依赖默认的 XMP 元数据读取
+
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 全景图加载不出来 | 多为 CORS：给图片源配 `Access-Control-Allow-Origin`，本地调试用同源或 dev server 代理 |
+| 移动端陀螺仪 / 立体 VR 无效 | 这些能力需要 HTTPS 环境（+ `gyroscope-plugin` / `stereo-plugin`） |
+| 切图后标记丢了 | `setPanorama()` 会重置标记；跨场景管理交给 `VirtualTourPlugin` |
+| 速度快慢不好调 | 时长参数是毫秒（`speed: 1500` 即 1.5 秒）或 `'3rpm'` 这类角度速度格式 |
+| 极点拉伸 / 变形 | 等距柱状图适配器 5.14.2+ 可用 `shader: true`（像素着色器）消除极点扭曲 |
+| 想直接用 React | 用官方生态的 `react-photo-sphere-viewer` wrapper，或自行在 `useEffect` 里 new Viewer |
+
+---
+
+## 相关技能
+
+- **cesiumjs** — 3D 地球与大规模场景可视化：[../../gis/cesiumjs/SKILL.md](../../gis/cesiumjs/SKILL.md)
+- **supersplat** — 3D 高斯泼溅编辑器与查看器：[../supersplat/SKILL.md](../supersplat/SKILL.md)
+
+---
+
 ## 参考资源
 
 - 官方文档：<https://photo-sphere-viewer.js.org>
@@ -307,8 +355,3 @@ const viewer = new Viewer({
 - NPM（core）：<https://www.npmjs.com/package/@photo-sphere-viewer/core>
 
 ---
-
-## 相关技能
-
-- **cesiumjs** — 3D 地球与大规模场景可视化：[../../gis/cesiumjs/SKILL.md](../../gis/cesiumjs/SKILL.md)
-- **supersplat** — 3D 高斯泼溅编辑器与查看器：[../supersplat/SKILL.md](../supersplat/SKILL.md)

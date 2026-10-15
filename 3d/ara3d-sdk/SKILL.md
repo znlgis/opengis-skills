@@ -12,7 +12,6 @@ tags:
   - ifc
   - mesh
   - gltf
-  - studio-plugin
 ---
 
 > **项目地址：** <https://github.com/ara3d/ara3d-sdk>
@@ -70,7 +69,7 @@ tags:
 
 Ara3D-SDK 提供四个**元包（meta-package）**——它们不含源码，只捆绑依赖，方便按需选择最小可用集合：
 
-```
+```text
 Ara3D.SDK  (net8.0-windows — 完整 Windows 技术栈)
 ├── Ara3D.SDK.Core            net8.0         — 跨平台基础（Utils/Logging/Memory/Collections/...）
 ├── Ara3D.SDK.Geometry        net8.0         — 网格、模型、SIMD 数学
@@ -408,4 +407,12 @@ public class TorusGenerator : IGenerator
 - **NuGet：** <https://www.nuget.org/packages/Ara3D.SDK>
 - **Ara 3D 官网：** <https://ara3d.com>
 - **上游中文教程：** <https://znlgis.github.io/3d/ara3d-sdk/>（10 章系统教程）
-- **相关技能：** [supersplat](../supersplat/SKILL.md)（Web 3DGS 编辑）、[xbim](../../cad/xbim/SKILL.md)（.NET BIM/IFC）、[occt](../../cad/occt/SKILL.md)（几何内核）、[cadquery](../../cad/cadquery/SKILL.md)（参数化建模）
+---
+
+## 相关技能
+
+- **supersplat** — Web 端 3D 高斯泼溅编辑（与网格管线互为补充的表示方式）：[../supersplat/SKILL.md](../supersplat/SKILL.md)
+- **elements** — Hypar Elements（同属 .NET/BIM 编程生成方向）：[../elements/SKILL.md](../elements/SKILL.md)
+- **xbim** — .NET BIM / IFC 读写与几何：[../../cad/xbim/SKILL.md](../../cad/xbim/SKILL.md)
+- **occt** — C++ 几何内核（Ara3D 之外的底层选择）：[../../cad/occt/SKILL.md](../../cad/occt/SKILL.md)
+- **cadquery** — Python 参数化建模（跨语言对照）：[../../cad/cadquery/SKILL.md](../../cad/cadquery/SKILL.md)
