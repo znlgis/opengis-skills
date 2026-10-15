@@ -28,7 +28,7 @@ KE3036 套件常见组成：
 
 ---
 
-## 烧录 MicroPython 固件
+## 环境准备：烧录 MicroPython 固件
 
 ```bash
 # 1. 下载固件：
@@ -49,6 +49,28 @@ mpremote connect /dev/ttyACM0 ls
 mpremote connect /dev/ttyACM0 cp main.py :main.py
 mpremote connect /dev/ttyACM0 run main.py
 ```
+
+---
+
+## 核心 API 速查（MicroPython / RP2040）
+
+| 模块 / 对象 | 用途 | 典型用法 |
+|-------------|------|----------|
+| `machine.Pin` | 数字 IO | `Pin(25, Pin.OUT)` / `Pin(14, Pin.IN, Pin.PULL_UP)`，带 `value()` / `on()` / `off()` / `irq()` |
+| `machine.PWM` | PWM 输出（LED 调光、舵机） | `PWM(Pin(15))` → `freq(50)` / `duty_u16()` |
+| `machine.ADC` | 模拟输入 | `ADC(Pin(26))` → `read_u16()` |
+| `machine.I2C` | I²C 总线（OLED 等） | `I2C(0, scl=Pin(1), sda=Pin(0), freq=400_000)` → `scan()` |
+| `machine.SPI` | SPI 总线 | `SPI(0, baudrate=1_000_000, ...)` |
+| `machine.UART` | 串口 | `UART(0, baudrate=9600)` |
+| `machine.Timer` | 软/硬定时器 | 周期回调；`machine.time_pulse_us` 可测脉冲宽度（超声波） |
+| `machine.freq` | 主频调节 | `freq(125_000_000)` |
+| `rp2.PIO` | 可编程 IO（WS2812 等时序敏感外设） | 需配合 `.pio` 程序 |
+| `network.WLAN` | Pico W 联网 | `WLAN(network.STA_IF)` → `connect()` / `ifconfig()` |
+| `umqtt.simple` | MQTT 客户端（Pico W） | `MQTTClient(...)` → `connect()` / `publish()` / `subscribe()` |
+| `dht` | DHT 温湿度（内置驱动） | `dht.DHT11(Pin(...))` → `measure()` |
+| `ssd1306` | OLED 驱动（需自备/`mip` 装库） | `I2C` + `ssd1306.SSD1306_I2C(...)` → `text()` / `show()` |
+| `mip` | 联网装第三方包 | `mip.install("...")` |
+| `time` / `utime` | 延时与计时 | `sleep()` / `sleep_us()` / `ticks_ms()` |
 
 ---
 
