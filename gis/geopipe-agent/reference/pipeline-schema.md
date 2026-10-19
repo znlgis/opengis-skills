@@ -17,8 +17,8 @@ pipeline:
       on_error: fail               # Optional: fail/skip/retry (default: fail)
       when: "$step_id.issues_count > 0"  # Optional: conditional execution
       backend: native_python           # Optional: specific backend to use
-   outputs:                         # Optional: pipeline output declarations
-     result: "$step_id.output"
+  outputs:                          # Optional: pipeline output declarations
+    result: "$step_id.output"
 ```
 
 ## Reference Syntax
