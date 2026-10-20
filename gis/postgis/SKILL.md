@@ -1,6 +1,6 @@
 ---
 name: postgis
-description: "Use when extending PostgreSQL with spatial data types, spatial indexes (GiST/SP-GiST), geometry functions (ST_Intersects, ST_Buffer, ST_Transform), and spatial queries. PostGIS: the most widely used open-source spatial database extension."
+description: "Use when extending PostgreSQL with PostGIS 3.6.4 — geometry/geography/raster types, GiST and KNN <-> indexes, ST_Intersects/ST_Buffer/ST_Transform/ST_AsMVT, shp2pgsql -I and raster2pgsql import, and fixing \"Operation on mixed SRID\", slow spatial joins, and invalid polygons with ST_MakeValid."
 tags:
   - postgresql
   - database
@@ -30,7 +30,7 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 - **坐标参考系**：内置 6000+ EPSG 投影，自动 ST_Transform
 - **数据导入导出**：与 GDAL/ogr2ogr/shp2pgsql 无缝集成
 
-**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.4，3.7 处于 RC 阶段，截至 2026-10）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
+**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.4；3.7 仍处 RC 阶段、尚未正式发布，候选版为 3.7.0rc2，截至 2026-10）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
 
 ---
 
@@ -228,17 +228,15 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-
-### 关键注意事项
-
-- **geometry vs geography**：`geometry`（平面计算，速度快）vs `geography`（球面计算，距离单位为米）
-- **SRID 必须一致**：跨 SRID 运算必须先 `ST_Transform`，否则报 `Operation on mixed SRID`
-- **用 `&&` 让查询走索引**：`WHERE geom && ST_MakeEnvelope(...)` 粗筛 + `ST_Within` 精筛
-- **KNN 用 `<->`**：`ORDER BY geom <-> point LIMIT 10` 走 GiST 索引，比 `ST_Distance` 快几个数量级
-- **大几何优化**：使用 `ST_Subdivide` 切分大面几何加速空间连接
-- **导入后 ANALYZE**：大批量数据导入后执行 `VACUUM ANALYZE` 更新统计信息
+- **加载与引用**：`skill("postgis")` 加载；技能目录只读，SQL 脚本、导出与测试数据写到会话工作区。
+- **执行环境**：命令交给 dsh 的 `pwsh`（Windows 用 `psql.exe`，或 `docker exec -i pg psql -U postgres`）；psql 元命令（`\d`、`\c`）用 `psql -c "\d poi"` 单条传入，别依赖交互式会话。
+- **先探测版本**：`psql -c "SELECT version(), PostGIS_Full_Version();"` 核对 PostgreSQL、PostGIS 3.6.4 与 GEOS/PROJ；扩展缺失时先看 `SELECT * FROM pg_available_extensions WHERE name LIKE 'postgis%';`。
+- **验证产物**：导入后别只看 `INSERT 0 n`，跑 `SELECT count(*), ST_SRID(geom), ST_IsValid(geom) FROM t GROUP BY 2,3;` 核对要素数、SRID 与无效几何；性能结论必须用 `EXPLAIN (ANALYZE, BUFFERS)` 证明索引被使用。
+- **写操作回读**：`CREATE/ALTER`、`UpdateGeometrySRID` 或批量 `UPDATE` 后回读 `\d+ t` 与 `geometry_columns`，确认列类型与 SRID 真的落库。
+- **安全与权限**：密码不要写进命令行或报告（用 `PGPASSWORD`/`.pgpass`/连接串环境变量）；`DROP TABLE/SCHEMA`、整表改写 geom、`VACUUM FULL`、重启 PostgreSQL 前必须先向用户确认并备份。
+- **大表 DDL**：`UPDATE`/`CREATE INDEX` 尽量放在可控事务里避免长时间锁表；`CREATE INDEX CONCURRENTLY` 不能包在事务块中执行。
 
 ## 相关技能
 

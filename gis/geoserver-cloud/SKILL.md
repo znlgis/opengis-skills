@@ -1,6 +1,6 @@
 ---
 name: geoserver-cloud
-description: "Use when deploying GeoServer on Kubernetes as cloud-native microservices with auto-scaling, service discovery, and centralized configuration. GeoServer Cloud: break monolithic GeoServer into independently scalable WMS/WFS/WCS services."
+description: "Use when deploying GeoServer Cloud 3.0.2 on Docker Compose or Kubernetes — gateway serving WMS/WFS/WCS/WPS/GWC microservices under /geoserver/cloud, PgConfig vs datadir backends, RabbitMQ config-bus sync, Helm chart geoservercloud 3.0.2, and diagnosing 502s via actuator/health and Consul registration."
 tags:
   - java
   - server
@@ -18,9 +18,9 @@ tags:
 >
 > **官方文档：** <https://geoserver.org/geoserver-cloud/>
 >
-> **Docker Hub：** <https://hub.docker.com/u/geoservercloud>（镜像标签与 GeoServer 主版本对应，如 `3.0.1.1`）
+> **Docker Hub：** <https://hub.docker.com/u/geoservercloud>（镜像标签与 GeoServer 主版本对应，如 `3.0.2`）
 >
-> **最新版本：** 3.0.1.1（截至 2026-10，[GitHub Releases](https://github.com/geoserver/geoserver-cloud/releases)）
+> **最新版本：** 3.0.2（2026-10-20，[GitHub Releases](https://github.com/geoserver/geoserver-cloud/releases)）
 >
 > **许可证：** GPL-2.0
 
@@ -98,7 +98,7 @@ PGCONFIG_SCHEMA: "pgconfig"          # 启动时自动创建 schema
 ## Kubernetes（Helm）
 
 ```bash
-# Chart：camptocamp/helm-geoserver-cloud（chart 名 geoservercloud，最新 3.0.1）
+# Chart：camptocamp/helm-geoserver-cloud（chart 名 geoservercloud，最新 3.0.2）
 helm repo add geoserver-cloud https://camptocamp.github.io/helm-geoserver-cloud
 helm repo update
 ```
@@ -110,7 +110,7 @@ helm repo update
 > dependencies:
 >   - name: geoservercloud
 >     repository: https://camptocamp.github.io/helm-geoserver-cloud
->     version: 3.0.1
+>     version: 3.0.2
 > ```
 >
 > ```yaml
@@ -182,7 +182,7 @@ management:
 ```bash
 docker run -e SPRING_PROFILES_ACTIVE=datadir \
   -v /mnt/gsdata:/opt/app/data_directory \
-  geoservercloud/geoserver-cloud-wms:3.0.1.1
+  geoservercloud/geoserver-cloud-wms:3.0.2
 ```
 
 ---
@@ -247,25 +247,15 @@ kubectl -n gis get deploy | grep wms
 kubectl -n gis scale deploy <wms-deployment> --replicas=10
 ```
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **确定架构**：根据业务需求选择配置后端（生产推荐 PgConfig）
-2. **部署基础设施**：先部署 RabbitMQ + PostgreSQL（PgConfig 目录库），再启动微服务
-3. **启动服务**：下载官方稳定版 docker-compose 文件或用 Helm Chart 部署
-4. **验证服务**：通过 Gateway (`localhost:9090/geoserver/cloud`) 访问 Web UI
-5. **配置监控**：启用 Prometheus + Grafana 监控各微服务状态
-6. **弹性伸缩**：按负载独立扩缩 WMS/WFS 等服务的副本数
-
-### 关键注意事项
-
-- **启动顺序**：先启动 discovery/Consul → config → 数据库/RabbitMQ → 各业务服务
-- **配置同步**：确保 `GEOSERVER_BUS_ENABLED=true` 且 RabbitMQ 可达
-- **路径前缀**：默认 `GEOSERVER_BASE_PATH=/geoserver/cloud`，构造服务 URL 时不要漏掉
-- **PgConfig 一致性**：多副本共享同一个 PgConfig 数据库实现强一致
-- **JVM 独立调优**：每个微服务根据负载独立设置 `-Xmx`，避免 OOM
-- **不部署不需要的服务**：如不使用 WPS/WCS，直接从 docker-compose 中移除
+- **加载与引用**：`skill("geoserver-cloud")` 加载；技能目录只读，compose/values 覆写文件写到会话工作区。
+- **执行环境**：命令交给 dsh 的 `pwsh`（Windows 无 `wget`，改 `curl.exe -LO`）；先用 `docker version`、`helm version`、`kubectl version --client` 确认工具在 PATH。
+- **先探测版本**：`curl.exe -s -u admin:geoserver http://localhost:9090/geoserver/cloud/rest/about/version.json` 读 GeoServer 版本；`curl.exe -s http://localhost:9090/actuator/health` 取 `{"status":"UP"}`（被 profile 关掉时改用 `kubectl -n gis get pods` 判活）。
+- **验证产物**：部署后逐服务探活，再经网关 `.../rest/workspaces.json` 与一次 WMS `GetMap` 走通全链路；`docker compose ps` 显示 Up 不等于 OGC 服务可用。
+- **排障顺序**：502 → 查 Consul 注册与目标服务健康（`kubectl -n gis logs deploy/<wms>`）；配置不生效 → 查 RabbitMQ 与 `GEOSERVER_BUS_ENABLED`；瓦片 404 → 查 gwc 是否部署、`GEOSERVER_BASE_PATH` 前缀是否一致。
+- **安全与权限**：`admin:geoserver`、`PGCONFIG_PASSWORD`、RabbitMQ 口令不要回显到报告；`docker compose down -v`、`helm uninstall`、删 PVC 或 PgConfig schema 会丢配置，先向用户确认并备份。
+- **先本地复现**：能在 docker compose 复现的问题再上 K8s；镜像标签与 chart 版本保持同一版本号（3.0.2），避免网关与服务错配。
 
 ## 相关技能
 

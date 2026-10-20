@@ -1,6 +1,6 @@
 ---
 name: geometry-api-java
-description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in Java — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for Java."
+description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in Java — GeometryEngine, com.esri.geometry:esri-geometry-api:2.2.4, WKT/WKB/GeoJSON/Esri JSON I/O, geodesic distance; also when GeometryEngine has no intersects or WKB method and you need OperatorFactoryLocal, or when 2.3.1 coordinates fail to resolve on Maven Central. Esri Geometry API for Java."
 tags:
   - java
   - geometry
@@ -376,23 +376,16 @@ if (hit) {
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **创建几何对象**：使用 `Point`、`Polyline`、`Polygon` 等构造函数创建几何
-2. **设置空间参考**：通过 `SpatialReference.create(wkid)` 指定坐标系
-3. **空间运算**：优先使用 `GeometryEngine` 静态方法（线程安全、API 简洁）；批量处理使用 `OperatorFactoryLocal` + `GeometryCursor`
-4. **格式转换**：使用 `GeometryEngine.geometryToGeoJson()` / `geometryFromWkt()` 等方法进行 WKT、GeoJSON、Esri JSON 互转；WKB 通过 `OperatorImportFromWkb` / `OperatorExportToWkb` 算子
-5. **大地测量**：经纬度距离使用 `GeometryEngine.geodesicDistanceOnWGS84()`（返回米）；椭球面积/长度算子未对外公开，需要时改用 JTS / GeoTools
-
-### 关键注意事项
-
-- **坐标系一致**：进行空间运算前，确保所有几何对象使用相同的 `SpatialReference`
-- **简化几何**：导入外部数据后，使用 `GeometryEngine.simplify()` 确保拓扑正确
-- **大地测量 vs 平面**：经纬度距离用 `geodesicDistanceOnWGS84()`；椭球面积/长度算子未公开，建议改用 JTS/GeoTools
-- **性能优化**：批量操作使用 `OperatorFactoryLocal` + `GeometryCursor`，而非逐个调用 `GeometryEngine` 静态方法
-- **线程安全**：`GeometryEngine` 静态方法是线程安全的；`Operator` 实例非线程安全
+- **加载与引用**：用 `skill("geometry-api-java")` 加载（用户也可输入 `/geometry-api-java`）；本技能没有 `reference/` 子目录，示例都在正文；技能目录只读，Maven 工程建在会话工作区。
+- **执行环境**：先 `mvn -v` 与 `java -version` 确认工具链（JDK 8+ 即可编译，建议 17/21 运行），Windows 上用 `pwsh` 执行；`%JAVA_HOME%`/`JAVA_HOME` 与 `mvn` 实际使用的 JDK 可能不同，报 `Unsupported class file major version` 时按 `mvn -v` 显示的 JDK 判断。
+- **依赖坐标**：`com.esri.geometry:esri-geometry-api:2.2.4` 是 Maven Central 最新（2020-09 发布）；上游 2.3.1（2026-10-09）未发布到 Central。先 `mvn dependency:get -Dartifact=com.esri.geometry:esri-geometry-api:2.2.4` 确认可解析，解析失败时报告“依赖不可下载”，不要自行改成 2.3.1 或别处坐标。
+- **离线与网络**：首次 `mvn` 会拉依赖，无网或私服缺包时报 `Could not resolve dependencies`；不要为绕过它去改 `settings.xml`、加未知仓库或降级版本，先向用户要可用镜像。
+- **验证产物**：写最小 main（或 JUnit）断言三件事——`geometryFromWkt` → `geometryToWkt` 往返等价、`GeometryEngine.buffer(poly, sr, 2.0)` 后 `getEnvelope()` 向外扩张、`geometryToGeoJson` 能被 `geoJsonToGeometry` 重新读入；`mvn -q -DskipTests package` 只证明能编译，不代表几何正确。
+- **编译期陷阱**：`GeometryEngine` 没有 `intersects` 和 WKB 方法，分别用 `OperatorIntersects.local().execute(a, b, sr, null)` 与 `OperatorImportFromWkb`/`OperatorExportToWkb`；面积/长度用 `geometry.calculateArea2D()` / `calculateLength2D()`，不要去找 `getArea()`。
+- **坐标与线程**：参与运算的几何必须带同一 `SpatialReference`；`GeometryEngine` 静态方法可并发调用，`Operator` 实例非线程安全，批量时用 `OperatorFactoryLocal` + `GeometryCursor` 并每线程持有自己的算子。
+- **安全与权限**：`mvn` 会写 `~/.m2` 与工作区 `target/`，属预期行为；执行 `mvn install`/`deploy`、改动共享 `settings.xml` 或写入系统目录前先征得用户同意。
 
 ## 相关技能
 

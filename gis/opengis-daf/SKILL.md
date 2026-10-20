@@ -1,6 +1,6 @@
 ---
 name: opengis-daf
-description: "Use when building plan-driven GIS data analysis or data quality-check pipelines with OpenGisDAF (.NET 10 / C# 14): define buffer, clip, intersect/containment checks, coordinate transform, field calculator, attribute/geometry QC rules purely in JSON plans, run the daf CLI, chain operators via DAG upstream bindings, output to GeoJSON/Shapefile/PostGIS, or extend with plugin operators loaded via AssemblyLoadContext."
+description: "Use when building JSON-plan GIS analysis or QC pipelines with OpenGisDAF (.NET 10 / C# 14) — daf validate/run, operators buffer/clip/intersect_check/containment_check/coordinate_transform, DAG upstream bindings, GeoJSON/Shapefile/PostGIS sinks, qcMode QC reports, AssemblyLoadContext plugins; also for \"zero tests ran\" exit code 5, missing --recurse-submodules GDAL build errors, or PostGIS Layer already exists. Plan-driven ETL."
 
 tags:
   - gis
@@ -237,19 +237,16 @@ dotnet demo/plugin/OpenGisDAF.PluginHostDemo/bin/Release/net10.0/OpenGisDAF.Plug
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **先读文档与 Demo**：优先阅读 `docs/quickstart.md`、`docs/plan-config-guide.md`、`docs/operator-reference.md`、`docs/cli-reference.md`，并对照 `demo/`（`demo/run-demo.ps1` / `run-demo.sh`）理解方案结构
-2. **先校验、再质检、后分析**：先用 `daf validate --plan <path>` 校验 21 条规则，再用 `qcMode: true` 的质检方案生成 `{plan}.qc-report.json` 修复数据，最后跑分析方案
-3. **串联用 upstream**：多步流程用 `InputBinding.type: "upstream"` 引用上游 item 输出，由 DAG 自动拓扑排序调度
-
-### 关键注意事项
-
-- **核心概念**：方案（AnalysisPlan）由 `items[]`（每项一次算子调用）与 `inputs`/`parameters`/`output` 组成，算子通过 `upstream` 绑定串成 DAG
-- **常见错误**：插件目录勿复制 `OpenGisDAF.Core.dll`（Type 不同源会被静默跳过）；`buffer` 单位与数据坐标系一致（度数坐标系需先 `coordinate_transform` 转米制投影）；PostGIS 目标表已存在会报错，绝不静默覆盖
-- **退出码**：`0` 成功、`1` 任何失败或跳过，便于 CI 判断
+- **加载与引用**：用 `skill("opengis-daf")` 加载（用户也可输入 `/opengis-daf`）；本技能没有 `reference/` 子目录，方案文档在上游仓库 `docs/`；技能目录只读，方案 JSON 与输出写到会话工作区。
+- **执行环境**：先 `dotnet --version`，必须是 **10.0**（仓库 `global.json` 锁定），Windows 用 `pwsh`；克隆必须 `git clone --recurse-submodules`，漏了子模块 `opengis-utils-for-net` 会在编译期报 GDAL 绑定类型缺失。
+- **源码构建（无 NuGet 包）**：`dotnet build` 或 `./build.sh`，再 `dotnet run --project src/OpenGisDAF.Cli -- help` 确认 CLI 可用；这是自有项目，不要写 `dotnet add package OpenGisDAF`。
+- **测试两步走**：`dotnet build OpenGisDAF.slnx -c Release` 后 `dotnet test OpenGisDAF.slnx -c Release --no-build`——同一条 `dotnet test` 在 xunit.v3 工具链下会报“运行了零个测试”并以退出码 5 失败。
+- **验证产物**：先 `daf validate --plan plans/my.json`（只校验 21 条规则）再 `daf run --plan plans/my.json`；退出码 `0` 才是成功（失败或跳过都返回 1），随后重开输出 GeoJSON 核对 `crs` 与要素数，并查看 `{plan}.qc-report.json` 的 `totalChecked/failed/passRate`（仅 `qcMode: true` 才生成）。
+- **典型误操**：`buffer` 的 `distance` 单位随数据坐标系（EPSG:4326 下 800 就是 800 度），先 `coordinate_transform` 转米制；`daf operator import` 只对当前进程有效，要让插件参与 `daf run` 必须用同进程宿主（`demo/plugin/OpenGisDAF.PluginHostDemo`）。
+- **插件坑**：插件工程引用 `OpenGisDAF.Core` 时必须 `Private="false" ExcludeAssets="runtime"`，把 `OpenGisDAF.Core.dll` 复制进插件目录会让 `IOperator` 类型不同源，算子被静默跳过。
+- **安全与权限**：PostGIS 输出的 `encryptedPassword` 只接受当前用户上下文生成的密文（DPAPI / AES-256-GCM），明文或跨用户密文会失败；`daf plan` 写入 `%APPDATA%\opengis-daf\plans`，覆盖已有方案或输出文件前先确认路径。
 
 ---
 

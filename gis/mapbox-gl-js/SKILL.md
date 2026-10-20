@@ -1,6 +1,6 @@
 ---
 name: mapbox-gl-js
-description: "Use when building interactive vector web maps with Mapbox GL JS — WebGL rendering, Style Spec, data-driven expressions, 3D terrain, layer-level events. Note: v2+ is proprietary under Mapbox TOS with an access token requirement; MapLibre GL JS is the open-source API-compatible fork."
+description: "Use when building vector web maps with mapbox-gl 3.33.0 — WebGL rendering, Style Spec layers, data-driven expressions, setTerrain raster-dem, fill-extrusion, or debugging 401 'A valid Mapbox access token is required', 'Style is not done loading', and pk./sk. token handling. Note: v2+ is proprietary under Mapbox TOS and requires a token; MapLibre GL JS is the open-source fork."
 tags:
   - javascript
   - web
@@ -424,11 +424,13 @@ map.on('load', () => {
 - **cesiumjs** — 三维地球与 3D Tiles 可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
 - **geoserver** — 发布 WMS/WFS/MVT 服务作为矢量瓦片数据源：[../geoserver/SKILL.md](../geoserver/SKILL.md)
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-- **先声明 token**：生成的代码始终包含 `mapboxgl.accessToken` 占位符，并提醒用户替换为真实 `pk.` token
-- **调用顺序**：`addSource`/`addLayer`/`setTerrain` 一律放入 `map.on('load', ...)` 回调，避免 "Style is not done loading"
-- **坐标顺序**：严格使用 `[lng, lat]`，不要套用 Leaflet 的 `[lat, lng]`
-- **许可提醒**：用户要求开源许可、免 token 或零成本时，主动建议 MapLibre GL JS 并给出等价 API 改写
-- **不虚构数据**：`source-layer` 名与可用属性取决于具体瓦片集，生成代码前确认来自 Mapbox Studio 或官方文档
-- **样式与交互**：动态样式用 expressions 数组语法；图层交互用 `map.on(type, layerId, handler)` 而非遍历全部要素
+- **加载与引用**：用 `skill("mapbox-gl-js")` 加载（用户也可输入 `/mapbox-gl-js`）；本技能无 reference 子目录，示例代码写入会话工作区工程，技能目录只读。
+- **执行环境**：`npm install`、`npm run build` 交给 `pwsh`；Windows 下用 `npm.cmd`，长构建用后台作业。
+- **先探测版本**：`npm ls mapbox-gl`（未装则 `npm view mapbox-gl version`）；本技能按 3.33.0 编写，CDN 的 JS 与 CSS 必须同为 `v3.33.0`，联网时 `curl.exe -I https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.js` 应为 200。
+- **验证产物**：`npm run build` 后 `npx serve dist`，`curl.exe -I http://localhost:5173/` 确认入口；地图是否真加载、有没有 401 只能看浏览器 Network（`api.mapbox.com`），DSH 不打开浏览器，请用户确认或提供截图后再 `read_image`。
+- **token 安全**：前端只允许 `pk.` 公开 token，`sk.` 绝不能进构建产物；用 `VITE_MAPBOX_TOKEN` 等环境变量注入，提交前用 dsh 的 `grep` 搜 `sk.` 与硬编码 `pk.`，回答和日志里不要回显 token。
+- **许可提醒**：v2+ 是 Mapbox 专有许可并受配额计费约束；用户要求开源或免 token 时改写为 MapLibre（`maplibregl` 替代 `mapboxgl`，`mapbox://` 样式换成自建瓦片）。
+- **常见症状**：`Style is not done loading` 是 `load` 事件前调了 `addSource`/`addLayer`；空白先查容器高度和 `map.resize()`；`e.features` 只在回调内有效。
+- **安全与权限**：装包、起 dev server、调用计费接口前先征得用户同意，并说明可能产生费用。

@@ -1,6 +1,6 @@
 ---
 name: nettopologysuite
-description: "Use when performing 2D computational geometry in .NET — spatial predicates, overlay operations, buffering, WKT/WKB I/O. NetTopologySuite: the .NET port of JTS, available via NuGet for spatial analysis in C# applications."
+description: "Use when doing 2D computational geometry in .NET with NuGet NetTopologySuite 2.6.0 — GeometryFactory with SRID, Contains/Intersects predicates, Intersection/Union/Buffer overlays, STRtree, GeometryFixer, WKT/WKB/GeoJSON I/O, Shapefile via IO.Esri, and EF Core spatial queries on SQL Server/Npgsql."
 tags:
   - dotnet
   - csharp
@@ -38,13 +38,13 @@ NTS 与 JTS API 几乎一一对应（C# 命名风格）：
 ## 环境准备
 
 ```bash
-dotnet add package NetTopologySuite
-dotnet add package NetTopologySuite.IO.GeoJSON
-dotnet add package NetTopologySuite.IO.Esri.Shapefile   # Shapefile 读写（Shapefile.ReadAllFeatures 等）
-dotnet add package ProjNet                              # 坐标变换（可选）
+dotnet add package NetTopologySuite --version 2.6.0
+dotnet add package NetTopologySuite.IO.GeoJSON --version 4.0.0
+dotnet add package NetTopologySuite.IO.Esri.Shapefile --version 1.2.0   # Shapefile 读写（Shapefile.ReadAllFeatures 等）
+dotnet add package ProjNet --version 2.1.0                              # 坐标变换（可选）
 ```
 
-**.NET 6+** 推荐。
+**.NET 6+** 推荐；IO 包需与主库 2.6 对齐（IO.GeoJSON 4.0.0 / IO.Esri.Shapefile 1.2.0 / ProjNet 2.1.0）。
 
 ---
 
@@ -228,21 +228,19 @@ foreach (var p in points) if (prep.Contains(p)) ...
 | Z/M 坐标丢失 | 配置 `WKBWriter` 的 `HandleOrdinates` |
 | Buffer 慢 | 减小 quadrantSegments、并行处理 |
 | Shapefile 读取写法报错 | 使用 `NetTopologySuite.IO.Esri.Shapefile` 包与 `NetTopologySuite.IO.Esri` 命名空间（`Shapefile.ReadAllFeatures`） |
-| 依赖版本不匹配（NTS 2.6 与旧 IO 包） | 各 IO 包选择与 NetTopologySuite 2.6 兼容的最新版本 |
+| 依赖版本不匹配（NTS 2.6 与旧 IO 包） | 对齐版本：IO.GeoJSON 4.0.0、IO.Esri.Shapefile 1.2.0、ProjNet 2.1.0 |
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-
-### 关键注意事项
-
-- **GeometryFactory 共享**：固定 SRID，复用 `GeometryFactory` 实例
-- **拓扑异常修复**：无效几何使用 `GeometryFixer.Fix()` 修复
-- **PreparedGeometry**：重复空间关系判断时使用 `PreparedGeometryFactory.Prepare()` 大幅提速
-- **STRtree 批量查询**：先 `Build()` 再 `Query()`，大数据量场景优于逐几何判断
-- **WKB vs WKT**：WKB 比 WKT 更快更紧凑，数据库交互优先使用 WKB
-- **Z/M 坐标**：`WKBWriter` 需配置 `HandleOrdinates` 保留 Z/M 坐标
+- **加载与引用**：`skill("nettopologysuite")` 加载；技能目录只读，示例工程与测试数据写到会话工作区。
+- **执行环境**：命令交给 dsh 的 `pwsh`；先 `dotnet --version` 确认 SDK 6.0+，`dotnet restore` 需要访问 NuGet。
+- **先探测版本**：`dotnet list package` 核对 `NetTopologySuite` 2.6.0、`NetTopologySuite.IO.GeoJSON` 4.0.0、`NetTopologySuite.IO.Esri.Shapefile` 1.2.0、`ProjNet` 2.1.0；IO 包与主库错配是常见编译/运行期报错源。
+- **验证产物**：`dotnet build` 后跑 `dotnet test`，或最小控制台做 WKT 往返 + `IsValid` 断言；`GeoJsonConverterFactory` 序列化后再反序列化，比对坐标数而不是只打日志。
+- **失败信号**：`TopologyException` 先 `GeometryFixer.Fix`；程序集加载/`TypeInitializationException` 多为 IO 包版本不匹配；EF Core 类型冲突是同时引了 `Microsoft.SqlServer.Types`。
+- **注意事项**：NTS 的 SRID 只是元数据、计算在平面进行，跨投影交给 ProjNet；`WKBWriter` 默认丢 Z/M，需设 `HandleOrdinates`。
+- **按需读文件**：本 SKILL 代码块较多，先按章节标题定位再用 `read` 取行区间，比整篇读更省上下文。
 
 ## NTS 家族与相关库
 

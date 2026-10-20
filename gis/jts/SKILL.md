@@ -1,6 +1,6 @@
 ---
 name: jts
-description: "Use when performing precise 2D computational geometry in Java — spatial predicates (contains, intersects), overlay operations, buffering, triangulation. JTS (Java Topology Suite): the canonical geometry engine used as blueprint for GEOS, Shapely, and NetTopologySuite."
+description: "Use when doing precise 2D computational geometry in Java with org.locationtech.jts:jts-core 1.20.0 — GeometryFactory construction, contains/intersects predicates, overlay via OverlayNGRobust, buffer, STRtree and PreparedGeometry speedups, WKT/WKB/GeoJSON I/O, and fixing TopologyException or unclosed rings."
 
 tags:
   - java
@@ -251,23 +251,15 @@ String geoJson = new GeoJsonWriter().write(buffered);
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **创建几何对象**：始终通过 `GeometryFactory` 工厂方法创建，不要直接 `new`
-2. **格式解析**：从 WKT/WKB/GeoJSON 读入外部数据，使用对应的 Reader
-3. **空间运算**：用 `PreparedGeometry` 加速批量 contains/intersects 判断
-4. **批量查询**：用 `STRtree` 建空间索引后查询
-5. **结果导出**：用 Writer 输出为 WKT/WKB/GeoJSON
-
-### 关键注意事项
-
-- **坐标顺序**：JTS 使用 `(x, y)` 即 `(经度, 纬度)`，注意与部分 GIS 系统的 `(y, x)` 区分
-- **SRID 不参与计算**：JTS 所有计算在笛卡尔平面进行，不处理地球曲率
-- **OverlayNG 优先**：叠加运算优先使用 `OverlayNGRobust.overlay()`，比传统方法更鲁棒
-- **线程安全**：`GeometryFactory` 和 `Geometry` 线程安全；Reader/Writer 非线程安全
-- **有效性检查**：外部导入的几何用 `isValid()` 检查后用 `GeometryFixer.fix()` 修复
+- **加载与引用**：`skill("jts")` 加载；完整运算示例在 [reference/geometry-operations.md](reference/geometry-operations.md)，按需 `read`（路径相对技能 Base directory）。
+- **执行环境**：命令交给 dsh 的 `pwsh`；JTS 只依赖 `jts-core`，Maven Central 直接可解析，不需要额外仓库，JDK 8+ 即可。
+- **先探测版本**：`mvn dependency:tree -Dincludes=org.locationtech.jts` 确认解析到 1.20.0；同时确认 classpath 里没有遗留的 `com.vividsolutions.jts` 旧包。
+- **验证产物**：`mvn -q test`，或最小 main 做 WKT 往返 + `geom.isValid()` + `buffer(0)` 断言；导出 GeoJSON 后用 `GeoJsonReader` 读回比对坐标数，别只看日志。
+- **失败信号**：`TopologyException` 改用 `OverlayNGRobust.overlay()`；`isValid()` 为 false 先 `GeometryFixer.fix()`；结果为空多半是把坐标写成了 `(lat, lon)`。
+- **注意事项**：SRID 在 JTS 里只是元数据、计算全在笛卡尔平面，跨投影需自己先转换；`WKTReader`/`WKTWriter` 非线程安全，不要多线程共享。
+- **性能验证**：批量判断用 `PreparedGeometry` 前后各计时一次（`System.nanoTime()`），用数据证明优化有效，别凭感觉。
 
 ## 相关技能
 

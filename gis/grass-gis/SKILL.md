@@ -328,12 +328,12 @@ grass $HOME/grassdata/ndvi_project/PERMANENT --exec sh -c '
 - **geopandas** — Python 矢量数据分析：[../geopandas/SKILL.md](../geopandas/SKILL.md)
 - **pyqgis** — QGIS Python 绑定：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-1. **优先单行无头命令**：`grass <project>/<mapset> --exec <module> ...` 或 `grass --tmp-project EPSG:<code> --exec ...`，便于在脚本与 CI 中复现。
-2. **先探查再分析**：`g.list` 列出可用地图、`g.region -p` 查看区域、`t.list` 列出时空数据集，确认现状后再构造命令。
-3. **结构化输出**：需要程序化解析时优先 `format=json`（如 `g.region -p format=json`）或用 `gs.parse_command`，避免解析文本表格。
-4. **注意区域语义**：栅格模块只处理计算区域内的像元，写命令前先确认或设置 `g.region`。
-5. **参数映射**：模块选项与标志位在 Python 中分别对应关键字参数与 `flags`（如 `gs.run_command("r.univar", map="elevation", flags="g")`）。
-6. **错误识别**：GRASS 模块错误以 `ERROR:` 开头且返回非零状态码，据此判断失败原因（地图不存在、区域为空、输出已存在等）。
-7. **覆盖与清理**：重复运行时统一使用 `--overwrite`，或先用 `g.remove` 清理中间地图。
+- **加载与引用**：用 `skill("grass-gis")` 加载（用户也可输入 `/grass-gis`）；本技能没有 reference 子目录，模块参数用 `r.univar --help` 或官网手册核对；技能目录只读，脚本与导出结果写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文里 `grass ... --exec sh -c '...'` 的多行引用在 pwsh 下不可靠，改为把模块序列写进 `.py` 脚本（首行 `#!/usr/bin/env python3`），再 `grass --tmp-project EPSG:3857 --exec python3 analysis.py`。
+- **先探测版本**：`grass --version`（应为 8.5.0，LTR 8.4.2）、`grass --tmp-project EPSG:3857 --exec g.region -p`；8.4 之前没有 `grass.tools`，Python 脚本改用 `gs.run_command`。
+- **验证产物**：`--tmp-project` 内的地图最后必须导出——`r.out.gdal input=slope output=/work/slope.tif format=GTiff`，随后 `gdalinfo -json slope.tif` 核对 CRS 与范围；会话内核对用 `g.region -p format=json`、`g.list type=raster`。
+- **区域语义优先**：栅格模块只处理计算区域内的像元，结果范围不对先看 `g.region -p`；重复运行加 `--overwrite`，否则模块报地图已存在并非零退出。
+- **错误识别**：GRASS 模块的失败以 `ERROR:` 开头并返回非零码（如 `Raster map <x> not found`），据此区分地图名、区域为空还是输出已存在问题，不要只读最后一行日志。
+- **安全与权限**：`g.remove`、`--overwrite`、`t.connect` 会改/删地图集数据；`--tmp-project`/`--tmp-mapset` 结束即删除目录，结果必须先导出；启动 Docker 或改文件属主（`--user=$(id -u):$(id -g)`）前先确认写入路径。

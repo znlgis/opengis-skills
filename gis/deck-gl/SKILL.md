@@ -1,6 +1,6 @@
 ---
 name: deck-gl
-description: "Use when visualizing large geospatial or tabular datasets in the browser with GPU rendering — millions of points, GeoJSON polygons, vector tiles, aggregation layers (hexagon, screen grid, heatmap), and overlaying them on a MapLibre/Mapbox GL JS base map via @deck.gl/mapbox."
+description: "Use when visualizing large geospatial datasets in the browser with deck.gl 9.4.0 — ScatterplotLayer/GeoJsonLayer, HexagonLayer/ScreenGridLayer aggregation, MVTLayer/TileLayer, @deck.gl/mapbox MapboxOverlay over MapLibre, or debugging blank canvases, stale data props and mismatched @deck.gl/* subpackage versions."
 tags:
   - javascript
   - web
@@ -439,12 +439,13 @@ map.addControl(overlay);
 - **leaflet** — 轻量 2D 瓦片地图，适合中小数据量与简单场景：[../leaflet/SKILL.md](../leaflet/SKILL.md)
 - **cesiumjs** — 三维地球与 3D Tiles 可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-- **版本对齐**：生成代码时统一使用 `@deck.gl/*` 9.4.0，并提醒用户各子包版本必须同步，避免混用不同大版本
-- **导入路径**：`Deck` 来自 `@deck.gl/core`，基础图层来自 `@deck.gl/layers`，聚合图层来自 `@deck.gl/aggregation-layers`，瓦片与 MVT 来自 `@deck.gl/geo-layers`，不要写错包名
-- **坐标顺序**：位置一律 `[经度, 纬度]`，与 GeoJSON 一致；半径默认单位为米，像素半径需显式设 `radiusUnits: 'pixels'`
-- **数据引用**：示例代码避免在渲染函数内生成新数组，优先用 `useMemo` 或模块级常量缓存
-- **拾取默认值**：需要 tooltip 或点击的图层必须显式写 `pickable: true`，其余保持默认关闭
-- **底图选择**：用户要求开源或免 token 时用 MapLibre（`maplibregl` + `MapboxOverlay`），需要 Mapbox 专有能力时才用 `mapbox-gl` 并提醒配置 token
-- **不虚构 API**：属性名以官方文档为准（如聚合权重用 `getColorWeight` / `getElevationWeight`），不确定时先查 <https://deck.gl/docs/api-reference/layers> 再生成
+- **加载与引用**：用 `skill("deck-gl")` 加载（用户也可输入 `/deck-gl`）；本技能无 reference 子目录，示例代码写入会话工作区工程，技能目录只读。
+- **执行环境**：`npm install`、`npm run build` 交给 `pwsh`；子包多、安装输出长，重定向到文件再分段读。
+- **先探测版本**：`npm ls deck.gl @deck.gl/core @deck.gl/layers @deck.gl/geo-layers`；所有 `@deck.gl/*` 必须是同一版本 9.4.0，混版会报 `Cannot read properties of undefined`。本技能按 9.4.0 编写。
+- **验证产物**：`npm run build` 后 `npx serve dist`，`curl.exe -I http://localhost:5173/` 确认入口；WebGL 是否真出图只能由浏览器确认，DSH 不打开浏览器，请用户看画面和控制台，有截图再用 `read_image`。
+- **无 GPU 环境**：无头/CI 环境无法验证 WebGL，构建通过不等于渲染正确，不要据此报告“已渲染”。
+- **数据与坐标**：位置一律 `[经度, 纬度]`；保持 `data` 引用稳定，不要在渲染路径里 `filter`/`map` 生成新数组，否则 GPU 缓冲反复重建。
+- **常见症状**：空白画布先查容器高度与底图；数据变了画面不变用 `updateTriggers`；tooltip 无反应是 `pickable` 默认 false。
+- **安全与权限**：装包、起 dev server 前先征得用户同意；用 Mapbox 底图时提醒 token 与计费。

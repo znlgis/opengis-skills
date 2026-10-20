@@ -1,6 +1,6 @@
 ---
 name: openlayers
-description: "Use when adding interactive 2D maps to web applications — WMS/WFS/WMTS layers, vector styling, map controls, popups. OpenLayers: the most full-featured open-source JavaScript web mapping library."
+description: "Use when adding interactive 2D maps to web apps with npm ol 10.11.0 — Map/View, fromLonLat to EPSG:3857, WMS/WMTS/XYZ sources, MVT with featureClass, Draw/Modify/Snap interactions, or debugging blank layers (missing setStyle), offset centers and ol/... module-not-found errors."
 tags:
   - javascript
   - web
@@ -259,16 +259,16 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-
-### 关键注意事项
-
-- **投影一致**：经纬度需 `fromLonLat()` 转为 EPSG:3857；自定义投影需注册 proj4
-- **WMS 参数**：`LAYERS` 参数需使用完整名称（如 `workspace:layer`），检查 CORS
-- **矢量瓦片字段**：MVT 格式需设置 `featureClass: Feature` 保留属性
-- **样式缓存**：使用函数式 Style 时，缓存 Style 实例避免重复创建
-- **批量添加**：使用 `addFeatures([])` 而非循环 `addFeature`，显著提升性能
+- **加载与引用**：用 `skill("openlayers")` 加载（用户也可输入 `/openlayers`）；本技能无 reference 子目录，示例代码直接写进会话工作区工程，技能目录只读。
+- **执行环境**：`npm install`、`npm run build` 交给 `pwsh`；Windows 下 `npm` 是 `npm.cmd`，长构建用后台作业并把输出落盘再读。
+- **先探测版本**：`npm ls ol`（未装则 `npm view ol version`）；本技能按 10.11.0 编写，只使用 `ol/Map.js`、`ol/layer/Tile.js` 等 ESM 子路径，旧版 `ol.source.*` 全量命名空间写法不要混用。
+- **验证产物**：`npm run build` 后用 `npx serve dist`（或 `python -m http.server 5173 -d dist`）起静态服务，`curl.exe -I http://localhost:5173/` 与打包出的 `assets/*.js` 应为 200；DSH 不打开浏览器，请用户看页面与控制台，有截图再用 `read_image`。
+- **投影**：经纬度必须 `fromLonLat()` 转 EPSG:3857，自定义投影先 `register(proj4)`；否则中心点偏移或图层不显示。
+- **图层样式**：矢量图层不设样式默认不渲染，务必 `setStyle()`；MVT 源要用 `MVT({ featureClass: Feature })` 才能保留属性。
+- **常见症状**：WMS 空白先查 CORS、`LAYERS` 全名与 `SRS`；`ol/...` 模块找不到说明打包器没按 ESM 解析；容器尺寸变化后调用 `map.updateSize()`。
+- **安全与权限**：装包、起 dev server、对外暴露端口前先征得用户同意；内网 WMS 地址与凭据不要写进示例。
 
 ## 相关技能
 

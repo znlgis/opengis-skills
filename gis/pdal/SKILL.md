@@ -339,10 +339,12 @@ for las_file in glob.glob("tiles/*.las"):
 - **geopandas** — Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
 - **shapely** — 几何对象计算，与裁剪范围构造相关：[../shapely/SKILL.md](../shapely/SKILL.md)
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-1. 探索数据先跑 `pdal info input.las --summary`，确认坐标系与范围后再设计 pipeline
-2. 生成 pipeline 后先用 `pdal pipeline --validate` 校验，再实际运行
-3. 大文件避免一次性标准模式处理，优先流式 stage 或分块
-4. 需要修改参数时优先在 pipeline JSON 中修改，而不是堆叠长命令行
-5. Python 场景用 `json.dumps` 构造 stage 列表，便于程序化生成与复用
+- **加载与引用**：用 `skill("pdal")` 加载（用户也可输入 `/pdal`）；本技能没有 reference 子目录，stage 参数以 `pdal --options filters.smrf` 这类命令现场核对为准；技能目录只读，pipeline JSON 与输出点云写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文的 `sudo apt`、`conda activate` 是 Bash/Linux 写法，Windows 改用 OSGeo4W 或 conda；Docker 挂载写成 `docker run --rm -v "${PWD}:/data" -w /data pdal/pdal pdal pipeline pipeline.json`。
+- **先探测版本**：`pdal --version`（应为 2.10.2）、`pdal --drivers`；`pdal ground` 自 2.6 起弃用，低版本缺少 `filters.expression` 等 stage，回答里要写明按哪个版本写。
+- **验证产物**：`pdal info --summary out.laz` 核对 `num_points`、`bounds`、`srs`；DEM 用 `gdalinfo -json dem.tif` 核对波段数与范围；pipeline 先 `pdal pipeline --validate` 再实跑，不要只看退出码。
+- **注意执行模式**：stream mode 不能跑 `filters.outlier`、`filters.smrf` 这类需要全局统计的 stage，大文件先按 tile 拆分；`writers.gdal` 默认 `output_type: "all"` 会输出多波段，单波段 DEM 要显式写 `idw`/`mean`。
+- **Python 场景**：`pipeline.execute()` 返回处理的点数而不是数组，数据在 `pipeline.arrays`（NumPy 结构化数组）；排查失败看 `pipeline.log`，不要只看异常栈。
+- **安全与权限**：`pdal translate` 与各 writer 会覆盖同名输出，先确认目标文件名；`pdal pipeline --stdin` 和 Docker 挂载以调用者/容器用户写盘，Linux 下注意属主；安装 PDAL 或下载大点云前先征得用户同意。

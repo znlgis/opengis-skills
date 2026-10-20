@@ -1,6 +1,6 @@
 ---
 name: qgis-server
-description: "Use when publishing QGIS projects (.qgs/.qgz) as OGC web services (WMS, WFS, WMTS, OGC API Features) via FastCGI, Docker, or Apache/Nginx, and when tuning QGIS_SERVER_* environment variables. QGIS Server: the C++ map server that renders QGIS Desktop projects over HTTP."
+description: "Use when publishing QGIS projects (.qgs/.qgz) as OGC web services — WMS GetMap/GetPrint, WFS and WFS-T, WMTS, OGC API Features via qgis_mapserv.fcgi with Apache mod_fcgid, Nginx, or Docker, plus QGIS_SERVER_* tuning (MAX_THREADS, PARALLEL_RENDERING, LOG_STDERR); covers \"Service unknown or unsupported\" and MAP/GetCapabilities checks. QGIS 4.2.3 and LTR 3.44.15."
 tags:
   - qgis
   - server
@@ -228,23 +228,12 @@ location /qgis {
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 关键注意事项
-
-- **`MAP` 必填**：几乎所有 QGIS 扩展请求都要求 `MAP` 指向存在的项目文件；用 `QGIS_PROJECT_FILE` 可设默认值。
-- **版本匹配**：生成项目的 Desktop 与服务端版本尽量一致，跨大版本先在小环境验证。
-- **日志优先 stderr**：`QGIS_SERVER_LOG_FILE` 已废弃，统一用 `QGIS_SERVER_LOG_STDERR`。
-- **发布开关**：图层是否出现在服务中取决于项目 `OWS Server` 页的 `published`/`queryable` 设置，而非仅由 URL 决定。
-
-### 常见配置模式
-
-```text
-QGIS Desktop 项目 (.qgz)
-  └── 项目属性 ▸ QGIS Server / OWS Server ──→ 启用 WMS/WFS/WMTS
-        └── FastCGI (qgis_mapserv.fcgi)
-              ├── Apache mod_fcgid
-              ├── Nginx + spawn-fcgi / fcgiwrap
-              └── Docker (qgis-server + nginx)
-                    └── MAP / QGIS_PROJECT_FILE + QGIS_SERVER_* 环境变量
-```
+- **加载与引用**：用 `skill("qgis-server")` 加载（用户也可输入 `/qgis-server`）；本技能没有 reference 子目录，服务能力以 `GetCapabilities` 实测为准；技能目录只读，配置片段与导出的能力文档写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行），Windows 上 `curl` 要写 `curl.exe`；Apache/Nginx 片段属于目标服务器配置，本机会话改不了远端，需在主机上执行或用容器验证。
+- **先探测版本**：用同一安装的 `qgis --version` / `qgis_process --version`（或 `dpkg -l qgis-server`、容器镜像 tag）确认服务端版本；Debian/Ubuntu 的服务入口是 `/usr/lib/cgi-bin/qgis_mapserv.fcgi`，直接执行返回 `ServiceExceptionReport` 即安装可用。本技能覆盖 4.2.3（最新）与 3.44.15（LTR），生成项目的 QGIS Desktop 与服务端大版本应一致。
+- **验证服务**：先 `curl "http://localhost/cgi-bin/qgis_mapserv.fcgi?MAP=/data/world.qgz&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"` 存盘后核对 `<Service>` 与 `<Layer>` 清单，再测 `GetMap` 出图（PNG 可 `read_image` 看是否空白）、`GetFeature`、`GetTile`。
+- **常见报错**：`Service unknown or unsupported` 是缺 `SERVICE`/`MAP` 参数而非服务故障；`GetMap` 空白先查 `MAP` 路径可读性与项目 `OWS Server` 页的 `published` 勾选，再查 CRS/`BBOX`。
+- **日志与生效**：`QGIS_SERVER_LOG_STDERR=1` 交给 journald 或容器日志；`QGIS_SERVER_LOG_FILE` 已废弃，不要再用；`QGIS_SERVER_*` 改动要重启 FCGI 进程（或容器）才生效。
+- **安全与权限**：启动容器、开放端口、改 Web 服务器配置前先征得用户同意；`GetPrint` 在无 X 的 Linux 上需 `Xvfb`；项目文件可能含数据库凭证，命令与回答里不要回显密码。

@@ -1,6 +1,6 @@
 ---
 name: geometry-api-net
-description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in .NET/C# — spatial operations, JSON/GeoJSON/WKT I/O, geodesic calculations. Esri Geometry API for .NET."
+description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in .NET/C# — GeometryEngine, NuGet OpenGIS.Esri.Geometry.Core 1.0.9, WKT/EWKT, WKB, GeoJSON and Esri JSON I/O, System.Text.Json converters, geodesic distance; also for unclosed polygon rings, Geometry base-class casts after overlay, or the retired Esri/geometry-api-net repo. Esri Geometry API for .NET."
 tags:
   - dotnet
   - geometry
@@ -304,23 +304,16 @@ dotnet run --project samples/OpenGIS.Esri.Geometry.Samples
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **创建几何对象**：使用 `Point`、`Polyline`、`Polygon` 等构造函数创建几何
-2. **空间运算**：优先使用 `GeometryEngine` 静态方法（API 最简洁）；需要精细控制时使用 `Operator.Instance` 单例模式
-3. **格式转换**：使用 `GeometryEngine.GeometryToGeoJson()` / `GeometryFromWkt()` 等方法进行 WKT、WKB、GeoJSON、Esri JSON 互转
-4. **大地测量**：对地理坐标的距离/面积计算，使用 `GeometryEngine.GeodesicDistance()` / `GeodesicArea()`
-5. **序列化集成**：使用 `OpenGIS.Esri.Geometry.Json.Converters` 命名空间的 `System.Text.Json` 转换器
-
-### 关键注意事项
-
-- **Polygon 环必须闭合**：首尾点必须相同
-- **返回类型需转换**：集合运算返回 `Geometry` 基类，需根据实际类型做类型转换
-- **大地测量基于 WGS84**：`GeodesicDistance` 使用 Vincenty 公式
-- **GeoJSON 导出规则**：单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`
-- **Operator 使用 Lazy 单例**：所有 Operator 类通过 `Instance` 属性获取单例实例
+- **加载与引用**：用 `skill("geometry-api-net")` 加载（用户也可输入 `/geometry-api-net`）；`reference/geometry-types.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，示例工程建在会话工作区。
+- **执行环境**：先 `dotnet --version`（库目标 `netstandard2.0`，可被 net6/net8/net9/net10 引用）；Windows 上用 `pwsh` 执行 `dotnet` 命令，`dotnet new console -o demo && cd demo` 建最小工程。
+- **依赖坐标**：`dotnet add package OpenGIS.Esri.Geometry.Core --version 1.0.9`（NuGet 最新 1.0.9，2026-09-21），需要 `System.Text.Json` 转换器时再装 `OpenGIS.Esri.Geometry.Json`；还原失败报 `NU1101` 说明源或版本不可用，报告“依赖不可下载”，不要自己编版本号。
+- **验证产物**：最小控制台程序断言三件事——`GeometryEngine.GeometryFromWkt` → `GeometryToWkt` 往返、`GeometryEngine.Contains(polygon, point)` 返回 true、`GeometryEngine.Buffer(point, 5.0).GetEnvelope()` 为 (XMin=5,YMin=15,XMax=15,YMax=25)，再 `dotnet run` 看实际输出；`dotnet build` 成功不代表几何结果正确。
+- **构建与测试**：`dotnet build` 编译、`dotnet test` 跑 xUnit、`dotnet run --project samples/OpenGIS.Esri.Geometry.Samples` 跑示例（需在仓库 checkout 内，且该路径存在）；输出在 `bin/`、`obj/`，不要提交。
+- **编译期陷阱**：`Polygon.AddRing` 必须闭合（首尾点相同）否则面积/包含判断异常；集合运算返回 `Geometry` 基类，要按 `Point`/`Polygon` 转型后再用；容差 `GeometryConstants.DefaultTolerance`（1e-10）是内部常量，无法外部调整。
+- **大地测量前提**：`GeodesicDistance`/`GeodesicArea` 基于 WGS84（Vincenty），输入必须是经纬度；对投影坐标（如 EPSG:3857 米制）调用会得到无意义结果。
+- **安全与权限**：`dotnet restore` 需访问 NuGet 源，离线时先确认本地缓存；修改全局 `NuGet.config`、安装 SDK 或写入系统目录前先征得用户同意，命令输出里不要回显私有源凭据。
 
 ## 常见问题
 

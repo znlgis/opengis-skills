@@ -1,6 +1,6 @@
 ---
 name: geopipe-agent
-description: "Use when building AI-driven GIS data pipelines with YAML-defined steps — format conversion, spatial validation, QC reporting, and self-extending capability gaps. GeoPipe Agent: YAML-driven GIS ETL pipeline agent with a built-in offline GIS knowledge layer."
+description: "Use when building YAML GIS pipelines with GeoPipeAgent — geopipe-agent validate/run, io.read_vector → vector.buffer → io.write_vector chains, 33 built-in steps, qc.geometry_validity/attribute_completeness/topology, native_python|qgis_process|gdal_cli backends, $step.output refs; also for validate \"not registered\" errors, silent when-condition skips, and resolve/knowledge capability gaps. 0.1.0, source install only (not on PyPI)."
 tags:
   - gis
   - agent
@@ -247,26 +247,16 @@ QC 步骤遵循 **「检查即透传」** 模式：输入数据原样通过为 `
 | 网络分析 | `io.read_vector → network.shortest_path → network.service_area → io.write_vector ×2` |
 | 空间聚类 + 热力图 | `io.read_vector → analysis.cluster(dbscan) → analysis.heatmap → io.write_vector + io.write_raster` |
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **理解需求**：用户要做什么 GIS 分析？
-2. **列出可用步骤**：`geopipe-agent list-steps` 或查阅步骤表
-3. **编写 YAML**：按 `io.read_vector → 处理步骤 → io.write_vector` 模式编排
-4. **加入 QC**：在关键步骤前后插入质检步骤
-5. **执行**：`geopipe-agent run pipeline.yaml`
-6. **解读结果**：检查 JSON 报告中的 `qc_summary` 和统计信息
-
-### 关键注意事项
-
-- **步骤 ID 规则**：只能用小写字母、数字、下划线和连字符，不能含点号（`.` 保留用于属性引用）
-- **引用链完整性**：确保每个 `$step_id` 引用的步骤在当前步骤之前定义
-- **QC 链式调用**：QC 步骤可串联（如 `qc.geometry_validity → qc.attribute_completeness → qc.topology`），问题汇总到管道报告的 `qc_summary` 中；请使用 `geopipe-agent list-steps --category qc` 列出的真实步骤 ID，写错 ID 会导致校验失败
-- **后端选择**：默认 `native_python`（纯 Python，无外部依赖）；可在步骤上用 `backend: <名称>` 指定 gdal_cli / gdal_python / qgis_process / pyqgis / generic_cli / curl_api，用 `geopipe-agent backends` 查看当前环境可用后端。注意：**只有声明了 backends 的步骤会读取该字段**（当前为 6 个矢量步骤），其余步骤写 `backend:` 会被忽略
-- **路径使用绝对路径**：避免工作目录问题
-- **未实现的能力**：若某个步骤 ID 尚未实现，`validate` 会直接报错；此时不要猜测参数，改用 `geopipe-agent resolve "<需求>"` 获取候选能力与回退路径
-- **大数据注意**：管道在内存中运行，超大栅格建议先裁剪
+- **加载与引用**：用 `skill("geopipe-agent")` 加载（用户也可输入 `/geopipe-agent`）；`reference/steps-reference.md`、`pipeline-schema.md`、`workflows.md`、`self-extension.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，YAML 与输出写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`）；`python` 可能指向 QGIS/GDAL 自带解释器，建议在工作区建独立 venv 后 `pip install -e .`，避免污染系统环境。
+- **源码安装（未上 PyPI）**：`git clone https://github.com/znlgis/GeoPipeAgent.git && pip install -e ".[analysis,network]"`；验证 `geopipe-agent --help`、`geopipe-agent list-steps --category qc`、`pip show geopipe-agent | Select-String Version`。不要写 `pip install geopipe-agent`——PyPI 上还没有这个包。
+- **先探测能力**：`geopipe-agent backends` 看当前环境可用后端（默认 `native_python`），`geopipe-agent list-steps --format json` 拿真实步骤 ID；`validate` 报 `not registered` 时先用 `geopipe-agent resolve "<需求>"` 与 `knowledge search`，不要猜参数。
+- **验证产物**：`geopipe-agent validate pipeline.yaml` 通过后再 `run pipeline.yaml`，检查 JSON 报告里的 `qc_summary` 与各步骤统计，随后重开输出文件核对（`geopipe-agent info output/result.geojson`，装了 GDAL 时也可 `ogrinfo -so output/result.geojson result`），确认要素数与 CRS 而不是只看“执行成功”。
+- **典型误操**：步骤 ID 不能含点号，`$step_id` 必须由更早步骤提供，`when` 引用不存在的属性会按 false **静默跳过**；`backend:` 只有声明了 backends 的 6 个矢量步骤会读取，其余步骤写了也被忽略。
+- **性能与内存**：管道全程在内存中运行，超大栅格先 `raster.clip` 或 `io.read_raster` 只读所需波段；QC 步骤是“检查即透传”，`output` 就是输入，问题在 `$step.issues` / `issues_gdf`。
+- **安全与权限**：`network.geocode` 与 `curl_api`、`http.request` 会把数据发到外部服务，执行前确认是否允许出网并检查 `user_agent`/凭据；`pip install`、覆盖已有输出文件、批量改写数据前先征得用户同意。
 
 ---
 

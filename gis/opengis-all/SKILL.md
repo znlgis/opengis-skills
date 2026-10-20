@@ -1,6 +1,6 @@
 ---
 name: opengis-all
-description: "Use when navigating end-to-end GIS workflows — discover the full toolchain from GDAL data processing through GeoServer publishing to CesiumJS/OpenLayers visualization. One-stop index covering the complete open-source GIS data pipeline."
+description: "Use when navigating end-to-end GIS workflows — GDAL CLI/API (ogr2ogr, gdalwarp, gdal_calc.py), qgis_process and PyQGIS analysis, GeoServer REST publishing, and OpenLayers/CesiumJS visualization. One-stop index covering the complete open-source GIS data pipeline."
 
 tags:
   - gis
@@ -91,7 +91,7 @@ export QT_QPA_PLATFORM=offscreen
 
 ```bash
 # Docker 方式（推荐）
-docker run -d -p 8080:8080 docker.osgeo.org/geoserver:3.0.1
+docker run -d -p 8080:8080 docker.osgeo.org/geoserver:3.0.2
 
 # 验证
 curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"
@@ -407,34 +407,14 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 工具选择指南
-
-| 场景 | 推荐工具 | 原因 |
-|------|----------|------|
-| 快速格式转换 | GDAL 命令行（ogr2ogr / gdal_translate） | 最简洁，适合脚本 |
-| 复杂空间分析 | qgis_process 或 PyQGIS | 算法丰富，参数统一 |
-| 编程集成 | GDAL API 或 PyQGIS | 灵活控制，适合程序嵌入 |
-| 栅格波段运算 | gdal_calc.py | NumPy 语法，简单直观 |
-| DEM 分析 | qgis_process (gdal:slope 等) | 一行命令完成 |
-| 几何级别操作 | GDAL OGR API 或 PyQGIS QgsGeometry | 精确控制每个几何操作 |
-| 服务发布 | GeoServer REST API | 唯一选择，HTTP 接口标准 |
-| CI/CD 自动化 | qgis_process + GDAL CLI + curl | 命令行驱动，JSON 输出 |
-
-
-### 关键注意事项
-
-1. **始终使用绝对路径**：避免工作目录不确定导致文件找不到。
-2. **始终使用 `--json` 选项**：JSON 输出结构化、易解析，是 AI 最友好的交互方式。
-3. **先查 help 再构造参数**：`qgis_process help <id> --json` 确认参数定义。
-4. **Headless 环境设置 `QT_QPA_PLATFORM=offscreen`**：在无显示器的服务器上必须设置。
-5. **坐标系一致性**：空间运算前确保所有数据使用相同 CRS。
-6. **文件上传格式**：GeoServer 上传 Shapefile 时需打包为 ZIP，且 ZIP 内须含 `.shp`、`.shx`、`.dbf`、`.prj`。
-7. **GeoServer JSON 包装**：REST API 的 JSON 请求/响应均使用单层包装（如 `{"workspace":{...}}`）。
-8. **recurse 参数**：删除 GeoServer 工作空间/数据存储时，添加 `?recurse=true` 级联删除。
-9. **大数据优化**：启用 `GDAL_NUM_THREADS=ALL_CPUS`，增大 `GDAL_CACHEMAX`；PyQGIS 中使用 `QgsSpatialIndex`。
-10. **始终备份**：GDAL 可就地修改文件（如 `gdal_edit.py`），操作前做好备份。
+- **加载与引用**：用 `skill("opengis-all")` 加载（用户也可输入 `/opengis-all`）；本页是阶段索引，详细步骤在 `reference/data-stages.md` 与 `reference/workflow-cheatsheets.md`，按当前阶段 `read`，不要一次全读。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。示例是 Linux/bash 写法，按平台改写 `apt`、`/tmp`、`export` 与反引号；Windows 路径加引号。
+- **先探测工具链**：`gdalinfo --version`、`qgis_process --version`、`python3 -c "from osgeo import gdal; print(gdal.VersionInfo())"`、`curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"`；缺哪个阶段就加载相邻技能（如 `skill("gdal")`、`skill("qgis-process")`）。
+- **分阶段交付**：每阶段产物落盘到工作区（GeoPackage/COG/GeoJSON），下一阶段只读取产物；先用 `ogrinfo -so`、`gdalinfo -json` 看摘要，不要把大文件或大段输出贴进上下文。
+- **验证**：转换后重新打开结果核对 CRS、范围、要素数；发布后用 `curl` 回读 REST 资源或 `GetCapabilities`；无显示器环境设置 `QT_QPA_PLATFORM=offscreen`；`qgis_process` 参数先用 `qgis_process help <id> --json` 确认。
+- **安全**：`gdal_edit.py`、覆盖输出、GeoServer `?recurse=true` 删除均不可逆；先备份并确认路径，安装 GDAL/QGIS、启动服务或使用数据库凭据前先征得用户同意。
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: opengis-utils-for-net
-description: "Use when needing common GIS utility functions in .NET/C# — CRS utilities, geometry helpers, format converters, spatial validation. OpenGIS Utils for .NET: convenience toolkit for .NET GIS projects."
+description: "Use when needing common GIS utilities in .NET/C# — OguLayerUtil ReadLayer/WriteLayer/ConvertFormat, GeometryUtil 50+ ops, CrsUtil CGCS2000 transforms, Shapefile/GeoJSON/FileGDB/GeoPackage/KML/PostGIS I/O; also for Unable to load DLL gdal / DllNotFoundException, GBK shapefile mojibake, or ArgumentException from Geojson2Wkt on a whole FeatureCollection. OpenGIS.Utils 1.1.2."
 tags:
   - dotnet
   - csharp
@@ -367,16 +367,16 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 
 > 常用代码模式完整示例见 [reference/code-patterns.md](reference/code-patterns.md)
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-
-### 关键注意事项
-
-- **GDAL 自动初始化**：无需手动调用 `GdalConfiguration.ConfigureGdal()`
-- **GeoJSON 字符串可直接解析**：`Geojson2Wkt()` 和 `Geojson2Geometry()` 通过 GDAL 解析裸几何、`Feature` 或 `FeatureCollection`（取第一个要素的几何），无法解析时抛 `ArgumentException`；整文件请从文件加载
-- **几何以 WKT 存储**：`OguFeature.Wkt` 存储 WKT 字符串；多数 `GeometryUtil` 方法有 `*Wkt` 变体
-- **.NET 的 GDAL 实现**：`GEOTOOLS` 枚举值仅为兼容保留并重定向到 GDAL（Java 版本为双引擎）
-- **线程安全**：GDAL 初始化线程安全，但单个 GDAL 几何对象非线程安全
+- **加载与引用**：用 `skill("opengis-utils-for-net")` 加载（用户也可输入 `/opengis-utils-for-net`）；`reference/code-patterns.md`、`reference/util-classes.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
+- **执行环境**：先 `dotnet --version`；库目标 .NET Standard 2.0，可被 .NET Core 2.0+ / .NET 5+ / .NET Framework 4.6.1+ 引用，Windows 用 `pwsh`；用 `dotnet new console -o demo && cd demo` 起最小工程。
+- **依赖坐标**：`dotnet add package OpenGIS.Utils --version 1.1.2`（NuGet 最新 1.1.2），原生 GDAL 运行时随包分发（`MaxRev.Gdal.Universal`）；用 `dotnet list package --include-transitive | Select-String OpenGIS.Utils` 核对解析出的版本，`NU1101`/`NU1102` 表示源或版本不可用，如实报告而不是改版本号重试。
+- **平台与原生库**：运行时与 RID 绑定，`DllNotFoundException` 或 `Unable to load DLL 'gdal'` 多因 `-r win-x64`/`linux-x64` 与运行环境不一致；`dotnet publish -r win-x64` 后跑发布目录，不要只跑 `bin/Debug` 里的半成品。
+- **验证产物**：最小程序 `OguLayerUtil.ReadLayer(DataFormatType.SHP, path)` 读入（完整重载见 `reference/code-patterns.md`）→ 打印 `layer.GetFeatureCount()` 与 `layer.Wkid`，再 `WriteLayer` 写出 GeoJSON 并重新读回，核对要素数与 CRS；`dotnet build` 成功只说明编译通过，GDAL 原生库是运行期才加载的。
+- **常见误操**：`Geojson2Wkt()` 只接受裸几何 / `Feature` / `FeatureCollection` 字符串，传整文件内容会抛 `ArgumentException`，整文件走 `OguLayerUtil.ReadLayer`；`OgrGeometry` 是 `IDisposable`，用完 `Dispose()`；`GEOTOOLS` 枚举仅为兼容，在 .NET 版实际重定向到 GDAL。
+- **构建与测试**：在仓库 checkout 内 `dotnet build OpenGIS.Utils.sln`、`dotnet test tests/OpenGIS.Utils.Tests/`，输出在 `bin/`、`obj/`（不要提交）；只看某一条测试时加 `--filter FullyQualifiedName~关键字`。
+- **安全与权限**：写入 Shapefile/GeoPackage 会覆盖同名文件，执行前确认目标路径；PostGIS 连接串与 GDAL 配置里的密码不要回显；`dotnet restore`、安装 SDK 或改 `NuGet.config` 前先征得用户同意。
 
 ## 典型工作流
 

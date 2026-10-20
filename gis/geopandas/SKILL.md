@@ -1,6 +1,6 @@
 ---
 name: geopandas
-description: "Use when performing vector spatial data analysis in Python — reading/writing shapefiles, spatial joins, overlay operations, choropleth maps. GeoPandas: extends pandas DataFrames with geometry columns for Pythonic spatial analysis."
+description: "Use when doing vector spatial analysis in Python — gpd.read_file/to_file via pyogrio (GPKG, Shapefile, GeoParquet), sjoin/sjoin_nearest, overlay, clip, dissolve, to_crs vs set_crs, gdf.plot choropleth; also for CRSError from a missing PROJ data dir, area/distance computed in degrees, or GeoDataFrame geometry-column conflicts. GeoPandas 1.2.0 extends pandas DataFrames with geometry columns."
 tags:
   - python
   - pandas
@@ -356,24 +356,16 @@ m = gdf.explore(column="population", cmap="viridis",
 | `DriverError` 无法写入 | 驱动不支持或文件被占用 | 检查驱动名拼写、关闭已打开的文件 |
 | `align=True` 导致意外 NaN | 二元操作默认按索引对齐 | 传入 `align=False` 或重置索引 |
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **读取数据**：使用 `gpd.read_file()` 读取矢量文件，或 `gpd.read_parquet()` 读取 GeoParquet
-2. **检查 CRS**：始终先检查 `gdf.crs`，需要在投影坐标系（非地理坐标系）下进行面积/距离计算
-3. **空间分析**：使用 `gpd.sjoin()` 进行空间连接，`gpd.overlay()` 进行叠加分析，`gpd.clip()` 进行裁剪
-4. **可视化**：使用 `.plot()` 快速静态出图，`.explore()` 生成交互式地图
-5. **输出**：使用 `gdf.to_file()` 或 `gdf.to_parquet()` 保存结果，优先使用 GeoPackage 或 GeoParquet 格式
-
-### 关键注意事项
-
-- **`set_crs()` vs `to_crs()`**：`set_crs()` 仅标记坐标系不转换坐标，`to_crs()` 执行实际坐标变换——切勿混用
-- **面积/距离计算前投影**：地理坐标系（EPSG:4326）下面积单位为度²无意义，应使用 `gdf.to_crs(gdf.estimate_utm_crs())` 投影后再计算
-- **空间操作前统一 CRS**：确保参与 `sjoin`、`overlay`、`clip` 的所有 GeoDataFrame 使用相同 CRS
-- **优先使用 GeoParquet**：比 Shapefile/GeoJSON 读写快 5-10 倍，且无字段名长度限制
-- **向量化操作**：避免逐行循环，使用 GeoSeries 的向量化方法（`buffer()`、`intersection()` 等）批量处理
-- **空间索引自动构建**：`.sindex` 自动维护 STRtree，`query()` 和 `nearest()` 可大幅加速空间查询
+- **加载与引用**：用 `skill("geopandas")` 加载（用户也可输入 `/geopandas`）；`reference/core-api.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，脚本与产物写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`，仅暴露 `run_code` 的会话在 `tools.pwsh` 里跑）；不要假设 `python` 是 QGIS/GDAL 自带的解释器，先 `python -c "import sys; print(sys.executable, sys.version)"`。
+- **先探测版本**：`python -c "import geopandas as gpd; print(gpd.__version__, gpd.options.io_engine)"`；本技能按 1.2.0 / Python >= 3.11 编写，低版本会缺 `to_arrow`、`to_parquet(geometry_encoding=...)` 与 1.2 新绘图参数（`tiles=`、`legend_kwds={"colorbar": True}`），回答时说明差异而不是硬写。
+- **检查依赖后端**：`python -c "import pyogrio, pyproj; print(pyogrio.__version__, pyproj.__version__, pyproj.datadir.get_data_dir())"`；PROJ 数据目录缺失时 `to_crs("EPSG:3857")` 抛 `CRSError: Invalid projection`，装 `pyproj`/`pyogrio` 前先征得用户同意。
+- **验证产物（必做）**：写完立即重开核对，`gdf = gpd.read_file("out.gpkg", layer="result"); print(gdf.crs, len(gdf), gdf.is_valid.all(), gdf.total_bounds)`，并确认面积/长度是在投影坐标系下算的。
+- **落图后看图**：`ax = gdf.plot(column="pop", legend=True, figsize=(12, 8)); ax.figure.savefig("map.png", dpi=100)`（需 matplotlib），再用 `read_image("map.png")` 检查范围、图例与空几何，不要只凭退出码报告成功。
+- **典型误操**：`set_crs()` 只标记不改坐标、`to_file()` 默认整表覆盖、`to_postgis(if_exists="replace")` 会删表重建——执行前确认目标路径/表名，Shapefile 字段名超 10 字符会被截断，改用 `.gpkg`。
+- **安全**：数据库连接串里的密码不要回显在命令输出里；`pip install geopandas[all]`、写入系统目录或覆盖生产数据前先得到用户确认。
 
 ## 相关技能
 

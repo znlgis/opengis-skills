@@ -1,6 +1,6 @@
 ---
 name: qgis-process
-description: "Use when running QGIS geoprocessing tools headless from command line or CI/CD — buffer, clip, reproject, raster analysis without GUI. QGIS Processing: batch spatial analysis via qgis_process CLI."
+description: "Use when running QGIS geoprocessing headless via qgis_process — native:buffer / native:reprojectlayer / native:clip, qgis_process list / help --json / run --json, .model3 models and .py scripts, batch CI pipelines, or debugging \"Algorithm ... not found!\"; includes QT_QPA_PLATFORM=offscreen and the qgis/qgis images (stable 4.2, ltr 3.44)."
 tags:
   - cli
   - qgis
@@ -302,37 +302,15 @@ qgis_process run /path/to/my_script.py -- INPUT=data.shp OUTPUT=result.shp
 
 > 常用内置算法速查、参数类型参考与典型工作流示例见 [reference/algorithm-cheatsheet.md](reference/algorithm-cheatsheet.md)
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **发现算法**：`qgis_process list` → 获取所有可用算法 ID
-2. **查看帮助**：`qgis_process help <algorithm_id> --json` → 获取参数定义的 JSON
-3. **构造参数**：根据 JSON 帮助信息构造参数
-4. **执行算法**：`qgis_process run <algorithm_id> --json -- PARAM=VALUE ...` 或通过 STDIN 传入 JSON
-5. **解析结果**：解析 JSON 输出获取结果路径和日志信息
-
-### 关键注意事项
-
-1. **始终使用 `--json` 选项**：JSON 输出结构化、易解析，是 AI 最友好的交互方式。
-2. **先查 help 再构造参数**：每个算法的参数名和类型不同，先用 `help --json` 确认参数定义。
-3. **枚举类型传数字索引**：枚举参数用数字（如 `0`、`1`）而非文字。help 输出的 `available_options` 提供了索引到含义的映射。
-4. **多值参数多次指定**：如 `LAYERS=a.shp LAYERS=b.shp`（在 `--` 之后，参数不带前导 `--`）。
-5. **复杂参数用 STDIN JSON**：字典类型的参数值适合通过 STDIN JSON 方式传入。
-6. **文件路径使用绝对路径**：避免工作目录不确定导致的文件找不到。
-7. **Headless 环境设置 `QT_QPA_PLATFORM=offscreen`**：在无显示器的服务器上必须设置。
-8. **需要项目文件的算法**：某些算法（如打印布局导出）需要通过 `--project_path` 指定项目文件。
-9. **取消正在运行的算法**：使用 `CTRL+C` 可取消执行中的算法。
-10. **`--no-python` 和 `--skip-loading-plugins` 可加速启动**：如果不需要第三方插件提供的算法，使用这两个选项可显著缩短启动时间。
-
-### 错误处理
-
-- 算法不存在：`Algorithm <id> not found!`
-- 缺少必填参数：`The following mandatory parameters were not specified`
-- 模型文件无效：`File <path> is not a valid Processing model!`
-- Python 脚本无效：`File <path> is not a valid Processing script!`
-- 算法不可在命令行使用：`The "<id>" algorithm is not available for use outside of the QGIS desktop application`
-- 需要项目文件：`The "<id>" algorithm requires a QGIS project to execute`
+- **加载与引用**：用 `skill("qgis-process")` 加载（用户也可输入 `/qgis-process`）；`reference/algorithm-cheatsheet.md` 按需 `read`，但算法参数一律以 `qgis_process help <id> --json` 的实时输出为准；技能目录只读，输出数据写会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。Windows 下 `qgis_process` 在 `C:\Program Files\QGIS 4.2\bin`（LTR 为 `C:\Program Files\QGIS 3.44\bin`）或 OSGeo4W Shell 里；PowerShell 设 `$env:QT_QPA_PLATFORM = "offscreen"`，不要照抄 `export`。
+- **先探测版本**：`qgis_process --version`（QGIS 4.2.3 或 LTR 3.44.15）、`qgis_process list`；低于 3.16 没有 `qgis_process`，只能改用 PyQGIS 脚本；`--no-python`、`--skip-loading-plugins` 可显著加快启动。
+- **验证产物**：`run ... --json` 里的 `results.OUTPUT` 是实际写出的绝对路径，再用 `ogrinfo -so`（矢量）或 `gdalinfo -json`（栅格）核对要素数、CRS、范围；日志中出现 `returned non-zero` 说明算法内部失败，不要只看进程退出码。
+- **参数约定**：`--` 之后的参数不带前导 `--`；枚举传数字索引（`help --json` 里的 `available_options` 是映射表）；多值参数重复同一键（`LAYERS=a.shp LAYERS=b.shp`）；路径含空格或中文时加引号，尽量用绝对路径。
+- **常见报错**：`Algorithm <id> not found!` 先查 provider 前缀（`native:`、`gdal:`、`grass:`），`The following mandatory parameters were not specified` 回看 `help --json`，`requires a QGIS project to execute` 补 `--project_path`。
+- **安全与权限**：`OUTPUT=` 指向已有文件会被覆盖；`--project_path` 会加载项目内的数据源与凭证，注意不要把含密码的项目传给外部环境；启动 Docker 或安装 QGIS 前先征得用户同意，长任务放后台作业。
 
 ---
 
@@ -363,6 +341,7 @@ qgis_process run /path/to/my_script.py -- INPUT=data.shp OUTPUT=result.shp
 | 多值参数只生效一项 | 在 `--` 之后多次指定同一参数（如 `LAYERS=a.shp LAYERS=b.shp`） |
 | 路径含空格或中文时报错 | 使用绝对路径并对参数值加引号 |
 | 启动速度慢 | 不需要 Python/插件时添加 `--no-python` 与 `--skip-loading-plugins` |
+| 模型/脚本或算法不可用 | 报 `File <path> is not a valid Processing model!` / `... is not a valid Processing script!` / `not available for use outside of the QGIS desktop application` 时，改用 QGIS 桌面或 PyQGIS 脚本 |
 
 ---
 

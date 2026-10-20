@@ -1,6 +1,6 @@
 ---
 name: proj
-description: "Use when performing coordinate reference system (CRS) transformation, reprojection, datum shift or EPSG lookup from the command line — converting coordinates between WGS 84, UTM, Web Mercator and CGCS2000. PROJ: the OSGeo library that powers GDAL/QGIS transformations, with projinfo, cs2cs, proj, cct and the proj.db SQLite database."
+description: "Use when transforming coordinates or inspecting CRS definitions from the command line — cs2cs, projinfo -s/-t, proj projection math, cct, EPSG lookup, datum shift with grid files, WKT/PROJJSON export, or debugging \"Cannot find proj.db\" and latitude-first axis order. PROJ 9.9.0: the OSGeo engine behind GDAL/QGIS, with the proj.db SQLite database."
 tags:
   - proj
   - crs
@@ -335,23 +335,12 @@ echo 116.391 39.907 | cs2cs EPSG:4326 EPSG:4547 --only-best
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **先查询、后转换**：任何转换前先用 `projinfo <code>` 确认 CRS 名称与轴序，再用 `projinfo -s A -t B` 确认转换路径。
-   ```bash
-   projinfo EPSG:4490
-   projinfo -s EPSG:4326 -t EPSG:4547 --summary
-   ```
-2. **用结构化输出便于解析**：`projinfo -o PROJJSON -q EPSG:4326 | jq .`，避免解析缩进文本。
-3. **点转换用 `cs2cs`，文件重投影用 GDAL**：`cs2cs` 只处理坐标流；`ogr2ogr -t_srs`/`gdalwarp -t_srs` 处理数据文件，二者共享 `PROJ_DATA`。
-4. **高精度场景显式下载网格**：先 `projsync --bbox ...` 或设 `PROJ_NETWORK=ON`，再加 `--only-best` 验证。
-5. **核对环境变量**：脚本中显式设置 `PROJ_DATA`，避免依赖不可控的默认搜索路径。
-
-### 关键注意事项
-
-- **不要凭记忆写 proj 字符串**：参数名（如 `+lat_ts`、`+zone`、`+ellps`）须与文档一致，优先用 EPSG 代码。
-- **轴序是最常见的错误来源**：`EPSG:4326` 纬度在前，`proj` 命令经度在前。
-- **转换前确认单位与高程**：三维转换需 `--3d`，并确认目标 CRS 的高程基准（如 EGM96）。
-- **版本即数据版本**：PROJ 9.x 的 `proj.db` 布局随版本变化，混用不同版本会报版本不匹配错误。
+- **加载与引用**：用 `skill("proj")` 加载（用户也可输入 `/proj`）；本技能没有 reference 子目录，正文即全部内容，更细的参数用 `projinfo --help`、`cs2cs --help`、`projinfo --list-crs` 现场查；技能目录只读，脚本与结果写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文的 `export PROJ_DATA=...` 在 PowerShell 写作 `$env:PROJ_DATA = "C:\OSGeo4W\share\proj"`；heredoc（`<<EOF`）在 pwsh 不可用，改用管道 `"56 12" | cs2cs EPSG:4326 EPSG:25832` 或先把输入写成文件再重定向。
+- **先探测版本**：`projinfo --version`（同时打印 `proj.db` 路径）、`projinfo --searchpaths`；本技能按 PROJ 9.9.0 编写，低于 9.1 用 `PROJ_LIB` 而非 `PROJ_DATA`，低于 9.3 的 `proj` 不能直接接受 `EPSG:xxxx`。
+- **验证转换**：用已知点对拍——`echo "116.391 39.907" | cs2cs EPSG:4326 EPSG:32650` 应得到东坐标约 45 万、北坐标约 442 万，量级不对通常是轴序或单位问题；结构化核对用 `projinfo -o PROJJSON -q EPSG:4326`，转换路径用 `projinfo -s A -t B --summary` 看候选操作与精度。
+- **轴序与降级**：`EPSG:4326` 纬度在前（输入先 lat 后 lon），`proj` 命令内部经度在前要用 `-r`；高精度转换加 `--only-best`，否则缺网格时会静默退回精度更低的操作。
+- **大输出处理**：`projinfo EPSG:4326` 的 WKT 有上百行，重定向到文件再分段 `read`；批量转换把 `cs2cs EPSG:4326 EPSG:3857 points.txt` 一次跑完，不要逐行起进程。
+- **安全与权限**：`projsync --all` 会从 CDN 下载数 GB 网格、`PROJ_NETWORK=ON` 也会联网，先确认网络与磁盘；`sqlite3 proj.db` 只做只读查询，不要写库；改 `PROJ_DATA` 会影响同机 GDAL/PostGIS，先征得用户同意。

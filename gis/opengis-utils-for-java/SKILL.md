@@ -1,6 +1,6 @@
 ---
 name: opengis-utils-for-java
-description: "Use when needing common GIS utility functions in Java — CRS utilities, geometry helpers, format converters, spatial validation. OpenGIS Utils for Java: convenience toolkit for Java GIS projects."
+description: "Use when needing common GIS utilities in Java — OguLayerUtil layer read/write, GeometryUtil 60+ ops, CrsUtil CGCS2000 (EPSG:4490, 4502-4554), Shapefile/GeoJSON/FileGDB/PostGIS/land TXT I/O, topology validation; also for GDAL UnsatisfiedLinkError on gdal_jni, missing osgeo repo on GeoTools, or resolving com.znlgis.ogu4j:ogu4j:1.0.0 that is not on Maven Central. OGU4J."
 tags:
   - java
   - gis
@@ -277,24 +277,16 @@ RuntimeException
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **选择引擎**：`GisEngineType.AUTO` 自动选择最优引擎（GDAL 优先）
-2. **读取数据**：使用 `OguLayerUtil.readLayer()` 统一入口读取各类矢量格式
-3. **空间分析**：JTS Geometry 对象用 `GeometryUtil`（60+ 方法），WKT 字符串用 `*Wkt` 后缀方法
-4. **坐标转换**：使用 `CrsUtil.transform()` 进行 CGCS2000 系列坐标系变换
-5. **写出结果**：使用 `OguLayerUtil.writeLayer()` 写出为目标格式
-
-### 关键注意事项
-
-- **始终使用 `OguLayerUtil` 作为主入口**：自动处理引擎选择和格式路由
-- **几何以 WKT 存储**：`OguFeature.geometry` 存储 WKT 字符串；空间运算时转为 JTS Geometry
-- **引擎选择**：`GEOTOOLS`（纯 Java，无原生依赖）vs `GDAL`（需本地库，支持 FileGDB）
-- **CGCS2000 坐标系**：EPSG:4490 为默认地理 CRS，投影 CRS 范围 EPSG:4502-4554
-- **Shapefile 字段名限 10 字符**：使用 `ShpUtil.formatFieldName()` 自动截断
-- **资源释放**：`DataStore` 和 OGR `DataSource` 必须在 finally 块中释放
+- **加载与引用**：用 `skill("opengis-utils-for-java")` 加载（用户也可输入 `/opengis-utils-for-java`）；`reference/common-tasks.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
+- **执行环境**：先 `java -version` 与 `mvn -version`（需 JDK 17+、Maven 3.8+），Windows 用 `pwsh`；`mvn -v` 里显示的 JDK 才是 Maven 实际使用的，与 shell 的 `java` 不一致时改 `JAVA_HOME` 再重试。
+- **源码安装（本库未发布到 Central）**：`git clone https://github.com/znlgis/opengis-utils-for-java.git` 后 `mvn install -DskipTests`，产物落在 `~/.m2/repository/com/znlgis/ogu4j/ogu4j/1.0.0/`；用 `mvn dependency:tree -Dincludes=com.znlgis.ogu4j` 确认坐标可解析。不要在 `pom.xml` 里直接写 `ogu4j:1.0.0` 后指望从 Central 下载。
+- **仓库与网络**：GeoTools 依赖不在 Central，`pom.xml` 必须带 `https://repo.osgeo.org/repository/release/`，否则 `Could not resolve dependencies for org.geotools:*`；离线或私服缺包时如实报告依赖不可下载，不要自行换版本或加未知仓库。
+- **原生 GDAL 匹配**：GDAL 引擎绑定 `org.gdal:gdal` 3.13.0，本机需装 GDAL 3.13.x 且 `java.library.path` 能找到 `gdal_jni`（Windows 上 `java -XshowSettings:properties -version 2>&1 | Select-String library.path`）；报 `UnsatisfiedLinkError: no gdal_jni in java.library.path` 说明原生库缺失或版本不符，此时改用 `GisEngineType.GEOTOOLS`。
+- **验证产物**：写最小 main 读一个 Shapefile/GeoJSON → `OguLayerUtil.readLayer(DataFormatType.SHP, path, null, null, null, GisEngineType.AUTO)`，打印 `layer.getWkid()`、`layer.getFeatureCount()`，再 `writeLayer` 成 GeoJSON 并重新读回比对要素数与 CRS；`mvn -q -DskipTests package` 只说明能编译。
+- **常见误操**：`AUTO` 在本机有原生 GDAL 时会优先走 GDAL，想复现纯 Java 结果必须显式传 `GisEngineType.GEOTOOLS`；`OguFeature.geometry` 是 WKT 字符串，做运算前先 `GeometryUtil.wkt2Geometry()`；`DataStore` 与 OGR `DataSource` 要在 `finally` 里释放，否则文件被占用后 `writeLayer` 覆盖失败。
+- **安全与权限**：PostGIS 连接串（`PG: host=... password=...`）里的密码不要回显到输出；`mvn install` 会写 `~/.m2`、示例代码会写 `/data` 等绝对路径，覆盖已有数据前先确认路径并征得用户同意。
 
 ## Important Notes for AI Developers
 

@@ -1,6 +1,6 @@
 ---
 name: mapserver
-description: "Use when publishing spatial data as OGC web services (WMS, WFS, WCS) from a mapfile, styling layers with SLD, or deploying the mapserv CGI/FastCGI. MapServer: the C-based OSGeo open-source map server for the web."
+description: "Use when publishing WMS/WFS/WCS/OGC API Features from a MapServer 8.6.6 .map mapfile — MAP/LAYER/CLASS/STYLE objects, STATUS/PROJECTION/EXTENT errors, WEB.METADATA wms_enable_request and wfs_enable_request, SLD binding, FastCGI plus MS_MAP_PATTERN hardening, and blank GetMap / \"No query information to decode\" symptoms."
 tags:
   - c
   - server
@@ -285,10 +285,12 @@ ogr2ogr -f GPKG clip.gpkg countries.gpkg -clipsrc 100 20 130 50
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-- **优先用 `mapserv -v` 判断能力**：输出中的 `SUPPORTS=` 列表决定该实例能否提供 WMS/WFS/WCS，遇到服务不生效先查此项。
-- **改动前先验证 mapfile 语法**：可用 `map2img` 或 `shp2img` 离线渲染，快速定位语法与数据路径问题，无需经过 Web 服务器。
-- **区分"渲染问题"与"协议问题"**：图像空白多属渲染（EXTENT/PROJECTION/STATUS），能力文档缺失多属 `wms_*`/`wfs_*` 元数据配置。
-- **不要编造 OGC 参数**：WMS/WFS 请求参数以官方文档为准，WFS 2.0 用 `TYPENAMES`，WMS 1.3.0 用 `CRS`。
-- **生产部署优先 FastCGI**，并配置 `MS_MAP_PATTERN` 限制可访问的 mapfile 路径。
+- **加载与引用**：`skill("mapserver")` 加载；技能目录只读，mapfile、SLD 与测试数据写到会话工作区。
+- **执行环境**：命令交给 dsh 的 `pwsh`（Windows 用 OSGeo4W 的 `mapserv.exe`）；`sudo apt`、`tar -zxvf` 不跨平台，Windows 改 `Expand-Archive`，装包或改系统目录前先问用户。
+- **先探测版本**：`mapserv -v`，确认输出含 `MapServer version 8.6.6` 且 `SUPPORTS=` 里有需要的 `WMS_SERVER`/`WFS_SERVER`；缺项说明该构建没编进对应库，改 mapfile 无用。
+- **验证产物**：先离线 `map2img -m demo.map -o out.png -s 600 400` 看渲染，再 `mapserv -nh "QUERY_STRING=map=/abs/demo.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities"` 抓能力文档，最后才 `curl -sI "http://host/cgi-bin/mapserv?map=...&REQUEST=GetMap..."` 确认 200 与 `Content-Type: image/png`。
+- **排障分流**：空白图查 `EXTENT`/`BBOX`/`PROJECTION`/`STATUS ON`；能力文档缺图层查 `wms_enable_request`、`wfs_enable_request` 与 `NAME` 是否字母开头；WFS 无属性字段是 8.x 默认行为，补 `gml_include_items`。
+- **安全与权限**：`map=` 可读任意路径是 MapServer 最典型误配置，生产必须设 `MS_MAP_PATTERN`/`MS_MAP_NO_PATH`；重启 Apache/nginx 或改 CGI 权限前先向用户确认。
+- **改一处验一处**：改 `WEB.METADATA` 后只重跑 `GetCapabilities`，改 `LAYER` 样式后只重跑 `map2img`，缩小排查范围。

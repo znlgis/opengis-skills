@@ -1,6 +1,6 @@
 ---
 name: sharpmap
-description: "Use when rendering 2D maps in legacy .NET WinForms or ASP.NET WebForms applications. SharpMap: an older .NET 2D mapping library. For new projects, prefer Mapsui."
+description: "Use when rendering 2D maps in legacy .NET Framework 4.7.2 WinForms or ASP.NET WebForms apps with SharpMap 1.2.0 — Map.GetMap() to PNG, ShapeFile/PostGIS providers, VectorLayer with CustomTheme, TileAsyncLayer via BruTile, ProjNet4GeoAPI transforms, or debugging blank output and GDI+ handle leaks. New projects should use Mapsui."
 tags:
   - dotnet
   - csharp
@@ -278,23 +278,15 @@ map.Layers.Add(new TileAsyncLayer(tileSrc, "OSM"));
 map.SRID = 3857;
 ```
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **创建 Map**：`new Map(new Size(width, height))` → 设置 SRID
-2. **添加数据源**：`ShapeFile(path)` / `PostGIS(conn, table, geomCol, idCol)` 等方式连接数据
-3. **创建图层**：`VectorLayer(name, provider)` 并设置 `Style`；按需添加 `LabelLayer`
-4. **添加底图**：`TileAsyncLayer` + `BruTile` 加载 OSM 在线底图
-5. **渲染输出**：`map.GetMap()` 获取 `Image` 对象 → 保存为 PNG 或通过 ASP.NET WMS 发布
-
-### 关键注意事项
-
-- **新项目建议 Mapsui**：SharpMap 主要面向 .NET Framework，新项目推荐使用 Mapsui（更活跃、跨平台更好）
-- **SRID 一致性**：图层与地图 SRID 必须一致，必要时通过 `CoordinateTransformation` 转换
-- **空间索引**：Shapefile 需预建 `.qix` 索引，PostGIS 用 GiST 索引加速查询
-- **资源释放**：GDI+ `Brush`/`Pen`/`Bitmap` 需及时释放避免内存泄漏
-- **Shapefile 编码**：中文数据需指定 `Encoding.UTF8` 或 `Encoding.GetEncoding("GBK")`
+- **加载与引用**：用 `skill("sharpmap")` 加载（用户也可输入 `/sharpmap`）；示例写入会话工作区的 .NET 工程，技能目录只读。
+- **执行环境**：先 `dotnet --list-sdks`；核心包 `SharpMap` 是 netstandard2.0，可被 .NET 8+ 工程引用，但 WinForms 控件 `SharpMap.UI` 只有 .NET Framework 4.7.2，目标框架必须选 net472，不能套 net8.0。
+- **验证产物**：`dotnet build` 后 `map.GetMap()` 取 `System.Drawing.Image` 再 `Save("output.png")`，用 `read_image` 看实际着色与标注；编译通过不代表渲染正确。
+- **依赖风险**：SharpMap 1.2.0（2021-03）的传递依赖含 `NetTopologySuite.Core` 1.15.3、`System.Drawing.Common` 4.6.0、`System.Data.SqlClient` 4.7.0，`dotnet restore` 会报 NU1902/NU1903/NU1904 漏洞告警，需向用户说明而不是静默忽略。
+- **坐标与 SRID**：`map.SRID` 与图层 SRID 必须一致；ProjNet 2.x 不再实现 GeoAPI 接口，坐标变换用 `ProjNet4GeoAPI` 1.4.1。
+- **资源释放**：GDI+ 的 `Brush`/`Pen`/`Bitmap` 必须 `using` 或 `Dispose`，否则长时间运行内存持续上涨。
+- **安全与权限**：新建工程、装包、连接 PostGIS 前先征得用户同意；连接串里的密码不要写进代码或回答。
 
 ## 相关技能
 

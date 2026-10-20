@@ -1,6 +1,6 @@
 ---
 name: leaflet
-description: "Use when adding lightweight interactive 2D maps to web pages — tile layers, markers, GeoJSON overlays, layer control, popups. Leaflet: compact, mobile-friendly open-source JavaScript web mapping library."
+description: "Use when adding lightweight 2D tile maps to web pages with leaflet 1.9.4 — L.map/L.tileLayer, markers, popups, GeoJSON overlays, layer control, [lat, lng] ordering, or debugging blank maps, broken default marker icons after bundling, and sizing fixed by invalidateSize()."
 tags:
   - javascript
   - web
@@ -341,10 +341,13 @@ export default function MapView() {
 - **cesiumjs** — 三维地球与 3D Tiles 可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
 - **geoserver** — 发布 WMS/WFS/瓦片服务作为 Leaflet 数据源：[../geoserver/SKILL.md](../geoserver/SKILL.md)
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-- **坐标顺序**：生成代码时严格区分 `[lat, lng]`（Leaflet）与 `[lng, lat]`（GeoJSON）
-- **生命周期**：框架集成务必成对生成创建与 `map.remove()` 清理逻辑
-- **图标修复**：npm 场景下主动补充默认图标路径配置，避免破图
-- **插件引入**：先引 CSS 再引 JS，绘制/聚合/热力图分别对应 `leaflet-draw`、`leaflet.markercluster`、`leaflet.heat`
-- **大数据量**：点数超过约 1000 时优先建议 `markercluster` 或改用 `circleMarker` 降低开销
+- **加载与引用**：用 `skill("leaflet")` 加载（用户也可输入 `/leaflet`）；本技能无 reference 子目录，示例代码直接落到会话工作区工程，技能目录只读。
+- **执行环境**：`npm install`、`npm run build` 交给 `pwsh`；纯静态页面可用 `python -m http.server 5173` 起服务（`python` 不存在时用 `py -3`）。
+- **先探测版本**：`npm ls leaflet`（未装则 `npm view leaflet version`）；本技能按 1.9.4 编写，CDN 的 `integrity` SRI 哈希只对应 1.9.4，换版本必须同步换哈希。
+- **验证产物**：构建后 `curl.exe -I http://localhost:5173/assets/<入口>.js` 确认 200；联网时还可 `curl.exe -I https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` 核对 CDN 版本；DSH 不打开浏览器，把 URL 和“应看到瓦片与标记”交给用户，有截图再用 `read_image`。
+- **图标与坐标**：npm + 打包器下默认 marker 图标会 404，需显式设置 `L.Icon.Default` 的 `iconUrl`/`iconRetinaUrl`/`shadowUrl`；坐标一律 `[lat, lng]`，GeoJSON 是 `[lng, lat]`。
+- **生命周期**：SPA 卸载必须 `map.remove()` 并解绑自定义事件；容器隐藏或尺寸变化后 `map.invalidateSize()`。
+- **常见症状**：地图区域空白多为容器没设高度；`L is not defined` 是脚本顺序或 CDN 失败；漏引 `leaflet.css` 会导致控件错位。
+- **安全与权限**：装包、起服务、改端口前先征得用户同意；天地图等瓦片服务的 `tk` 不要硬编码进提交的前端代码。

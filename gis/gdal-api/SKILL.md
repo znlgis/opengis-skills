@@ -1,6 +1,6 @@
 ---
 name: gdal-api
-description: "Use when programming against GDAL/OGR in C, C++, Python, Java, or .NET for raster/vector I/O, coordinate transformation, or custom geospatial algorithms. GDAL API: low-level programming interface for reading/writing 70+ geospatial formats."
+description: "Use when programming against GDAL/OGR in C, C++, Python, Java, or .NET — raster/vector I/O, gdal.UseExceptions, OGRSpatialReference transforms, gdal.Translate / gdal.Warp, VRT/COG, or fixing \"no driver registered\" and UnsatisfiedLinkError; C++ gdal-config, Maven org.gdal:gdal 3.13.0, NuGet MaxRev.Gdal.Core."
 
 tags:
   - gdal
@@ -102,7 +102,7 @@ dotnet add package MaxRev.Gdal.LinuxRuntime.Minimal   # Linux
 dotnet add package MaxRev.Gdal.WindowsRuntime.Minimal  # Windows
 ```
 
-**注意：** 官方 SWIG 绑定命名空间为 `OSGeo.GDAL`、`OSGeo.OGR`、`OSGeo.OSR`。NuGet 包 `MaxRev.Gdal.Core` 是社区维护的跨平台封装。
+**注意：** 官方 SWIG 绑定命名空间为 `OSGeo.GDAL`、`OSGeo.OGR`、`OSGeo.OSR`。NuGet 包 `MaxRev.Gdal.Core` 是社区维护的跨平台封装，2026-10 的最新版为 `3.13.3.583`（对应 GDAL 3.13.3），运行时包需与 `MaxRev.Gdal.Core` 主版本一致。
 
 ---
 
@@ -315,34 +315,15 @@ src_ds = None                             # 释放数据源
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **语言选择**：Python 优先（NumPy 集成、语法简洁），性能敏感用 C++，.NET 项目用 C#，Java 项目用 Java
-2. **驱动注册**：任何 GDAL 操作前先调用注册函数（C++: `GDALAllRegister()`, Python 默认已注册）
-3. **探索数据**：先 `gdalinfo`/`ogrinfo` 命令行查数据结构，再编写 API 代码
-4. **异常处理**：Python 脚本开头加 `gdal.UseExceptions()` 启用异常模式
-5. **分块读写**：大栅格使用 `RasterIO` 指定窗口，避免全量加载到内存
-
-### 关键注意事项
-
-- **资源释放**：C++ 用 `GDALClose()`，Python 赋值 `None`，Java 用 `.delete()`，C# 用 `.Dispose()`
-- **坐标轴顺序**：GDAL 3.0+ 默认纬度在前，可用 `SetAxisMappingStrategy` 切换
-- **Python NumPy 集成**：`ReadAsArray()` 直接返回 NumPy 数组，是 Python 最大优势
-- **CS 平台依赖**：C# 需安装对应平台运行时包（Linux/Windows）
-- **JA 本地库**：Java 需确保 `gdalalljni` 在 `java.library.path` 中
-
-### 各语言适用场景
-
-| 场景 | Python | C++ | Java | C# |
-|------|--------|-----|------|-----|
-| 数据处理脚本 | （推荐）首选 | | | |
-| 生产级服务 | | （推荐）首选 | （推荐） | （推荐） |
-| GIS 桌面插件 | （推荐） | | | |
-| .NET 企业应用 | | | | （推荐） |
-| Android GIS | | | （推荐） | |
-| 嵌入式系统 | | （推荐） | | |
+- **加载与引用**：用 `skill("gdal-api")` 加载（用户也可输入 `/gdal-api`）；`reference/raster-api.md`（栅格读写的完整 API）、`reference/vector-api.md`（OGR 图层与 GeoPackage）按需 `read`，路径相对 Base directory；技能目录只读，示例代码与产物写到会话工作区。
+- **执行环境**：编译与运行交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。C++ 用 `gdal-config --cflags --libs` 或 CMake `find_package(GDAL REQUIRED)`；Python 用装好绑定的解释器；Java 的 `gdalalljni`、.NET 的 MaxRev 运行时包必须与平台、架构匹配。
+- **先探测版本**：`ogrinfo --version`、`python -c "from osgeo import gdal; print(gdal.VersionInfo())"`（返回 `3130300` 这类数字）、`mvn -v`、`dotnet --version`；本技能按 GDAL 3.13.3、Java 绑定 3.13.0 编写，低版本缺少新驱动与部分 SWIG 方法，回答里要说明差异。
+- **验证产物**：写完后重新打开核对——`python -c "from osgeo import gdal; ds=gdal.Open('out.tif'); print(ds.GetDriver().ShortName, ds.RasterCount, ds.GetSpatialRef().GetAuthorityCode(None))"`；矢量用 `ogrinfo -al -so out.gpkg` 看要素数与字段；Python 一律先 `gdal.UseExceptions()`，否则错误被静默吞掉。
+- **语言选择**：数据处理脚本优先 Python（`ReadAsArray()` 直通 NumPy）；生产服务与嵌入式优先 C++；Java 注意用 `java.util.Vector<String>` 传选项；.NET 用 `OSGeo.GDAL`/`OSGeo.OGR` 命名空间，或 MaxRev 封装 + 对应平台运行时包。
+- **资源与轴序**：Python 置 `ds = None`、C++ `GDALClose()`、Java `.delete()`、C# `.Dispose()` 之后才算落盘；GDAL 3+ 默认纬度在前，需要经度在前时用 `SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)`，轴序改错是坐标错位最常见的原因。
+- **安全与权限**：以更新模式（`gdal.GA_Update`、`GDALOpen(..., GA_Update)`）打开会直接改原文件；覆盖已有输出前先确认；安装 `libgdal-dev`、`dotnet add package`、写系统目录前先征得用户同意。
 
 ## 相关技能
 

@@ -1,6 +1,6 @@
 ---
 name: pyqgis
-description: "Use when extending QGIS with Python plugins, automating map composition, or scripting QGIS processing algorithms. PyQGIS: QGIS Python API for custom tools, processing scripts, and plugin development."
+description: "Use when scripting QGIS with Python — QgsApplication standalone init, QgsVectorLayer / QgsRasterLayer loading, processing.run after Processing.initialize(), QgsGeometry / QgsExpression, QgsMapSettings rendering and QgsLayoutExporter PDF/PNG export, qgis._3d, or debugging \"import qgis.core\" failures. PyQGIS for QGIS 4.2.3 and LTR 3.44.15, Python 3.12."
 tags:
   - python
   - qgis
@@ -380,49 +380,15 @@ qgs.exitQgis()
 
 更多工作流（批量缓冲融合、栅格裁剪、打印布局导出）见 [reference/processing-rendering.md](reference/processing-rendering.md)。
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **初始化环境**：独立脚本需 `QgsApplication` 初始化；QGIS 控制台中可直接使用
-2. **加载数据**：使用 `QgsVectorLayer` / `QgsRasterLayer` 加载数据源
-3. **执行分析**：优先使用 `processing.run()` 调用算法（参数统一、算法丰富）；精细操作使用 `QgsGeometry` 方法
-4. **导出结果**：使用 `QgsVectorFileWriter` 写出矢量，`QgsRasterFileWriter` 写出栅格
-5. **清理退出**：独立脚本调用 `qgs.exitQgis()`
-
-### 关键注意事项
-
-1. **始终检查图层有效性**：加载图层后必须检查 `layer.isValid()`，无效时检查路径和 Provider。
-2. **坐标系一致性**：空间运算前确保所有图层使用相同 CRS；使用 `native:reprojectlayer` 或 `QgsCoordinateTransform` 进行转换。
-3. **编辑模式**：修改图层数据需 `startEditing()` → 操作 → `commitChanges()`；失败可 `rollBack()`。
-4. **Processing 内存输出**：将 OUTPUT 设为 `'memory:name'` 可得到内存图层，避免创建临时文件。
-5. **椭球面计算**：对地理坐标（经纬度）计算距离/面积时，使用 `QgsDistanceArea` 并设置椭球体，或使用 Processing 算法指定椭球体。
-6. **Headless 环境**：无显示器的服务器上必须设置 `QT_QPA_PLATFORM=offscreen`。
-7. **文件路径使用绝对路径**：避免工作目录不确定导致文件找不到。
-8. **大数据量优化**：使用 `QgsSpatialIndex` 加速空间查询；使用 `QgsFeatureRequest` 限制返回字段和范围。
-9. **表达式语法**：字段名用双引号 `"field"`，字符串值用单引号 `'value'`。
-10. **QGIS 版本兼容**：部分 API 在不同版本间有变化，建议使用 LTR 版本（[查看当前 LTR](https://qgis.org/download/)）以获得稳定接口；QGIS 当前稳定版为 4.2.3（2026-09 发布），3.44 LTR（最新 3.44.15）仍受支持（截至 2026-10）。
-
-### 错误处理
-
-```python
-# 图层加载失败
-layer = QgsVectorLayer(path, name, provider)
-if not layer.isValid():
-    print(f"图层加载失败: {layer.error().message()}")
-
-# Processing 算法错误
-try:
-    result = processing.run("native:buffer", params, feedback=feedback)
-except Exception as e:
-    print(f"算法执行失败: {e}")
-
-# 编辑提交失败
-if not layer.commitChanges():
-    errors = layer.commitErrors()
-    print(f"提交失败: {errors}")
-    layer.rollBack()
-```
+- **加载与引用**：用 `skill("pyqgis")` 加载（用户也可输入 `/pyqgis`）；`reference/vector-raster-layers.md`、`reference/processing-rendering.md` 按需 `read`，路径相对 Base directory；技能目录只读，脚本、导出图与中间数据写到会话工作区。
+- **执行环境**：必须用 QGIS 自带的解释器（Windows 在 `C:\Program Files\QGIS 4.2\apps\Python312\python.exe`，LTR 为 `QGIS 3.44`），不要用系统 Python；命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行），`export QT_QPA_PLATFORM=offscreen` 改写为 `$env:QT_QPA_PLATFORM = "offscreen"`。
+- **先探测版本**：`python -c "from qgis.core import Qgis; print(Qgis.QGIS_VERSION)"`；本技能同时覆盖 4.2.3（最新）与 3.44.15（LTR），4.x 与 3.x 存在 API 差异，回答里要写明按哪个版本写、低版本哪些类/方法不可用。
+- **验证产物**：独立脚本按 `QgsApplication` → `initQgis()` → 处理 → `exitQgis()` 收尾；写出后重开图层核对 `isValid()`、`featureCount()`、`crs().authid()`，`processing.run()` 的返回值只给路径，结果要二次打开；渲染或布局导出的 PNG 可用 `read_image` 看是否空白。
+- **模块名易错**：3D 模块是 `qgis._3d`（下划线，不是 `qgis.3d`），例如 `from qgis._3d import Qgs3DMapSettings`；`processing.run()` 前必须先 `Processing.initialize()`，否则报算法不存在。
+- **进程与日志**：批量脚本不要跨任务复用同一个 `QgsProject.instance()`；长任务放后台作业，QGIS 日志（`QgsApplication.messageLog()`）与 stderr 重定向到文件后分段 `read`。
+- **安全与权限**：`startEditing()`/`commitChanges()` 直接改源数据（Shapefile、PostGIS），先备份或把中间结果写 `memory:`；覆盖已有输出文件、安装 QGIS、把数据写进系统目录前先征得用户同意。
 
 ---
 

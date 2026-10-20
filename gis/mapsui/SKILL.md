@@ -1,6 +1,6 @@
 ---
 name: mapsui
-description: "Use when embedding interactive 2D maps in .NET desktop (WinForms/WPF) or mobile (MAUI) applications — tile layers, vector features, map controls. Mapsui: cross-platform .NET map component library."
+description: "Use when embedding interactive 2D maps in .NET desktop (WPF/WinUI/WinForms) or mobile (MAUI/Avalonia/Blazor) apps with Mapsui 5.1.0 (net8.0/net9.0) — Mapsui.Wpf/Mapsui.Maui packages, Map and Layers, OpenStreetMap.CreateTileLayer, Shapefile/GeoJSON via Mapsui.Nts, SphericalMercator.FromLonLat, or fixing a blank MapControl."
 tags:
   - dotnet
   - csharp
@@ -18,7 +18,7 @@ tags:
 >
 > **官方文档：** <https://mapsui.com/v5/documentation/index.html>
 >
-> **最新版本：** 5.1.0（截至2026-10，NuGet）
+> **最新版本：** 5.1.0（截至 2026-10，NuGet 稳定版；5.2.0-beta.1 为预发布）
 >
 > **许可证：** MIT
 
@@ -251,23 +251,15 @@ map.Layers.Add(new ImageLayer("Rivers") { DataSource = wmsProvider });
 map.ZoomToExtents();
 ```
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **选择 UI 框架**：Mapsui 支持 WPF/WinUI/MAUI/Avalonia/Uno/Blazor/WinForms，根据需要选择对应的 NuGet 包
-2. **创建 Map**：实例化 `Map`，添加图层（`TileLayer` 作为底图 + `MemoryLayer` 作为矢量覆盖层）
-3. **数据转换**：通过 `SphericalMercator.FromLonLat()` 将经纬度转为 Web Mercator 坐标
-4. **绑定控件**：将 `MapControl.Map` 设置为创建的 Map 对象
-5. **添加交互**：通过 `MapControl.Info` 事件处理点击拾取，`Navigator` 控制视图
-
-### 关键注意事项
-
-- **NuGet 包完整**：确保安装了 `Mapsui.<UI框架>`、`Mapsui.Tiling`、`Mapsui.Nts` 三个包
-- **投影转换**：WGS84 经纬度必须通过 `SphericalMercator.FromLonLat()` 转换后才能用于 Mapsui 定位
-- **Shapefile 编码**：中文 Shapefile 需指定 `Encoding`（如 `Encoding.UTF8` 或 `Encoding.GetEncoding("GBK")`）
-- **样式共享**：共享 `Brush`/`Pen`/`VectorStyle` 实例可提升性能
-- **海量点优化**：使用 `RasterizingTileLayer` 包装海量点图层，按瓦片预渲染
+- **加载与引用**：用 `skill("mapsui")` 加载（用户也可输入 `/mapsui`）；示例写入会话工作区的 .NET 工程，技能目录只读。
+- **执行环境**：先 `dotnet --list-sdks`；Mapsui 5.1.0 的目标框架是 net8.0/net9.0（`Mapsui.Wpf` 为 net8.0-windows/net9.0-windows），低于 .NET 8 的工程不能直接引用。命令交给 `pwsh`，例如 `dotnet add package Mapsui.Wpf --version 5.1.0`。
+- **验证产物**：`dotnet build` 只证明编译通过；无头渲染用 `Mapsui.Rendering.Skia.MapRenderer.RenderToBitmapStream(map, ...)` 输出 PNG 的 MemoryStream（参数以 IntelliSense 为准），落盘后 `read_image` 检查；WinForms/WPF 窗口 DSH 看不到，需用户运行后提供截图。
+- **投影**：定位坐标必须 `SphericalMercator.FromLonLat(lon, lat)` 转换，直接用经纬度会定位到南太平洋。
+- **数据**：Shapefile 中文要指定 `Encoding`（UTF8 或 GBK）；矢量要素装 `Mapsui.Nts`，瓦片装 `Mapsui.Tiling`，UI 包装 `Mapsui.Wpf`/`Mapsui.Maui`。
+- **常见症状**：`MapControl` 空白先查是否赋值 `MapControl.Map`；MAUI 空白查 `UseSkiaSharp()` 与 `UseMapsui()` 是否注册。
+- **安全与权限**：新建工程、装包、运行桌面程序前先征得用户同意；PostGIS/瓦片服务的密码不要写进代码或回答。
 
 ## 相关技能
 

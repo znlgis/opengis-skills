@@ -1,6 +1,6 @@
 ---
 name: shapely
-description: "Use when performing computational geometry in Python — intersection, union, buffer, convex hull, simplification. Shapely: Python bindings for GEOS, the C++ geometry engine that powers PostGIS."
+description: "Use when doing computational geometry in Python — shapely.intersection/union/buffer/convex_hull/simplify, STRtree queries, from_wkt/to_wkt/to_geojson, make_valid, GEOS-gated ops (coverage_clean, split); also for TopologyException on self-intersecting polygons or OOP vs function buffer quad_segs mismatch. Shapely 2.2.0 binds GEOS."
 tags:
   - python
   - geometry
@@ -275,24 +275,16 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 # left_idx[i] and right_idx[i] are paired matches
 ```
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **创建几何**：使用 `shapely.points()` / `shapely.linestrings()` / `shapely.polygons()` 向量化创建，或 `Point()` / `LineString()` / `Polygon()` OOP 方式
-2. **空间运算**：使用向量化函数（`shapely.intersection()` / `shapely.buffer()`）批量处理，比逐个 OOP 调用快 10-100 倍
-3. **空间谓词**：使用 `shapely.contains()` / `shapely.intersects()` 等函数式 API，返回 bool 数组
-4. **空间索引**：`STRtree` 查询 + `predicate="intersects"` 加速批量空间关系判断
-5. **序列化**：`shapely.from_wkt()` / `shapely.to_geojson()` 等进行格式互转
-
-### 关键注意事项
-
-- **Z 坐标在分析中被忽略**：所有空间运算仅在 x-y 平面进行
-- **`contains` 不包含边界**：如需边界判断使用 `covers()` 或 `intersects()`
-- **向量化函数 vs OOP 方法**：函数式 API（`shapely.area(geoms)`）释放 GIL，支持 NumPy 广播，性能远优于 OOP（`geom.area`）
-- **`set_precision` 改变顶点顺序**：返回的几何为"温和规范形式"，不应依赖顶点顺序
-- **Prepared 状态不持久**：任何操作产生新几何后需重新 `prepare()`
-- **WKB 会丢弃 LinearRing**：WKB 序列化时 LinearRing 变为 LineString
+- **加载与引用**：用 `skill("shapely")` 加载（用户也可输入 `/shapely`）；`reference/operations-reference.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证脚本与产物写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`，仅暴露 `run_code` 的会话在 `tools.pwsh` 里跑）；`python` 不一定是 QGIS/GDAL 自带环境，先 `python -c "import sys; print(sys.executable, sys.version)"`。
+- **先探测版本**：`python -c "import shapely; print(shapely.__version__, shapely.geos_version)"`；本技能按 2.2.0 编写，PyPI wheel 内含 GEOS 3.14.1。GEOS 低版本请按第 11 条降级（如 `coverage_clean` 需 3.14、`shapely.split` 需 3.15）。
+- **验证产物（必做）**：`print(shapely.is_valid(g), shapely.is_valid_reason(g))` 报无效原因；面积/长度做量级断言；序列化回读 `shapely.from_wkt(shapely.to_wkt(g, rounding_precision=-1)).equals(g)`，改过几何后再核对一次 `geom_type` 与 `get_num_geometries()`。
+- **报错先查有效性**：`TopologyException: side location conflict` 基本都是输入几何自相交，先 `shapely.make_valid(g)`（可指定 `method="structure"`）再算，不要直接加 `buffer(0)`。
+- **性能与内存**：批量操作走向量化函数（`shapely.union_all`、`shapely.buffer(geoms, r)`），别逐条 OOP 循环；十万级以上几何先 `STRtree(geoms)` 过滤，再对小集合做精确谓词。
+- **典型误操**：`set_coordinates()`/`shapely.prepare()` 都是原地修改，先 `.copy()`；`shapely.buffer` 默认 `quad_segs=8` 与 `Point.buffer()` 的 16 不同，比较结果前显式传参。
+- **安全**：`pip install shapely` 前先征得用户同意；输出 WKT/坐标前确认数据是否敏感（精确坐标可反推位置），大几何 dump 到文件再分段读，别刷屏。
 
 ---
 

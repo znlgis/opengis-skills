@@ -1,6 +1,6 @@
 ---
 name: geotools
-description: "Use when building Java GIS applications — feature reading/writing, coordinate transformations, map styling, spatial filters, WMS/WFS clients. GeoTools: the Java GIS toolkit and OGC standards reference implementation."
+description: "Use when building Java GIS apps on GeoTools 35.2 (JDK 17) — org.geotools:gt-main / gt-shapefile / gt-geopkg / gt-epsg-hsql from repo.osgeo.org (not Maven Central), CQL/ECQL filters, CRS.decode plus JTS.transform reprojection, StreamingRenderer PNG output, and disposing DataStore/SimpleFeatureIterator."
 tags:
   - java
   - gis
@@ -18,7 +18,7 @@ tags:
 >
 > **Maven GroupId：** `org.geotools`
 >
-> **最新版本：** 35.1（截至 2026-10，[OSGeo Maven 仓库](https://repo.osgeo.org/repository/release/)）
+> **最新版本：** 35.2（2026-10-16，[OSGeo Maven 仓库](https://repo.osgeo.org/repository/release/)）
 >
 > **许可证：** LGPL 2.1
 >
@@ -60,7 +60,7 @@ GeoTools 发布在 OSGeo Maven 仓库，需在 `pom.xml` 中添加：
 
 ```xml
 <properties>
-    <geotools.version>35.1</geotools.version><!-- 最新稳定版；版本列表见 https://geotools.org/ -->
+    <geotools.version>35.2</geotools.version><!-- 最新稳定版；版本列表见 https://geotools.org/ -->
 </properties>
 
 <dependencies>
@@ -386,25 +386,15 @@ store.dispose();
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **配置 Maven 仓库**：在 `pom.xml` 中添加 OSGeo 仓库（`https://repo.osgeo.org/repository/release/`）
-2. **引入必要模块**：`gt-main`（核心）、`gt-shapefile` / `gt-geopkg`（数据源）、`gt-epsg-hsql`（CRS）、`gt-cql`（查询）、`gt-render`（渲染）
-3. **打开数据源**：使用 `FileDataStoreFinder.getDataStore()`（文件）或 `DataStoreFinder.getDataStore(params)`（数据库）
-4. **执行查询**：使用 `CQL.toFilter()` 构建过滤器 → `featureSource.getFeatures(filter)`
-5. **处理结果**：遍历 `SimpleFeatureIterator`，使用 JTS 几何方法进行空间运算
-6. **释放资源**：`store.dispose()`、关闭 `SimpleFeatureIterator`
-
-### 关键注意事项
-
-- **Maven 仓库必需**：GeoTools 不在 Maven Central，必须配置 OSGeo 仓库
-- **EPSG 数据库**：使用 CRS 功能需引入 `gt-epsg-hsql`，否则 `CRS.decode()` 抛出异常
-- **资源释放**：`DataStore`、`Reader`、`Writer`、`MapContent` 使用后必须调用 `dispose()`
-- **坐标轴顺序**：GeoTools 默认遵循 EPSG 规范（纬度在前），使用 `CRS.decode("EPSG:4326", true)` 强制经度在前
-- **线程安全**：`DataStore` 线程安全可共享；`SimpleFeatureIterator` 非线程安全
-- **JTS 包名**：GeoTools 20+ 使用 `org.locationtech.jts`（GeoTools ≤19 为旧版 `com.vividsolutions.jts`）
+- **加载与引用**：`skill("geotools")` 加载；完整示例在 [reference/vector-io.md](reference/vector-io.md) 与 [reference/raster-rendering.md](reference/raster-rendering.md)，按需 `read`（路径相对技能 Base directory）。
+- **执行环境**：命令交给 dsh 的 `pwsh`；先 `java -version` 与 `mvn -v` 确认 JDK 17，35.x 在 JDK 8/11 下编译即失败。
+- **先探测版本**：`mvn dependency:tree -Dincludes=org.geotools` 确认解析到 35.2 且未被其他依赖压回旧版；`pom.xml` 里必须有指向 `repo.osgeo.org/repository/release/` 的 `<repository>`。
+- **验证产物**：`mvn -q -DskipTests package` 后跑最小读图层程序（`FileDataStoreFinder` → `getFeatures()` → 打印 count 与 CRS）或 `mvn -q test`；`CRS.decode("EPSG:4326")` 抛异常说明缺 `gt-epsg-hsql`。
+- **常见失败信号**：`getDataStore()` 返回 null 或报找不到工厂，是 SPI 模块没进 classpath；出现 `com.vividsolutions.jts` 是包名没升级（GeoTools 20+ 用 `org.locationtech.jts`）。
+- **安全与权限**：测试别全量加载要素到内存（用 `Query` 限制属性与 bbox）；连接串/密码不要回显，对生产库批量写入前先向用户确认。
+- **按需读文件**：本 SKILL 较长，先按章节标题定位，再用 `read` 的 offset/limit 只取相关段，避免整篇占满上下文。
 
 ## 相关技能
 

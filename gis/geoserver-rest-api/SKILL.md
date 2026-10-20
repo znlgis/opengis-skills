@@ -1,6 +1,6 @@
 ---
 name: geoserver-rest-api
-description: "Use when automating GeoServer management — programmatic workspace, datastore, and layer creation, style upload, service configuration via REST API. GeoServer REST API: manage GeoServer without GUI using curl, Python, or any HTTP client."
+description: "Use when automating GeoServer 3.0.2 over REST — POST /rest/workspaces, datastores, featuretypes, PUT Shapefile ZIP to file.shp, GeoTIFF to coveragestores, upload SLD as application/vnd.ogc.sld+xml, ?recurse=true deletes. curl -u admin:geoserver, single-key JSON like {\"workspace\":{...}}, 401 on POST but 200 on GET, GWC cache masking style changes."
 tags:
   - rest
   - api
@@ -20,7 +20,7 @@ tags:
 >
 > **API 参考：** <https://docs.geoserver.org/stable/en/user/rest/api/index.html>
 >
-> **最新版本：** GeoServer 3.0.1（截至 2026-10，[官方下载](https://geoserver.org/release/stable/)）
+> **最新版本：** GeoServer 3.0.2（2026-10-19，安全修复版；[官方下载](https://geoserver.org/release/stable/)）
 >
 > **许可证：** GPL-2.0
 
@@ -354,25 +354,15 @@ await workspaceService.CreateWorkspaceAsync("myws");
 
 ---
 
-## AI 使用建议
+## DeepSeek Harness 使用建议
 
-### 推荐工作流
-
-1. **确认 GeoServer 运行**：先验证 `http://localhost:8080/geoserver/rest/about/version.json` 可访问
-2. **创建工作空间**：POST `/rest/workspaces` → 创建命名空间
-3. **添加数据存储**：根据数据类型 POST datastores（矢量）或 coveragestores（栅格）
-4. **发布图层**：POST featuretypes（矢量）或 coverages（栅格）
-5. **配置样式**：POST styles + PUT SLD 文件 → PUT layers 绑定样式
-6. **验证发布**：GET `/rest/layers.json` 确认图层列表，访问 WMS GetMap 测试
-
-### 关键注意事项
-
-- **JSON 包装结构**：GeoServer REST API 的 JSON 请求/响应使用单层包装（如 `{"workspace":{...}}`）
-- **recurse 参数**：删除 Workspace/Store 时务必添加 `?recurse=true` 级联删除
-- **Shapefile 上传**：必须打包为 ZIP（含 .shp/.shx/.dbf/.prj），用 PUT 方式上传
-- **URL 后缀**：可用 `.json` / `.xml` 后缀替代 `Accept` 头指定响应格式
-- **Content-Type**：样式上传使用 `application/vnd.ogc.sld+xml`，栅格上传使用 `image/tiff`
-- **认证**：所有 POST/PUT/DELETE 操作需要 HTTP Basic Auth（默认 admin:geoserver）
+- **加载与引用**：`skill("geoserver-rest-api")` 加载；完整端点清单按需 `read` [reference/endpoints.md](reference/endpoints.md)（路径相对技能 Base directory），不要整份通读。
+- **执行环境**：示例交给 dsh 的 `pwsh`（显式 `curl.exe`，Windows 的 `curl` 是别名、参数不同）；`\` 续行在 pwsh 无效，压成单行；请求体先写成 `body.json`，用 `curl.exe --data "@body.json"` 传，避开各 shell 的引号差异。
+- **先探测版本**：`curl.exe -s -u admin:geoserver http://localhost:8080/geoserver/rest/about/version.json`，确认是 3.0.2 并顺带看到组件版本；返回 401 是凭据/安全规则问题，不是版本问题。
+- **验证产物**：写操作后立刻 GET 回读同一资源（`.../rest/workspaces/myws.json`、`.../rest/layers/myws:roads.json`），再发一次 WMS `GetMap` 取 `image/png` 确认非空图；不要只凭 201 或退出码报告成功。
+- **幂等与坑**：同名资源重复 POST 会报已存在（重跑脚本前先 GET 判断或改 PUT）；改了样式记得清 GWC 缓存，否则瓦片还是旧的。
+- **安全与权限**：`admin:geoserver` 不要硬编码进脚本或回显到报告；`?recurse=true` 删除 workspace、`POST /rest/reset`、清缓存均不可逆，执行前向用户确认。
+- **批量脚本**：循环建资源时检查 `$LASTEXITCODE`，一失败即停；半套配置留在服务端比报错更难排查。
 
 ## 相关技能
 
