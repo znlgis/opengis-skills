@@ -382,15 +382,15 @@ done
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("qgis-process")` 加载（用户也可输入 `/qgis-process`）；`reference/algorithm-cheatsheet.md` 按需 `read`，但算法参数一律以 `qgis_process help <id> --json` 的实时输出为准；技能目录只读，输出数据写会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。Windows 下 `qgis_process` 在 `C:\Program Files\QGIS 4.2\bin`（LTR 为 `C:\Program Files\QGIS 3.44\bin`）或 OSGeo4W Shell 里；PowerShell 设 `$env:QT_QPA_PLATFORM = "offscreen"`，不要照抄 `export`。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/algorithm-cheatsheet.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）。Windows 下 `qgis_process` 在 `C:\Program Files\QGIS 4.2\bin`（LTR 为 `C:\Program Files\QGIS 3.44\bin`）或 OSGeo4W Shell 里；PowerShell 设 `$env:QT_QPA_PLATFORM = "offscreen"`，不要照抄 `export`。
 - **先探测版本**：`qgis_process --version`（QGIS 4.2.3 或 LTR 3.44.15）、`qgis_process list`；低于 3.16 没有 `qgis_process`，只能改用 PyQGIS 脚本；`--no-python`、`--skip-loading-plugins` 可显著加快启动。
 - **验证产物**：`run ... --json` 里的 `results.OUTPUT` 是实际写出的绝对路径，再用 `ogrinfo -so`（矢量）或 `gdalinfo -json`（栅格）核对要素数、CRS、范围；日志中出现 `returned non-zero` 说明算法内部失败，不要只看进程退出码。
 - **参数约定**：`--` 之后的参数不带前导 `--`；枚举传数字索引（`help --json` 里的 `available_options` 是映射表）；多值参数重复同一键（`LAYERS=a.shp LAYERS=b.shp`）；路径含空格或中文时加引号，尽量用绝对路径。
 - **常见报错**：`Algorithm <id> not found!` 先查 provider 前缀（`native:`、`gdal:`、`grass:`），`The following mandatory parameters were not specified` 回看 `help --json`，`requires a QGIS project to execute` 补 `--project_path`。
-- **安全与权限**：`OUTPUT=` 指向已有文件会被覆盖；`--project_path` 会加载项目内的数据源与凭证，注意不要把含密码的项目传给外部环境；启动 Docker 或安装 QGIS 前先征得用户同意，长任务放后台作业。
+- **安全与权限**：`OUTPUT=` 指向已有文件会被覆盖；`--project_path` 会加载项目内的数据源与凭证，注意不要把含密码的项目传给外部环境；启动 Docker 或安装 QGIS 前先征得用户同意，长任务放后台运行。
 
 ---
 

@@ -239,10 +239,9 @@ dotnet demo/plugin/OpenGisDAF.PluginHostDemo/bin/Release/net10.0/OpenGisDAF.Plug
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("opengis-daf")` 加载（用户也可输入 `/opengis-daf`）；本技能没有 `reference/` 子目录，方案文档在上游仓库 `docs/`；技能目录只读，方案 JSON 与输出写到会话工作区。
-- **执行环境**：先 `dotnet --version`，必须是 **10.0**（仓库 `global.json` 锁定），Windows 用 `pwsh`；克隆必须 `git clone --recurse-submodules`，漏了子模块 `opengis-utils-for-net` 会在编译期报 GDAL 绑定类型缺失。
+- **执行环境**：先 `dotnet --version`，必须是 **10.0**（仓库 `global.json` 锁定），Windows 用 PowerShell；克隆必须 `git clone --recurse-submodules`，漏了子模块 `opengis-utils-for-net` 会在编译期报 GDAL 绑定类型缺失。
 - **源码构建（无 NuGet 包）**：`dotnet build` 或 `./build.sh`，再 `dotnet run --project src/OpenGisDAF.Cli -- help` 确认 CLI 可用；这是自有项目，不要写 `dotnet add package OpenGisDAF`。
 - **测试两步走**：`dotnet build OpenGisDAF.slnx -c Release` 后 `dotnet test OpenGisDAF.slnx -c Release --no-build`——同一条 `dotnet test` 在 xunit.v3 工具链下会报“运行了零个测试”并以退出码 5 失败。
 - **验证产物**：先 `daf validate --plan plans/my.json`（只校验 21 条规则）再 `daf run --plan plans/my.json`；退出码 `0` 才是成功（失败或跳过都返回 1），随后重开输出 GeoJSON 核对 `crs` 与要素数，并查看 `{plan}.qc-report.json` 的 `totalChecked/failed/passRate`（仅 `qcMode: true` 才生成）。

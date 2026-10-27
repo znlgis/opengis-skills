@@ -350,6 +350,16 @@ http://127.0.0.1:5190/#/play/sleep?autoplay=1&instant=1
 | 游戏打不开，界面只有一句「这个任务暂时打不开」 | 技术详情在 `window.__bamboo.lastError` 与控制台；多为内容/关卡校验失败，跑 `pnpm content:check` 定位 |
 | 进度会丢吗 | 本机 IndexedDB（无账号、不同步）；刷新/重开都在，清浏览器数据或换设备会丢；云存档只需替换 `ProgressStore` 实现 |
 
+## AI 使用建议
+
+- **执行环境**：用 `pnpm`（根 `package.json` 的 `packageManager` 锁版本）与 Node.js 24；命令在终端 / shell 中执行（Windows 用 PowerShell）。
+- **先探测版本**：`pnpm -v`、`node -v` 与仓库 `package.json` 比对；玩法包与外壳各自是独立 workspace 包，新增依赖要写进对应包的 `package.json`。
+- **验证产物**：改完跑 `pnpm verify`（类型 / 单测 / 内容校验 / 打包体积四道门禁），再 `pnpm dev` 打开页面确认任务可玩；类型检查通过不代表玩法正确，`window.__bamboo` 调试桥可用于快速跳任务。
+- **常见误操**：任务 JSON 由 zod 校验，字段缺失可能静默不回显，改内容后先看 verify 的内容阶段；长任务放后台运行并落盘日志。
+- **安全与权限**：新增依赖、改 `packageManager` 版本、执行 `pnpm install` 前先征得用户同意；打包产物与 `node_modules` 不要提交。
+
+---
+
 ## 相关技能
 
 - **chags** — 同一作者的姐妹项目：印证同一套「内容与代码分离 + 模板库」结构能撑起几十个小游戏：[../chags/SKILL.md](../chags/SKILL.md)

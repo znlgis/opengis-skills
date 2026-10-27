@@ -287,12 +287,11 @@ React 侧的等价流程是：`processGeojson` / `processCsvData` 解析 → `di
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("kepler-gl")` 加载（也可输入 `/kepler-gl`）；示例工程写到会话工作区，技能目录只读。
-- **执行环境**：`npm install` / `pnpm install`、`pip install keplergl` 交给 `pwsh` 或 `ops_bash`，长输出重定向到文件再分段读。
+- **执行环境**：`npm install` / `pnpm install`、`pip install keplergl` 在终端中执行 或 `ops_bash`，长输出重定向到文件再分段读。
 - **先探测版本**：`npm ls kepler.gl @kepler.gl/components @kepler.gl/actions`，子包必须与主包同为 3.3.0-alpha.16；Python 侧 `python -c "import keplergl; print(keplergl.__version__)"` 应为 0.4.0。
-- **验证产物**：前端用 `npm run build` 确认编译，再用 `npx serve dist` 起本地静态服务；是否真出图只能由浏览器确认，DSH 不打开浏览器，请用户看画面与控制台，有截图再用 `read_image`。
+- **验证产物**：前端用 `npm run build` 确认编译，再用 `npx serve dist` 起本地静态服务；是否真出图只能由浏览器确认，AI 助手通常看不到浏览器画面，请用户看画面与控制台，环境支持读图时用截图核对。
 - **无 GPU 环境**：无头环境无法验证 WebGL 渲染，构建通过不等于地图可用，此时不要报告「已渲染」。
 - **常见症状**：空白组件先查 reducer 与 `getState`；无图层查 `dataId` 与字段类型；token 报错查底图样式。
 - **安全与权限**：装包、起服务、把数据写入 HTML 前先征得用户同意；配置里不要硬编码 Mapbox token。

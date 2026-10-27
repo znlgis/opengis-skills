@@ -225,11 +225,11 @@ new Map({
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("opengis-all")` 加载（用户也可输入 `/opengis-all`）；本页是阶段索引，详细步骤在 `reference/data-stages.md` 与 `reference/workflow-cheatsheets.md`，按当前阶段 `read`，不要一次全读。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。示例是 Linux/bash 写法，按平台改写 `apt`、`/tmp`、`export` 与反引号；Windows 路径加引号。
-- **先探测工具链**：`gdalinfo --version`、`qgis_process --version`、`python3 -c "from osgeo import gdal; print(gdal.VersionInfo())"`、`curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"`；缺哪个阶段就加载相邻技能（如 `skill("gdal")`、`skill("qgis-process")`）。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/data-stages.md`、`reference/workflow-cheatsheets.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）。示例是 Linux/bash 写法，按平台改写 `apt`、`/tmp`、`export` 与反引号；Windows 路径加引号。
+- **先探测工具链**：`gdalinfo --version`、`qgis_process --version`、`python3 -c "from osgeo import gdal; print(gdal.VersionInfo())"`、`curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"`；缺哪个阶段就加载相邻技能（如 `gis/gdal`、`gis/qgis-process`）。
 - **分阶段交付**：每阶段产物落盘到工作区（GeoPackage/COG/GeoJSON），下一阶段只读取产物；先用 `ogrinfo -so`、`gdalinfo -json` 看摘要，不要把大文件或大段输出贴进上下文。
 - **验证**：转换后重新打开结果核对 CRS、范围、要素数；发布后用 `curl` 回读 REST 资源或 `GetCapabilities`；无显示器环境设置 `QT_QPA_PLATFORM=offscreen`；`qgis_process` 参数先用 `qgis_process help <id> --json` 确认。
 - **安全**：`gdal_edit.py`、覆盖输出、GeoServer `?recurse=true` 删除均不可逆；先备份并确认路径，安装 GDAL/QGIS、启动服务或使用数据库凭据前先征得用户同意。

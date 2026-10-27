@@ -264,7 +264,7 @@ map.Layers.Add(new ImageLayer("Rivers") { DataSource = wmsProvider });
 map.ZoomToExtents();
 ```
 
-**验证产物**：`dotnet build` 通过不等于出图。无头环境用 `Mapsui.Rendering.Skia.MapRenderer` 把 `map` 渲染成 PNG 再 `read_image` 检查；有窗口时请用户运行后提供截图。
+**验证产物**：`dotnet build` 通过不等于出图。无头环境用 `Mapsui.Rendering.Skia.MapRenderer` 把 `map` 渲染成 PNG 再打开 PNG 检查；有窗口时请用户运行后提供截图。
 
 ## 性能优化
 
@@ -289,11 +289,10 @@ map.ZoomToExtents();
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("mapsui")` 加载（用户也可输入 `/mapsui`）；示例写入会话工作区的 .NET 工程，技能目录只读。
-- **执行环境**：先 `dotnet --list-sdks`；Mapsui 5.1.0 的目标框架是 net8.0/net9.0（`Mapsui.Wpf` 为 net8.0-windows/net9.0-windows），低于 .NET 8 的工程不能直接引用。命令交给 `pwsh`，例如 `dotnet add package Mapsui.Wpf --version 5.1.0`。
-- **验证产物**：`dotnet build` 只证明编译通过；无头渲染用 `Mapsui.Rendering.Skia.MapRenderer.RenderToBitmapStream(map, ...)` 输出 PNG 的 MemoryStream（参数以 IntelliSense 为准），落盘后 `read_image` 检查；WinForms/WPF 窗口 DSH 看不到，需用户运行后提供截图。
+- **执行环境**：先 `dotnet --list-sdks`；Mapsui 5.1.0 的目标框架是 net8.0/net9.0（`Mapsui.Wpf` 为 net8.0-windows/net9.0-windows），低于 .NET 8 的工程不能直接引用。命令在终端中执行，例如 `dotnet add package Mapsui.Wpf --version 5.1.0`。
+- **验证产物**：`dotnet build` 只证明编译通过；无头渲染用 `Mapsui.Rendering.Skia.MapRenderer.RenderToBitmapStream(map, ...)` 输出 PNG 的 MemoryStream（参数以 IntelliSense 为准），落盘后打开 PNG 检查；WinForms/WPF 窗口 AI 助手 看不到，需用户运行后提供截图。
 - **投影**：定位坐标必须 `SphericalMercator.FromLonLat(lon, lat)` 转换，直接用经纬度会定位到南太平洋。
 - **数据**：Shapefile 中文要设 `ShapeFile.Encoding`（UTF8 或 GBK）；矢量要素装 `Mapsui.Nts`，瓦片装 `Mapsui.Tiling`，UI 包装 `Mapsui.Wpf`/`Mapsui.Maui`。
 - **常见症状**：`MapControl` 空白先查是否赋值 `MapControl.Map`；MAUI 空白查 `UseSkiaSharp()` 与 `UseMapsui()` 是否注册。

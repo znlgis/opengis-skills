@@ -275,10 +275,10 @@ QC 步骤遵循 **「检查即透传」** 模式：输入数据原样通过为 `
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("geopipe-agent")` 加载（用户也可输入 `/geopipe-agent`）；`reference/steps-reference.md`、`pipeline-schema.md`、`workflows.md`、`self-extension.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，YAML 与输出写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`）；`python` 可能指向 QGIS/GDAL 自带解释器，建议在工作区建独立 venv 后 `pip install -e .`，避免污染系统环境。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/backends.md`、`reference/knowledge.md`、`reference/pipeline-schema.md`、`reference/self-extension.md`、`reference/steps-reference.md`、`reference/workflows.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`python` 可能指向 QGIS/GDAL 自带解释器，建议在工作区建独立 venv 后 `pip install -e .`，避免污染系统环境。
 - **源码安装（未上 PyPI）**：`git clone https://github.com/znlgis/GeoPipeAgent.git && pip install -e ".[analysis,network]"`；验证 `geopipe-agent --help`、`geopipe-agent list-steps --category qc`、`pip show geopipe-agent | Select-String Version`。不要写 `pip install geopipe-agent`——PyPI 上还没有这个包。
 - **先探测能力**：`geopipe-agent backends` 看当前环境可用后端（默认 `native_python`），`geopipe-agent list-steps --format json` 拿真实步骤 ID；`validate` 报 `not registered` 时先用 `geopipe-agent resolve "<需求>"` 与 `knowledge search`，不要猜参数。
 - **验证产物**：`geopipe-agent validate pipeline.yaml` 通过后再 `run pipeline.yaml`，检查 JSON 报告里的 `qc_summary` 与各步骤统计，随后重开输出文件核对（`geopipe-agent info output/result.geojson`，装了 GDAL 时也可 `ogrinfo -so output/result.geojson result`），确认要素数与 CRS 而不是只看“执行成功”。

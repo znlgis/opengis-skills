@@ -263,10 +263,9 @@ Console.WriteLine($"cache={fromCache} web={fromWeb}");
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("brutile")` 加载（也可输入 `/brutile`）；示例工程写到会话工作区，技能目录只读。
-- **执行环境**：`dotnet add package` / `dotnet build` / `dotnet run` 交给 `pwsh`，首次 restore 需访问 NuGet。
+- **执行环境**：`dotnet add package` / `dotnet build` / `dotnet run` 在终端中执行，首次 restore 需访问 NuGet。
 - **先探测版本**：`dotnet list package` 确认 `BruTile` 是 6.0.0 还是 5.x——两者的 `GetTileAsync` 签名不同，写代码前必须确认；目标框架须为 net8.0/net9.0 才能用 6.0.0。
 - **验证产物**：先跑「schema + GetTileInfos 计数」的最小用例（0 级应为 1 张瓦片），再验证网络取图；取图结果检查字节长度大于 0，不要只看是否抛异常。
 - **网络与权限**：抓取第三方瓦片服务前确认其使用政策与是否需要 key；不要在示例里写死真实密钥。

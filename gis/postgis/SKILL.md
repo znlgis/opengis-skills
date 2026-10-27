@@ -279,10 +279,9 @@ SELECT count(*) FROM poi AS p JOIN districts AS d
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：`skill("postgis")` 加载；技能目录只读，SQL 脚本、导出与测试数据写到会话工作区。
-- **执行环境**：命令交给 dsh 的 `pwsh`（Windows 用 `psql.exe`，或 `docker exec -i pg psql -U postgres`）；psql 元命令（`\d`、`\c`）用 `psql -c "\d poi"` 单条传入，别依赖交互式会话。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 `psql.exe`，或 `docker exec -i pg psql -U postgres`）；psql 元命令（`\d`、`\c`）用 `psql -c "\d poi"` 单条传入，别依赖交互式会话。
 - **先探测版本**：`psql -c "SELECT version(), PostGIS_Full_Version();"` 核对 PostgreSQL、PostGIS 3.6.4 与 GEOS/PROJ；扩展缺失时先看 `SELECT * FROM pg_available_extensions WHERE name LIKE 'postgis%';`。
 - **验证产物**：导入后别只看 `INSERT 0 n`，跑 `SELECT count(*), ST_SRID(geom), ST_IsValid(geom) FROM t GROUP BY 2,3;` 核对要素数、SRID 与无效几何；性能结论必须用 `EXPLAIN (ANALYZE, BUFFERS)` 证明索引被使用。
 - **写操作回读**：`CREATE/ALTER`、`UpdateGeometrySRID` 或批量 `UPDATE` 后回读 `\d+ t` 与 `geometry_columns`，确认列类型与 SRID 真的落库。

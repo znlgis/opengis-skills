@@ -422,12 +422,11 @@ map.addControl(overlay);
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("deck-gl")` 加载（用户也可输入 `/deck-gl`）；本技能无 reference 子目录，示例代码写入会话工作区工程，技能目录只读。
-- **执行环境**：`npm install`、`npm run build` 交给 `pwsh`；子包多、安装输出长，重定向到文件再分段读。
+- **执行环境**：`npm install`、`npm run build` 在终端中执行；子包多、安装输出长，重定向到文件再分段读。
 - **先探测版本**：`npm ls deck.gl @deck.gl/core @deck.gl/layers @deck.gl/geo-layers`；所有 `@deck.gl/*` 必须是同一版本 9.4.0，混版会报 `Cannot read properties of undefined`。本技能按 9.4.0 编写。
-- **验证产物**：`npm run build` 后 `npx serve dist`，`curl.exe -I http://localhost:5173/` 确认入口；WebGL 是否真出图只能由浏览器确认，DSH 不打开浏览器，请用户看画面和控制台，有截图再用 `read_image`。
+- **验证产物**：`npm run build` 后 `npx serve dist`，`curl.exe -I http://localhost:5173/` 确认入口；WebGL 是否真出图只能由浏览器确认，AI 助手通常看不到浏览器画面，请用户看画面和控制台，环境支持读图时用截图核对。
 - **无 GPU 环境**：无头/CI 环境无法验证 WebGL，构建通过不等于渲染正确，不要据此报告“已渲染”。
 - **数据与坐标**：位置一律 `[经度, 纬度]`；保持 `data` 引用稳定，不要在渲染路径里 `filter`/`map` 生成新数组，否则 GPU 缓冲反复重建。
 - **常见症状**：空白画布先查容器高度与底图；数据变了画面不变用 `updateTriggers`；tooltip 无反应是 `pickable` 默认 false。

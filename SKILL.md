@@ -30,7 +30,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域，以及通用工具（others）与项目演示（demos），共 8 个分类、114 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent** 的技能（Skill）集合，与任何特定 Agent 产品解耦：Claude Code / Claude、Cursor、Cline / Roo Code、GitHub Copilot、Codex、Gemini CLI、OpenCode、DeepSeek Harness 等凡是能按需读取 Markdown 的工具都可直接使用。内容涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域，以及通用工具（others）与项目演示（demos），共 8 个分类、114 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -296,26 +296,26 @@ tags:
 
 ### Skill 加载方式
 
-不同 AI 工具加载 Skill 的方式：
+本仓库是纯 Markdown，**不依赖任何特定 Agent 产品**。各工具的通用做法：
 
 ```bash
 # Claude Code / Claude
 @SKILL.md                    # 加载根入口（推荐）
 @gis/gdal/SKILL.md           # 加载 GDAL 技能
-@gis/opengis-all/SKILL.md    # 加载 GIS 全流程索引
 
-# Cursor
-在 .cursorrules 中引用或在对话中使用 @file 语法
+# Cursor / Cline / Roo Code
+把 SKILL.md 路径写进 .cursorrules / .clinerules，或在对话里 @file 引用
 
-# Cline / Roo Code
-直接使用 @ 语法或通过 .clinerules 配置
+# GitHub Copilot Chat
+通过 .github/copilot-instructions.md 指向根 SKILL.md，或对话中 #file 引用
 
-# VS Code Copilot Chat
-通过 /addContext 或 .github/copilot-instructions.md 配置
-
-# DeepSeek Chat
-对话中粘贴 SKILL.md 内容或引用文件路径
+# Codex / Gemini CLI / Aider / OpenCode 等 CLI Agent
+直接把 `SKILL.md`（或分类级 / 项目级 SKILL.md）作为上下文文件提供给 Agent，
+或让 Agent 按路径自行 read；支持技能目录的宿主可把本仓 `<category>/<skill>/`
+整个目录注册为技能
 ```
+
+> **兼容性原则：** 技能正文只写**工具无关**的知识（版本、API、命令、工作流、排障），不假设 Agent 具备特定工具名或私有 API；「AI 使用建议」一节描述的是通用协作方式（如何加载、用什么命令、怎么验证产物），任何 Agent 都能照做。
 
 ---
 
@@ -329,7 +329,7 @@ tags:
 4. **环境准备/安装**
 5. **核心 API/命令** — 含代码示例
 6. **典型工作流** — 端到端操作步骤
-7. **AI 使用建议** — AI 助手专项指导（dsh/DeepSeek Harness 场景下部分技能写作「DeepSeek Harness 使用建议」，两者等价，后者含 `skill()` 加载、`run_code`/`pwsh` 工具映射等 dsh 专属说明）
+7. **AI 使用建议** — 工具无关的协作指导：执行环境、版本探测、产物验证、常见误操、安全与权限
 8. **常见问题（FAQ）**
 9. **参考资源**
 

@@ -197,7 +197,7 @@ geolibre-mcp --root ~/maps
 }
 ```
 
-Claude Code 一行安装：
+支持 MCP 的客户端（Claude Code、Cursor、Cline、OpenCode 等）都把上段 JSON 写进各自的 MCP 配置即可；以 Claude Code 为例的一行注册：
 
 ```bash
 claude mcp add geolibre -- geolibre-mcp --root ~/maps
@@ -340,9 +340,8 @@ python -c "import json;d=json.load(open('beijing.geolibre.json'));print(len(d.ge
 | 网页版打开本地文件后刷新就没了 | 浏览器安全模型不给持久文件路径 | 用桌面版做本地文件工作，或用 data= 指向托管 URL |
 | 沙盒（Mac App Store）版加载松散 Shapefile 丢属性 | 沙盒授权只覆盖显式选择的文件 | 一次选中所有分片（.shp/.dbf/.prj）或用压缩包 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载技能**：skill("geolibre")；技能目录只读，生成的 .geolibre.json、.html 与脚本写到会话工作区。
 - **先确认版本与入口**：pip show geolibre 看版本，geolibre-mcp --help 看参数；桌面版看 Help → About。教程可能对应 3.4，遇到差异以 3.5.1 的实际行为为准。
 - **装包前确认 Python 版本**：PyPI 的 geolibre 3.5.1 要求 Python >= 3.11；低版本解释器会直接安装失败，不要误判为网络问题。
 - **MCP 路径要显式**：Windows 上 JSON 里写正向斜杠（C:/Users/you/maps），反斜杠需成对转义，容易出错。

@@ -211,10 +211,9 @@ curl -u admin:geoserver -XPOST \
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：`skill("geoserver")` 加载；技能目录只读，SLD、脚本、日志等产物写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`）；`wget`/`unzip` 换成 `curl.exe -LO` 与 `Expand-Archive`，`$PWD` 换成 `(Get-Location)`。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`wget`/`unzip` 换成 `curl.exe -LO` 与 `Expand-Archive`，`$PWD` 换成 `(Get-Location)`。
 - **先探测版本**：`curl -s -u admin:geoserver http://localhost:8080/geoserver/rest/about/version.json`（无 jq 时管道给 `python -m json.tool`），核对 GeoServer、GeoWebCache 与 JVM；`java -version` 必须是 17 或 21，否则 3.0.2 包直接启动失败。
 - **验证产物**：发布后用 `curl -s -o out.png -w "%{http_code} %{size_download}\n" "http://localhost:8080/geoserver/my_ws/wms?service=WMS&version=1.1.0&request=GetMap&layers=my_ws:poi&srs=EPSG:4326&bbox=...&width=512&height=512&format=image/png"`，要 200 且字节数大于 0；再拉一次 `GetCapabilities` 确认图层已注册，不要只凭 UI 回显。
 - **写后回读**：REST 建 workspace/store/layer 或上传 SLD 后，用同路径 GET 回读；`?recurse=true` 删除后再 GET 应得 404。

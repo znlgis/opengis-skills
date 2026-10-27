@@ -314,12 +314,11 @@ handler.setInputAction((e) => {
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("cesiumjs")` 加载（用户也可输入 `/cesiumjs`）；本技能无 reference 子目录，示例代码直接落到会话工作区的工程里，技能目录只读。
-- **执行环境**：`npm install`、`npm run build` 交给 `pwsh`；Windows 下 `npm` 实为 `npm.cmd`，脚本里写 `cmd /c npm run build` 更稳；装包和大构建用后台作业，输出重定向到文件再分段读。
+- **执行环境**：`npm install`、`npm run build` 在终端中执行；Windows 下 `npm` 实为 `npm.cmd`，脚本里写 `cmd /c npm run build` 更稳；装包和大构建放后台运行，输出重定向到文件再分段读。
 - **先探测版本**：`npm ls cesium`（未安装时 `npm view cesium version`）。本技能按 1.146.0 编写：该版本依赖 `@cesium/core@^0.1.0`，数学/几何/时间/工具类已拆到 `@cesium/core`，低于 1.146 的工程不要照搬这条迁移建议。
-- **验证产物**：`npm run build` 通过后用 `npx serve dist` 或 `python -m http.server 5173 -d dist` 起静态服务，用 `curl.exe -I` 检查 `http://localhost:5173/Cesium.js` 与 `.../Cesium/Widgets/widgets.css` 返回 200（404 或 text/html 说明资源没拷贝）；DSH 不打开浏览器，把 URL 和预期画面交给用户，有截图再用 `read_image` 核对。
+- **验证产物**：`npm run build` 通过后用 `npx serve dist` 或 `python -m http.server 5173 -d dist` 起静态服务，用 `curl.exe -I` 检查 `http://localhost:5173/Cesium.js` 与 `.../Cesium/Widgets/widgets.css` 返回 200（404 或 text/html 说明资源没拷贝）；AI 助手通常看不到浏览器画面，把 URL 和预期画面交给用户，环境支持读图时用截图核对。
 - **Ion 与部署**：`Cesium.Ion.defaultAccessToken` 从环境变量注入（Vite 用 `import.meta.env.VITE_CESIUM_ION_TOKEN`），不要写进源码或提交；黑屏先查 `window.CESIUM_BASE_URL` 与 `Workers/Assets/Widgets` 是否随构建产物发布。
 - **坐标与性能**：定位一律 `Cesium.Cartesian3.fromDegrees(lon, lat, height)`；大量静态要素用 Primitive，少量动态要素才用 Entity；`clampToGround` 只在需要贴地时开启。
 - **常见症状**：瓦片整体错位是国内底图的 GCJ-02 偏移，需先纠偏；ion 服务 401/403 多为 token 未设置或失效；`tileset.destroy()`、`viewer.dataSources.remove()` 不调用会持续占用显存。

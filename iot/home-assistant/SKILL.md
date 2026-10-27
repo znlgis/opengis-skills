@@ -380,9 +380,8 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 | 升级后集成报错 | 破坏性变更或自定义集成不兼容 | 先读版本发布说明的 Breaking Changes；回滚镜像 tag 到上一个版本 |
 | 容器重启后配置全没了 | 没挂载 `/config` 卷 | 停容器，重新以 `-v <host>:/config` 启动；以后先确认卷再升级 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载技能**：skill("home-assistant")；技能目录只读，脚本与临时配置写到会话工作区。
 - **先探版本与形态**：`GET /api/config` 拿 `version` 与 `location_name`；容器内 `docker exec` 跑命令比在宿主机猜路径可靠。
 - **改 YAML 前必备份**：`cp configuration.yaml configuration.yaml.bak`，改完先 `check_config`，通过后再 reload/restart。
 - **令牌不落盘**：用环境变量传 `TOKEN`，示例里的 `<粘贴长期访问令牌>` 必须替换；不要把令牌写进脚本或报告。

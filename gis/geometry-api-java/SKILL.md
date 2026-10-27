@@ -376,10 +376,9 @@ if (hit) {
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("geometry-api-java")` 加载（用户也可输入 `/geometry-api-java`）；本技能没有 `reference/` 子目录，示例都在正文；技能目录只读，Maven 工程建在会话工作区。
-- **执行环境**：先 `mvn -v` 与 `java -version` 确认工具链（JDK 8+ 即可编译，建议 17/21 运行），Windows 上用 `pwsh` 执行；`%JAVA_HOME%`/`JAVA_HOME` 与 `mvn` 实际使用的 JDK 可能不同，报 `Unsupported class file major version` 时按 `mvn -v` 显示的 JDK 判断。
+- **执行环境**：先 `mvn -v` 与 `java -version` 确认工具链（JDK 8+ 即可编译，建议 17/21 运行），Windows 上用 PowerShell 执行；`%JAVA_HOME%`/`JAVA_HOME` 与 `mvn` 实际使用的 JDK 可能不同，报 `Unsupported class file major version` 时按 `mvn -v` 显示的 JDK 判断。
 - **依赖坐标**：`com.esri.geometry:esri-geometry-api:2.2.4` 是 Maven Central 最新（2020-09 发布）；上游 2.3.1（2026-10-09）未发布到 Central。先 `mvn dependency:get -Dartifact=com.esri.geometry:esri-geometry-api:2.2.4` 确认可解析，解析失败时报告“依赖不可下载”，不要自行改成 2.3.1 或别处坐标。
 - **离线与网络**：首次 `mvn` 会拉依赖，无网或私服缺包时报 `Could not resolve dependencies`；不要为绕过它去改 `settings.xml`、加未知仓库或降级版本，先向用户要可用镜像。
 - **验证产物**：写最小 main（或 JUnit）断言三件事——`geometryFromWkt` → `geometryToWkt` 往返等价、`GeometryEngine.buffer(poly, sr, 2.0)` 后 `getEnvelope()` 向外扩张、`geometryToGeoJson` 能被 `geoJsonToGeometry` 重新读入；`mvn -q -DskipTests package` 只证明能编译，不代表几何正确。

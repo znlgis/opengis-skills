@@ -348,9 +348,8 @@ SELECT ST_AsMVT(tile, 'cities', 4096, 'geom') FROM tile;
 | 写出的 Parquet 没有 CRS | ST_AsWKB 只写几何，不写 CRS 元数据 | 落盘后用 GeoPandas/GDAL 补写 crs，或用 ogr2ogr 转出 |
 | ST_ReadOSM 只返回 node/way 原始表 | 该函数不做几何装配 | 需要成品几何时改用 ST_Read 的 OSM 驱动 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载技能**：skill("duckdb-spatial")；技能目录只读，SQL 脚本与输出数据写到会话工作区。
 - **先验扩展再写 SQL**：执行前跑 SELECT extension_name, loaded FROM duckdb_extensions() WHERE extension_name='spatial'; 确认 loaded=true；未加载就先 LOAD，不要把"函数不存在"当语法错误去改。
 - **版本敏感**：2.0.0 与旧版函数集合有差异（ST_Area_Spheroid、ST_CoverageUnion_Agg 属较新函数）。写示例前用 SELECT function_name FROM duckdb_functions() WHERE function_name LIKE 'ST_%'; 探测实际可用函数。
 - **大文件不要整读进内存**：优先用 ST_Read 的 spatial_filter_box / layer 参数与 Parquet 列裁剪；反复查询时先落表。

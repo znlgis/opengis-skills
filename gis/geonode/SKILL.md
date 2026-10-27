@@ -323,9 +323,8 @@ print(requests.get(wms, params={
 | `docs.geonode.org` 某些深链 404 | 文档站路径随版本调整 | 从首页导航进入；或直接读仓库 `docs/src/` 下对应 Markdown |
 | 裸机安装 GeoServer 登录失败 | OAuth2 client 与 GeoNode 不一致 | 按官方 OAuth2 章节核对 `clientid/clientsecret` 与 GeoServer 过滤器配置 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载技能**：skill("geonode")；技能目录只读，脚本与上传样例写到会话工作区。
 - **先确认版本与入口**：`curl -s http://localhost/version.txt` 确认 5.1.1；Docker 部署优先用 `docker compose exec` 而不是宿主机的 `manage.py`，避免环境错位。
 - **API 用 `/api/v2/`**：旧 Tastypie 的 `/api/*` 仍在，但新代码一律用 `/api/v2/resources` 与 `/api/v2/uploads/upload`；两者返回结构不同，不要混用。
 - **认证信息不要进日志**：用环境变量传 `Authorization`，示例里出现的 `<base64>` 必须替换，不要把真实凭据写进脚本或报告。

@@ -371,6 +371,16 @@ tail -n 3 logs/app-*.log
 
 ---
 
+## AI 使用建议
+
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`dotnet add package` 首次需访问 NuGet，离线时先用本地缓存。
+- **先探测版本**：`dotnet list package` 核对 `Serilog` 4.4.0 与 `Serilog.AspNetCore` 10.0.0；后者版本跟随 Microsoft.Extensions.Hosting，与核心包**不同号属正常**，不要强行对齐。
+- **验证产物**：`dotnet run` 后确认控制台出现一条结构化日志，并检查 `appsettings.json` 的 `Serilog:Using` 与实际加载的 sink 包一致；若只看到内置 `Microsoft.Extensions.Logging` 的格式，说明 `UseSerilog()` 没生效。
+- **常见误操**：同时调用 `builder.Host.UseSerilog()` 与 `builder.Logging.AddSerilog()` 会导致日志重复；`ReadFrom.Configuration` 需要在 csproj 里带上 `Serilog.Settings.Configuration`，否则配置被静默忽略。
+- **安全与权限**：日志里不要输出连接串、口令与个人信息；`WriteTo.File` 会写磁盘，部署前确认路径可写与滚动策略。
+
+---
+
 ## 相关技能
 
 - **furion** — .NET Web 框架，生产项目常与 Serilog 一起替换默认日志：[../furion/SKILL.md](../furion/SKILL.md)

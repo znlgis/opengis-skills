@@ -401,14 +401,14 @@ qgs.exitQgis()
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("pyqgis")` 加载（用户也可输入 `/pyqgis`）；`reference/vector-raster-layers.md`、`reference/processing-rendering.md` 按需 `read`，路径相对 Base directory；技能目录只读，脚本、导出图与中间数据写到会话工作区。
-- **执行环境**：必须用 QGIS 自带的解释器（Windows 在 `C:\Program Files\QGIS 4.2\apps\Python312\python.exe`，LTR 为 `QGIS 3.44`），不要用系统 Python；命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行），`export QT_QPA_PLATFORM=offscreen` 改写为 `$env:QT_QPA_PLATFORM = "offscreen"`。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/processing-rendering.md`、`reference/vector-raster-layers.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：必须用 QGIS 自带的解释器（Windows 在 `C:\Program Files\QGIS 4.2\apps\Python312\python.exe`，LTR 为 `QGIS 3.44`），不要用系统 Python；命令在终端 / shell 中执行（Windows 用 PowerShell），`export QT_QPA_PLATFORM=offscreen` 改写为 `$env:QT_QPA_PLATFORM = "offscreen"`。
 - **先探测版本**：`python -c "from qgis.core import Qgis; print(Qgis.QGIS_VERSION)"`；本技能同时覆盖 4.2.3（最新）与 3.44.15（LTR），4.x 与 3.x 存在 API 差异，回答里要写明按哪个版本写、低版本哪些类/方法不可用。
-- **验证产物**：独立脚本按 `QgsApplication` → `initQgis()` → 处理 → `exitQgis()` 收尾；写出后重开图层核对 `isValid()`、`featureCount()`、`crs().authid()`，`processing.run()` 的返回值只给路径，结果要二次打开；渲染或布局导出的 PNG 可用 `read_image` 看是否空白。
+- **验证产物**：独立脚本按 `QgsApplication` → `initQgis()` → 处理 → `exitQgis()` 收尾；写出后重开图层核对 `isValid()`、`featureCount()`、`crs().authid()`，`processing.run()` 的返回值只给路径，结果要二次打开；渲染或布局导出的 PNG 要实际打开看是否空白。
 - **模块名易错**：3D 模块是 `qgis._3d`（下划线，不是 `qgis.3d`），例如 `from qgis._3d import Qgs3DMapSettings`；`processing.run()` 前必须先 `Processing.initialize()`，否则报算法不存在。
-- **进程与日志**：批量脚本不要跨任务复用同一个 `QgsProject.instance()`；长任务放后台作业，QGIS 日志（`QgsApplication.messageLog()`）与 stderr 重定向到文件后分段 `read`。
+- **进程与日志**：批量脚本不要跨任务复用同一个 `QgsProject.instance()`；长任务放后台运行，QGIS 日志（`QgsApplication.messageLog()`）与 stderr 重定向到文件后分段查看。
 - **安全与权限**：`startEditing()`/`commitChanges()` 直接改源数据（Shapefile、PostGIS），先备份或把中间结果写 `memory:`；覆盖已有输出文件、安装 QGIS、把数据写进系统目录前先征得用户同意。
 
 ---

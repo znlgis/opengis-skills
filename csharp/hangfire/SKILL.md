@@ -358,6 +358,16 @@ dotnet run
 
 ---
 
+## AI 使用建议
+
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；装 `Hangfire.AspNetCore` 与存储包后需 `UseHangfireDashboard()` 才能看到面板。
+- **先探测版本**：`dotnet list package` 确认 `Hangfire.Core` 与存储实现（SqlServer/PostgreSql/InMemory）主次版本一致；不匹配是最常见的 “storage not initialized” 来源。
+- **验证产物**：入队一个任务后用 `BackgroundJob.Enqueue` 返回的 job id 查询状态，确认 Enqueued → Processing → Succeeded；周期任务用 `RecurringJob.TriggerJob(id)` 立即触发一次再核对。
+- **常见误操**：多实例部署时默认每个实例都跑 worker，需按队列拆分；Dashboard 默认只允许本机访问，反代后 401/404 多为鉴权或 `PathBase` 未设，不要直接去掉授权过滤器。
+- **安全与权限**：Dashboard 能重跑与删除任务，生产必须加认证；`RecurringJob.RemoveIfExists` 与存储清理会删历史，执行前向用户确认。
+
+---
+
 ## 相关技能
 
 - **serilog** — 任务内日志与失败告警统一走结构化日志：[../serilog/SKILL.md](../serilog/SKILL.md)

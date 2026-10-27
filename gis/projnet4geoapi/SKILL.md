@@ -273,10 +273,9 @@ while ((line = reader.ReadLine()) is not null)
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("projnet4geoapi")` 加载（也可输入 `/projnet4geoapi`）；示例工程写在会话工作区，技能目录只读。
-- **执行环境**：`dotnet add package`、`dotnet build`、`dotnet run` 交给 `pwsh`；首次 restore 需要访问 NuGet，失败时先看是否离线。
+- **执行环境**：`dotnet add package`、`dotnet build`、`dotnet run` 在终端中执行；首次 restore 需要访问 NuGet，失败时先看是否离线。
 - **先探测版本**：`dotnet list package` 确认是 `ProjNet 2.1.0` 还是 `ProjNet4GeoAPI 1.4.1`——两者的命名空间与接口完全不同，写代码前必须确认，不要凭 `using ProjNet.CoordinateSystems` 猜。
 - **WKT 来源**：让用户提供或先跑 `projinfo EPSG:xxxx -o WKT2:2019` 生成，再写进示例；不要凭空编造 `PROJCS` 参数。
 - **验证产物**：编译后运行最小断言（如 116.397, 39.908 → Web Mercator 约 (12957254.8, 4852582.1)），数值量级不对就说明坐标系或轴序取错。

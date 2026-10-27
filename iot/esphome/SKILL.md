@@ -291,9 +291,8 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | `${key}` 没被替换 | substitution 名大小写不匹配，或引用早于定义 | 名字小写且与 `substitutions` 键完全一致；必要时用 `-s` 覆盖调试 |
 | 日志反复出现 `WiFi: Connection lost` | 信号弱或密码错误 | 用 `manual_ip` 并靠近 AP；先用手机确认密码；必要时调 `reboot_timeout` |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载技能**：skill("esphome")；技能目录只读，YAML 与脚本写到会话工作区。
 - **先探版本**：`esphome version` 确认与文档一致（2026.10.0）；CLI 选项随版本改名，旧教程里的参数可能已失效。
 - **不碰硬件也能验证**：改完先 `esphome config --error-format line`，过了校验再谈烧写，能省大量插拔。
 - **写盘前确认设备目标**：`run` / `upload` 会覆盖设备固件，`--device` 指错可能刷到别的设备；执行前向用户确认端口或 IP。

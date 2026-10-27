@@ -242,9 +242,8 @@ wbt.watershed(d8_pntr="flow_pntr.tif", pour_pts="pour_pts_snapped.shp", output="
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("whitebox-tools")` 加载（也可输入 `/whitebox-tools`）；脚本与数据写到会话工作区，技能目录只读。
 - **执行环境**：`python build.py` 编译耗时可达数分钟，放后台任务；`pip install whitebox` 首次调用会联网下载二进制，离线环境需先手动放置 WBT。
 - **先探测版本**：`whitebox_tools --version` 确认核心版本（本文基准 2.4.0）；`python -c "import whitebox; print(whitebox.__version__)"` 确认前端（2.3.6）。两者不一致时以二进制为准并明确告知用户。
 - **验证产物**：用 `ls -l` 检查输出文件是否生成，再用 GDAL（`gdalinfo` / `python -c "import rasterio..."`）读取数值范围做断言；只看命令退出码不足以证明分析正确。

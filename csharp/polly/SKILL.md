@@ -383,6 +383,16 @@ for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://localhos
 
 ---
 
+## AI 使用建议
+
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`dotnet add package` 需访问 NuGet。
+- **先探测版本**：`dotnet list package` 确认 `Polly.Core` / `Polly.Extensions` / `Polly.RateLimiting` 同为 8.8.1；v8 的入口是 `ResiliencePipelineBuilder`，v7 的 `Policy` API 只在旧包 `Polly` 里，混用会编译失败。
+- **验证产物**：写一个必然失败三次再成功的委托，断言 `AddRetry` 的实际尝试次数与退避间隔；断路器用 `CircuitState` 断言 Closed→Open→HalfOpen 的转换，而不是只看异常类型。
+- **常见误操**：重试包住整条 HttpClient 调用链时，若外层还有 HTTP 层的重试会成倍放大请求；`AddTimeout` 的超时要短于 HttpClient 的 `Timeout`，否则永远等不到自己的超时。
+- **安全与权限**：重试会放大对故障服务的压力，生产环境配指数退避与抖动；限流/熔断阈值改动前先与用户确认容量预期。
+
+---
+
 ## 相关技能
 
 - **serilog** — 结构化日志，记录重试/熔断事件与降级路径：[../serilog/SKILL.md](../serilog/SKILL.md)

@@ -303,15 +303,14 @@ foreach (var p in points) if (prep.Contains(p)) ...
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：`skill("nettopologysuite")` 加载；技能目录只读，示例工程与测试数据写到会话工作区。
-- **执行环境**：命令交给 dsh 的 `pwsh`；先 `dotnet --version` 确认 SDK 6.0+，`dotnet restore` 需要访问 NuGet。
+- **执行环境**：命令在终端 / shell 中执行；先 `dotnet --version` 确认 SDK 6.0+，`dotnet restore` 需要访问 NuGet。
 - **先探测版本**：`dotnet list package` 核对 `NetTopologySuite` 2.6.0、`NetTopologySuite.IO.GeoJSON`（或 `IO.GeoJSON4STJ`）4.0.0、`NetTopologySuite.IO.Esri.Shapefile` 1.2.0、`ProjNet` 2.1.0；IO 包与主库错配是常见编译/运行期报错源。
 - **验证产物**：`dotnet build` 后跑 `dotnet test`，或最小控制台做 WKT 往返 + `IsValid` 断言；`GeoJsonConverterFactory` 序列化后再反序列化，比对坐标数而不是只打日志。
 - **失败信号**：`TopologyException` 先 `GeometryFixer.Fix`；程序集加载/`TypeInitializationException` 多为 IO 包版本不匹配；EF Core 类型冲突是同时引了 `Microsoft.SqlServer.Types`。
 - **注意事项**：NTS 的 SRID 只是元数据、计算在平面进行，跨投影交给 ProjNet；`WKBWriter` 默认丢 Z/M，需设 `HandleOrdinates`。
-- **按需读文件**：本 SKILL 代码块较多，先按章节标题定位再用 `read` 取行区间，比整篇读更省上下文。
+- **按需读文件**：本 SKILL 代码块较多，先按章节标题定位再分段读取，比整篇读更省上下文。
 
 ## NTS 家族与相关库
 

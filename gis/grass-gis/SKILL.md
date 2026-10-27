@@ -310,10 +310,9 @@ grass $HOME/grassdata/ndvi_project/PERMANENT --exec sh -c '
 | Docker 中结果文件属主为 root | 运行时加 `--user=$(id -u):$(id -g)` 与 `--env HOME=/data/` |
 | `t.*` 报时空数据库错误 | 时空数据库按地图集独立且自动创建；确认在正确地图集内运行并检查 `t.connect -p` 状态 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("grass-gis")` 加载（用户也可输入 `/grass-gis`）；本技能没有 reference 子目录，模块参数用 `r.univar --help` 或官网手册核对；技能目录只读，脚本与导出结果写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文里 `grass ... --exec sh -c '...'` 的多行引用在 pwsh 下不可靠，改为把模块序列写进 `.py` 脚本（首行 `#!/usr/bin/env python3`），再 `grass --tmp-project EPSG:3857 --exec python3 analysis.py`。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）。正文里 `grass ... --exec sh -c '...'` 的多行引用在 PowerShell 下不可靠，改为把模块序列写进 `.py` 脚本（首行 `#!/usr/bin/env python3`），再 `grass --tmp-project EPSG:3857 --exec python3 analysis.py`。
 - **先探测版本**：`grass --version`（应为 8.5.0，LTR 8.4.2）、`grass --tmp-project EPSG:3857 --exec g.region -p`；8.4 之前没有 `grass.tools`，Python 脚本改用 `gs.run_command`。
 - **验证产物**：`--tmp-project` 内的地图最后必须导出——`r.out.gdal input=slope output=/work/slope.tif format=GTiff`，随后 `gdalinfo -json slope.tif` 核对 CRS 与范围；会话内核对用 `g.region -p format=json`、`g.list type=raster`。
 - **区域语义优先**：栅格模块只处理计算区域内的像元，结果范围不对先看 `g.region -p`；重复运行加 `--overwrite`，否则模块报地图已存在并非零退出。

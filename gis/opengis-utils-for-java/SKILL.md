@@ -384,10 +384,10 @@ System.out.println(check.getWkid() + " / " + check.getFeatureCount());
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("opengis-utils-for-java")` 加载（用户也可输入 `/opengis-utils-for-java`）；`reference/common-tasks.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
-- **执行环境**：先 `java -version` 与 `mvn -version`（需 JDK 17+、Maven 3.8+），Windows 用 `pwsh`；`mvn -v` 里显示的 JDK 才是 Maven 实际使用的，与 shell 的 `java` 不一致时改 `JAVA_HOME` 再重试。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/common-tasks.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：先 `java -version` 与 `mvn -version`（需 JDK 17+、Maven 3.8+），Windows 用 PowerShell；`mvn -v` 里显示的 JDK 才是 Maven 实际使用的，与 shell 的 `java` 不一致时改 `JAVA_HOME` 再重试。
 - **源码安装（本库未发布到 Central）**：`git clone https://github.com/znlgis/opengis-utils-for-java.git` 后 `mvn install -DskipTests`，产物落在 `~/.m2/repository/com/znlgis/ogu4j/ogu4j/1.0.0/`；用 `mvn dependency:tree -Dincludes=com.znlgis.ogu4j` 确认坐标可解析。不要在 `pom.xml` 里直接写 `ogu4j:1.0.0` 后指望从 Central 下载。
 - **仓库与网络**：GeoTools 依赖不在 Central，`pom.xml` 必须带 `https://repo.osgeo.org/repository/release/`，否则 `Could not resolve dependencies for org.geotools:*`；离线或私服缺包时如实报告依赖不可下载，不要自行换版本或加未知仓库。
 - **原生 GDAL 匹配**：GDAL 引擎绑定 `org.gdal:gdal` 3.13.0，本机需装 GDAL 3.13.x 且 `java.library.path` 能找到 `gdal_jni`（Windows 上 `java -XshowSettings:properties -version 2>&1 | Select-String library.path`）；报 `UnsatisfiedLinkError: no gdal_jni in java.library.path` 说明原生库缺失或版本不符，此时改用 `GisEngineType.GEOTOOLS`。

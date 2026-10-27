@@ -368,14 +368,14 @@ m = gdf.explore(column="population", cmap="viridis",
 | `DriverError` 无法写入 | 驱动不支持或文件被占用 | 检查驱动名拼写、关闭已打开的文件 |
 | `align=True` 导致意外 NaN | 二元操作默认按索引对齐 | 传入 `align=False` 或重置索引 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("geopandas")` 加载（用户也可输入 `/geopandas`）；`reference/core-api.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，脚本与产物写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`，仅暴露 `run_code` 的会话在 `tools.pwsh` 里跑）；不要假设 `python` 是 QGIS/GDAL 自带的解释器，先 `python -c "import sys; print(sys.executable, sys.version)"`。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/core-api.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；不要假设 `python` 是 QGIS/GDAL 自带的解释器，先 `python -c "import sys; print(sys.executable, sys.version)"`。
 - **先探测版本**：`python -c "import geopandas as gpd; print(gpd.__version__, gpd.options.io_engine)"`；本技能按 1.2.0 / Python >= 3.11 编写，低版本会缺 `to_arrow`、`to_parquet(geometry_encoding=...)` 与 1.2 新绘图参数（`tiles=`、`legend_kwds={"colorbar": True}`），回答时说明差异而不是硬写。
 - **检查依赖后端**：`python -c "import pyogrio, pyproj; print(pyogrio.__version__, pyproj.__version__, pyproj.datadir.get_data_dir())"`；PROJ 数据目录缺失时 `to_crs("EPSG:3857")` 抛 `CRSError: Invalid projection`，装 `pyproj`/`pyogrio` 前先征得用户同意。
 - **验证产物（必做）**：写完立即重开核对，`gdf = gpd.read_file("out.gpkg", layer="result"); print(gdf.crs, len(gdf), gdf.is_valid.all(), gdf.total_bounds)`，并确认面积/长度是在投影坐标系下算的。
-- **落图后看图**：`ax = gdf.plot(column="pop", legend=True, figsize=(12, 8)); ax.figure.savefig("map.png", dpi=100)`（需 matplotlib），再用 `read_image("map.png")` 检查范围、图例与空几何，不要只凭退出码报告成功。
+- **落图后看图**：`ax = gdf.plot(column="pop", legend=True, figsize=(12, 8)); ax.figure.savefig("map.png", dpi=100)`（需 matplotlib），再打开该 PNG 检查范围、图例与空几何（能读图的环境可直接查看截图），不要只凭退出码报告成功。
 - **典型误操**：`set_crs()` 只标记不改坐标、`to_file()` 默认整表覆盖、`to_postgis(if_exists="replace")` 会删表重建——执行前确认目标路径/表名，Shapefile 字段名超 10 字符会被截断，改用 `.gpkg`。
 - **安全**：数据库连接串里的密码不要回显在命令输出里；`pip install geopandas[all]`、写入系统目录或覆盖生产数据前先得到用户确认。
 

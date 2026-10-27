@@ -317,10 +317,10 @@ src_ds = None                             # 释放数据源
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("gdal-api")` 加载（用户也可输入 `/gdal-api`）；`reference/raster-api.md`（栅格读写的完整 API）、`reference/vector-api.md`（OGR 图层与 GeoPackage）按需 `read`，路径相对 Base directory；技能目录只读，示例代码与产物写到会话工作区。
-- **执行环境**：编译与运行交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。C++ 用 `gdal-config --cflags --libs` 或 CMake `find_package(GDAL REQUIRED)`；Python 用装好绑定的解释器；Java 的 `gdalalljni`、.NET 的 MaxRev 运行时包必须与平台、架构匹配。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/raster-api.md`、`reference/vector-api.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：编译与运行在终端 / shell 中执行（Windows 用 PowerShell）。C++ 用 `gdal-config --cflags --libs` 或 CMake `find_package(GDAL REQUIRED)`；Python 用装好绑定的解释器；Java 的 `gdalalljni`、.NET 的 MaxRev 运行时包必须与平台、架构匹配。
 - **先探测版本**：`ogrinfo --version`、`python -c "from osgeo import gdal; print(gdal.VersionInfo())"`（返回 `3130300` 这类数字）、`mvn -v`、`dotnet --version`；本技能按 GDAL 3.13.3、Java 绑定 3.13.0 编写，低版本缺少新驱动与部分 SWIG 方法，回答里要说明差异。
 - **验证产物**：写完后重新打开核对——`python -c "from osgeo import gdal; ds=gdal.Open('out.tif'); print(ds.GetDriver().ShortName, ds.RasterCount, ds.GetSpatialRef().GetAuthorityCode(None))"`；矢量用 `ogrinfo -al -so out.gpkg` 看要素数与字段；Python 一律先 `gdal.UseExceptions()`，否则错误被静默吞掉。
 - **语言选择**：数据处理脚本优先 Python（`ReadAsArray()` 直通 NumPy）；生产服务与嵌入式优先 C++；Java 注意用 `java.util.Vector<String>` 传选项；.NET 用 `OSGeo.GDAL`/`OSGeo.OGR` 命名空间，或 MaxRev 封装 + 对应平台运行时包。

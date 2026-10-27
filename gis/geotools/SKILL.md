@@ -388,15 +388,15 @@ store.dispose();
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：`skill("geotools")` 加载；完整示例在 [reference/vector-io.md](reference/vector-io.md) 与 [reference/raster-rendering.md](reference/raster-rendering.md)，按需 `read`（路径相对技能 Base directory）。
-- **执行环境**：命令交给 dsh 的 `pwsh`；先 `java -version` 与 `mvn -v` 确认 JDK 17，35.x 在 JDK 8/11 下编译即失败。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/raster-rendering.md`、`reference/vector-io.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：命令在终端 / shell 中执行；先 `java -version` 与 `mvn -v` 确认 JDK 17，35.x 在 JDK 8/11 下编译即失败。
 - **先探测版本**：`mvn dependency:tree -Dincludes=org.geotools` 确认解析到 35.2 且未被其他依赖压回旧版；`pom.xml` 里必须有指向 `repo.osgeo.org/repository/release/` 的 `<repository>`。
 - **验证产物**：`mvn -q -DskipTests package` 后跑最小读图层程序（`FileDataStoreFinder` → `getFeatures()` → 打印 count 与 CRS）或 `mvn -q test`；`CRS.decode("EPSG:4326")` 抛异常说明缺 `gt-epsg-hsql`。
 - **常见失败信号**：`getDataStore()` 返回 null 或报找不到工厂，是 SPI 模块没进 classpath；出现 `com.vividsolutions.jts` 是包名没升级（GeoTools 20+ 用 `org.locationtech.jts`）。
 - **安全与权限**：测试别全量加载要素到内存（用 `Query` 限制属性与 bbox）；连接串/密码不要回显，对生产库批量写入前先向用户确认。
-- **按需读文件**：本 SKILL 较长，先按章节标题定位，再用 `read` 的 offset/limit 只取相关段，避免整篇占满上下文。
+- **按需读文件**：本 SKILL 较长，先按章节标题定位，再按行区间分段读取，避免整篇占满上下文。
 
 ## 相关技能
 

@@ -361,10 +361,10 @@ dotnet run --project samples/OpenGIS.Esri.Geometry.Samples
 | `GeodesicDistance` 结果异常 | 基于 WGS84（Vincenty 公式），输入必须是经纬度坐标；`GeodesicArea` 使用球面超量公式 |
 | GeoJSON 导出类型与预期不符 | 单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`；Envelope 导出为 `Polygon` |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("geometry-api-net")` 加载（用户也可输入 `/geometry-api-net`）；`reference/geometry-types.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，示例工程建在会话工作区。
-- **执行环境**：先 `dotnet --version`（库目标 `netstandard2.0`，可被 net6/net8/net9/net10 引用）；Windows 上用 `pwsh` 执行 `dotnet` 命令，`dotnet new console -o demo && cd demo` 建最小工程。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/geometry-types.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：先 `dotnet --version`（库目标 `netstandard2.0`，可被 net6/net8/net9/net10 引用）；Windows 上用 PowerShell 执行 `dotnet` 命令，`dotnet new console -o demo && cd demo` 建最小工程。
 - **依赖坐标**：`dotnet add package OpenGIS.Esri.Geometry.Core --version 1.0.9`（NuGet 最新 1.0.9，2026-09-21），需要 `System.Text.Json` 转换器时再装 `OpenGIS.Esri.Geometry.Json`；还原失败报 `NU1101` 说明源或版本不可用，报告“依赖不可下载”，不要自己编版本号。
 - **验证产物**：最小控制台程序断言三件事——`GeometryEngine.GeometryFromWkt` → `GeometryToWkt` 往返、`GeometryEngine.Contains(polygon, point)` 返回 true、`GeometryEngine.Buffer(point, 5.0).GetEnvelope()` 为 (XMin=5,YMin=15,XMax=15,YMax=25)，再 `dotnet run` 看实际输出；`dotnet build` 成功不代表几何结果正确。
 - **构建与测试**：`dotnet build` 编译、`dotnet test` 跑 xUnit、`dotnet run --project samples/OpenGIS.Esri.Geometry.Samples` 跑示例（需在仓库 checkout 内，且该路径存在）；输出在 `bin/`、`obj/`，不要提交。

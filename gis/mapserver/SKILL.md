@@ -266,10 +266,9 @@ ogr2ogr -f GPKG clip.gpkg countries.gpkg -clipsrc 100 20 130 50
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：`skill("mapserver")` 加载；技能目录只读，mapfile、SLD 与测试数据写到会话工作区。
-- **执行环境**：命令交给 dsh 的 `pwsh`（Windows 用 OSGeo4W 的 `mapserv.exe`）；`sudo apt`、`tar -zxvf` 不跨平台，Windows 改 `Expand-Archive`，装包或改系统目录前先问用户。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 OSGeo4W 的 `mapserv.exe`）；`sudo apt`、`tar -zxvf` 不跨平台，Windows 改 `Expand-Archive`，装包或改系统目录前先问用户。
 - **先探测版本**：`mapserv -v`，确认输出含 `MapServer version 8.6.6` 且 `SUPPORTS=` 里有需要的 `WMS_SERVER`/`WFS_SERVER`；缺项说明该构建没编进对应库，改 mapfile 无用。
 - **验证产物**：先离线 `map2img -m demo.map -o out.png -s 600 400` 看渲染，再 `mapserv -nh "QUERY_STRING=map=/abs/demo.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities"` 抓能力文档，最后才 `curl -sI "http://host/cgi-bin/mapserv?map=...&REQUEST=GetMap..."` 确认 200 与 `Content-Type: image/png`。
 - **排障分流**：空白图查 `EXTENT`/`BBOX`/`PROJECTION`/`STATUS ON`；能力文档缺图层查 `wms_enable_request`、`wfs_enable_request` 与 `NAME` 是否字母开头；WFS 无属性字段是 8.x 默认行为，补 `gml_include_items`。

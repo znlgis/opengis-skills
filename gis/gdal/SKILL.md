@@ -459,14 +459,14 @@ gdaltindex -recursive -of GPKG \
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("gdal")` 加载（用户也可输入 `/gdal`）；`reference/raster-tools.md`、`reference/vector-tools.md`、`reference/data-formats.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，产物写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文的 `apt-get`、`sudo`、`export VAR=` 是 Bash 写法：Windows 改为 `$env:GDAL_NUM_THREADS = "ALL_CPUS"`，无 `sudo`/`apt` 时改用 conda-forge 或 `docker run --rm -v "${PWD}:/data" -w /data ghcr.io/osgeo/gdal:latest ...`。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/data-formats.md`、`reference/raster-tools.md`、`reference/vector-tools.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）。正文的 `apt-get`、`sudo`、`export VAR=` 是 Bash 写法：Windows 改为 `$env:GDAL_NUM_THREADS = "ALL_CPUS"`，无 `sudo`/`apt` 时改用 conda-forge 或 `docker run --rm -v "${PWD}:/data" -w /data ghcr.io/osgeo/gdal:latest ...`。
 - **先探测版本**：`gdalinfo --version`、`ogrinfo --version`；本技能按 GDAL 3.13.3 编写，低于 3.11 没有 `gdal <command>` 新式 CLI（`gdal vector`/`gdal raster`），须退回 `ogr2ogr`/`gdalwarp`；`gdal dataset check` 需 3.13+，且 `gdal_calc.py` 等脚本工具还需要 Python 绑定。
 - **验证产物**：栅格用 `gdalinfo -json out.tif` 核对 `driverShortName`、`size`、`coordinateSystem.wkt`、`bands[].noDataValue`；矢量用 `ogrinfo -so out.shp layer`（或 `ogrinfo -json out.gpkg`）核对 `Feature Count`、`Geometry`、字段列表；不要只凭退出码报告成功。
-- **先看错误再改参数**：`ERROR 4: ... not recognized as a supported file format` 先查路径与 `gdalinfo --formats`；`--debug on` 或 `CPL_DEBUG=ON` 看驱动细节；输出很长时重定向到文件再分段 `read`，不要一次打印全文。
-- **批处理与中间产物**：批量循环建议用 Python 生成命令，中间结果用 `gdalbuildvrt` 写 `.vrt` 而不是反复 `gdalwarp`；耗时命令放后台作业，避免一次重投影全部数据。
+- **先看错误再改参数**：`ERROR 4: ... not recognized as a supported file format` 先查路径与 `gdalinfo --formats`；`--debug on` 或 `CPL_DEBUG=ON` 看驱动细节；输出很长时重定向到文件再分段读取，不要一次打印全文。
+- **批处理与中间产物**：批量循环建议用 Python 生成命令，中间结果用 `gdalbuildvrt` 写 `.vrt` 而不是反复 `gdalwarp`；耗时命令放后台运行，避免一次重投影全部数据。
 - **安全与权限**：`gdal_edit.py`、`ogr2ogr` 写已有目标、`-overwrite`/`-append` 会就地改写或覆盖数据，先备份或换输出名；安装 GDAL、改 `GDAL_DATA`/`PROJ_LIB`、访问 `/vsis3/`（需 `AWS_SECRET_ACCESS_KEY`）前先征得用户同意，回答里不要回显密钥。
 
 ---

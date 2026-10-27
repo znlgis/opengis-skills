@@ -330,10 +330,9 @@ for las_file in glob.glob("tiles/*.las"):
 | 地面分类效果不佳 | 调整 smrf 的 window/slope/threshold/scalar，先检查数据坐标系与高程单位 |
 | 报 `Couldn't create <cls> stage of type '<type>'.` | stage 名拼错或该版本没有此 stage：先 `pdal --drivers` 确认存在，再核对 `readers.*`/`filters.*`/`writers.*` 前缀 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("pdal")` 加载（用户也可输入 `/pdal`）；本技能没有 reference 子目录，stage 参数以 `pdal --options filters.smrf` 这类命令现场核对为准；技能目录只读，pipeline JSON 与输出点云写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文的 `sudo apt`、`conda activate` 是 Bash/Linux 写法，Windows 改用 OSGeo4W 或 conda；Docker 挂载写成 `docker run --rm -v "${PWD}:/data" -w /data pdal/pdal pdal pipeline pipeline.json`。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）。正文的 `sudo apt`、`conda activate` 是 Bash/Linux 写法，Windows 改用 OSGeo4W 或 conda；Docker 挂载写成 `docker run --rm -v "${PWD}:/data" -w /data pdal/pdal pdal pipeline pipeline.json`。
 - **先探测版本**：`pdal --version`（应为 2.10.2）、`pdal --drivers`；`pdal ground` 自 2.6 起弃用，低版本缺少 `filters.expression` 等 stage，回答里要写明按哪个版本写。
 - **验证产物**：`pdal info --summary out.laz` 核对 `num_points`、`bounds`、`srs`；DEM 用 `gdalinfo -json dem.tif` 核对波段数与范围；pipeline 先 `pdal pipeline --validate` 再实跑，不要只看退出码。
 - **注意执行模式**：stream mode 不能跑 `filters.outlier`、`filters.smrf` 这类需要全局统计的 stage，大文件先按 tile 拆分；`writers.gdal` 默认 `output_type: "all"` 会输出多波段，单波段 DEM 要显式写 `idw`/`mean`。

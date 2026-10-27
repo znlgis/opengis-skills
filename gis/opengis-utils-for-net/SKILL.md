@@ -464,10 +464,10 @@ Console.WriteLine($"{check.Wkid} / {check.GetFeatureCount()}");
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("opengis-utils-for-net")` 加载（用户也可输入 `/opengis-utils-for-net`）；`reference/code-patterns.md`、`reference/util-classes.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
-- **执行环境**：先 `dotnet --version`；库目标 .NET Standard 2.0，可被 .NET Core 2.0+ / .NET 5+ / .NET Framework 4.6.1+ 引用，Windows 用 `pwsh`；用 `dotnet new console -o demo && cd demo` 起最小工程。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/code-patterns.md`、`reference/util-classes.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：先 `dotnet --version`；库目标 .NET Standard 2.0，可被 .NET Core 2.0+ / .NET 5+ / .NET Framework 4.6.1+ 引用，Windows 用 PowerShell；用 `dotnet new console -o demo && cd demo` 起最小工程。
 - **依赖坐标**：`dotnet add package OpenGIS.Utils --version 1.1.2`（NuGet 最新 1.1.2），原生 GDAL 运行时随包分发（`MaxRev.Gdal.Universal`）；用 `dotnet list package --include-transitive | Select-String OpenGIS.Utils` 核对解析出的版本，`NU1101`/`NU1102` 表示源或版本不可用，如实报告而不是改版本号重试。
 - **平台与原生库**：运行时与 RID 绑定，`DllNotFoundException` 或 `Unable to load DLL 'gdal'` 多因 `-r win-x64`/`linux-x64` 与运行环境不一致；`dotnet publish -r win-x64` 后跑发布目录，不要只跑 `bin/Debug` 里的半成品。
 - **验证产物**：最小程序 `OguLayerUtil.ReadLayer(DataFormatType.SHP, path)` 读入（完整重载见 `reference/code-patterns.md`）→ 打印 `layer.GetFeatureCount()` 与 `layer.Wkid`，再 `WriteLayer` 写出 GeoJSON 并重新读回，核对要素数与 CRS；`dotnet build` 成功只说明编译通过，GDAL 原生库是运行期才加载的。

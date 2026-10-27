@@ -346,10 +346,10 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("shapely")` 加载（用户也可输入 `/shapely`）；`reference/operations-reference.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证脚本与产物写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`，仅暴露 `run_code` 的会话在 `tools.pwsh` 里跑）；`python` 不一定是 QGIS/GDAL 自带环境，先 `python -c "import sys; print(sys.executable, sys.version)"`。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/operations-reference.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`python` 不一定是 QGIS/GDAL 自带环境，先 `python -c "import sys; print(sys.executable, sys.version)"`。
 - **先探测版本**：`python -c "import shapely; print(shapely.__version__, shapely.geos_version)"`；本技能按 2.2.0 编写，PyPI wheel 内含 GEOS 3.14。GEOS 低版本请按第 11 条降级（如 `coverage_clean` 需 3.14、`shapely.split` 需 3.15）。
 - **验证产物（必做）**：`print(shapely.is_valid(g), shapely.is_valid_reason(g))` 报无效原因；面积/长度做量级断言；序列化回读 `shapely.from_wkt(shapely.to_wkt(g, rounding_precision=-1)).equals(g)`，改过几何后再核对一次 `geom_type` 与 `get_num_geometries()`。
 - **报错先查有效性**：`TopologyException: side location conflict` 基本都是输入几何自相交，先 `shapely.make_valid(g)`（可指定 `method="structure"`）再算，不要直接加 `buffer(0)`。

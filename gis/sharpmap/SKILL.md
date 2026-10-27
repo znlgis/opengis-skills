@@ -293,10 +293,10 @@ img.Save("map_with_osm.png");
 dotnet --version                              # 需 .NET Framework 4.7.2 工程或 net472 目标框架
 dotnet add package SharpMap --version 1.2.0
 dotnet add package SharpMap.UI --version 1.2.0
-dotnet build                                  # 通过后用 read_image 检查输出的 PNG
+dotnet build                                  # 通过后打开输出的 PNG 检查
 ```
 
-**验证产物**：只有 `dotnet build` 成功不算完成——用 `read_image` 打开 `output.png`，能看到按人口分色的面、标注文字与底图瓦片才算渲染正确。
+**验证产物**：只有 `dotnet build` 成功不算完成——打开 `output.png`，能看到按人口分色的面、标注文字与底图瓦片才算渲染正确。
 
 ## 最佳实践与性能建议
 
@@ -322,11 +322,10 @@ dotnet build                                  # 通过后用 read_image 检查�
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("sharpmap")` 加载（用户也可输入 `/sharpmap`）；示例写入会话工作区的 .NET 工程，技能目录只读。
 - **执行环境**：先 `dotnet --list-sdks`；核心包 `SharpMap` 是 netstandard2.0，可被 .NET 8+ 工程引用，但 WinForms 控件 `SharpMap.UI` 只有 .NET Framework 4.7.2，目标框架必须选 net472，不能套 net8.0。
-- **验证产物**：`dotnet build` 后 `map.GetMap()` 取 `System.Drawing.Image` 再 `Save("output.png")`，用 `read_image` 看实际着色与标注；编译通过不代表渲染正确。
+- **验证产物**：`dotnet build` 后 `map.GetMap()` 取 `System.Drawing.Image` 再 `Save("output.png")`，打开 PNG 看实际着色与标注；编译通过不代表渲染正确。
 - **依赖风险**：SharpMap 1.2.0（2021-03）的传递依赖含 `NetTopologySuite.Core` 1.15.3、`System.Drawing.Common` 4.6.0、`System.Data.SqlClient` 4.7.0，`dotnet restore` 会报 NU1902/NU1903/NU1904 漏洞告警，需向用户说明而不是静默忽略。
 - **坐标与 SRID**：`map.SRID` 与图层 SRID 必须一致；ProjNet 2.x 不再实现 GeoAPI 接口，坐标变换用 `ProjNet4GeoAPI` 1.4.1。
 - **资源释放**：GDI+ 的 `Brush`/`Pen`/`Bitmap` 必须 `using` 或 `Dispose`，否则长时间运行内存持续上涨。

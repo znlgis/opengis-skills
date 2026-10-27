@@ -317,14 +317,13 @@ echo 39.907 116.391 | cs2cs EPSG:4326 EPSG:4547 --only-best
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("proj")` 加载（用户也可输入 `/proj`）；本技能没有 reference 子目录，正文即全部内容，更细的参数用 `projinfo --help`、`cs2cs --help`、`projinfo --list-crs` 现场查；技能目录只读，脚本与结果写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文的 `export PROJ_DATA=...` 在 PowerShell 写作 `$env:PROJ_DATA = "C:\OSGeo4W\share\proj"`；heredoc（`<<EOF`）在 pwsh 不可用，改用管道 `"56 12" | cs2cs EPSG:4326 EPSG:25832` 或先把输入写成文件再重定向。
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）。正文的 `export PROJ_DATA=...` 在 PowerShell 写作 `$env:PROJ_DATA = "C:\OSGeo4W\share\proj"`；heredoc（`<<EOF`）在 PowerShell 中不可用，改用管道 `"56 12" | cs2cs EPSG:4326 EPSG:25832` 或先把输入写成文件再重定向。
 - **先探测版本**：`projinfo --version`（同时打印 `proj.db` 路径）、`projinfo --searchpaths`；本技能按 PROJ 9.9.0 编写，低于 9.1 用 `PROJ_LIB` 而非 `PROJ_DATA`，低于 9.3 的 `proj` 不能直接接受 `EPSG:xxxx`。
 - **验证转换**：用已知点对拍——`echo "39.907 116.391" | cs2cs EPSG:4326 EPSG:32650` 应得到东坐标约 44 万、北坐标约 442 万，量级不对通常是轴序或单位问题；结构化核对用 `projinfo -o PROJJSON -q EPSG:4326`，转换路径用 `projinfo -s A -t B --summary` 看候选操作与精度。
 - **轴序与降级**：`EPSG:4326` 纬度在前（输入先 lat 后 lon），`proj` 命令内部经度在前要用 `-r`；高精度转换加 `--only-best`，否则缺网格时会静默退回精度更低的操作。
-- **大输出处理**：`projinfo EPSG:4326` 的 WKT 有上百行，重定向到文件再分段 `read`；批量转换把 `cs2cs EPSG:4326 EPSG:3857 points.txt` 一次跑完，不要逐行起进程。
+- **大输出处理**：`projinfo EPSG:4326` 的 WKT 有上百行，重定向到文件再分段读取；批量转换把 `cs2cs EPSG:4326 EPSG:3857 points.txt` 一次跑完，不要逐行起进程。
 - **安全与权限**：`projsync --all` 会从 CDN 下载数 GB 网格、`PROJ_NETWORK=ON` 也会联网，先确认网络与磁盘；`sqlite3 proj.db` 只做只读查询，不要写库；改 `PROJ_DATA` 会影响同机 GDAL/PostGIS，先征得用户同意。
 
 ## 相关技能

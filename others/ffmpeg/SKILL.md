@@ -269,6 +269,16 @@ ffprobe -v error -show_entries format=duration -of csv=p=0 out/seg_000.ts
 | RTSP 拉流频繁超时 | UDP 丢包；加 `-rtsp_transport tcp`，必要时用 `-timeout 5000000`（微秒）控制 socket 读写超时（老脚本里的 `-stimeout` 已废弃） |
 | 老脚本里的 `-vsync 0` / `-vsync vfr` 不再生效 | `-vsync` 已被 `-fps_mode` 取代（9.x 文档里只有 `-fps_mode`）：`0` → `passthrough`，`vfr` → `vfr`，`cfr` → `cfr` |
 
+## AI 使用建议
+
+- **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell，`ffmpeg` 需在 PATH 中或写全路径）；转码耗时，长任务放后台运行并把 stderr 重定向到文件。
+- **先探测版本**：`ffmpeg -version` 与 `ffprobe -version` 一起看，确认编码器可用（`ffmpeg -encoders | grep 264`）与是否 `--enable-gpl`；版本不同则参数名可能已变（如 `-vsync` 已被 `-fps_mode` 取代）。
+- **验证产物**：先 `ffprobe -v error -show_streams -show_format out.mp4` 看时长、分辨率、帧率、码率与像素格式，再抽一帧落 PNG 实际打开核对；只看退出码不算验证。
+- **常见误操**：`-ss` 放 `-i` 前是快速定位（关键帧对齐）、放后面是精确解码；`-c copy` 切片要求源与目标封装兼容，否则时间戳错乱；`moov atom not found` 说明录制中断，先修复再用。
+- **安全与权限**：批处理会覆盖同名输出，先确认目标或加 `-n`；GPL 编码器（libx264/libx265）会影响整体许可证，分发前提醒用户。
+
+---
+
 ## 相关技能
 
 - **gdal** — 帧序列/正射影像的后续处理（重投影、金字塔、COG）：[../../gis/gdal/SKILL.md](../../gis/gdal/SKILL.md)

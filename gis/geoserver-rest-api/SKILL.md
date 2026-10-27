@@ -359,10 +359,10 @@ await workspaceService.CreateWorkspaceAsync("myws");
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：`skill("geoserver-rest-api")` 加载；完整端点清单按需 `read` [reference/endpoints.md](reference/endpoints.md)（路径相对技能 Base directory），不要整份通读。
-- **执行环境**：示例交给 dsh 的 `pwsh`（显式 `curl.exe`，Windows 的 `curl` 是别名、参数不同）；`\` 续行在 pwsh 无效，压成单行；请求体先写成 `body.json`，用 `curl.exe --data "@body.json"` 传，避开各 shell 的引号差异。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/endpoints.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **执行环境**：示例在终端 / shell 中执行（显式 `curl.exe`，Windows 的 `curl` 是别名、参数不同）；`\` 续行在 PowerShell 无效，压成单行；请求体先写成 `body.json`，用 `curl.exe --data "@body.json"` 传，避开各 shell 的引号差异。
 - **先探测版本**：`curl.exe -s -u admin:geoserver http://localhost:8080/geoserver/rest/about/version.json`，确认是 3.0.2 并顺带看到组件版本；返回 401 是凭据/安全规则问题，不是版本问题。
 - **验证产物**：写操作后立刻 GET 回读同一资源（`.../rest/workspaces/myws.json`、`.../rest/layers/myws:roads.json`），再发一次 WMS `GetMap` 取 `image/png` 确认非空图；不要只凭 201 或退出码报告成功。
 - **幂等与坑**：同名资源重复 POST 会报已存在（重跑脚本前先 GET 判断或改 PUT）；改了样式记得清 GWC 缓存，否则瓦片还是旧的。

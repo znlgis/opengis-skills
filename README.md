@@ -1,14 +1,16 @@
 # opengis-skills
 
-> 面向 **AI 编程助手 / Agent** 的开源 GIS、CAD、C#、AI、IoT、3D 技能及通用工具（Skill）集合。
+> 面向 **任意 AI 编程助手 / Agent** 的开源 GIS、CAD、C#、AI、IoT、3D 技能及通用工具（Skill）集合。
 >
 > 本仓库与 [znlgis.github.io](https://github.com/znlgis/znlgis.github.io) 上游博客分类完全对齐，便于双向导航与学习。
+>
+> **与 Agent 产品解耦：** 全部内容为纯 Markdown，不依赖任何特定 Agent 运行时、私有工具名或专有 API。Claude Code / Cursor / Cline / GitHub Copilot / Codex / Gemini CLI / OpenCode / DeepSeek Harness 等都能直接读取。
 
 ---
 
 ## 🤖 AI 入口提示
 
-> **对于 AI 编程助手（Claude / Cursor / Cline / Copilot Chat / DeepSeek 等）：**
+> **对于 AI 编程助手（Claude Code、Cursor、Cline、GitHub Copilot、Codex、Gemini CLI、OpenCode、DeepSeek Harness 等）：**
 >
 > 本仓库的主入口是根目录下的 **[`SKILL.md`](./SKILL.md)**。该文件包含完整的技能索引、标签搜索系统和按需加载指南，是 AI 工具理解和使用本仓库的**第一站**。
 >
@@ -16,7 +18,7 @@
 > - 加载 **分类 `*/SKILL.md`**（如 `gis/SKILL.md`）→ 获取某个领域的技能概要
 > - 加载 **项目 `*/<project>/SKILL.md`** → 获取单个工具的深度知识
 >
-> 推荐先用 `@SKILL.md` 或 `@gis/gdal/SKILL.md` 等方式按需加载，避免全量注入导致上下文膨胀。
+> 按需加载即可：支持 `@文件` 语法的工具用 `@SKILL.md` / `@gis/gdal/SKILL.md`；CLI Agent 直接给出路径让它自行 read；支持技能目录的宿主可把 `<category>/<skill>/` 注册为技能。避免全量注入导致上下文膨胀。
 
 ---
 
@@ -61,8 +63,11 @@ AI 根据 SKILL.md 中的 API/命令示例生成代码
 # VS Code Copilot Chat
 通过 /addContext 或 .github/copilot-instructions.md 配置
 
-# DeepSeek Chat
-对话中粘贴 SKILL.md 内容或引用文件路径
+# Codex / Gemini CLI / Aider / OpenCode 等 CLI Agent
+把 SKILL.md 路径作为上下文文件传入，或直接让 Agent 自己 read
+
+# 任何其他工具（含自建 Agent、本地模型、Web 对话）
+粘贴 SKILL.md 内容或提供仓库路径即可，无需任何插件
 ```
 
 ---
@@ -309,7 +314,7 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
    - **典型工作流**
    - **最佳实践 / 性能优化**
    - **常见问题（FAQ 表，≥5 行）**
-   - **AI 使用建议**（dsh 场景下部分技能写作「DeepSeek Harness 使用建议」，两者等价）
+   - **AI 使用建议**（工具无关：执行环境、版本探测、产物验证、常见误操、安全与权限）
    - **相关技能**
    - **参考资源**
 

@@ -342,9 +342,8 @@ print(rows[:3])
 | apt 装的版本比官网旧 | 发行版冻结版本 | 需要 5.1.0 特性时用 conda-forge，或从源码编译 |
 | 用 GDAL 打开 SQLite 库看不到图层 | 库不是 SpatiaLite 格式 | 导入时加 `-dsco SPATIALITE=YES`；已存在的库可用 GDAL 的 `SQLite` 驱动按层读取 |
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载技能**：skill("spatialite")；技能目录只读，SQL 脚本与导出文件写到会话工作区。
 - **先确认库能被加载**：任何排查都从 `python -c "import sqlite3; c=sqlite3.connect(':memory:'); c.enable_load_extension(True); c.load_extension('mod_spatialite')"` 开始；库加载不了时，SQL 报错没有诊断价值。
 - **版本差异**：SpatiaLite 5.x 的函数集与 4.x 不同（如 `GeosMakeValid`、`InitSpatialMetaData` 的重载）。动手前查 `spatialite_version()`，并按官方函数参考核对函数名与参数。
 - **优先用 ogr2ogr 导入**：命令行工具的参数在不同构建间不一致，GDAL 的 `-dsco SPATIALITE=YES` 路径最稳定；确需 `spatialite_tool` 时先跑 `--help` 核对参数。

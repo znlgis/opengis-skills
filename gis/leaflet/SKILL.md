@@ -350,12 +350,11 @@ export default function MapView() {
 
 ---
 
-## DeepSeek Harness 使用建议
+## AI 使用建议
 
-- **加载与引用**：用 `skill("leaflet")` 加载（用户也可输入 `/leaflet`）；本技能无 reference 子目录，示例代码直接落到会话工作区工程，技能目录只读。
-- **执行环境**：`npm install`、`npm run build` 交给 `pwsh`；纯静态页面可用 `python -m http.server 5173` 起服务（`python` 不存在时用 `py -3`）。
+- **执行环境**：`npm install`、`npm run build` 在终端中执行；纯静态页面可用 `python -m http.server 5173` 起服务（`python` 不存在时用 `py -3`）。
 - **先探测版本**：`npm ls leaflet`（未装则 `npm view leaflet version`）；本技能按 1.9.4 编写，CDN 的 `integrity` SRI 哈希只对应 1.9.4，换版本必须同步换哈希。
-- **验证产物**：构建后 `curl.exe -I http://localhost:5173/assets/<入口>.js` 确认 200；联网时还可 `curl.exe -I https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` 核对 CDN 版本；DSH 不打开浏览器，把 URL 和“应看到瓦片与标记”交给用户，有截图再用 `read_image`。
+- **验证产物**：构建后 `curl.exe -I http://localhost:5173/assets/<入口>.js` 确认 200；联网时还可 `curl.exe -I https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` 核对 CDN 版本；AI 助手通常看不到浏览器画面，把 URL 和“应看到瓦片与标记”交给用户，环境支持读图时用截图核对。
 - **图标与坐标**：npm + 打包器下默认 marker 图标会 404，需显式设置 `L.Icon.Default` 的 `iconUrl`/`iconRetinaUrl`/`shadowUrl`；坐标一律 `[lat, lng]`，GeoJSON 是 `[lng, lat]`。
 - **生命周期**：SPA 卸载必须 `map.remove()` 并解绑自定义事件；容器隐藏或尺寸变化后 `map.invalidateSize()`。
 - **常见症状**：地图区域空白多为容器没设高度；`L is not defined` 是脚本顺序或 CDN 失败；漏引 `leaflet.css` 会导致控件错位。
