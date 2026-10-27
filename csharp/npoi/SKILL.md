@@ -1,25 +1,27 @@
 ---
 name: npoi
-description: "Use when reading/writing Excel (.xls/.xlsx) or Word (.doc/.docx) files in .NET without Microsoft Office — data import/export, report generation, template filling. NPOI: .NET port of Apache POI for Office file I/O in server environments."
+description: "Use when reading/writing Excel (.xls/.xlsx) or Word (.doc/.docx) in .NET without Microsoft Office — XSSFWorkbook/HSSFWorkbook/SXSSFWorkbook, WorkbookFactory.Create, ICellStyle reuse, IFormulaEvaluator. Also for dates rendering as numbers, OutOfMemoryException on large files, and 64000 cell-style limits. NPOI: .NET port of Apache POI."
 tags:
   - dotnet
   - excel
   - word
   - office
   - npoi
+  - xls
+  - xlsx
 ---
 
 > **项目地址：** <https://github.com/nissl-lab/npoi>
 >
 > **NuGet：** `NPOI`
 >
-> **最新版本：** 2.8.1（截至2026-09，NuGet）
+> **最新版本：** 2.8.1（2026-10-07 仓库最后提交；截至 2026-10，NuGet 实测）
 >
 > **官方文档：** <https://github.com/nissl-lab/npoi/wiki>
 >
 > **许可证：** Apache-2.0
 >
-> **注意：** 自 NPOI 2.8.0（2026-04）起，产生收入的商业用户需通过 GitHub Sponsors 支付月度维护费用。详见 [NPOI GitHub](https://github.com/nissl-lab/npoi)。
+> **注意（OSMF）：** 自 2.8.0 起 NuGet 包附带 OSMF EULA，年收入超过 1 万美元的组织/商业用户需通过 GitHub Sponsors 支付月度维护费；初创、自由职业者与业余项目免费。详见 <https://github.com/nissl-lab/npoi> 与 <https://opensourcemaintenancefee.org/consumers/>。
 
 ## 概述
 
@@ -39,8 +41,30 @@ NPOI 主要能力：
 
 ## 安装
 
+### 方式一：dotnet CLI
+
 ```bash
 dotnet add package NPOI
+```
+
+### 方式二：PackageReference
+
+```xml
+<ItemGroup>
+  <PackageReference Include="NPOI" Version="2.8.1" />
+</ItemGroup>
+```
+
+### 方式三：包管理器控制台
+
+```powershell
+Install-Package NPOI -Version 2.8.1
+```
+
+### 验证安装
+
+```bash
+dotnet list package | grep -i npoi
 ```
 
 主要命名空间：
@@ -103,11 +127,14 @@ for (int r = 1; r <= 10; r++) {
     dr.CreateCell(3).SetCellValue(DateTime.Now);   // 注意要设置日期样式
 }
 
-// 列宽
-sh.AutoSizeColumn(1);
+// 列宽：AutoSizeColumn 依赖字体度量，Linux/容器里常失败，生产代码建议显式设宽
+// （1/256 个字符宽，20 字符宽 ≈ 20 * 256）
+for (int i = 0; i < head.Length; i++) sh.SetColumnWidth(i, 20 * 256);
 
-using var fs = new FileStream("out.xlsx", FileMode.Create);
-wb.Write(fs, leaveOpen: false);
+using (var fs = new FileStream("out.xlsx", FileMode.Create))
+{
+    wb.Write(fs, leaveOpen: false);
+}
 ```
 
 ---
@@ -179,9 +206,11 @@ for (int r = 0; r < 1_000_000; r++) {
     for (int c = 0; c < 10; c++)
         row.CreateCell(c).SetCellValue(r * 10 + c);
 }
-using var fs = File.Create("big.xlsx");
-wb.Write(fs);
-wb.Dispose();   // 清理临时文件
+using (var fs = File.Create("big.xlsx"))
+{
+    wb.Write(fs);
+}
+wb.Dispose();   // SXSSF 必须 Dispose 才会清理磁盘临时文件
 ```
 
 ---
@@ -273,6 +302,19 @@ doc.Write(fs);
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 中文乱码 | 文本本身是 UTF-8，`.xlsx` 不会乱码；`.xls`（HSSF）在 Excel 里按本地代码页显示，建议中文场景统一用 xlsx |
+| 日期变数字（显示 45000 之类） | 单元格要套带日期 `DataFormat` 的 `ICellStyle`，只 `SetCellValue(DateTime)` 不够 |
+| Office 报「此工作簿包含无法读取的内容」 | 多为样式数超 64000 或公式非法：把 `CreateCellStyle()` 提到循环外复用，并检查 `SetCellFormula` 的表达式 |
+| 大文件 `OutOfMemoryException` | 写用 `SXSSFWorkbook`（记得 `Dispose()` 清临时文件），读用 XSSF EventModel（SAX） |
+| 打开提示文件损坏 | `wb.Write(fs)` 要写在 `FileStream` 作用域内，且不要把 `leaveOpen` 误设为 true 后又提前 dispose 流 |
+| `AutoSizeColumn` 抛异常或列宽为 0 | xlsx 下自动列宽依赖字体度量，Linux/容器里常失败；改成显式 `SetColumnWidth(col, width*256)` |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -304,22 +346,11 @@ doc.Write(fs);
 
 ---
 
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 中文乱码 | 文件流默认 UTF-8；xls 打开 Excel 自动识别 |
-| 日期变数字 | 给 Cell 设置带日期 DataFormat 的 ICellStyle |
-| 出现「This Workbook contains an invalid」 | 风格数超限或公式错误，减少样式 / 修正公式 |
-| 内存溢出 | 改用 SXSSF / EventModel |
-| Office 打开提示损坏 | 写完后 `wb.Write(fs)` 必须在文件流之前不要 Close 流 |
-
----
-
 ## 相关技能
 
 - **reogrid** — .NET 电子表格控件，内嵌可编辑表格，底层依赖 NPOI 读写 Excel 文件：[../reogrid/SKILL.md](../reogrid/SKILL.md)
 - **sqlsugar** — .NET ORM，可与 NPOI 配合：从数据库查询后批量导出 Excel：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
+- **sod** — 另一套 .NET ORM，导出场景同样先查库再交给 NPOI 写表：[../sod/SKILL.md](../sod/SKILL.md)
 
 ---
 

@@ -1,12 +1,14 @@
 ---
 name: dotnet-reactor
-description: "Use when protecting .NET assemblies from reverse engineering — obfuscation, string encryption, control flow obfuscation, anti-debugging, licensing. .NET Reactor: commercial-grade .NET code protection and licensing tool."
+description: "Use when protecting .NET assemblies from reverse engineering or adding license enforcement — Necrobit IL encryption, obfuscation, string encryption, control-flow obfuscation, anti-debug/anti-tamper, License Manager serials, dotNET_Reactor.Console CI runs, merge assemblies. Also for Type.GetType failures after obfuscation, broken XAML bindings and JSON deserialization, and antivirus false positives. .NET Reactor: commercial .NET protection."
 tags:
   - dotnet
   - obfuscation
   - protection
   - licensing
   - security
+  - eziriz
+  - code-protection
 ---
 
 > **产品定位：** 商业闭源 .NET 代码保护与授权工具（Eziriz 出品；非开源项目，无公开仓库）
@@ -17,7 +19,7 @@ tags:
 >
 > **下载：** <https://www.eziriz.com/downloads.htm>
 >
-> **版本：** 商业闭源软件，不在 NuGet 分发；以官网下载页最新版为准（截至2026年）
+> **版本：** 7.5.0.0（官网下载页标注，Release date 2025-11-12；商业闭源，不在 NuGet 分发，截至 2026-10 实测）
 >
 > **许可证：** 商业（提供个人/企业/全球许可证）
 
@@ -40,9 +42,25 @@ tags:
 
 ## 安装与启动
 
-1. 从 Eziriz 官网下载安装
-2. 启动 .NET Reactor → 输入授权
+.NET Reactor 是商业闭源 Windows 桌面工具，不走 NuGet，安装方式只有下面两种：
+
+### 方式一：官网安装包（推荐）
+
+1. 打开 <https://www.eziriz.com/downloads.htm>，下载 .NET Reactor 7.5.0.0（Demo 版可先试用）
+2. 安装后启动，输入购买的 License 完成激活
 3. 主界面：左侧选项卡（Files / Protection / Native EXE File / License Manager / ...）
+
+### 方式二：命令行工具单独分发（CI 用）
+
+把安装目录下的 `dotNET_Reactor.Console.exe` 及其依赖复制到构建机，用 `.nrproj` 配置文件驱动，无需 GUI。
+
+```bash
+# 验证安装：控制台工具能启动并打印用法
+# 安装路径因版本与安装选项而异，先在安装目录里定位到 dotNET_Reactor.Console.exe
+"<安装目录>/dotNET_Reactor.Console.exe"
+```
+
+> Linux 构建机无法跑 GUI，只能通过 Wine 或 Windows 构建 agent 执行 `dotNET_Reactor.Console`；跨平台流水线请把保护步骤放到 Windows runner 上。
 
 也支持命令行 `dotNET_Reactor.Console.exe` 与 MSBuild 集成（CI 友好）。
 
@@ -226,6 +244,19 @@ GUI → Advanced：
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 反射 `Type.GetType("...")` 失败 | 排除被反射的类型/方法 |
+| 序列化字段丢失 | JSON 用 `[JsonProperty]` 显式映射；或排除字段 |
+| WPF XAML 绑定失败 | 排除被 XAML 引用的类型与属性 |
+| 启动慢 | Necrobit 解密成本；可关闭部分保护项 |
+| 被 AV 误报 | 联系杀软厂商加白；选择「Anti Debug = Mild」 |
+| Linux 运行报错 | Necrobit 对 Linux / .NET Core 的支持依赖较新版本，需升级后实测验证 |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -256,22 +287,12 @@ GUI → Advanced：
 
 ---
 
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 反射 `Type.GetType("...")` 失败 | 排除被反射的类型/方法 |
-| 序列化字段丢失 | JSON 用 `[JsonProperty]` 显式映射；或排除字段 |
-| WPF XAML 绑定失败 | 排除被 XAML 引用的类型与属性 |
-| 启动慢 | Necrobit 解密成本；可关闭部分保护项 |
-| 被 AV 误报 | 联系杀软厂商加白；选择「Anti Debug = Mild」 |
-| Linux 运行报错 | Necrobit 对 Linux / .NET Core 的支持依赖较新版本，需升级后实测验证 |
-
----
-
 ## 相关技能
 
 - **furion** — .NET Web 框架，dotnet-reactor 可保护 Furion 构建的 API/桌面应用：[../furion/SKILL.md](../furion/SKILL.md)
+- **admin-net-backend** — 典型可分发后台项目，保护后需逐项验证动态 API 与反射调用：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
+- **sentry** — 保护后堆栈需反混淆，配合 Debug Files / Release 还原符号：[../sentry/SKILL.md](../sentry/SKILL.md)
+- **serilog** — 保护前后的运行日志，用于确认反射与序列化是否被破坏：[../serilog/SKILL.md](../serilog/SKILL.md)
 
 ---
 

@@ -1,12 +1,15 @@
 ---
 name: dify
-description: "Use when building LLM applications with visual workflow — RAG knowledge bases, AI agents, chatbots with drag-and-drop orchestration. Dify: open-source LLM app platform supporting 30+ models (OpenAI, Claude, DeepSeek, Ollama, Qwen, GLM) with Docker deployment."
+description: "Use when self-hosting an LLM app platform with visual orchestration — docker compose up in dify/docker, knowledge bases with hybrid retrieval + rerank, Chatflow/Workflow nodes (Knowledge Retrieval, Code, HTTP Request, Iteration), custom tools from OpenAPI schema, /v1/chat-messages and /v1/workflows/run API keys; also for `host.docker.internal` Ollama unreachable in Docker, embedding model errors, empty retrieval from bad chunking, and SSE streaming vs blocking. Dify 1.18.0."
 tags:
   - llm
   - workflow
   - rag
   - agent
   - platform
+  - docker
+  - self-hosted
+  - chatbot
 ---
 
 > **项目地址：** <https://github.com/langgenius/dify>
@@ -15,8 +18,9 @@ tags:
 >
 > **官方文档：** <https://docs.dify.ai/>
 >
-> **许可证：** Dify Open Source License（基于 Apache-2.0 + 附加条款）
-> **最新版本：** 1.17.1（截至 2026-10-11 的最新 Release，见 [GitHub Releases](https://github.com/langgenius/dify/releases)）
+> **许可证：** Dify Open Source License（修改版 Apache-2.0，含附加条款）
+>
+> **最新版本：** 1.18.0（截至 2026-10，实测 `releases/latest` 重定向；Helm chart 最新 3.13.1）
 
 ## 概述
 
@@ -51,6 +55,8 @@ docker compose up -d
 
 ```bash
 helm repo add dify https://langgenius.github.io/dify-helm
+helm repo update
+# chart 名是 dify/dify，版本与 Dify 应用版本不同号（截至 2026-10 最新 chart 3.13.1）
 helm install dify dify/dify -n dify --create-namespace
 ```
 
@@ -232,6 +238,22 @@ Start → 用户提交申请
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 上传文档失败 | 检查 `STORAGE_*` 配置（本地 / S3）与权限 |
+| 嵌入失败 | 嵌入模型未配置 / 余额不足；切换其它供应商 |
+| 私有 Ollama 不通 | Docker 网络：`host.docker.internal` 或自定义网络 |
+| 响应慢 | 启用 streaming；缩短 prompt；减少检索 topK |
+| 中文检索差 | 使用 `bge-m3` / `text2vec` 等中文嵌入 + jieba 关键词 |
+| 知识库检索结果为空 | 检查文档是否已完成索引（未完成则只有原文没有向量）、分段长度是否大于 chunk 上限、检索 top_k/score 阈值是否过严 |
+| Docker 里连不上宿主机服务 | Linux 用 `--add-host=host.docker.internal:host-gateway`，或在 compose 里把服务放进同一网络 |
+| API 返回 `conversation_id` 无效 | Chatbot 首轮传空字符串，后续轮次必须回传服务端返回的 `conversation_id` 才能保持上下文 |
+| Workflow 报变量不存在 | 变量引用必须是 `{{#node_id.field#}}` 且节点在该节点上游；分支里定义的变量要在分支外汇总后才能用 |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -260,18 +282,6 @@ Start → 用户提交申请
 | 多步骤审批/数据流转 | Workflow |
 | 对话式多步骤 | Chatflow |
 | 纯文本生成（无对话） | Text Generator |
-
----
-
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 上传文档失败 | 检查 `STORAGE_*` 配置（本地 / S3）与权限 |
-| 嵌入失败 | 嵌入模型未配置 / 余额不足；切换其它供应商 |
-| 私有 Ollama 不通 | Docker 网络：`host.docker.internal` 或自定义网络 |
-| 响应慢 | 启用 streaming；缩短 prompt；减少检索 topK |
-| 中文检索差 | 使用 `bge-m3` / `text2vec` 等中文嵌入 + jieba 关键词 |
 
 ---
 

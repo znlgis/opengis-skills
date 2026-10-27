@@ -1,6 +1,6 @@
 ---
 name: acme.sh
-description: "Use when automating SSL/TLS certificate issuance and renewal from Let's Encrypt, ZeroSSL, or BuyPass — wildcard certs, DNS API mode for 150+ providers, Nginx/Apache auto-reload. acme.sh: pure Shell ACME client, zero dependencies, crontab-friendly auto-renewal."
+description: "Use when automating SSL/TLS certificate issuance and renewal from Let's Encrypt, ZeroSSL or BuyPass — wildcard certs via DNS-01 for 150+ providers, HTTP-01 webroot, --install-cert with reloadcmd, cron auto-renewal. acme.sh: pure POSIX shell ACME client, zero dependencies. Also for \"Verify error: Invalid response\", \"Create new order error\" rate limits, ZeroSSL EAB registration failures, and cron that never renews."
 tags:
   - ssl
   - tls
@@ -18,7 +18,11 @@ tags:
 >
 > **官网：** <https://acme.sh>
 >
-> **许可证：** GPL-3.0 ｜ **最新版本：** 3.1.6（2026-09）｜ **默认分支：** `master`
+> **许可证：** GPL-3.0
+>
+> **包管理器：** `curl https://get.acme.sh | sh`（官方安装脚本）/ git clone + `./acme.sh --install`（最新 3.1.6，截至 2026-10）
+>
+> **版本：** 3.1.6（2026-09-20）｜ 默认分支 `master`
 
 ## 概述
 
@@ -233,7 +237,10 @@ crontab -l | grep acme.sh
 
 ## 相关技能
 
-- **billionmail** — 自建邮件平台，同样用 ACME 签发与续期 TLS 证书：[../billionmail/SKILL.md](../billionmail/SKILL.md)
+- **billionmail** — 自建邮件平台，同样用 ACME 签发与续期 TLS 证书，且需要 SPF/DKIM/DMARC 与反向解析：[../billionmail/SKILL.md](../billionmail/SKILL.md)
+- **docker-compose** — 容器化部署（acme.sh 常与 nginx 一起进容器，续期后 reload 容器）：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
+- **geoserver** — Java GIS 服务，对外发布 HTTPS 的典型上游（证书与反向代理配置）：[../../gis/geoserver/SKILL.md](../../gis/geoserver/SKILL.md)
+- **qgis-server** — QGIS 地图服务，同样需要 HTTPS 与 `.well-known` 路径放行：[../../gis/qgis-server/SKILL.md](../../gis/qgis-server/SKILL.md)
 
 ---
 

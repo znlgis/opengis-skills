@@ -1,6 +1,6 @@
 ---
 name: qcad
-description: "Use when editing DXF files with a professional open-source 2D CAD application — CAM output, part libraries, isometric projection. QCAD: open-source 2D CAD with DXF as native format, scriptable via ECMAScript."
+description: "Use when editing or batch-converting DXF/DWG drawings with QCAD 3.33 — RAddObjectsOperation scripting, dwginfo/dwg2pdf/dwg2svg console tools, or version conversion through `qcad -no-gui -autostart SaveAs.js -filter`; also when dwg2pdf/dwg2svg are missing because they ship only with QCAD Professional, when a PDF export drops white entities, or when `-no-gui` runs never exit. QCAD: 2D CAD whose native format is DXF, scriptable via ECMAScript."
 tags:
   - 2d
   - cad
@@ -9,6 +9,7 @@ tags:
   - qt
   - javascript
   - ecmascript
+  - cli
 ---
 
 > **项目地址：** <https://github.com/qcad/qcad>
@@ -21,7 +22,7 @@ tags:
 >
 > **许可证：** GPL-3.0（社区版）；Pro 版商业许可
 >
-> **最新稳定版：** 3.33.1（截至2026年9月，GitHub tag `v3.33.1.0`，见 <https://qcad.org/en/download>）
+> **最新稳定版：** 3.33.1（2026-09-08，GitHub tag `v3.33.1.0`；截至 2026-10 未发新版，下一版将切换到日历版本号 27.x，见 [Changelog](https://qcad.org/en/changelog) 与 <https://qcad.org/en/download>）
 
 ## 概述
 

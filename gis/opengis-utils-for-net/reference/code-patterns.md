@@ -1,12 +1,12 @@
-# OpenGIS Utils for .NET Common Code Patterns
+# OpenGIS Utils for .NET 常用代码模式
 
-Common code patterns and examples split from SKILL.md.
+从 SKILL.md 拆出的常用代码模式与示例，.NET 版本按 OpenGIS.Utils 1.1.2 编写。
 
 ---
 
-## Common Code Patterns
+## 常用代码模式
 
-### Create a Layer from Scratch
+### 从零构造图层
 
 ```csharp
 using OpenGIS.Utils.Engine.Model.Layer;
@@ -32,7 +32,7 @@ layer.AddFeature(feature);
 layer.Validate();
 ```
 
-### Read → Process → Write
+### 读取 → 处理 → 写出
 
 ```csharp
 using OpenGIS.Utils.DataSource;
@@ -60,7 +60,7 @@ foreach (var feature in layer.Features)
 OguLayerUtil.WriteLayer(DataFormatType.GEOJSON, layer, "output.geojson");
 ```
 
-### Coordinate Transformation
+### 坐标变换
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -73,7 +73,7 @@ int wkid = CrsUtil.GetProjectedWkid(zone);   // Projected WKID
 string projected = CrsUtil.Transform(wktWgs84, 4326, wkid);
 ```
 
-### Geometry Analysis
+### 几何分析
 
 ```csharp
 using OpenGIS.Utils.Geometry;
@@ -87,20 +87,20 @@ string center = GeometryUtil.CentroidWkt(polygon);           // "POINT (5 5)"
 string buffer = GeometryUtil.BufferWkt(point, 1.0);          // Buffered polygon WKT
 ```
 
-### Format Conversion (One Line)
+### 格式转换（一行代码）
 
 ```csharp
 OguLayerUtil.ConvertFormat("input.shp", DataFormatType.SHP, "output.gpkg", DataFormatType.GEOPACKAGE);
 ```
 
-### JSON Serialization
+### JSON 序列化
 
 ```csharp
 string json = layer.ToJson();
 OguLayer? restored = OguLayer.FromJson(json);
 ```
 
-### Shapefile with Encoding
+### 带编码的 Shapefile
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -110,7 +110,7 @@ var layer = ShpUtil.ReadShapefile("data.shp", Encoding.GetEncoding("GBK"));
 ShpUtil.WriteShapefile(layer, "output.shp", Encoding.UTF8);
 ```
 
-### Natural Sorting
+### 自然排序
 
 ```csharp
 using OpenGIS.Utils.Utils;

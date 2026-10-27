@@ -1,6 +1,6 @@
 ---
 name: astral3d
-description: "Use when building Web 3D scenes, digital twins or BIM lightweight viewing with Astral3D — the Vue 3 + Three.js editor monorepo and its @astral3d/engine SDK. Covers source-build workflow (pnpm sdk:build then editor:dev), Viewer/App/Loader/Package APIs, scene pack/unpack ZIP delivery, plugin and script runtime extension, DXF and IFC preview."
+description: "Use when building Web 3D scenes, digital twins or BIM lightweight viewers with Astral3D — @astral3d/engine Viewer/Loader/Package SDK, the Vue 3 + Three.js editor monorepo (pnpm sdk:build then editor:dev), scene pack/unpack ZIP delivery, plugin and script runtime; also for \"EUNSUPPORTEDPROTOCOL: catalog:\" when running npm i astral3d, \"Cannot find module '@astral3d/engine'\", and DXF/IFC/3D Tiles preview."
 tags:
   - web
   - 3d
@@ -14,11 +14,15 @@ tags:
 
 > **项目地址：** <https://github.com/mlt131220/Astral3D>（Gitee 镜像 <https://gitee.com/mlt131220/Astral3D>）
 >
-> **在线编辑器：** <https://editor.astraljs.com/> ｜ **文档中心：** <http://editor-doc.astraljs.com/>
+> **官方文档：** <http://editor-doc.astraljs.com/>
+>
+> **在线编辑器：** <https://editor.astraljs.com/>
 >
 > **许可证：** Apache-2.0（README 声明个人学习与二次开发免费、商业使用需授权，以仓库为准）
 >
-> **最新版本：** `1.0.0`（GitHub tag / Release 2025-10-04，与 npm 包 `astral3d` 版本一致；main 分支仍在持续开发，截至 2026-10）
+> **包管理器：** pnpm workspace（`packageManager: pnpm@10.8.1`）；npm 包 `astral3d` 1.0.0 因保留 `catalog:` 依赖**不能**直接 `npm install`（截至 2026-10）
+>
+> **版本：** SDK/编辑器 `1.0.0`（GitHub Release `1.0.0`），npm 包 `astral3d` 同为 `1.0.0`
 >
 > **中文教程（12 章）：** <https://znlgis.github.io/cad/Astral3D/>
 
@@ -231,6 +235,8 @@ viewer.unInstallScripts();                      // 全部卸载
 
 ## 典型工作流
 
+两条主线：**输入** glTF/IFC/DXF 与场景配置 → **产出** 可在自有页面嵌入的 3D 场景。
+
 ### 工作流一：编辑器搭场景，自有页面轻量展示
 
 1. 打开 <https://editor.astraljs.com/>，或本地 `pnpm run sdk:build && pnpm run editor:dev`
@@ -301,4 +307,4 @@ viewer.unInstallScripts();                      // 全部卸载
 - 在线编辑器：<https://editor.astraljs.com/> ｜ 文档中心：<http://editor-doc.astraljs.com/>
 - 后端实现参考：<https://github.com/yx8663/astral-service>
 - 中文教程（12 章）：<https://znlgis.github.io/cad/Astral3D/>
-- Three.js：<https://threejs.org/docs/> ｜ camera-controls：<https://github.com/yotsen99/camera-controls>
+- Three.js：<https://threejs.org/docs/> ｜ camera-controls：<https://github.com/yomotsu/camera-controls>

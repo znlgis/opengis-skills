@@ -1,6 +1,6 @@
 ---
 name: solvespace
-description: "Use when doing lightweight parametric 2D/3D CAD with constraint-based sketching — linkages and mechanism analysis, section drawings, STL export for 3D printing, or driving the constraint solver from Python/CI. SolveSpace: ultra-light parametric CAD with a real-time solver, a headless solvespace-cli, and a PyPI slvs binding."
+description: "Use when doing lightweight parametric 2D/3D CAD in SolveSpace 3.3 — constraint sketching, linkage/mechanism checks, section and 2D views, STL for printing, or driving the solver from solvespace-cli / the PyPI slvs package in CI; also when sketch lines turn red (over-constrained) or blue (under-constrained), a constraint value change does not refresh (press Space), an exported STL has holes (Ctrl+Shift+N naked edges), or someone expects STEP import (STEP is export-only)."
 tags:
   - 3d
   - 2d
@@ -20,7 +20,7 @@ tags:
 >
 > **许可证：** GPL-3.0+
 >
-> **最新稳定版：** 3.2（2026-03-27 发布，见 [GitHub Releases](https://github.com/solvespace/solvespace/releases)）；CHANGELOG 顶部已有 **3.3（release date TBD）**，主要是 NURBS 内核与求解器修复
+> **最新稳定版：** 3.3（2026-10-21 发布，截至 2026-10，见 [GitHub Releases](https://github.com/solvespace/solvespace/releases)）；主线变化是 NURBS 曲面/边的修复与求解器改进（大尺寸值、此前不收敛的合法约束），以及 3.2 那处"解不出的约束被删除"的回归修复
 >
 > **参考手册：** <https://solvespace.com/ref.pl> ・ **教程：** <https://solvespace.com/tutorial.pl> ・ **网页版：** <https://solvespace.com/>（同一版本线的 Emscripten 构建）
 
@@ -33,7 +33,7 @@ SolveSpace 特性：
 - **装配**：导入零件文件（.slvs）+ 3D 约束装配
 - **机构分析**：Analyze 菜单的干涉检查、轨迹跟踪（Trace Point）
 - **导出**：二维矢量 SVG / PDF / EPS / PS / DXF / HPGL / G 代码（.ngc）/ STEP；网格 STL / OBJ / VRML / Three.js（.js/.html）；精确三维曲面 STEP
-- **脚本求解**：Cython 封装的求解器内核发布为 PyPI 包 [`slvs`](https://pypi.org/project/slvs/)（3.2 同版号），可只做约束求解不建模
+- **脚本求解**：Cython 封装的求解器内核发布为 PyPI 包 [`slvs`](https://pypi.org/project/slvs/)（与 SolveSpace 同版号，当前 3.3），可只做约束求解不建模
 - **占用极小**：单个可执行文件、无外部几何库依赖，桌面与网页版都能秒开
 
 ---
@@ -55,7 +55,8 @@ brew install --cask solvespace
 只用约束求解器（无 GUI，CI 友好）：
 
 ```bash
-pip install slvs          # 与 SolveSpace 同版号（当前 3.2），预编译 wheel
+pip install slvs          # 与 SolveSpace 同版号（当前 3.3），预编译 wheel
+python -c "import slvs; print(slvs.__file__)"   # 验证可导入
 ```
 
 自源码构建要求 CMake ≥ 3.31（见仓库 `CMakeLists.txt`），同时产出 `solvespace`（GUI）与 `solvespace-cli`（无头）：
@@ -67,7 +68,7 @@ cmake --build build
 
 ---
 
-## 工作流
+## 建模流程（GUI）
 
 ```text
 新建文件 (.slvs)
@@ -158,7 +159,7 @@ File → Export Image…         → PNG 位图
 要点：
 
 - STEP 由 SolveSpace 自带写出器（`src/exportstep.cpp`）生成，不依赖 OCCT，可被 FreeCAD 等打开
-- 二维矢量导出对**锯齿线（zigzag）与点画线（stippled）样式**目前不支持，3.3 前会崩溃，必要时先改为实线
+- 二维矢量导出对**锯齿线（zigzag）与点画线（stippled）样式**不支持：3.3 起不会再崩溃，但这些样式仍不会被导出，必要时先改为实线
 - 网格密度由 `Configuration…` 的 chord tolerance 控制；导出前用 Analyze → Show Naked Edges 确认实体闭合
 
 
@@ -191,7 +192,7 @@ solvespace-cli export-surfaces --output out.step input.slvs            # 精确�
 
 ## Python 求解器（slvs）
 
-仓库把约束求解内核用 Cython 封装后发布到 PyPI（包名 `slvs`，与 SolveSpace 同版号，当前 3.2；该封装在 `pyproject.toml` 中标注 MIT，主程序仍是 GPL-3.0+）。它只做求解，不含 GUI 与几何建模：
+仓库把约束求解内核用 Cython 封装后发布到 PyPI（包名 `slvs`，与 SolveSpace 同版号，当前 3.3；该封装在 `pyproject.toml` 中标注 MIT，主程序仍是 GPL-3.0+）。它只做求解，不含 GUI 与几何建模：
 
 ```python
 import slvs
@@ -289,10 +290,12 @@ API 面（见 `python/slvs/solvespace.pyi`）：
 
 | 问题 | 解决 |
 |------|------|
-| 草图线条变红 | 过约束：删除冗余约束；3.2 有个"求解不出的约束会被直接删掉"的回归，3.3 已修复，遇到约束神秘消失请升级或手工加回 |
+| 草图线条变红 | 过约束：删除冗余约束；若曾在 3.2 遇到过"求解不出的约束被直接删掉"，那是 3.2 的回归，3.3 起不再删除，用 3.3+ 或手工加回 |
 | 草图线条蓝色 | 欠约束：补距离/角度/水平垂直；`Ctrl+Shift+F` 高亮所有欠约束点 |
 | 改完约束值不刷新 | 按 `Space`（Regenerate All）；仍不对就 `Ctrl+Shift+D` 逐步维度检查 |
 | 导出 STL 残缺 | 实体未闭合，`Ctrl+Shift+N` 查裸边，确认拉伸 Group 生成的是 Solid 而非 Shell |
+| 升级到 3.3 后曲面显示变干净但旧文件几何有细微变化 | 3.3 是 NURBS 几何内核修复，平面/边、曲面与相切处都有改动，导出前用 `Ctrl+Shift+N` 与体积/面积核对关键尺寸 |
+| 大尺寸模型（米级跨度）求解不收敛 | 3.3 改善了大数值约束的求解；仍在旧版时先升级，或把单位改为 mm 并统一量级 |
 | 圆弧标注变成了直径 | 3.2 起圆/弧尺寸默认**半径**，在 Property Browser 取消 `use radius` 可切回直径 |
 | 拉伸的图片/文字出现在 3D 里 | 3.2 起 Image 元素默认不复制到 3D Group，需要时对该 Image 执行 Toggle Construction |
 | 中文乱码 | 内置矢量字体不含 CJK；TrueType 文字需系统字体，或导出 SVG 后用其它工具补文字 |
@@ -310,7 +313,7 @@ API 面（见 `python/slvs/solvespace.pyi`）：
 ## AI 使用建议
 
 - **推荐工作流模式**：按 SolveSpace 的自然约束流程引导——选工作平面 → 绘草图（`s`/`c`/`a`/`b`）→ 加约束（`d`/`n`/`h`/`v`/`q`/`l`/`y`）→ `Shift+X` 拉伸或 `Shift+L` 旋转 → 导出。约束状态用颜色判断：黑=完全约束、红=过约束（删冗余）、蓝=欠约束（补约束），可用 `Ctrl+Shift+F` 定位蓝点。
-- **关键注意事项**：① 单键快捷键无需修饰键，但会全局拦截，画图中按 `Esc` 是**删除**该实体而非取消；② STEP 为只出不进，跨软件往返请用 DXF/网格或 FreeCAD；③ 3.2 有"无法求解的约束被删除"的回归，重要模型建议在 3.3+ 或先备份 .slvs；④ 圆/弧尺寸默认半径；⑤ 批量任务优先 `solvespace-cli` 或 `slvs`，不要试图脚本驱动 GUI。
+- **关键注意事项**：① 单键快捷键无需修饰键，但会全局拦截，画图中按 `Esc` 是**删除**该实体而非取消；② STEP 为只出不进，跨软件往返请用 DXF/网格或 FreeCAD；③ 从 3.2 升级时注意：3.2 有"无法求解的约束被删除"的回归，3.3 已修复，重要模型升级前先备份 .slvs；④ 圆/弧尺寸默认半径；⑤ 批量任务优先 `solvespace-cli` 或 `slvs`，不要试图脚本驱动 GUI。
 - **常用代码模式**：GUI：`s` 画线 → 选实体 → `d` 距离、`n` 角度、`q` 等长 → `Shift+X` 拉伸 → Export Triangle Mesh。CLI：`solvespace-cli regenerate input.slvs`、`solvespace-cli export-mesh --output out.stl input.slvs`。Python：`slvs.add_base_2d(g)` → `slvs.add_point_2d` / `add_line_2d` → `slvs.distance/angle/parallel` → `slvs.solve_sketch(g, False)` → `slvs.get_param_value(ent['param'][i])`。
 - **不要臆造**：SolveSpace 没有 Sweep/放样 Group（只有 Extrude、Lathe、Revolve、Helix、Step Translating/Rotating），没有 IGES 导出，也没有参数表达式表或外部变量文件。
 

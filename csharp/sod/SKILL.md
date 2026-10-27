@@ -1,15 +1,17 @@
 ---
 name: sod
-description: "Use when needing a multi-paradigm .NET ORM with SQL-MAP (MyBatis-style XML mapping), OQL (Object Query Language), and traditional ORM. PDF.NET SOD: combines ORM + SQL-MAP + OQL for flexible .NET data access."
+description: "Use when needing a multi-paradigm .NET ORM — EntityBase + EntityQuery CRUD, OQL chain queries with oql.Limit paging, MyBatis-style SQL-MAP XML via SqlMapper, AdoHelper raw SQL, MyDB.GetDBHelperByConnectionName. Also for identity keys not written back after Insert, dirty-field updates, and provider switching across SqlServer/MySql/DaMeng/Kingbase. PDF.NET SOD: ORM + SQL-MAP + OQL."
 tags:
   - dotnet
   - orm
   - database
   - sql-mapping
   - oql
+  - mybatis-style
+  - multi-database
 ---
 
-> **项目地址：** <https://github.com/znlgis/SOD>（社区主仓库见 <https://gitee.com/znlgis/SOD>）
+> **项目地址：** <https://github.com/znlgis/SOD>（镜像仓库，最后提交 2025-07-05；国内主仓库见 <https://gitee.com/znlgis/SOD>，截至 2026-10 仍可访问但更新缓慢）
 >
 > **官网：** <https://www.pwmis.com/sod/>
 >
@@ -19,7 +21,7 @@ tags:
 >
 > **NuGet（.NET 6+）：** `PWMIS.SOD`
 >
-> **最新版本：** PDF.NET.SOD 7.0.1 / PWMIS.SOD 6.0.3（截至2026-09，NuGet）
+> **最新版本：** PDF.NET.SOD 7.0.1 / PWMIS.SOD 6.0.3（截至 2026-10，NuGet 实测）
 >
 > **许可证：** Apache-2.0
 
@@ -40,12 +42,35 @@ SOD 由 PDF.NET 演化而来，主要特点：
 
 ## 安装
 
+### 方式一：dotnet CLI
+
 ```bash
-dotnet add package PDF.NET.SOD
-# 或对应数据库 Provider：
+# .NET 6+ 用 PWMIS.SOD（新版核心库）
+dotnet add package PWMIS.SOD
+
+# .NET Framework / netstandard2.0 用 PDF.NET.SOD 系列
+dotnet add package PDF.NET.SOD.Core
+
+# 对应数据库 Provider
 dotnet add package PDF.NET.SOD.MySQL.Provider
 dotnet add package PDF.NET.SOD.PostgreSQL.Provider
 ```
+
+### 方式二：PackageReference
+
+```xml
+<ItemGroup>
+  <PackageReference Include="PWMIS.SOD" Version="6.0.3" />
+</ItemGroup>
+```
+
+### 验证安装
+
+```bash
+dotnet list package | grep -i sod
+```
+
+> 两个包的实测结构：`PWMIS.SOD` 6.0.3 提供 `lib/net6.0/PWMIS.SOD.Core.dll`；`PDF.NET.SOD` 7.0.1 只含 `PWMIS.SOD.Core.Extensions.dll`，完整核心在 `PDF.NET.SOD.Core` 7.0.1 里。按目标框架选包，不要混装。
 
 ---
 
@@ -53,13 +78,13 @@ dotnet add package PDF.NET.SOD.PostgreSQL.Provider
 
 | 对象 | 入口 | 说明 |
 |------|------|------|
-| 数据访问入口 | `MyDB.GetDBHelperByConnectionName(name)` / `MyDB.GetDBHelperByConnectionString(cs, provider)` | 返回 `AdoHelper`（`db`），屏蔽底层 Provider 差异 |
+| 数据访问入口 | `MyDB.GetDBHelperByConnectionName(name)` / `MyDB.GetDBHelperByProviderString(cs, provider)` | 返回 `AdoHelper`（`db`，继承自 `CommonDB`），屏蔽底层 Provider 差异 |
 | 实体基类 | `EntityBase` | `TableName` / `IdentityName` / `PrimaryKeys`；属性用 `getProperty<T>()` / `setProperty()` |
 | 实体 CRUD | `new EntityQuery<T>(db)` | `Insert` / `Update`（仅脏字段）/ `Delete` / `GetList` / `GetEntity` |
 | OQL 链式查询 | `OQL.From(entity).Select(...).Where(...).OrderBy(...).END` | 支持多表连接、分组、聚合；`oql.Limit(pageSize, pageIndex)` 分页 |
 | SQL-MAP | `new SqlMapper(db).ExecuteList<T>("Map.Statement", param)` | XML 写 SQL（MyBatis 风格），SqlMapTool 可生成强类型 DAL |
 | 原生 SQL | `db.ExecuteDataSet(...)` / `db.ExecuteNonQuery(...)` / `db.GetParameter(...)` | 用 AdoHelper 直接执行 |
-| 事务 | `db.BeginTransaction()` → `db.Commit()` / `db.Rollback()` | 或 `db.UseTransaction(() => { ... })` |
+| 事务 | `db.BeginTransaction()` → `db.Commit()` / `db.Rollback()` | 均定义在 `CommonDB` 上，`AdoHelper` 继承而来；没有 `UseTransaction` 辅助方法 |
 
 ---
 
@@ -76,7 +101,7 @@ dotnet add package PDF.NET.SOD.PostgreSQL.Provider
 
 ```csharp
 using PWMIS.DataProvider.Data;
-var db = MyDB.GetDBHelperByConnectionString(
+var db = MyDB.GetDBHelperByProviderString(
     "server=.;database=demo;uid=sa;pwd=...", "SqlServer");
 ```
 
@@ -220,14 +245,7 @@ try {
 }
 ```
 
-或：
-
-```csharp
-db.UseTransaction(() => {
-    q.Insert(u1); q.Insert(u2);
-    return true;
-});
-```
+批量写入时可用 `q.Insert(new List<User> { u1, u2 })` 一次提交；SOD 没有 `UseTransaction(() => {...})` 这种委托式包装，事务边界要自己用 `BeginTransaction()` / `Commit()` 显式写，`CommonDB.OnErrorRollback` 只在内部错误处理里生效。
 
 ---
 
@@ -289,7 +307,20 @@ db.UseTransaction(() => {
 
 1. 换库只需要改连接字符串的 `providerName`（SqlServer / MySql / PostgreSQL / DaMeng 等）
 2. 读写分离：分别配主从连接串，写走 master、读走 slave
-3. 事务要在同一个 `AdoHelper` 实例里 `BeginTransaction()` → 操作 → `Commit()`/`Rollback()`
+3. 事务要在同一个 `AdoHelper`（`CommonDB`）实例里 `BeginTransaction()` → 操作 → `Commit()`/`Rollback()`
+
+---
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 字段映射错误 | 使用 `MapField(...)` 指定列名 |
+| 自增主键未填回 | `IdentityName` 设置正确 |
+| 中文乱码 | 数据库用 utf8mb4 / NVARCHAR |
+| 事务跨连接失败 | 使用同一 `AdoHelper` 实例（事务挂在 `CommonDB` 上，换实例即换事务） |
+| 找不到 `UseTransaction` / `GetDBHelperByConnectionString` | 6.0/7.0 版没有这两个成员：事务用 `BeginTransaction()`/`Commit()`/`Rollback()`，按连接串取 helper 用 `MyDB.GetDBHelperByProviderString(cs, providerName)` |
+| OQL 查全表把内存吃满 | 改用 `oql.Limit(pageSize, pageIndex)` 分页，避免 `ToList()` 全量取回 |
 
 ---
 
@@ -301,7 +332,7 @@ db.UseTransaction(() => {
 2. **选查询方式**：简单 CRUD → `EntityQuery<T>`；复杂条件 → OQL 链式 API；固定 SQL → SQL-MAP XML
 3. **多数据库切换**：仅改连接字符串的 `providerName`（SqlServer / MySql / PostgreSQL / DaMeng 等）
 4. **读写分离**：配置主从连接字符串，写走 master，读走 slave
-5. **事务**：同一 `AdoHelper` 实例内 `BeginTransaction()` → 操作 → `Commit()` / `Rollback()`
+5. **事务**：同一 `AdoHelper` 实例内 `BeginTransaction()` → 操作 → `Commit()` / `Rollback()`（无 `UseTransaction` 委托式 API）
 
 ### 关键模式与常见陷阱
 
@@ -322,22 +353,12 @@ db.UseTransaction(() => {
 
 ---
 
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 字段映射错误 | 使用 `MapField(...)` 指定列名 |
-| 自增主键未填回 | `IdentityName` 设置正确 |
-| 中文乱码 | 数据库用 utf8mb4 / NVARCHAR |
-| 事务跨连接失败 | 使用同一 `AdoHelper` 实例 |
-| OQL 查全表把内存吃满 | 改用 `oql.Limit(pageSize, pageIndex)` 分页，避免 `ToList()` 全量取回 |
-
----
-
 ## 相关技能
 
 - **sqlsugar** — 同为 .NET ORM，链式查询更现代化，生态更活跃：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
 - **furion** — .NET Web 框架，Furion 内置 SqlSugar 集成，SOD 亦可配合使用：[../furion/SKILL.md](../furion/SKILL.md)
+- **npoi** — 查询结果导出 Excel 时与 SOD 组合使用：[../npoi/SKILL.md](../npoi/SKILL.md)
+- **admin-net-backend** — 基于 Furion + SqlSugar 的后台框架，可对照其分层与 DAL 组织方式：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
 
 ---
 

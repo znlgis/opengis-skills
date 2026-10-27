@@ -16,7 +16,7 @@ tags:
 >
 > **英文上游：** <https://github.com/obra/superpowers>
 >
-> **最新版本：** npm 包 1.7.14（2026-09-28，`npx superpowers-zh` 拉的就是它）；仓库 git tag 已到 v5.1.0，两者版本号不同步，以 npm 为准
+> **最新版本：** npm 包 1.8.0（截至 2026-10，`npx superpowers-zh` 拉的就是它）；仓库 git tag 与 npm 版本号不同步，以 npm 为准
 >
 > **许可证：** MIT ｜ **npm 包：** 参见 [npm](https://www.npmjs.com/package/superpowers-zh)｜ **运行要求：** Node.js ≥ 20
 
@@ -28,18 +28,42 @@ superpowers-zh 不是代码库或语言框架，而是一套面向 AI 编程工�
 2. **让 AI 用工程纪律工作**：用 TDD、系统化调试、完成前验证、代码审查约束「看起来能跑」的草率实现。
 3. **让中文团队直接落地**：在完整汉化基础上补充中文代码审查、中文 Git 工作流、中文技术文档与提交规范等本土化能力。
 
-包内含 `skills/`、`agents/`、`commands/`、`hooks/` 与一键安装脚本 `bin/superpowers-zh.js`。它在 obra/superpowers（英文上游，250k+ 星标）基础上完整汉化（14 个翻译 skills）并新增 4 个中国原创 skills（另有 2 个上游历史保留 skills，全仓共 20 个），支持 Claude Code / GitHub Copilot CLI / Hermes Agent / Cursor / Claw Code / Windsurf / Kiro / Gemini CLI / OpenCode / Qoder 等 26 款工具。
+包内含 `skills/`、`agents/`、`commands/`、`hooks/` 与一键安装脚本 `bin/superpowers-zh.js`。它在 obra/superpowers（英文上游）基础上完整汉化并新增 4 个中国原创 skills，**全仓共 21 个 skills**，覆盖 Claude Code / Copilot CLI / Hermes Agent / Cursor / Windsurf / Kiro / Gemini CLI / Codex / Aider / OpenCode / OpenClaw / DeepSeek Harness / Qoder / Trae 等 **26 款工具**（1.8.0 官方口径）。
 
 ---
 
 ## 安装
 
+要求 Node.js ≥ 20（npm 包 `superpowers-zh` 的 `engines` 为 `>=20.0.0`）。
+
+### 方式一：npx 直接跑（推荐）
+
 ```bash
-# 一键安装（交互式选择目标 AI 工具并写入对应配置）
+# 交互式选择目标 AI 工具并写入对应配置
 npx superpowers-zh
+
+# 显式指定工具，不依赖自动识别
+npx superpowers-zh --tool copilot
+
+# 装到用户级目录（如 Hermes）
+npx superpowers-zh --global --tool hermes
 ```
 
-要求 Node.js ≥ 20。安装器会按所选工具把 skills/agents/commands/hooks 写入相应位置（如 Claude Code 的 plugin、Cursor 的 `.cursor-plugin`、OpenCode 的 `.opencode/plugins`、Codex 的 `.codex-plugin`、Gemini 的 `gemini-extension.json` 等）。
+### 方式二：全局安装后用 `superpowers-zh` 命令
+
+```bash
+npm install -g superpowers-zh
+superpowers-zh
+```
+
+### 验证
+
+```bash
+superpowers-zh --help          # 打印可用参数（--tool / --global 等）
+ls .claude/skills              # 按所选工具检查落盘位置
+```
+
+安装器会按所选工具把 `skills/`、`agents/`、`commands/`、`hooks/` 写入对应位置——1.8.0 的落盘目录按工具不同：Claude Code / Copilot CLI 用 `.claude/skills/`，Cursor 用 `.cursor/skills/`，Codex 用 `.agents/skills/`，Gemini CLI 用 `.gemini/skills/`，Hermes 用 `~/.hermes/skills/`，Windsurf 用 `.windsurf/skills/`（全局 `~/.codeium/windsurf/skills/`），Kiro 用 `.kiro/skills/`。
 
 ---
 
@@ -81,9 +105,11 @@ npx superpowers-zh
 | 问题 | 解决 |
 |------|------|
 | 它是模型或插件吗 | 都不是，是一套被 AI 加载的「方法论 Skills」，约束 AI 的工作流程 |
-| 支持哪些工具 | Claude Code、Copilot CLI、Cursor、OpenCode、Hermes Agent、Windsurf、Gemini CLI、Kiro、Qoder 等 26 款 |
-| 和英文 superpowers 区别 | 完整汉化（14 个翻译 skills）+ 4 个中国原创 skills（中文代码审查 / Git 工作流 / 技术文档 / 提交规范）+ 2 个上游历史保留（MCP 构建器 / 工作流执行器），共 20 个 skills |
+| 支持哪些工具 | Claude Code、Copilot CLI、Cursor、OpenCode、OpenClaw、DeepSeek Harness、Hermes Agent、Windsurf、Kiro、Gemini CLI、Codex、Aider、Qoder、Trae 等 26 款 |
+| 和英文 superpowers 区别 | 完整汉化 + 4 个中国原创 skills（中文代码审查 / Git 工作流 / 技术文档 / 提交规范），共 21 个 skills；上游英文版只有 6 款工具适配，中文版扩到 26 款 |
 | 安装要求 | Node.js ≥ 20，`npx superpowers-zh` 一键安装 |
+| 只装到某个工具 | `npx superpowers-zh --tool <name>` 显式指定；装到全局用户目录加 `--global`（如 `--global --tool hermes` 写 `~/.hermes/skills/`） |
+| 技能装到哪了 | 按工具不同：Claude Code `.claude/skills/`、Cursor `.cursor/skills/`、Codex `.agents/skills/`、Gemini `.gemini/skills/`、Hermes `~/.hermes/skills/` 等 |
 | AI 不触发 Skill | 确认工具支持 Skill 发现/自定义指令，并已写入对应配置；从 `using-superpowers` 入口引导 |
 | 能和编码 Agent 一起用吗 | 可以，常与 OpenCode / Hermes Agent / Claude Code 搭配，作为「工作方式约束层」 |
 

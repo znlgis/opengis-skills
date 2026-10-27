@@ -15,9 +15,9 @@ tags:
 
 > **项目地址：** <https://github.com/qgis/QGIS>
 >
-> **官方文档：** <https://docs.qgis.org/latest/en/docs/server_manual/>
+> **官方文档：** <https://docs.qgis.org/3.44/en/docs/server_manual/>（`/latest/` 目前 302 到 3.44 手册，4.2 手册尚未单独发布）
 >
-> **最新版本：** 4.2.3（截至 2026-10）；LTR 3.44.15
+> **最新版本：** 4.2.3（稳定版）；LTR 3.44.15（截至 2026-10，实测 `qgis/qgis` 镜像 tag 与 <https://qgis.org/download/>）
 >
 > **许可证：** GPL-2.0
 
@@ -119,7 +119,9 @@ WMS 的 `LAYERS` 支持按短名或图层 ID 选择，多个图层用逗号分�
 
 WMTS 的 `TILEMATRIXSET` 定义金字塔所用 CRS（形如 `EPSG:XXXX`），`TILEMATRIX`/`TILEROW`/`TILECOL` 定位具体瓦片；`FORMAT` 仅支持 `jpg`/`jpeg`/`image/jpeg`/`image/png`，其余值回退为 PNG。`GetFeatureInfo` 的 `INFOFORMAT` 默认 `text/plain`，用 `I`/`J` 指定像素坐标。
 
-OGC API - Features（WFS3）是面向 REST 的 JSON 接口，按项目发布，端点位于服务根路径下（如 `/wfs3/collections`、`/wfs3/collections/{id}/items`），支持 `limit`、`bbox`、`datetime` 等查询参数。该服务是否可用取决于项目 `OWS Server` 页的发布设置。
+OGC API - Features（OAPIF，旧称 WFS3）是面向 REST 的 JSON/HTML 接口，按项目发布，服务根为 `/wfs3`（如 `/wfs3/collections`、`/wfs3/collections/{id}/items`），`/wfs3/api` 提供自描述文档，支持 `limit`、`bbox`、`datetime` 等查询参数。该服务是否可用取决于项目 `OWS Server` 页的发布设置。
+
+> 官方注意：OAPIF 遵循 OpenAPI 规范，不接受额外查询参数，因此**不建议**在 URL 里暴露 `MAP`；改用 `QGIS_PROJECT_FILE` 环境变量或 Web 服务器重写规则指定项目（实测 QGIS 3.44/4.2 Server 手册 "OGC API Features" 一节）。
 
 ### 在项目中启用服务
 
@@ -205,26 +207,7 @@ location /qgis {
 | `GetPrint` 报错或输出空白 | Linux 无 X 环境，需安装并启动 `Xvfb`，在 Web 服务器配置 `DISPLAY=:99` |
 | WFS `Transaction` 提交失败 | 需通过 POST 提交（删除可用 `OPERATION`），且数据源必须可写、图层勾选相应发布权限 |
 | 高并发下响应缓慢 | 开启 `QGIS_SERVER_PARALLEL_RENDERING`、调大 `QGIS_SERVER_MAX_THREADS` 与项目缓存 |
-
----
-
-## 参考资源
-
-- QGIS Server 手册：<https://docs.qgis.org/latest/en/docs/server_manual/>
-- 配置与环境变量：<https://docs.qgis.org/latest/en/docs/server_manual/config.html>
-- WMS 服务：<https://docs.qgis.org/latest/en/docs/server_manual/services/wms.html>
-- WFS 服务：<https://docs.qgis.org/latest/en/docs/server_manual/services/wfs.html>
-- WMTS 服务：<https://docs.qgis.org/latest/en/docs/server_manual/services/wmts.html>
-- 容器化部署：<https://docs.qgis.org/latest/en/docs/server_manual/containerized_deployment.html>
-
----
-
-## 相关技能
-
-- **pyqgis** — 服务端插件与 Python 自动化：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
-- **qgis-process** — 桌面端处理算法与批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
-- **geoserver** — 另一套 OGC 服务方案（Java，Web UI 管理）：[../geoserver/SKILL.md](../geoserver/SKILL.md)
-- **postgis** — QGIS Server 常用矢量数据源：[../postgis/SKILL.md](../postgis/SKILL.md)
+| 直接执行 `qgis_mapserv.fcgi` 无输出 | 正常：FCGI 需由 Web 服务器以 FastCGI 协议调用；用 `curl` 带 `SERVICE=WMS&REQUEST=GetCapabilities` 验证 |
 
 ---
 
@@ -237,3 +220,21 @@ location /qgis {
 - **常见报错**：`Service unknown or unsupported` 是缺 `SERVICE`/`MAP` 参数而非服务故障；`GetMap` 空白先查 `MAP` 路径可读性与项目 `OWS Server` 页的 `published` 勾选，再查 CRS/`BBOX`。
 - **日志与生效**：`QGIS_SERVER_LOG_STDERR=1` 交给 journald 或容器日志；`QGIS_SERVER_LOG_FILE` 已废弃，不要再用；`QGIS_SERVER_*` 改动要重启 FCGI 进程（或容器）才生效。
 - **安全与权限**：启动容器、开放端口、改 Web 服务器配置前先征得用户同意；`GetPrint` 在无 X 的 Linux 上需 `Xvfb`；项目文件可能含数据库凭证，命令与回答里不要回显密码。
+
+## 相关技能
+
+- **pyqgis** — 服务端插件与 Python 自动化：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **qgis-process** — 桌面端处理算法与批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+- **geoserver** — 另一套 OGC 服务方案（Java，Web UI 管理）：[../geoserver/SKILL.md](../geoserver/SKILL.md)
+- **postgis** — QGIS Server 常用矢量数据源：[../postgis/SKILL.md](../postgis/SKILL.md)
+
+---
+
+## 参考资源
+
+- QGIS Server 手册：<https://docs.qgis.org/latest/en/docs/server_manual/>
+- 配置与环境变量：<https://docs.qgis.org/latest/en/docs/server_manual/config.html>
+- WMS 服务：<https://docs.qgis.org/latest/en/docs/server_manual/services/wms.html>
+- WFS 服务：<https://docs.qgis.org/latest/en/docs/server_manual/services/wfs.html>
+- WMTS 服务：<https://docs.qgis.org/latest/en/docs/server_manual/services/wmts.html>
+- 容器化部署：<https://docs.qgis.org/latest/en/docs/server_manual/containerized_deployment.html>

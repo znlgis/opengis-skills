@@ -46,9 +46,9 @@ sudo apt update && sudo apt install grass
 # Conda / mamba / pixi（conda-forge 提供 Linux、macOS、Windows 64 位包）
 conda install -c conda-forge grass
 
-# Docker（官方镜像；下载页同时以 osgeo/grass-gis 名称与 releasebranch_8_5-* 标签发布）
-docker pull osgeo/grass
-docker run --rm osgeo/grass grass --version
+# Docker（官方镜像名是 osgeo/grass-gis；标签形如 8.5.0-ubuntu / releasebranch_8_5-ubuntu）
+docker pull osgeo/grass-gis:latest
+docker run --rm osgeo/grass-gis grass --version
 ```
 
 Windows 可通过 OSGeo4W 安装器安装，之后在 "OSGeo4W Shell" 中使用 `grass` 命令。
@@ -310,6 +310,23 @@ grass $HOME/grassdata/ndvi_project/PERMANENT --exec sh -c '
 | Docker 中结果文件属主为 root | 运行时加 `--user=$(id -u):$(id -g)` 与 `--env HOME=/data/` |
 | `t.*` 报时空数据库错误 | 时空数据库按地图集独立且自动创建；确认在正确地图集内运行并检查 `t.connect -p` 状态 |
 
+## DeepSeek Harness 使用建议
+
+- **加载与引用**：用 `skill("grass-gis")` 加载（用户也可输入 `/grass-gis`）；本技能没有 reference 子目录，模块参数用 `r.univar --help` 或官网手册核对；技能目录只读，脚本与导出结果写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文里 `grass ... --exec sh -c '...'` 的多行引用在 pwsh 下不可靠，改为把模块序列写进 `.py` 脚本（首行 `#!/usr/bin/env python3`），再 `grass --tmp-project EPSG:3857 --exec python3 analysis.py`。
+- **先探测版本**：`grass --version`（应为 8.5.0，LTR 8.4.2）、`grass --tmp-project EPSG:3857 --exec g.region -p`；8.4 之前没有 `grass.tools`，Python 脚本改用 `gs.run_command`。
+- **验证产物**：`--tmp-project` 内的地图最后必须导出——`r.out.gdal input=slope output=/work/slope.tif format=GTiff`，随后 `gdalinfo -json slope.tif` 核对 CRS 与范围；会话内核对用 `g.region -p format=json`、`g.list type=raster`。
+- **区域语义优先**：栅格模块只处理计算区域内的像元，结果范围不对先看 `g.region -p`；重复运行加 `--overwrite`，否则模块报地图已存在并非零退出。
+- **错误识别**：GRASS 模块的失败以 `ERROR:` 开头并返回非零码（如 `Raster map <x> not found`），据此区分地图名、区域为空还是输出已存在问题，不要只读最后一行日志。
+- **安全与权限**：`g.remove`、`--overwrite`、`t.connect` 会改/删地图集数据；`--tmp-project`/`--tmp-mapset` 结束即删除目录，结果必须先导出；启动 Docker 或改文件属主（`--user=$(id -u):$(id -g)`）前先确认写入路径。
+
+## 相关技能
+
+- **qgis-process** — QGIS Processing 命令行（含 GRASS provider 调用）：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+- **gdal** — 栅格/矢量格式转换与命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **geopandas** — Python 矢量数据分析：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **pyqgis** — QGIS Python 绑定：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+
 ## 参考资源
 
 - **GRASS GIS 源码：** <https://github.com/OSGeo/grass>
@@ -320,20 +337,3 @@ grass $HOME/grassdata/ndvi_project/PERMANENT --exec sh -c '
 - **时空框架介绍：** <https://grass.osgeo.org/grass-stable/manuals/temporalintro.html>
 - **Docker 镜像说明：** <https://grass.osgeo.org/download/docker/>
 - **官方示例数据：** <https://grass.osgeo.org/sampledata/north_carolina/nc_basic_spm_grass7.zip>
-
-## 相关技能
-
-- **qgis-process** — QGIS Processing 命令行（含 GRASS provider 调用）：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
-- **gdal** — 栅格/矢量格式转换与命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
-- **geopandas** — Python 矢量数据分析：[../geopandas/SKILL.md](../geopandas/SKILL.md)
-- **pyqgis** — QGIS Python 绑定：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
-
-## DeepSeek Harness 使用建议
-
-- **加载与引用**：用 `skill("grass-gis")` 加载（用户也可输入 `/grass-gis`）；本技能没有 reference 子目录，模块参数用 `r.univar --help` 或官网手册核对；技能目录只读，脚本与导出结果写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文里 `grass ... --exec sh -c '...'` 的多行引用在 pwsh 下不可靠，改为把模块序列写进 `.py` 脚本（首行 `#!/usr/bin/env python3`），再 `grass --tmp-project EPSG:3857 --exec python3 analysis.py`。
-- **先探测版本**：`grass --version`（应为 8.5.0，LTR 8.4.2）、`grass --tmp-project EPSG:3857 --exec g.region -p`；8.4 之前没有 `grass.tools`，Python 脚本改用 `gs.run_command`。
-- **验证产物**：`--tmp-project` 内的地图最后必须导出——`r.out.gdal input=slope output=/work/slope.tif format=GTiff`，随后 `gdalinfo -json slope.tif` 核对 CRS 与范围；会话内核对用 `g.region -p format=json`、`g.list type=raster`。
-- **区域语义优先**：栅格模块只处理计算区域内的像元，结果范围不对先看 `g.region -p`；重复运行加 `--overwrite`，否则模块报地图已存在并非零退出。
-- **错误识别**：GRASS 模块的失败以 `ERROR:` 开头并返回非零码（如 `Raster map <x> not found`），据此区分地图名、区域为空还是输出已存在问题，不要只读最后一行日志。
-- **安全与权限**：`g.remove`、`--overwrite`、`t.connect` 会改/删地图集数据；`--tmp-project`/`--tmp-mapset` 结束即删除目录，结果必须先导出；启动 Docker 或改文件属主（`--user=$(id -u):$(id -g)`）前先确认写入路径。

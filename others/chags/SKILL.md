@@ -14,20 +14,23 @@ tags:
 
 > **项目地址：** <https://github.com/znlgis/CHAGS>
 >
-> **许可证：** MIT ｜ **最新版本：** `v0.0.5`（GitHub tag / Release 一致，截至2026-10）
+> **包管理器：** pnpm 11.22.0（`packageManager` 字段锁版本）+ Node.js 24
+>
+> **版本：** `v0.1.2`（GitHub Release，2026-10-20；仓库根 `package.json` 的 version 为 0.1.0）
 
 ## 概述
 
-CHAGS（Chinese Historical Anecdotes Game Series，中国历史典故儿童游戏合集）是面向 6–12 岁儿童的开源 H5 游戏合集：「一个典故一个小游戏」，让孩子在「做」故事的过程中记住典故。17 个典故已全部跑通，界面 / 内容 / 语音支持中英双语一键切换。架构是「Phaser 4.2 管游戏 + Vue 3.5 管外壳」的双栈：外壳负责典故馆 / 图鉴 / 路由，每个典故是一个独立游戏包，懒加载、纯代码绘制。无后端、无账号、无广告，进度只存本机 IndexedDB；同一份站点产物还能打成 Windows 便携 exe（约 3.3 MB）与安卓 apk。
+CHAGS（Chinese Historical Anecdotes Game Series，中国历史典故儿童游戏合集）是面向 6–12 岁儿童的开源 H5 游戏合集：「一个典故一个小游戏」，让孩子在「做」故事的过程中记住典故。当前共 **53 条内容、分两组**：典故组 17 条（神话 / 传说 / 信史 / 寓言）+ 三十六计组 36 条，每条一个专属动词。界面 / 内容 / 语音支持中英双语一键切换。架构是「Phaser 4.2 管游戏 + Vue 3.5 管外壳」的双栈：外壳负责典故馆 / 图鉴 / 路由，每个典故是一个独立游戏包，懒加载、纯代码绘制。无后端、无账号、无广告，进度只存本机 IndexedDB；同一份站点产物还能打成 Windows 便携 exe（约 3.3 MB）与安卓 apk。
 
 ### 核心特性
 
 | 特性 | 说明 |
 |------|------|
-| 典故合集 | 17 部（神话 / 传说 / 信史 / 寓言），每部有一个只属于它的「动词」 |
+| 内容合集 | 53 条 = 典故 17 部（神话 / 传说 / 信史 / 寓言）+ 三十六计 36 计；每条一个只属于它的「动词」 |
+| 分组 | `packages/content/src/groups.ts` 的 `GROUPS`：`allusion`（按 `yearApprox` 排）与 `stratagem`（按计策序号排），新增分组只改这张表 |
 | 双栈隔离 | Phaser 绝不进外壳首屏包，只在进入游戏时按需加载 |
 | 契约层 | `packages/game-kit` 定义 GameModule / GameContext / 事件协议，游戏与外壳互不认识 |
-| 玩法模板库 | story / substitution / tap / place / aim / sort / trace / wait / mark / split / burrow / quiz / reward |
+| 玩法模板库 | 24 个模板 id（`packages/content/src/schema.ts` 的 `TEMPLATE_IDS`）：典故组 substitution / tap / place / aim / sort / trace / wait / beacon / mark / split / burrow / butcher；三十六计组 ruse / siege / borrow / stillness / window / show / twoline / read / matchup / probe / lure / chase / swap / chain（外加 story / reward 两个共用） |
 | 内容驱动 | 典故 = 一份 JSON（zod schema 构建期校验），换典故不改代码 |
 | 记忆工程 | `keyMoment` 关键抉择 + `misconceptions` + transfer 迁移题 + 1/3/7/21/60 天复习调度 |
 | 质量门禁 | `pnpm verify` 六连跑 + Playwright 真实鼠标操作通关 + 体积守卫 |
@@ -99,7 +102,7 @@ CHAGS/
 │  ├─ platform/      # Web 平台实现：IndexedDB / WebAudio / TTS / 生命周期
 │  ├─ progress/      # 存档 + 复习调度（纯 TS，可单测）
 │  └─ i18n/          # 界面文案表与取词器
-├─ games/<id>/src/   # 17 个游戏包：manifest / logic / art / index (+ 专属 scenes/)
+├─ games/<id>/src/   # 53 个游戏包：manifest / logic / art / index (+ 专属 scenes/)
 ├─ e2e/              # Playwright：冒烟 / 真实操作 / 双语 / 慢设备 / 截图
 ├─ scripts/          # 体积守卫 / apk 构建 / 图标生成
 └─ docs/             # 技术方案、典故方案、打包方案
@@ -237,7 +240,13 @@ schema 末尾五条 `refine` 把教学要求变成数据约束：answer 下标�
 | `mark` | 记号与参照系（会动的记号找不到东西） | 刻舟求剑 |
 | `split` | 说法与实质的对照 | 朝三暮四 |
 | `burrow` | 挖洞应对危险波次 | 狡兔三窟 |
-| `quiz` / `reward` | 复习问答（待接线）/ 典故卡（全部结尾） | 全部 |
+| `beacon` | 点火装置监视阈值 | 烽火戏诸侯 |
+| `butcher` | 按关节拆解（顺序敏感） | 庖丁解牛 |
+| `ruse` / `siege` / `borrow` / `stillness` / `window` | 三十六计第一~四辑的交互原语（以计策语义命名） | 三十六计组 |
+| `show` / `twoline` / `read` / `matchup` | 表演性对照、双线并置、文本解读、配对 | 三十六计组 |
+| `probe` / `lure` / `chase` | 试探、诱敌、追逐 | 三十六计组 |
+| `swap` / `chain` | 调换与连锁（可与其他模板拼成多段 `stages`） | 三十六计组 |
+| `story` / `reward` | 共用开场（分幕绘本 + 旁白）/ 结尾典故卡 | 全部 |
 
 数据登记规则「场景可专属、数据必登记」：beacon（烽火戏诸侯）、butcher（庖丁解牛）的场景在各自游戏包里，但关卡数据登记在 `templateSchemas` 注册表 —— `content:check` 的双语校验与 schema 体检才能覆盖它们。
 
@@ -269,12 +278,12 @@ export function gradeFromScore(correct: number, total: number): 0 | 1 | 2 | 3;  
 
 **步骤 1：写内容 JSON（内容先立住）**
 
-新建 `packages/content/src/allusions/kongrong.json`，再在 `allusions/index.ts` 注册两行：
+新建 `packages/content/src/entries/kongrong.json`，再在 `entries/index.ts` 注册两行：
 
 ```typescript
 import rawKongrong from './kongrong.json';
-// 在 allusions 数组里追加：
-AllusionSchema.parse(rawKongrong),
+// 在 entries 数组里追加：
+EntrySummarySchema.parse(rawKongrong),
 ```
 
 **步骤 2：写英文补丁**
@@ -325,7 +334,7 @@ export default defineGame({
 
 **步骤 5：外壳注册两处**
 
-`apps/site/src/registry.ts` 加一行 `kongrong: () => import('@chags/game-kongrong')`；`apps/site/package.json` 加依赖。`registry.test.ts` 会强制「内容目录、注册表、懒加载入口」三方一致。
+`apps/site/src/registry.ts` 加一行 `kongrong: () => import('@chags/game-kongrong')`；`apps/site/package.json` 加依赖。`registration.test.ts` 会强制「内容目录、注册表、懒加载入口」三方一致。
 
 **步骤 6：补端到端用例**
 
@@ -351,20 +360,10 @@ pnpm audit:i18n # 文案 / 版面有改动时，人工看一眼两种语言下�
 - **长按 / 等待类进度按墙钟计时，不累加帧间隔**：Phaser 在低帧率时钳制 delta，慢手机上「按住 6 秒」会累积不到 6 秒。
 - **快速 projectile 命中按「一帧扫过的线段」判定**，并取沿弹道最先碰到的目标（点判定会漏、按垂直距离会选错）。
 - **内容数值约束写进 schema refine**：tap 强制整除（否则永远点不满）、substitution 用背包校验「容差内可通关」（否则可凑不出）。
-- **新增典故要三处对账**：内容 JSON / `allusions/index.ts` / `registry.ts`（+ apps/site 依赖），`registry.test.ts` 会兜底；`manifest.id` 与内容 `id` 不一致时挂载即抛错。
+- **新增内容要三处对账**：内容 JSON / `entries/index.ts` / `registry.ts`（+ apps/site 依赖），`registration.test.ts` 会兜底；`manifest.id` 与内容 `id` 不一致时挂载即抛错。
 - **屏幕文字按英文长度设限**（`story.text ≤ 90 字符`），长内容放进 `narration` 交给 TTS；英文长句是排版问题的高发区。
 - **零失败与宽松星级**：放错弹回不惩罚；星星门槛宽（错 ≤ 1 次三星），对小朋友永远正向。
 - **游戏内禁止直接 `localStorage` / `fetch`**：一律走 `GameContext.services`，这是将来上小游戏 / 云存档的唯一低成本出口。
-
----
-
-## AI 使用建议
-
-1. **先读契约再动手**：修改任何代码前先看 `packages/game-kit/src/contract.ts`（GameModule / GameContext / 事件协议）与 `packages/content` 的 zod schema；游戏包与外壳只通过契约耦合，不要互相直接引用。
-2. **新增典故按「内容先立住」的顺序**：先写典故 JSON + 英文补丁并跑 `pnpm content:check`，再复用现有模板写游戏包（`defineGame` 三段式），最后在外壳 `apps/site/src/registry.ts` 注册。
-3. **三处对账别遗漏**：内容 JSON / `allusions/index.ts` / `registry.ts`（+ apps/site 依赖）必须一致，`registry.test.ts` 会兜底校验；`manifest.id` 与内容 `id` 不一致时挂载即抛错。
-4. **遵守平台边界与测试约束**：逻辑层禁用 `Math.random` / `Date.now`（时钟走 `services.now()`），游戏内不直接碰 `localStorage` / `fetch`；Phaser 实例用 `shallowRef` / `markRaw` 持有、离场 `await unmount()`。
-5. **以门禁为准**：改动完成前跑 `pnpm verify`（typecheck → lint → test → content:check → build → size）与 `pnpm e2e`；双语 / 版面有改动再跑 `pnpm audit:i18n` 人工巡检。
 
 ---
 
@@ -385,11 +384,22 @@ pnpm audit:i18n # 文案 / 版面有改动时，人工看一眼两种语言下�
 
 ---
 
+## AI 使用建议
+
+1. **先读契约再动手**：修改任何代码前先看 `packages/game-kit/src/contract.ts`（GameModule / GameContext / 事件协议）与 `packages/content` 的 zod schema；游戏包与外壳只通过契约耦合，不要互相直接引用。
+2. **新增典故按「内容先立住」的顺序**：先写典故 JSON + 英文补丁并跑 `pnpm content:check`，再复用现有模板写游戏包（`defineGame` 三段式），最后在外壳 `apps/site/src/registry.ts` 注册。
+3. **三处对账别遗漏**：内容 JSON / `entries/index.ts` / `registry.ts`（+ apps/site 依赖）必须一致，`registration.test.ts` 会兜底校验；`manifest.id` 与内容 `id` 不一致时挂载即抛错。
+4. **遵守平台边界与测试约束**：逻辑层禁用 `Math.random` / `Date.now`（时钟走 `services.now()`），游戏内不直接碰 `localStorage` / `fetch`；Phaser 实例用 `shallowRef` / `markRaw` 持有、离场 `await unmount()`。
+5. **以门禁为准**：改动完成前跑 `pnpm verify`（typecheck → lint → test → content:check → build → size）与 `pnpm e2e`；双语 / 版面有改动再跑 `pnpm audit:i18n` 人工巡检。
+
+---
+
 ## 相关技能
 
 - **vue3-map-dashboard** — Vue 3 + Vite + TypeScript 前端工程（同批技能，技术栈与本项目外壳一致）：[../../demos/vue3-map-dashboard/SKILL.md](../../demos/vue3-map-dashboard/SKILL.md)
 - **photo-sphere-viewer** — 浏览器端 Three.js 全景查看器（同为 TypeScript / Vite 构建的 WebGL 应用）：[../../3d/photo-sphere-viewer/SKILL.md](../../3d/photo-sphere-viewer/SKILL.md)
-- **全仓技能总索引** — 按分类浏览 80 个技能：[../../SKILL.md](../../SKILL.md)
+- **bamboobuddy** — 同一作者的姐妹项目（同样的 Phaser 4 + Vue 3 双栈与 `pnpm verify` 门禁）：[../bamboobuddy/SKILL.md](../bamboobuddy/SKILL.md)
+- **docker-compose** — 静态站点/后端依赖的容器化部署（可选）：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: docutranslate
-description: "Use when translating documents locally via LLM — PDF, Word, Excel, Markdown, SRT subtitles with format preservation. DocuTranslate: LLM-powered multi-format local file translation tool with MCP server support."
+description: "Use when translating PDF/Word/Excel/Markdown/EPUB/SRT documents locally with an LLM while keeping layout — docutranslate -i on port 8010, docutranslate.sdk Client(translate/save), docutranslate --mcp for stdio/SSE MCP, MinerU token for PDF parsing; also for missing DOCUTRANSLATE_API_KEY, PDF layout loss after md conversion, MinerU token errors, and [mcp] extra not installed. DocuTranslate, PyPI 1.7.9."
 tags:
   - ai
   - llm
@@ -19,10 +19,9 @@ tags:
 >
 > **官方文档：** GitHub README（中/英/日/越）｜API文档：启动后 http://127.0.0.1:8010/docs（Swagger UI）
 >
-> **最新发布：** 参见 [GitHub Releases](https://github.com/xunbu/docutranslate/releases)
+> **许可证：** MPL-2.0（Mozilla Public License 2.0）
 >
-> **许可证：** Mozilla Public License 2.0 (MPL-2.0)
-> **最新版本：** GitHub Release v1.7.10 / PyPI 1.7.9（GitHub 已发布 v1.7.10，PyPI 仍为 1.7.9；见 [GitHub Releases](https://github.com/xunbu/docutranslate/releases) 与 [PyPI](https://pypi.org/project/docutranslate/)）
+> **版本：** GitHub Release v1.7.10 ／ PyPI 1.7.9（截至 2026-10，实测两边不同步：PyPI 最新上传 1.7.9 为 2026-09-11）
 
 ## 概述
 
@@ -222,6 +221,23 @@ SSE 模式下客户端配置端点：`http://127.0.0.1:8000/mcp/sse`。
 
 ---
 
+## 常见问题（FAQ）
+
+| 问题 | 说明 |
+|------|------|
+| PDF 翻译后版式丢失？ | PDF 会先转 markdown，属预期行为；对版式敏感请用其它格式或本地 MinerU。 |
+| 不想暴露到局域网？ | 默认仅本机访问；需要局域网访问才加 `--host 0.0.0.0`。 |
+| 支持 `doc`/`xls` 吗？ | 暂不支持旧版二进制格式，仅 `docx`/`xlsx`。 |
+| 如何只解析不翻译？ | SDK 传 `skip_translate=True`。 |
+| 触发平台限流？ | 降低 `concurrent`，设置 `rpm`/`tpm` 限速。 |
+| 报 `DOCUTRANSLATE_API_KEY` 未设置 | 用环境变量或 SDK 构造参数显式传 `api_key`/`base_url`/`model_id` 三项，缺一不可 |
+| `docutranslate --mcp` 报找不到 mcp 模块 | 装 MCP 扩展：`pip install "docutranslate[mcp]"`（uv：`uv add "docutranslate[mcp]"`） |
+| PDF 报 MinerU token 无效/超时 | 在线引擎需 `mineru_token`（<https://mineru.net/apiManage/token>）；内网改用 `convert_engine="mineru_deploy"` 指向本地 MinerU |
+| 8010 端口被占用 | `docutranslate -i -p 8081` 换端口，或用 `docker run -p 8081:8010` 做端口映射 |
+| 导出 docx 失败 | md→docx 依赖 pandoc；`md2docx_engine` 显式设 `pandoc` 并先装 pandoc，或退回 `python` 引擎 |
+
+---
+
 ## AI 使用建议
 
 - 生成 SDK 调用代码时，务必带上 `base_url`/`model_id`/`to_lang`；PDF 场景默认 `convert_engine="mineru"` 需要 `mineru_token`。
@@ -232,22 +248,11 @@ SSE 模式下客户端配置端点：`http://127.0.0.1:8000/mcp/sse`。
 
 ---
 
-## 常见问题（FAQ）
-
-| 问题 | 说明 |
-|------|------|
-| PDF 翻译后版式丢失？ | PDF 会先转 markdown，属预期行为；对版式敏感请用其它格式或本地 MinerU。 |
-| 不想暴露到局域网？ | 默认仅本机访问；需要局域网访问才加 `--host 0.0.0.0`。 |
-| 支持 `doc`/`xls` 吗？ | 暂不支持旧版二进制格式，仅 `docx`/`xlsx`。 |
-| 如何只解析不翻译？ | SDK 传 `skip_translate=True`。 |
-| 触发平台限流？ | 降低 `concurrent`，设置 `rpm`/`tpm` 限速。 |
-
----
-
 ## 相关技能
 
 - **dify** — LLM 应用平台（RAG 知识库 / 工作流 / 工具调用）：[../dify/SKILL.md](../dify/SKILL.md)
 - **opencode** — 终端 AI 编码 Agent，可作为 DocuTranslate MCP 的宿主：[../opencode/SKILL.md](../opencode/SKILL.md)
+- **ollama** — 本地推理服务，可给 DocuTranslate 提供离线 OpenAI 兼容模型：[../ollama/SKILL.md](../ollama/SKILL.md)
 
 ---
 

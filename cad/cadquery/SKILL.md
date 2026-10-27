@@ -1,6 +1,6 @@
 ---
 name: cadquery
-description: "Use when scripting parametric 3D CAD models in Python — programmatic part generation, parametric design optimization, STEP export. CadQuery: Python-based parametric CAD built on OCCT kernel with a fluent API."
+description: "Use when scripting parametric 3D CAD parts in Python with CadQuery — Workplane fluent API, Selector expressions like \">Z\" and \"|Z\", extrude/loft/sweep, fillet and shell, Sketch API, Assembly constraints, STEP/STL/glTF export. Covers conda-forge vs pip install of cadquery 2.8.0 with cadquery-ocp; also for selectors matching nothing, fillet failing on edge sets, and OCCT failures from degenerate geometry."
 tags:
   - python
   - 3d
@@ -18,11 +18,13 @@ tags:
 >
 > **GUI：** CQ-editor（<https://github.com/CadQuery/CQ-editor>）
 >
+> **包管理器：** `cadquery`（最新 2.8.0，截至 2026-10；PyPI 与 conda-forge 同步，要求 Python ≥ 3.11，几何依赖 `cadquery-ocp` 7.9.x）
+>
 > **许可证：** Apache-2.0
 
 ## 概述
 
-CadQuery 与 OpenSCAD 的对比：
+CadQuery 是用 Python 描述参数化零件的脚本化 CAD 库，几何内核为 OCCT（通过 `cadquery-ocp` 绑定），模型是带面/边/顶点可选择寻址的 BREP 实体，而不是 CSG 网格。API 以 `Workplane` 的链式调用为主，配合 Selector 表达式定位几何、`Assembly` 组织装配，最终导出 STEP/STL 等交换格式。与 OpenSCAD 的定位差异：
 
 | 维度 | OpenSCAD | CadQuery |
 |------|----------|----------|
@@ -38,19 +40,30 @@ CadQuery 与 OpenSCAD 的对比：
 ## 安装
 
 ```bash
-# Conda（推荐，自动带 OCCT）
+# Conda / mamba（推荐，自动带 cadquery-ocp 与 OCCT）
 conda install -c conda-forge cadquery
-# pip
+
+# pip（需自备可用的 cadquery-ocp wheel，Python ≥ 3.11）
 pip install cadquery
-# 安装 GUI
+
+# 可选 GUI
 pip install cq-editor
 ```
 
-> 当前稳定版 **2.8.0**（GitHub Release 2026-06-20，PyPI 2026-06-21，参见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)）。PyPI 包要求 **Python ≥ 3.11**，几何依赖 `cadquery-ocp`（2.8.0 锁 `>=7.9.3.1,<8.0`，即 OCCT 7.9.x）；conda-forge 通道同步发布。
+验证安装（能打印版本且能建体即为就绪）：
+
+```bash
+python -c "import cadquery as cq; print(cq.__version__)"
+python -c "import cadquery as cq; print(cq.Workplane(\"XY\").box(1,1,1).val().Volume())"
+```
+
+> 当前稳定版 **2.8.0**（PyPI 上传 2026-06-21；tag `v2.8.0` 见 [CadQuery GitHub Releases](https://github.com/CadQuery/cadquery/releases)）。PyPI 包要求 **Python ≥ 3.11**，几何依赖 `cadquery-ocp`（2.8.0 锁 `>=7.9.3.1,<8.0`，即 OCCT 7.9.x）；conda-forge 通道同步发布。
 
 ---
 
-## Hello CadQuery
+## 核心 API
+
+### Hello CadQuery
 
 ```python
 import cadquery as cq
@@ -69,7 +82,7 @@ cq.exporters.export(result, "out.stl")
 
 ---
 
-## 工作平面（Workplane）
+### 工作平面（Workplane）
 
 ```python
 wp = cq.Workplane("XY")               # XY/YZ/XZ 或自定义
@@ -80,7 +93,7 @@ wp = (cq.Workplane("front")           # 命名平面
 
 ---
 
-## 二维草图与拉伸
+### 二维草图与拉伸
 
 ```python
 result = (cq.Workplane("XY")
@@ -100,7 +113,7 @@ plate = (cq.Workplane("XY").rect(100, 60).extrude(2)
 
 ---
 
-## Selector（核心特性）
+### Selector（核心特性）
 
 ```python
 result = result.faces(">Z")        # 最大 Z 的面
@@ -120,7 +133,7 @@ result = result.faces(">Z")        # 最大 Z 的面
 
 ---
 
-## 修饰特征
+### 修饰特征
 
 ```python
 res = (cq.Workplane("XY").box(50, 30, 10)
@@ -139,7 +152,7 @@ swept = cq.Workplane("XY").circle(2).sweep(path)
 
 ---
 
-## 布尔运算
+### 布尔运算
 
 ```python
 a = cq.Workplane("XY").box(20, 20, 10)
@@ -152,7 +165,7 @@ c = a.intersect(b)
 
 ---
 
-## Sketch（新草图 API）
+### Sketch（新草图 API）
 
 ```python
 sk = (cq.Sketch()
@@ -166,7 +179,7 @@ result = cq.Workplane().placeSketch(sk).extrude(10)
 
 ---
 
-## 装配（Assembly）
+### 装配（Assembly）
 
 ```python
 asm = (cq.Assembly()
@@ -181,7 +194,7 @@ asm.save('out.glb', 'GLTF')
 
 ---
 
-## 参数化设计与脚本
+### 参数化设计与脚本
 
 ```python
 def make_box(L, W, H, hole_d=8):
@@ -194,7 +207,7 @@ for L in (40, 60, 80):
 
 ---
 
-## CQ-editor / Jupyter
+### CQ-editor / Jupyter
 
 ```python
 # 在 cq-editor 中：
@@ -207,7 +220,7 @@ show(result)
 
 ---
 
-## 导出
+### 导出
 
 ```python
 cq.exporters.export(result, "out.step")   # STEP
@@ -220,6 +233,8 @@ cq.exporters.export(result, "out.svg")
 ---
 
 ## 典型工作流
+
+**输入**：一组尺寸参数（或参数矩阵 + 模板脚本）；**输出**：STEP/STL 等几何文件。
 
 ### 工作流一：从草图到 STEP 的完整零件建模
 
@@ -255,11 +270,12 @@ cq.exporters.export(result, "out.svg")
 
 | 问题 | 解决 |
 |------|------|
-| OCCT 异常 | 检查输入几何是否合法；调用 `.clean()` |
-| Selector 选不到 | 使用 `result.faces().vals()` 调试 |
-| 圆角失败 | 减小半径或拆分到边集合后逐一加 |
-| Conda 安装慢 | 使用 mamba |
-| `cq.Assembly` 求解失败 | 减少冲突约束、给定初始 `Location` |
+| `ImportError: cannot import name 'OCP'` / `cadquery-ocp` 装不上 | pip 下没有对应平台的 `cadquery-ocp` wheel：改用 `conda install -c conda-forge cadquery`（conda-forge 同步发布），并确认 Python ≥ 3.11 |
+| Selector 选不到（`.faces(">Z")` 结果为空） | 先用 `result.faces().vals()` 或 `result.edges().vals()` 列出全部候选，核对方向/类型过滤条件后再加修饰；复合表达式在 `Val()` 上逐段验证 |
+| 圆角/倒角抛 `OCCT` 异常 | 半径超过相邻边长、或边集合不连续都会失败；减小半径或拆成单条边逐一 `fillet`/`chamfer` |
+| 布尔运算后几何异常/体积为 0 | 运算前确认两个实体都是闭合 Solid（`shape.isValid()`），退化几何先 `.clean()` |
+| `cq.Assembly` 求解失败或不收敛 | 约束过多/冲突：减少约束、给定初始 `Location`，用 `asm.solve()` 的返回状态判断是否收敛 |
+| 导出 STEP 体积巨大或丢失颜色 | STEP 以 BREP 精确保存，体积随面数增长；颜色需在 `Assembly.add(..., color=...)` 上给，`exporters.export` 对单实体不写颜色 |
 
 ---
 

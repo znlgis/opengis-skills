@@ -1,6 +1,6 @@
 ---
 name: go
-description: "Use when writing Go/Golang code — goroutines/channels concurrency, net/http web servers, database/sql, generics (1.18+), module management, testing and benchmarking. Go: the language powering Docker, Kubernetes, and cloud-native infrastructure."
+description: "Use when writing or debugging Go (go1.27.3) — goroutines/channels and context cancellation, net/http and ServeMux patterns, database/sql with MySQL/Postgres drivers, generics, go mod tidy / go work, table-driven tests and -race. Also for \"all goroutines are asleep - deadlock!\", data races on map writes, \"missing go.sum entry\", and slice aliasing surprises."
 tags:
   - go
   - golang
@@ -23,7 +23,11 @@ tags:
 >
 > **Effective Go：** <https://go.dev/doc/effective_go>
 >
-> **许可证：** BSD-3-Clause ｜ **最新稳定版：** go1.27.2（2026-10，见 [go.dev/dl](https://go.dev/dl/)；1.27.0 于 2026-08-19 发布）
+> **许可证：** BSD-3-Clause
+>
+> **包管理器：** 官方二进制 tar.gz / `brew install go` / `winget install Golang.go`（最新 go1.27.3，截至 2026-10）
+>
+> **版本：** go1.27.3（见 [go.dev/dl](https://go.dev/dl/)）
 
 ## 概述
 
@@ -54,9 +58,9 @@ Go 是由 Robert Griesemer、Rob Pike 和 Ken Thompson 于 2007 年在 Google �
 | 1.22 | 2024 | 循环变量每次迭代新作用域、增强 ServeMux 路由 |
 | 1.23 | 2024 | range over func（迭代器函数）、unique 包 |
 | 1.24 | 2025 | 泛型类型别名、Swiss Table map 优化、weak 指针 |
-| 1.25 | 2025 | 容器感知 GOMAXPROCS、`testing/synctest`、trace flight recorder、实验性新 GC 与 `encoding/json/v2` |
-| 1.26 | 2026 | 新 GC 默认启用、cgo 调用加速、实验性 goroutine 泄漏剖析、`crypto/hpke` |
-| 1.27 | 2026 | 分配器提速、`encoding/json/v2` 转正、`crypto/mldsa`（后量子）、新 `uuid` 包 |
+| 1.25 | 2025 | 容器感知 GOMAXPROCS、`testing/synctest`、trace flight recorder、实验性新 GC 与实验性 `encoding/json/v2` |
+| 1.26 | 2026 | 新垃圾回收器、cgo 调用加速、堆基址随机化、实验性 goroutine 泄漏剖析、`crypto/hpke`、实验性 `simd/archsimd` 与 `runtime/secret` |
+| 1.27 | 2026 | 内存分配提速、`encoding/json/v2` 与 `encoding/json/jsontext` 正式加入标准库、`crypto/mldsa`（后量子）、`uuid` 包、实验性 `simd` |
 
 ---
 
@@ -69,8 +73,8 @@ Go 是由 Robert Griesemer、Rob Pike 和 Ken Thompson 于 2007 年在 Google �
 brew install go
 
 # Linux（官方二进制）
-wget https://go.dev/dl/go1.27.2.linux-amd64.tar.gz
-sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.27.2.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.27.3.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.27.3.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 
 # Windows
@@ -109,13 +113,13 @@ go env -w GOSUMDB=sum.golang.google.cn
 | 并发 | `go f()` / `chan T` / `select` | goroutine + channel（CSP）；`sync.WaitGroup`、`sync.Mutex`、`sync.Once`、`sync.Map` |
 | 取消与超时 | `context.Context` | `context.WithCancel/WithTimeout/WithValue`，I/O 函数第一个参数传 ctx |
 | HTTP 服务 | `net/http` | `http.HandleFunc` / `http.ServeMux`（1.22+ 支持方法与路径模式）/ `http.Client` |
-| JSON | `encoding/json` | `json.Marshal/Unmarshal`、struct tag；1.25+ 有实验性 `encoding/json/v2`，1.27 转正 |
+| JSON | `encoding/json` | `json.Marshal/Unmarshal`、struct tag；`encoding/json/v2` 与 `encoding/json/jsontext` 自 1.27 进入标准库（1.25 需 `GOEXPERIMENT=jsonv2`） |
 | 数据库 | `database/sql` | `sql.Open` + 驱动（如 `go-sql-driver/mysql`）、`QueryContext/ExecContext` |
 | 错误处理 | `errors` + `fmt` | `fmt.Errorf("...: %w", err)` 包装、`errors.Is/As/Join` |
 | 泛型 | 类型参数（方括号） | `func Map[T, U any]` 这样声明，形参照常用圆括号；调用时 `Map[int, string]` 可省略部分推断 |
 | 集合工具 | `slices` / `maps` / `cmp` | `slices.Sort`、`maps.Clone`、`cmp.Compare`（1.21+） |
 | 日志 | `log/slog` | 结构化日志（1.21+），`slog.Info("msg", "k", v)` |
-| 测试 | `testing` | table-driven 测试、`t.Run` 子测试、`go test -race/-bench`；1.25+ `testing/synctest` 测并发 |
+| 测试 | `testing` | table-driven 测试、`t.Run` 子测试、`go test -race/-bench`；`testing/synctest`（1.25 新增，测并发时序） |
 | 性能剖析 | `runtime/pprof` / `net/http/pprof` | CPU/内存/阻塞剖析 |
 | 模块 | `go mod` | `go mod init/tidy`、`go get`、`go work`（1.18+ workspace） |
 
@@ -190,20 +194,6 @@ go run ./cmd/api
 
 ---
 
-## AI 使用建议
-
-1. **优先用标准库**：Go 标准库覆盖面广（net/http、database/sql、encoding/json）。评估第三方依赖前先检查标准库。
-2. **错误必须处理**：Go 没有 try/catch。每个 error 返回值都必须检查，避免 `_` 忽略。
-3. **用 context 传播取消**：所有 I/O 操作应接受 `context.Context` 参数，支持超时和取消。
-4. **goroutine 防泄漏**：确保每个 goroutine 都有退出路径（channel 关闭 / context 取消 / done 信号）。
-5. **先写测试**：table-driven 测试是 Go 社区标准实践。
-6. **gofmt 是强制的**：永远不要手动调格式，交给 `gofmt`/`goimports`。
-7. **用 golangci-lint**：集成 staticcheck、go vet、unused 等多类静态检查。
-8. **接口定义在消费方**：Go 风格是消费者定义接口（interface），而非提供者。
-9. **结构体对齐**：字段按大小降序排列可减少 struct 内存占用（对齐填充）。
-
----
-
 ## 常见问题
 
 | 陷阱 | 说明 | 解决方案 |
@@ -218,10 +208,26 @@ go run ./cmd/api
 
 ---
 
+## AI 使用建议
+
+1. **优先用标准库**：Go 标准库覆盖面广（net/http、database/sql、encoding/json）。评估第三方依赖前先检查标准库。
+2. **错误必须处理**：Go 没有 try/catch。每个 error 返回值都必须检查，避免 `_` 忽略。
+3. **用 context 传播取消**：所有 I/O 操作应接受 `context.Context` 参数，支持超时和取消。
+4. **goroutine 防泄漏**：确保每个 goroutine 都有退出路径（channel 关闭 / context 取消 / done 信号）。
+5. **先写测试**：table-driven 测试是 Go 社区标准实践。
+6. **gofmt 是强制的**：永远不要手动调格式，交给 `gofmt`/`goimports`。
+7. **用 golangci-lint**：集成 staticcheck、go vet、unused 等多类静态检查。
+8. **接口定义在消费方**：Go 风格是消费者定义接口（interface），而非提供者。
+9. **结构体对齐**：字段按大小降序排列可减少 struct 内存占用（对齐填充）。
+
+---
+
 ## 相关技能
 
 - **robotgo** — 用 Go 做桌面自动化（键鼠/屏幕/窗口控制）：[../robotgo/SKILL.md](../robotgo/SKILL.md)
-- **robotgo-flow** — 基于 RobotGo 的 YAML 工作流自动化：[../robotgo-flow/SKILL.md](../robotgo-flow/SKILL.md)
+- **robotgo-flow** — 基于 RobotGo 的 YAML 工作流自动化（Go CLI + 原生壳）：[../robotgo-flow/SKILL.md](../robotgo-flow/SKILL.md)
+- **docker-compose** — Docker Compose 本身即 Go 实现，可作为读 Go 大型 CLI 工程的样例：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
+- **acme.sh** — 纯 Shell 的 ACME 客户端；Go 服务常与它配合做证书自动续期：[../acme.sh/SKILL.md](../acme.sh/SKILL.md)
 
 ---
 

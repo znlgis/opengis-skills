@@ -1,6 +1,6 @@
 ---
 name: clipper1
-description: "Use when maintaining legacy code that depends on Clipper 1.x API for polygon clipping and offsetting. Clipper1: the original widely-deployed polygon boolean library. Prefer Clipper2 for new projects."
+description: "Use when maintaining legacy code on the Clipper 1.x API — IntPoint integer paths with a scale factor, Clipper.AddPath/Execute for ctUnion/ctIntersection/ctDifference/ctXor, ClipperOffset for jtRound/jtMiter buffering, PolyTree hole hierarchy, and the pyclipper (1.4.0) / js-clipper bindings. Clipper1 V6 (6.4.2) is frozen; new projects should use Clipper2. Also for lost hole structure in flat List<List<IntPoint>> results, self-intersections after offsetting, and scale overflow."
 tags:
   - 2d
   - geometry
@@ -14,9 +14,11 @@ tags:
 
 > **项目地址（V6 官方主页）：** <https://sourceforge.net/p/polyclipping/>
 >
-> **说明：** 原 GitHub 仓库 `github.com/AngusJohnson/Clipper` 现重定向到 Clipper2，V6 末版为 **6.4.2**，已不再新增功能
+> **官方文档：** <https://sourceforge.net/p/polyclipping/wiki/Home/>
 >
-> **NuGet：** `Clipper`（多个第三方移植版）
+> **版本：** V6 末版 **6.4.2**（pyclipper 1.4.0 内嵌的即为该版）。原 GitHub 仓库 `github.com/AngusJohnson/Clipper` 已重定向到 Clipper2，V6 不再新增功能
+>
+> **包管理器：** NuGet `Clipper` 6.4.0（Angus Johnson 发布）｜ PyPI `pyclipper` 1.4.0（封装 Clipper 6.4.2）｜ npm `js-clipper` 1.0.1（截至 2026-10）
 >
 > **许可证：** Boost Software License 1.0
 
@@ -36,21 +38,29 @@ Clipper1 主要特征：
 ## 安装
 
 ```bash
-# C#
+# C#（NuGet 包作者为 Angus Johnson，最新 6.4.0，略旧于 C++ V6 末版 6.4.2）
 dotnet add package Clipper
 
 # JavaScript
-npm install js-clipper          # 或 clipper-lib
+npm install js-clipper          # 1.0.1，或 clipper-lib
 
 # Python
-pip install pyclipper
+pip install pyclipper           # 1.4.0，内嵌 Clipper 6.4.2
+```
+
+验证：
+
+```bash
+python -c "import pyclipper; print(pyclipper.__version__)"
 ```
 
 C++ 通常直接拷贝 `clipper.hpp/.cpp` 到工程。
 
 ---
 
-## 核心数据结构
+## 核心 API
+
+### 核心数据结构
 
 ```csharp
 using ClipperLib;
@@ -69,7 +79,7 @@ List<List<IntPoint>> paths = new() { path };
 
 ---
 
-## 布尔运算
+### 布尔运算
 
 ```csharp
 var clipper = new Clipper();
@@ -86,7 +96,7 @@ clipper.Execute(ClipType.ctUnion, solution,
 
 ---
 
-## 多边形偏移（ClipperOffset）
+### 多边形偏移（ClipperOffset）
 
 ```csharp
 var co = new ClipperOffset();
@@ -101,7 +111,7 @@ co.Execute(ref solution, 10 * Scale);     // 正：外扩；负：内缩
 
 ---
 
-## PolyTree（保留环层级）
+### PolyTree（保留环层级）
 
 ```csharp
 var tree = new PolyTree();
@@ -115,7 +125,7 @@ foreach (var node in tree.Childs)        // 顶层是外环
 
 ---
 
-## 实用方法
+### 实用方法
 
 ```csharp
 double area    = Clipper.Area(path);
@@ -127,7 +137,7 @@ var    reverse = Clipper.ReversePath(path);
 
 ---
 
-## Python（pyclipper）
+### Python（pyclipper）
 
 ```python
 import pyclipper
@@ -155,7 +165,7 @@ sol = pco.Execute(10 * scale)
 
 ---
 
-## C++ 用法
+### C++ 用法
 
 ```cpp
 #include "clipper.hpp"

@@ -1,6 +1,6 @@
 ---
 name: tongwen
-description: "Use when translating engineering CAD drawings between languages — DWG text extraction, glossary-driven translation workspace, QA gating, lossless write-back. Tongwen: local-first CAD/BIM translation suite with an AutoCAD 2019/2021/2025/2026 plugin, a TW_-command set, and a headless BatchCli for pipeline use."
+description: "Use when translating engineering DWG drawings with Tongwen — TW_EXTRACT_ALL / TW_TRANSLATE / TW_WRITEBACK_FILE in AutoCAD 2019/2021/2025/2026, glossary CSV with CM/TM precedence, placeholder QA blocking write-back, or headless Tongwen.Runner.BatchCli -i -o -c -m runs; also when extraction fails with a Named Pipe connection error, a configured glossary is never applied, or write-back makes the original text disappear. Local-first CAD/BIM translation suite."
 tags:
   - autocad
   - cad
@@ -24,7 +24,9 @@ tags:
 >
 > **许可证：** 专有商业软件
 >
-> **CAD 平台：** AutoCAD 2019—2026
+> **CAD 平台：** AutoCAD 2019 / 2021 / 2025 / 2026（四档独立插件包，AutoCAD LT 不支持）
+>
+> **版本：** 商业闭源，不发布公开版本号；安装包为 `Tongwen_Setup_vX.X.X.msi`，以官网 <https://shandianweihu.com/> 下载页显示为准（截至 2026-10）
 
 ## 概述
 
@@ -257,15 +259,6 @@ QA 由三种验证器组成，发现按**四级风险**分级（阻断 / 高风�
 
 ---
 
-## AI 使用建议
-
-- **推荐工作流模式**：按"连接 → 提取 → 翻译 → QA → 回写"五段推进。CAD 内用 `TW_CONNECT`/`TW_EXTRACT_ALL`/`TW_TRANSLATE`/`TW_RECEIVE`/`TW_WRITEBACK_FILE`；成批则改用 `Tongwen.Runner.BatchCli`（`-i/-o/-c/-m/--fail-on-error`）+ 项目 JSON 配置，交付前用 `Tongwen.Runner.Review` 出 HTML 审校页。术语表让 LLM 按 CSV 列（`source_text`/`target_text`/语言对/领域/优先级）批量生成后导入。
-- **关键注意事项**：① 译文优先级是 CM > TM > Glossary > LLM，想让术语生效要确认术语表已关联当前项目且未被更高优先级条目覆盖；② 阻断级占位符问题会**阻止回写**，不要试图绕过，先修占位符；③ `writeBack.strategy` 里 `override`（UI 称"原位替换"）会直接改原始 DWG，**回写前必须备份**，要保留原文用 `newLayer` 或合并图层；④ 平台只支持 64 位 Windows 与 AutoCAD 2019/2021/2025/2026，AutoCAD LT 无 .NET API、跑不了；⑤ 数据本地存储，但翻译引擎调用是外网的，离线场景需自备引擎或先用 Mock 引擎跑通流程。
-- **常用代码模式**：批量翻译 = `Tongwen.Runner.BatchCli -i <dwg目录> -o <输出> -c <config.json> -m 3 --fail-on-error false`；配置 = `translation.engine` 选 `deepseek-v4-fast`/`deepseek-v4-pro`，`glossary.paths` 顺序加载，`qa.minSeverityToReport` 控报告门槛；服务化 = `Tongwen.Server --port 5000` 走 HTTP 注册任务与查状态。
-- **不要臆造**：插件命令一律 `TW_` 前缀（不存在 `TONGWEN_QC`、`TONGWEN_SETTINGS` 之类）；命令行工具是 `Tongwen.Runner.BatchCli`，没有 `TongWen.CLI.exe`；术语表载体只有 CSV。
-
----
-
 ## 常见问题
 
 | 问题 | 解决方案 |
@@ -280,6 +273,14 @@ QA 由三种验证器组成，发现按**四级风险**分级（阻断 / 高风�
 | 批量处理某张失败拖垮整批 | 加 `--fail-on-error false`；大目录用 `-m` 提并发，但要留意机器与引擎配额 |
 | 杀毒软件拦截 DLL | 把安装目录加入白名单后再"修复"安装 |
 
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：按"连接 → 提取 → 翻译 → QA → 回写"五段推进。CAD 内用 `TW_CONNECT`/`TW_EXTRACT_ALL`/`TW_TRANSLATE`/`TW_RECEIVE`/`TW_WRITEBACK_FILE`；成批则改用 `Tongwen.Runner.BatchCli`（`-i/-o/-c/-m/--fail-on-error`）+ 项目 JSON 配置，交付前用 `Tongwen.Runner.Review` 出 HTML 审校页。术语表让 LLM 按 CSV 列（`source_text`/`target_text`/语言对/领域/优先级）批量生成后导入。
+- **关键注意事项**：① 译文优先级是 CM > TM > Glossary > LLM，想让术语生效要确认术语表已关联当前项目且未被更高优先级条目覆盖；② 阻断级占位符问题会**阻止回写**，不要试图绕过，先修占位符；③ `writeBack.strategy` 里 `override`（UI 称"原位替换"）会直接改原始 DWG，**回写前必须备份**，要保留原文用 `newLayer` 或合并图层；④ 平台只支持 64 位 Windows 与 AutoCAD 2019/2021/2025/2026，AutoCAD LT 无 .NET API、跑不了；⑤ 数据本地存储，但翻译引擎调用是外网的，离线场景需自备引擎或先用 Mock 引擎跑通流程。
+- **常用代码模式**：批量翻译 = `Tongwen.Runner.BatchCli -i <dwg目录> -o <输出> -c <config.json> -m 3 --fail-on-error false`；配置 = `translation.engine` 选 `deepseek-v4-fast`/`deepseek-v4-pro`，`glossary.paths` 顺序加载，`qa.minSeverityToReport` 控报告门槛；服务化 = `Tongwen.Server --port 5000` 走 HTTP 注册任务与查状态。
+- **不要臆造**：插件命令一律 `TW_` 前缀（不存在 `TONGWEN_QC`、`TONGWEN_SETTINGS` 之类）；命令行工具是 `Tongwen.Runner.BatchCli`，没有 `TongWen.CLI.exe`；术语表载体只有 CSV。
 
 ---
 

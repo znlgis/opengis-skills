@@ -1,6 +1,6 @@
 ---
 name: ke3036-keyes-pico
-description: "Use when programming the Keyes Raspberry Pi Pico (RP2040) learning kit with MicroPython — GPIO LED/button control, I2C/SPI/UART sensor integration, servo/motor/relay driving, Wi-Fi MQTT, 0.96 inch OLED display, ultrasonic ranging. KE3036 Keyes Pico: 45-sensor STEM learning kit for RP2040."
+description: "Use when programming the Keyes Raspberry Pi Pico (RP2040) learning kit with MicroPython — GPIO LED/button control, I2C/SPI/UART sensor integration, servo/motor/relay driving, Wi-Fi MQTT, 0.96 inch OLED display, ultrasonic ranging. KE3036 Keyes Pico: 42-in-1 sensor STEM learning kit for RP2040."
 tags:
   - micropython
   - rp2040
@@ -302,6 +302,18 @@ while True:
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 烧录后无 LED | 检查 GP25（Pico）/ "LED"（Pico W）使用正确 |
+| ADC 抖动 | 多次平均；接旁路电容 |
+| I²C 找不到设备 | `i2c.scan()` 查看；上拉电阻 4.7kΩ |
+| Wi-Fi 不连 | 仅支持 2.4 GHz；密码与国别码（`network.country('CN')`） |
+| 串口在 Linux 需要权限 | `sudo usermod -aG dialout $USER` |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -328,18 +340,6 @@ while True:
 | 高性能 / 实时控制 | C/C++ SDK (pico-sdk) |
 | Wi-Fi 数据上报 | Pico W + MQTT |
 | 简单桌面自动化 | 不用 Pico，用 openclaw |
-
----
-
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 烧录后无 LED | 检查 GP25（Pico）/ "LED"（Pico W）使用正确 |
-| ADC 抖动 | 多次平均；接旁路电容 |
-| I²C 找不到设备 | `i2c.scan()` 查看；上拉电阻 4.7kΩ |
-| Wi-Fi 不连 | 仅支持 2.4 GHz；密码与国别码（`network.country('CN')`） |
-| 串口在 Linux 需要权限 | `sudo usermod -aG dialout $USER` |
 
 ---
 

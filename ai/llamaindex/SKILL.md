@@ -19,7 +19,8 @@ tags:
 > **官方文档：** <https://docs.llamaindex.ai/>（2026 年起 301 重定向至 <https://developers.llamaindex.ai/python/framework/>）
 >
 > **许可证：** MIT
-> **最新版本：** llama-index 0.14.25、llama-index-core 0.14.25（PyPI，2026-10；GitHub 最新 Release 标签为 `v0.14.25`，包按组件独立发版）
+>
+> **最新版本：** llama-index 0.14.25、llama-index-core 0.14.25（PyPI 实测，截至 2026-10；GitHub 最新 Release 标签为 `v0.14.25`，集成包按组件独立发版）
 
 ## 概述
 
@@ -38,8 +39,8 @@ LlamaIndex 是连接大语言模型与私有数据的 Python 框架，核心流�
 |------|------|---------|
 | llama-index | 元包：core + OpenAI LLM/嵌入集成 + nltk | 0.14.25 |
 | llama-index-core | 索引、检索、Workflows、Agent 等核心 | 0.14.25 |
-| llama-index-llms-openai | OpenAI / Azure LLM 集成 | 0.7.x |
-| llama-index-embeddings-openai | OpenAI 嵌入集成 | 0.6.x |
+| llama-index-llms-openai | OpenAI / Azure LLM 集成 | 0.8.3 |
+| llama-index-embeddings-openai | OpenAI 嵌入集成 | 0.7.0 |
 
 其余向量库、嵌入、LLM 集成均为独立包，按需安装。
 
@@ -412,26 +413,6 @@ print(response)
 
 ---
 
-## 参考资源
-
-- 官方文档（现址）：<https://developers.llamaindex.ai/python/framework/>
-- 查询引擎与响应模式：<https://developers.llamaindex.ai/python/framework/module_guides/deploying/query_engine/>
-- Workflows：<https://developers.llamaindex.ai/python/framework/understanding/workflows/>
-- Agent：<https://developers.llamaindex.ai/python/framework/understanding/agent/>
-- GitHub Releases：<https://github.com/run-llama/llama_index/releases>
-- PyPI：<https://pypi.org/project/llama-index/>
-
----
-
-## 相关技能
-
-- [langchain](../langchain/SKILL.md) — LLM 应用框架，LCEL 链与 LangGraph Agent，与 LlamaIndex 索引能力可互补
-- [dify](../dify/SKILL.md) — 可视化 LLM 应用平台，无需编码即可搭建 RAG 知识库与工作流
-- [docutranslate](../docutranslate/SKILL.md) — 基于 LLM 的多格式文件翻译，可作为 RAG 文档预处理环节
-- [ollama](../ollama/SKILL.md) — 本地模型运行时，可为 LlamaIndex 提供离线 LLM 与嵌入后端
-
----
-
 ## AI 使用建议
 
 ### 推荐工作流
@@ -448,3 +429,21 @@ print(response)
 - **Settings 是全局单例**：在进程早期设置一次即可；忘记设置 `embed_model` 时默认回退 OpenAI 嵌入，离线环境会因缺少 Key 报错
 - **维度必须对齐**：`PGVectorStore.from_params(embed_dim=...)` 与嵌入模型维度不一致会写入失败，换嵌入模型需重建索引
 - **不要编造**：向量库类名、`from_params` 参数、selector 与 Agent 类名均以官方文档为准，升级后优先查 `developers.llamaindex.ai`
+
+## 相关技能
+
+- [langchain](../langchain/SKILL.md) — LLM 应用框架，LCEL 链与 LangGraph Agent，与 LlamaIndex 索引能力可互补
+- [dify](../dify/SKILL.md) — 可视化 LLM 应用平台，无需编码即可搭建 RAG 知识库与工作流
+- [docutranslate](../docutranslate/SKILL.md) — 基于 LLM 的多格式文件翻译，可作为 RAG 文档预处理环节
+- [ollama](../ollama/SKILL.md) — 本地模型运行时，可为 LlamaIndex 提供离线 LLM 与嵌入后端
+
+---
+
+## 参考资源
+
+- 官方文档（现址）：<https://developers.llamaindex.ai/python/framework/>
+- 查询引擎与响应模式：<https://developers.llamaindex.ai/python/framework/module_guides/deploying/query_engine/>
+- Workflows：<https://developers.llamaindex.ai/python/framework/understanding/workflows/>
+- Agent：<https://developers.llamaindex.ai/python/framework/understanding/agent/>
+- GitHub Releases：<https://github.com/run-llama/llama_index/releases>
+- PyPI：<https://pypi.org/project/llama-index/>

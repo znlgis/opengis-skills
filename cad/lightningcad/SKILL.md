@@ -1,6 +1,6 @@
 ---
 name: lightningcad
-description: "Use when doing architectural facade panel layout and detailing in AutoCAD, ZWCAD or GstarCAD — panel numbering, shop drawing generation, material optimization. LightningCAD: building envelope detailing plugin for AutoCAD/ZWCAD/GstarCAD."
+description: "Use when doing prefabricated facade/envelope panel layout and detailing inside AutoCAD, ZWCAD or GstarCAD with LightningCAD — FsInitBuilding / FsPanelLayout, FsCreateNodeLine node lines, FsShouBian trim and BOM export, LTJianChaTuZhi drawing checks; also when the plugin fails to load (TRUSTEDPATHS, .NET Framework 4.8), custom AecPanel entities render as proxies, or collision checking runs single-threaded under 50 panels. Commercial plugin, no public SDK."
 tags:
   - autocad
   - zwcad
@@ -22,7 +22,9 @@ tags:
 >
 > **许可证：** 专有商业软件（30 天试用授权，含 SM2 国密加密认证）
 >
-> **运行时：** .NET Framework 4.8 ｜ **CAD 平台：** AutoCAD、中望 CAD、浩辰 CAD 等
+> **运行时：** .NET Framework 4.8 ｜ **CAD 平台：** AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）
+>
+> **版本：** 商业闭源，不发布公开版本号；安装包与更新由桌面客户端下发（AutoUpdater.NET + 阿里云 OSS），以官网 <https://shandianweihu.com/> 与客户端显示为准（截至 2026-10）
 
 ## 概述
 
@@ -165,7 +167,9 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 
 ## 典型工作流
 
-### 标准深化设计流程（9 步）
+### 标准深化设计流程（9 步，端到端）
+
+输入：建筑专业提资的 DWG 平面图（含轴网、墙线、洞口位置）；输出：排布实体 + 节点线 + 收边 BOM 与统计表（DWG + Excel）。
 
 1. **初始化建筑**（FsInitBuilding）— 创建建筑容器实体
 2. **配置排布方案** — 设置板材规格、间距、模数等参数
@@ -207,14 +211,6 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 
 ---
 
-## AI 使用建议
-
-- **推荐工作流模式**：AI 助手开发或使用 LightningCAD 时应遵循标准深化设计流程——FsInitBuilding 初始化 → FsPanelLayout 排布 → FsCreateNodeLine 节点线 → FsShouBian* 收边 → FsCreateWallRectOpening 洞口 → LTJianChaTuZhi 校验 → FsExportPanelTable 输出。自动化批处理可通过 .scr 脚本 + 命令行方式实现无人值守出图。
-- **关键注意事项**：① 自定义实体类名（AecPanel 等）和命令前缀（Fs/LT）有明确约定，不得随意命名；② 配置文件为 JSON 格式，存储在 `.cfg/Configs/` 下，可用 `System.Text.Json` 直接读写；③ 板材碰撞检测板材数 >50 时自动启用多线程（NetTopologySuite STR-Tree）；④ 跨平台编译使用条件编译符号区分 AutoCAD（AC_*）与 ZWCAD（ZW_*）目标。
-- **常用代码模式**：CAD .NET 插件结构 = 实现 CommandClass → [CommandMethod] 注册命令 → 操作 AutoCAD 实体。配置读写 = `System.Text.Json` 序列化/反序列化 `.cfg/Configs/` 下 JSON 文件。板材排布 = FsPanelLayout → FsMergePanel → FsExportPanelTable 导出统计表。
-
----
-
 ## 常见问题
 
 | 问题 | 解决方案 |
@@ -225,6 +221,17 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 | 客户端无法登录 | 检查网络连接、SM2 加密组件是否正常 |
 | 收边 BOM 导出 Excel 失败 | 确认 ReoGrid/NPOI 组件依赖完整 |
 | 心跳检测失败 | 授权过期或网络中断，重新登录 |
+| 命令行输入 FsInitBuilding 提示未知命令 | 插件未随当前图纸加载：确认客户端已注册该 CAD 版本、`TRUSTEDPATHS` 含插件 DLL 目录，并在新图纸中重试 |
+| 客户端更新后 CAD 启动报插件版本不匹配 | 客户端与插件须同版本；从客户端执行"修复/更新"，不要手工替换 DLL |
+
+---
+
+## AI 使用建议
+
+- **推荐工作流模式**：AI 助手开发或使用 LightningCAD 时应遵循标准深化设计流程——FsInitBuilding 初始化 → FsPanelLayout 排布 → FsCreateNodeLine 节点线 → FsShouBian* 收边 → FsCreateWallRectOpening 洞口 → LTJianChaTuZhi 校验 → FsExportPanelTable 输出。自动化批处理可通过 .scr 脚本 + 命令行方式实现无人值守出图。
+- **关键注意事项**：① 自定义实体类名（AecPanel 等）和命令前缀（Fs/LT）有明确约定，不得随意命名；② 配置文件为 JSON 格式，存储在 `.cfg/Configs/` 下，可用 `System.Text.Json` 直接读写；③ 板材碰撞检测板材数 >50 时自动启用多线程（NetTopologySuite STR-Tree）；④ 跨平台编译使用条件编译符号区分 AutoCAD（AC_*）与 ZWCAD（ZW_*）目标。
+- **常用代码模式**：CAD .NET 插件结构 = 实现 CommandClass → [CommandMethod] 注册命令 → 操作 AutoCAD 实体。配置读写 = `System.Text.Json` 序列化/反序列化 `.cfg/Configs/` 下 JSON 文件。板材排布 = FsPanelLayout → FsMergePanel → FsExportPanelTable 导出统计表。
+- **不要臆造**：命令前缀只有 `Fs`（功能命令）与 `LT`（校验类）两族，没有 `LC_`/`LIGHTNING_` 前缀；产品不提供公开 SDK 或 NuGet 包，不要编造 API 名称。
 
 ---
 
@@ -232,6 +239,8 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 
 - **ifoxcad** — AutoCAD .NET 二次开发框架（共享 ObjectARX/.NET 插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 - **fy_layout** — 飞扬 LightCAD 场布插件示例（另一 CAD 二次开发参考）：[../fy_layout/SKILL.md](../fy_layout/SKILL.md)
+- **tongwen** — 同文图纸翻译套件（同为 AutoCAD 2019–2026 商业插件，插件形态可对照）：[../tongwen/SKILL.md](../tongwen/SKILL.md)
+- **libredwg** — DWG/DXF 读写库（图纸预处理/格式转换）：[../libredwg/SKILL.md](../libredwg/SKILL.md)
 
 ---
 

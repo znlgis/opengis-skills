@@ -1,6 +1,6 @@
 ---
 name: design-drawing-svg-md
-description: "Use when converting vector PDF engineering drawings (steel-structure shop drawings, A0 drawings, linework-only PDFs without a text layer) into LLM-consumable dual-carrier records — semantic Markdown reading thread plus layered SVG geometry archive linked by shared IDs and crosswalk."
+description: "Use when a vector PDF engineering drawing has no text layer and an AI/agent must still read it — dimension digits are only glyph outlines, so it renders but cannot be questioned. Builds a dual carrier (semantic Markdown reading thread + layered SVG geometry archive) joined by view/dim/balloon IDs and a crosswalk, via an 11-stage pipeline with hard gates. Also for steel-structure A0 shop drawings, R00→R01 revision diffs, token-budget chunking, and QA acceptance."
 tags:
   - cad
   - svg
@@ -22,7 +22,9 @@ tags:
 >
 > **适用输入：** 矢量线画 + 无文字层的 PDF 工程图（彩色分层或单色均可）。
 >
-> **依赖版本：** Python 3.10+（脚本使用 `str | None` 等 3.10 语法）＋ PyMuPDF ＋ NumPy ＋ SciPy ＋ Pillow；PyMuPDF 与 Pillow 的具体版本由 `07_validate.py` 在测量当时写入 `validate.json`，报告读回而非另行探测，保证与交付物同源。
+> **包管理器：** `pip install pymupdf numpy scipy pillow`（PyMuPDF 2.0、2026-10-19；脚本已按新包名 `import pymupdf`，不再使用旧的 `import fitz` 别名，截至 2026-10）
+>
+> **依赖版本：** Python 3.10+（脚本使用 `str | None` 等 3.10 语法）＋ PyMuPDF ＋ NumPy ＋ SciPy ＋ Pillow；实际运行版本由 `07_validate.py` 在测量当时写入 `validate.json`，报告读回而非另行探测，保证与交付物同源。
 >
 > **脚本资产：** 本仓库 `scripts/` 目录附带可直接复跑的泛化脚本——共用库 [scripts/common.py](scripts/common.py)、入口配置 [scripts/config.example.json](scripts/config.example.json)、十一阶段脚本 `01_extract.py` … `09_verify_deliverables.py`（执行顺序与门禁见 [reference/pipeline.md](reference/pipeline.md)）。
 
@@ -90,11 +92,9 @@ cp config.example.json config.json      # 或运行时 --config /path/to/config.
 
 ### 双载体定位
 
-##### 双载体定位
-
 ```text
 原图 PDF（矢量线画 / 无文字层 / 彩色分层）
-   │  提取（fitz.get_drawings + 分层：OCG 语义优先 + 颜色兜底）
+   │  提取（pymupdf.get_drawings + 分层：OCG 语义优先 + 颜色兜底）
    ▼
 MD（魂·阅读主线） ◄── ID 互联（view/dim/balloon/prim-id + crosswalk） ──► SVG（骨·几何档案）
 语义/参数/值/工艺/BOM                                       原生坐标/图层/视图分组/文本
@@ -129,7 +129,7 @@ MD（魂·阅读主线） ◄── ID 互联（view/dim/balloon/prim-id + cross
 
 ---
 
-## 载体分工矩阵（单一事实源）
+### 载体分工矩阵（单一事实源）
 
 | 信息项 | 事实源 | 另一载体 |
 |---|---|---|
@@ -149,9 +149,9 @@ MD（魂·阅读主线） ◄── ID 互联（view/dim/balloon/prim-id + cross
 
 ---
 
-## ID 体系与 crosswalk 换算链
+### ID 体系与 crosswalk 换算链
 
-### ID 体系
+#### ID 体系
 
 | ID | 对象 | 出现位置 |
 |---|---|---|
@@ -160,7 +160,7 @@ MD（魂·阅读主线） ◄── ID 互联（view/dim/balloon/prim-id + cross
 | `V{nn}-D{mm}` | 尺寸标注 | SVG `data-dim-id`（线与 text 同号）/ MD dims 表 |
 | `V{nn}-B{mm}` | 气球（零件编号） | MD 标注章 |
 
-### 换算链
+#### 换算链
 
 MD 参数坐标（x, y）= 视图局部 mm，原点 = 视图 bbox 左下角，X 右 Y 上；s = 2.83465 / 比例分母（pt/mm）：
 
@@ -169,7 +169,7 @@ X_L = x·s + tx          Y_L = −y·s + ty
 页面 pt（竖放）：x_p = W − Y_L          y_p = X_L
 ```
 
-- **回正规则（唯一结论）：** 页面内容回正 = 逆时针 90°（ccw90）；fitz 调用 `page.set_rotation(270)`。
+- **回正规则（唯一结论）：** 页面内容回正 = 逆时针 90°（ccw90）；pymupdf 调用 `page.set_rotation(270)`。
 - **自检（self_check）：** 局部原点 (0,0) 换算后必须落在该视图 bbox 左下角（x_p = bbox 左界、y_p = bbox 下界）。
 - s、tx/ty 与各坐标值均为示例值（如 1:20 → s≈0.14173）；实际图纸以配准（流水线步骤 5）实测为准。
 - crosswalk 条目 JSON 全文见 [reference/md-spec.md](reference/md-spec.md)。
@@ -180,7 +180,7 @@ X_L = x·s + tx          Y_L = −y·s + ty
 
 完整职责、脚本执行顺序、关键依赖与门禁矩阵见 [reference/pipeline.md](reference/pipeline.md)；本节只留步骤索引 + 门禁矩阵。文中数字均为多图实测值。**语义步骤号 ≠ 执行顺序**（如 06 SVG 生成在 04 MD 增补之前执行），执行顺序以 [reference/pipeline.md](reference/pipeline.md) §2 为准。
 
-1. **矢量提取 + 分层**（`01_extract.py`）：`fitz.get_drawings()` 按 **OCG 语义优先 + 颜色兜底** 归六层（颜色→层硬映射对部分图失效）；title-block 靠 OCG `layer==PDM_Title` 独立成层，否则退化为五层不合规。
+1. **矢量提取 + 分层**（`01_extract.py`）：`pymupdf.get_drawings()` 按 **OCG 语义优先 + 颜色兜底** 归六层（颜色→层硬映射对部分图失效）；title-block 靠 OCG `layer==PDM_Title` 独立成层，否则退化为五层不合规。
 2. **视图聚类归属**（`02_cluster_views.py`）：outline + dimension + centerline 空间聚类（排除 thin 层）；**视图数是聚类输出、非可预设目标**（实测区间 [8,26]）。
 3. **跨图字形字典**（`03`/`03c`/`03d`）：模板聚类 → 自监督解码 → 视觉逐行对账，跨图合并；**视觉识读过双闸门**（图号真值 + 转录字符数核对）才入字典。
 4. **文本恢复**（`03b_text_recover.py`）：按视图 bbox 高清竖正裁切识读 → `<text>` + dim-id 绑定；竖排归一化必须用 `(x,y) → (1−y, x)`（旧式 `(y, 1−x)` 缺平移校正、静默降质）。

@@ -1,6 +1,6 @@
 ---
 name: lightcad
-description: "Use when building or extending a desktop CAD/BIM application with the open-source FeiYang LightCAD platform — plugin development, custom elements, DWG/DXF I/O, 2D drafting and 3D/BIM modeling on C#/.NET. LightCAD (FeiYang Integrated Design Platform) is a C# CAD system integrating 2D design, 3D design, and BIM."
+description: "Use when extending the FeiYang LightCAD platform (C#/.NET 8) — implementing ILcPlugin, registering ElementType / ElementActions, [CommandClass] + [CommandMethod] commands, plugins.json loading, DwgReader.Import / SaveDwg workflows; also when a plugin DLL is not loaded, dispatching to a command does nothing, or a build fails on ThreeJs4Net.dll / OpenTK.dll or does not support targeting .NET 8. Source is not publicly released; API facts here track the platform SDK used by znlgis/FY_Layout."
 tags:
   - csharp
   - dotnet
@@ -13,19 +13,19 @@ tags:
   - architecture
 ---
 
-> **项目地址：** <https://github.com/znlgis/lightcad1>
+> **项目地址：** 原公开仓库 `github.com/znlgis/lightcad1` 已不可用（HTTP 404），源码暂未公开发布；项目信息见启道软件官网（www.qidaosoft.com/Feiyang.html，仅 HTTP）
 >
-> **所属平台：** 飞扬集成设计平台（LightCAD，启道软件 Qidao Soft 开源）
+> **所属平台：** 飞扬集成设计平台（LightCAD，启道软件 Qidao Soft）
 >
-> **许可证：** CC-BY-SA-4.0（见仓库 LICENSE）
+> **许可证：** 以官方发布渠道声明为准（曾标注 CC-BY-SA-4.0）
 >
-> **中文教程：** <https://znlgis.github.io/cad/LightCAD/>（20 章，从架构到插件实战）
+> **中文教程：** <https://znlgis.github.io/cad/LightCAD/>（20 章，从架构到插件实战，当前唯一可访问的权威来源）
 >
-> **版本：** 仓库暂无公开 Release/Tag，以 master 分支为准（截至2026-10）
+> **版本：** 无公开 Release/Tag；API 以配套插件仓库 [znlgis/FY_Layout](https://github.com/znlgis/FY_Layout) 引用的 SDK 为准（截至 2026-10）
 
 ## 概述
 
-LightCAD（飞扬集成设计平台）是一套基于 .NET 8 / C# 开发的开源建筑工程设计软件，目标是把二维设计、三维设计、BIM 设计、智能设计与协同设计融合为一体，为建筑设计行业提供 BIM 正向设计支撑能力。项目采用严格的分层架构（MathLib → Core → RenderUtils → Drawing → Runtime → UI），既可作为完整 CAD 平台使用，也可作为二次开发底座。核心特性：
+LightCAD（飞扬集成设计平台）是一套基于 .NET 8 / C# 开发的建筑工程设计软件（主程序源码未公开发布，能力与 API 以官方渠道与配套插件仓库为准），目标是把二维设计、三维设计、BIM 设计、智能设计与协同设计融合为一体，为建筑设计行业提供 BIM 正向设计支撑能力。项目采用严格的分层架构（MathLib → Core → RenderUtils → Drawing → Runtime → UI），既可作为完整 CAD 平台使用，也可作为二次开发底座。核心特性：
 
 - **完整 2D/3D 能力**：直线、圆弧、多段线、样条等二维图元；拉伸、旋转、放样、融合等参数化实体建模
 - **多渲染后端**：Three.js4Net（WebGL）与 OpenTK（OpenGL）
@@ -46,24 +46,25 @@ LightCAD（飞扬集成设计平台）是一套基于 .NET 8 / C# 开发的开�
 | SDK | .NET 8 SDK |
 | 硬件 | 8GB 内存起（推荐 16GB+），支持 OpenGL 3.3 的显卡 |
 
-### 获取源码与编译（命令行方式）
+### 获取源码与编译
+
+> **源码获取提示：** LightCAD 主程序源码暂未公开发布，原 GitHub 仓库已 404，无法通过 `git clone` 获取。请通过启道软件官方渠道（www.qidaosoft.com/Feiyang.html，仅 HTTP，需手动访问）申请/下载；若已从官方渠道拿到源码包，按下面的步骤编译。
 
 ```bash
-# 仓库体积较大（含 DLL 与资源），建议浅克隆
-git clone --depth 1 https://github.com/znlgis/lightcad1.git
-cd lightcad1
+# 将 <LightCAD-源码目录> 替换为你从官方渠道取得并解压后的实际路径
+cd <LightCAD-源码目录>
 
-# 还原与编译
-dotnet restore LightCAD1.sln
-dotnet build LightCAD1.sln --configuration Debug
+# 还原与编译（解决方案文件名以实际包内为准，下例为常见形态）
+dotnet restore <Solution>.sln
+dotnet build <Solution>.sln --configuration Debug
 ```
 
 ### 运行（VS 或 CLI）
 
 ```bash
-# VS：用 Visual Studio 打开 LightCAD1.sln，将 LightCAD.WinForm 设为启动项目，按 F5
+# VS：打开解决方案，将主程序工程（LightCAD.WinForm 一类）设为启动项目，按 F5
 # CLI：
-dotnet run --project src/LightCAD.WinForm
+dotnet run --project <主程序工程目录>
 ```
 
 **验证**：稳定编译后启动主窗口即成功；插件调试采用 VS「附加到进程」绑定 `lightcad` 进程（参见 FY_Layout 插件示例的做法）。
@@ -176,13 +177,13 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 
 ---
 
-## 端到端工作流
+## 典型工作流
 
 ### 工作流一：从源码构建并运行平台
 
 1. 安装 .NET 8 SDK 与 Visual Studio 2022（17.5.5+，.NET 桌面开发工作负载）
-2. `git clone --depth 1 https://github.com/znlgis/lightcad1.git`
-3. `dotnet restore LightCAD1.sln` → `dotnet build LightCAD1.sln -c Debug`
+2. 从官方渠道取得 LightCAD 源码包并解压（原公开仓库已 404，无法 `git clone`）
+3. 在源码目录执行 `dotnet restore <Solution>.sln` → `dotnet build <Solution>.sln -c Debug`
 4. 启动 `LightCAD.WinForm`，在命令行窗口输入 `LINE` 画一条直线验证交互
 5. 用 `LoadDwg`/`SaveDwg` 打开与保存 DWG 图纸验证文件链路
 
@@ -202,7 +203,7 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 1. **分层依赖**：业务代码只引用 `LightCAD.Core`/`LightCAD.MathLib`，UI 与交互逻辑放 Action 层，避免循环依赖
 2. **元素类型 GUID 稳定**：`ElementType.Guid` 是序列化标识，发布后不可更改；注意 SDK 属性拼写为 `DispalyName`
 3. **命令薄、Action 厚**：`[CommandMethod]` 只做参数解析与转发，交互逻辑放入 Action 类便于复用与调试
-4. **大仓库浅克隆**：仓库含大量 DLL/字体资源，开发机建议 `--depth 1`
+4. **源码包体积大**：含大量 DLL/字体资源，从官方渠道取得后先校验解压完整性再编译；参考实现可对照 FY_Layout 的 `Libs/` 引用方式
 5. **渲染路径分离**：2D 显示与 3D 显示（ThreeJs4Net/OpenTK）分别验证，避免把 2D 交互问题误判为渲染问题
 6. **DWG 兼容性**：DWG 读写依赖 ODA 相关 DLL，分发插件时确认 `Libs/` 依赖完整
 
@@ -243,7 +244,7 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 
 ## 参考资源
 
-- 仓库：<https://github.com/znlgis/lightcad1>
-- 中文教程（20 章）：<https://znlgis.github.io/cad/LightCAD/>
-- 插件示例仓库：<https://github.com/znlgis/FY_Layout>
+- 中文教程（20 章，唯一可公开访问的权威来源）：<https://znlgis.github.io/cad/LightCAD/>
+- 插件示例仓库（可公开访问，含 LightCAD SDK DLL 引用方式）：<https://github.com/znlgis/FY_Layout>
+- 主程序源码：未公开发布；原 `github.com/znlgis/lightcad1` 已 404，请走启道软件官方渠道
 - 关键章节：第 3 章（分层架构）、第 15 章（插件系统与扩展开发）、第 16 章（命令与操作系统）

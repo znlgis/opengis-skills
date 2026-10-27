@@ -43,7 +43,7 @@ GeoServer Cloud（GS Cloud）：
 | 服务 | 镜像 | 用途 |
 |------|------|------|
 | `gateway` | `geoservercloud/geoserver-cloud-gateway` | 网关 |
-| `discovery` | `geoservercloud/geoserver-cloud-discovery` | 服务发现（3.x 的官方 compose 改用 `hashicorp/consul`） |
+| `discovery` | —（3.x 不再发布该镜像） | 服务发现：官方 compose/K8s 改用 `hashicorp/consul`，`geoservercloud/geoserver-cloud-discovery:3.0.2` 在 Docker Hub 已 404 |
 | `config` | `geoservercloud/geoserver-cloud-config` | 配置中心 |
 | `web-ui` | `geoservercloud/geoserver-cloud-webui` | 管理界面 |
 | `rest` | `geoservercloud/geoserver-cloud-rest` | REST API |
@@ -198,17 +198,6 @@ docker run -e SPRING_PROFILES_ACTIVE=datadir \
 
 ---
 
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 配置不同步 | 检查 RabbitMQ 可达 + `GEOSERVER_BUS_ENABLED=true` |
-| Web UI 改了 wms 没生效 | 检查事件订阅 |
-| 启动顺序错乱 | `depends_on` + 健康检查；K8s 用 `initContainers` |
-| OOM | 调整 `-Xmx`，按服务独立资源 |
-| Gateway 502 / 服务不可达 | 检查目标服务健康状态与 Consul 注册（服务名解析：`wms`、`wfs` 等） |
-| 瓦片 404 / 缓存未命中 | 确认 gwc 服务已部署、`GEOSERVER_BASE_PATH` 与请求路径一致，必要时重新 seed |
-
 ---
 
 ## 典型工作流
@@ -246,6 +235,17 @@ helm upgrade --install gs . -n gis --create-namespace -f values.yaml
 kubectl -n gis get deploy | grep wms
 kubectl -n gis scale deploy <wms-deployment> --replicas=10
 ```
+
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 配置不同步 | 检查 RabbitMQ 可达 + `GEOSERVER_BUS_ENABLED=true` |
+| Web UI 改了 wms 没生效 | 检查事件订阅 |
+| 启动顺序错乱 | `depends_on` + 健康检查；K8s 用 `initContainers` |
+| OOM | 调整 `-Xmx`，按服务独立资源 |
+| Gateway 502 / 服务不可达 | 检查目标服务健康状态与 Consul 注册（服务名解析：`wms`、`wfs` 等） |
+| 瓦片 404 / 缓存未命中 | 确认 gwc 服务已部署、`GEOSERVER_BASE_PATH` 与请求路径一致，必要时重新 seed |
 
 ## DeepSeek Harness 使用建议
 

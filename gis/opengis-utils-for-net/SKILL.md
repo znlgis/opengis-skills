@@ -18,7 +18,7 @@ tags:
 >
 > **NuGet 包：** `OpenGIS.Utils`
 >
-> **最新版本：** 1.1.2（截至2026-10，NuGet）
+> **最新版本：** 1.1.2（截至 2026-10，NuGet）
 >
 > **许可证：** LGPL-2.1-or-later
 
@@ -38,11 +38,31 @@ tags:
 
 ## 环境准备
 
+### 方式一：dotnet CLI
+
 ```bash
-dotnet add package OpenGIS.Utils
+dotnet add package OpenGIS.Utils --version 1.1.2
 ```
 
-## Build & Test
+### 方式二：手写 csproj 的 PackageReference
+
+```xml
+<ItemGroup>
+  <PackageReference Include="OpenGIS.Utils" Version="1.1.2" />
+</ItemGroup>
+```
+
+### 验证
+
+```bash
+dotnet --version                       # 库为 netstandard2.0，.NET Core 2.0+ / .NET 5+ 均可引用
+dotnet restore                         # 能解析 OpenGIS.Utils 1.1.2 即包可用
+dotnet list package --include-transitive | findstr OpenGIS.Utils
+```
+
+> GDAL 原生运行时由 `MaxRev.Gdal.Universal` 随包分发，无需手动 `GdalConfiguration.ConfigureGdal()`；`DllNotFoundException` 通常来自 RID 不匹配，见常见问题。
+
+## 构建与测试
 
 ```bash
 dotnet build OpenGIS.Utils.sln
@@ -51,7 +71,7 @@ dotnet test tests/OpenGIS.Utils.Tests/
 
 ---
 
-## Project Structure
+## 项目结构
 
 ```text
 src/OpenGIS.Utils/
@@ -93,7 +113,7 @@ src/OpenGIS.Utils/
 
 ---
 
-## Enums
+## 枚举
 
 ### GeometryType
 
@@ -131,7 +151,7 @@ TOO_FEW_POINTS, INVALID_COORDINATE, RING_NOT_CLOSED
 
 ---
 
-## Core Model Classes
+## 核心模型类
 
 ### OguLayer
 
@@ -234,7 +254,7 @@ Methods: `ToWkt()` → `string`, `FromWkt(string wkt)` → `OguCoordinate` *(sta
 
 > OguLayerUtil、GeometryUtil、CrsUtil、ShpUtil、PostgisUtil、GtTxtUtil 等工具类与 GDAL 配置的完整 API 见 [reference/util-classes.md](reference/util-classes.md)
 
-## Engine Architecture
+## 引擎架构
 
 ```csharp
 using OpenGIS.Utils.Engine;
@@ -278,7 +298,7 @@ public interface ILayerWriter
 
 ---
 
-## General Utilities
+## 通用工具
 
 ### EncodingUtil
 
@@ -322,7 +342,7 @@ string NumUtil.FormatNumber(double value, int decimals)
 
 ---
 
-## Exception Hierarchy
+## 异常层次
 
 ```text
 System.Exception
@@ -336,7 +356,7 @@ System.Exception
 
 ---
 
-## Result Models
+## 结果模型
 
 ### TopologyValidationResult
 
@@ -367,27 +387,6 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 
 > 常用代码模式完整示例见 [reference/code-patterns.md](reference/code-patterns.md)
 
-## DeepSeek Harness 使用建议
-
-- **加载与引用**：用 `skill("opengis-utils-for-net")` 加载（用户也可输入 `/opengis-utils-for-net`）；`reference/code-patterns.md`、`reference/util-classes.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
-- **执行环境**：先 `dotnet --version`；库目标 .NET Standard 2.0，可被 .NET Core 2.0+ / .NET 5+ / .NET Framework 4.6.1+ 引用，Windows 用 `pwsh`；用 `dotnet new console -o demo && cd demo` 起最小工程。
-- **依赖坐标**：`dotnet add package OpenGIS.Utils --version 1.1.2`（NuGet 最新 1.1.2），原生 GDAL 运行时随包分发（`MaxRev.Gdal.Universal`）；用 `dotnet list package --include-transitive | Select-String OpenGIS.Utils` 核对解析出的版本，`NU1101`/`NU1102` 表示源或版本不可用，如实报告而不是改版本号重试。
-- **平台与原生库**：运行时与 RID 绑定，`DllNotFoundException` 或 `Unable to load DLL 'gdal'` 多因 `-r win-x64`/`linux-x64` 与运行环境不一致；`dotnet publish -r win-x64` 后跑发布目录，不要只跑 `bin/Debug` 里的半成品。
-- **验证产物**：最小程序 `OguLayerUtil.ReadLayer(DataFormatType.SHP, path)` 读入（完整重载见 `reference/code-patterns.md`）→ 打印 `layer.GetFeatureCount()` 与 `layer.Wkid`，再 `WriteLayer` 写出 GeoJSON 并重新读回，核对要素数与 CRS；`dotnet build` 成功只说明编译通过，GDAL 原生库是运行期才加载的。
-- **常见误操**：`Geojson2Wkt()` 只接受裸几何 / `Feature` / `FeatureCollection` 字符串，传整文件内容会抛 `ArgumentException`，整文件走 `OguLayerUtil.ReadLayer`；`OgrGeometry` 是 `IDisposable`，用完 `Dispose()`；`GEOTOOLS` 枚举仅为兼容，在 .NET 版实际重定向到 GDAL。
-- **构建与测试**：在仓库 checkout 内 `dotnet build OpenGIS.Utils.sln`、`dotnet test tests/OpenGIS.Utils.Tests/`，输出在 `bin/`、`obj/`（不要提交）；只看某一条测试时加 `--filter FullyQualifiedName~关键字`。
-- **安全与权限**：写入 Shapefile/GeoPackage 会覆盖同名文件，执行前确认目标路径；PostGIS 连接串与 GDAL 配置里的密码不要回显；`dotnet restore`、安装 SDK 或改 `NuGet.config` 前先征得用户同意。
-
-## 典型工作流
-
-1. **读取数据**：使用 `OguLayerUtil.ReadLayer()` 统一入口读取各类矢量格式
-2. **几何运算**：使用 `GeometryUtil.Wkt2Geometry()` 转换后操作，或直接用 `*Wkt` 后缀方法
-3. **坐标转换**：使用 `CrsUtil.Transform()` 进行坐标系变换（CGCS2000 系列）
-4. **写出结果**：使用 `OguLayerUtil.WriteLayer()` 写出为目标格式
-5. **格式转换**：使用 `OguLayerUtil.ConvertFormat()` 一步完成
-
----
-
 ## 常见问题
 
 | 问题 | 解决 |
@@ -399,14 +398,7 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 | `Geojson2Wkt`/`Geojson2Geometry` 抛 `ArgumentException` | 仅接受裸几何、`Feature` 或 `FeatureCollection` 字符串；空串或无法解析会抛错，整文件请走 `OguLayerUtil.ReadLayer` |
 | OGR 几何内存管理 | `OgrGeometry` 实现 `IDisposable`，用完及时 `Dispose()`；或用 `*Wkt` 便捷方法避免手动管理 |
 
-## 相关技能
-
-- **nettopologysuite** — .NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
-- **geometry-api-net** — Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
-- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
-- **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
-
-## Important Notes
+## AI 编码约定
 
 1. **GDAL auto-initializes** — No manual `GdalConfiguration.ConfigureGdal()` call needed.
 2. **GeoJSON string parsing is supported** — `Geojson2Wkt()` / `Geojson2Geometry()` parse bare geometry, `Feature`, or `FeatureCollection` strings (first feature's geometry wins) via the GDAL GeoJSON driver and throw `ArgumentException` for unparseable input. For whole files use `GdalReader` or `OguLayerUtil.ReadLayer(DataFormatType.GEOJSON, path)`.
@@ -415,6 +407,80 @@ Properties: `GdbPath` (`string?`), `LayerNames` (`List<string>`)
 5. **Cross-platform** — .NET Standard 2.0: works on .NET Core 2.0+, .NET 5+, .NET Framework 4.6.1+.
 6. **Encoding support** — `EncodingUtil` detects UTF-8, UTF-16 LE/BE, GBK, GB2312. Register CodePages with `Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)` if needed.
 7. **WKT convenience methods** — Most `GeometryUtil` methods have `*Wkt` variants that accept/return WKT strings directly, avoiding the need to manage `OgrGeometry` objects.
+
+---
+
+## 典型工作流
+
+以「Shapefile → 属性筛选 → 缓冲区 → 投影 → GeoPackage」为例：输入 `data/parcels.shp`（EPSG:4326），输出 `data/parcels_4528.gpkg`。
+
+1. **读取数据**：`OguLayerUtil.ReadLayer(DataFormatType.SHP, path)` 统一入口读取各类矢量格式
+2. **几何运算**：`GeometryUtil.Wkt2Geometry()` 转换后操作，或直接用 `*Wkt` 后缀方法
+3. **坐标转换**：`CrsUtil.Transform()` 只接受 WKT 或 `OgrGeometry`，整层变换需逐要素处理后改 `layer.Wkid`
+4. **写出结果**：`OguLayerUtil.WriteLayer()` 写出为目标格式
+5. **格式转换**：`OguLayerUtil.ConvertFormat()` 一步完成
+6. **回读验证**：重新读取产物，核对要素数与 `Wkid`
+
+```csharp
+using OpenGIS.Utils.DataSource;
+using OpenGIS.Utils.Engine.Enums;
+using OpenGIS.Utils.Engine.Model.Layer;
+using OpenGIS.Utils.Geometry;
+
+// 1. 读：完整重载见 reference/code-patterns.md
+OguLayer layer = OguLayerUtil.ReadLayer(DataFormatType.SHP, "data/parcels.shp");
+Console.WriteLine($"{layer.Wkid} / {layer.GetFeatureCount()}");
+
+// 2. 筛选 + 缓冲：几何以 WKT 字符串存放，OgrGeometry 需要 Dispose
+var large = layer.Filter(f =>
+{
+    using var g = GeometryUtil.Wkt2Geometry(f.Wkt!);
+    return GeometryUtil.Area(g) > 10000;
+});
+
+foreach (var f in large)
+{
+    using var g = GeometryUtil.Wkt2Geometry(f.Wkt!);
+    using var buffered = GeometryUtil.Buffer(g, 50);
+    f.Wkt = GeometryUtil.Geometry2Wkt(buffered);
+}
+
+// 3. 投影到 CGCS2000 3 度带（EPSG:4528）。
+//    CrsUtil 只有 WKT / OgrGeometry 两个重载，没有整层变换，必须逐要素处理并改 Wkid
+int sourceWkid = layer.Wkid ?? 4326;
+foreach (var f in layer.Features)
+    f.Wkt = CrsUtil.Transform(f.Wkt!, sourceWkid, 4528);
+layer.Wkid = 4528;
+
+// 4. 写出 GeoPackage
+OguLayerUtil.WriteLayer(DataFormatType.GEOPACKAGE, layer, "data/parcels_4528.gpkg");
+
+// 6. 回读验证
+OguLayer check = OguLayerUtil.ReadLayer(DataFormatType.GEOPACKAGE, "data/parcels_4528.gpkg");
+Console.WriteLine($"{check.Wkid} / {check.GetFeatureCount()}");
+```
+
+**验收**：打印的 WKID 应为 4528、要素数与筛选结果一致；再用 `ogrinfo -so data/parcels_4528.gpkg` 复核。`dotnet build` 成功不代表能跑——GDAL 原生库是运行期才加载的。
+
+---
+
+## DeepSeek Harness 使用建议
+
+- **加载与引用**：用 `skill("opengis-utils-for-net")` 加载（用户也可输入 `/opengis-utils-for-net`）；`reference/code-patterns.md`、`reference/util-classes.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
+- **执行环境**：先 `dotnet --version`；库目标 .NET Standard 2.0，可被 .NET Core 2.0+ / .NET 5+ / .NET Framework 4.6.1+ 引用，Windows 用 `pwsh`；用 `dotnet new console -o demo && cd demo` 起最小工程。
+- **依赖坐标**：`dotnet add package OpenGIS.Utils --version 1.1.2`（NuGet 最新 1.1.2），原生 GDAL 运行时随包分发（`MaxRev.Gdal.Universal`）；用 `dotnet list package --include-transitive | Select-String OpenGIS.Utils` 核对解析出的版本，`NU1101`/`NU1102` 表示源或版本不可用，如实报告而不是改版本号重试。
+- **平台与原生库**：运行时与 RID 绑定，`DllNotFoundException` 或 `Unable to load DLL 'gdal'` 多因 `-r win-x64`/`linux-x64` 与运行环境不一致；`dotnet publish -r win-x64` 后跑发布目录，不要只跑 `bin/Debug` 里的半成品。
+- **验证产物**：最小程序 `OguLayerUtil.ReadLayer(DataFormatType.SHP, path)` 读入（完整重载见 `reference/code-patterns.md`）→ 打印 `layer.GetFeatureCount()` 与 `layer.Wkid`，再 `WriteLayer` 写出 GeoJSON 并重新读回，核对要素数与 CRS；`dotnet build` 成功只说明编译通过，GDAL 原生库是运行期才加载的。
+- **常见误操**：`Geojson2Wkt()` 只接受裸几何 / `Feature` / `FeatureCollection` 字符串，传整文件内容会抛 `ArgumentException`，整文件走 `OguLayerUtil.ReadLayer`；`OgrGeometry` 是 `IDisposable`，用完 `Dispose()`；`GEOTOOLS` 枚举仅为兼容，在 .NET 版实际重定向到 GDAL。
+- **构建与测试**：在仓库 checkout 内 `dotnet build OpenGIS.Utils.sln`、`dotnet test tests/OpenGIS.Utils.Tests/`，输出在 `bin/`、`obj/`（不要提交）；只看某一条测试时加 `--filter FullyQualifiedName~关键字`。
+- **安全与权限**：写入 Shapefile/GeoPackage 会覆盖同名文件，执行前确认目标路径；PostGIS 连接串与 GDAL 配置里的密码不要回显；`dotnet restore`、安装 SDK 或改 `NuGet.config` 前先征得用户同意。
+
+## 相关技能
+
+- **nettopologysuite** — .NET 几何计算核心：[../nettopologysuite/SKILL.md](../nettopologysuite/SKILL.md)
+- **geometry-api-net** — Esri Geometry API for .NET：[../geometry-api-net/SKILL.md](../geometry-api-net/SKILL.md)
+- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
 
 ## 参考资源
 

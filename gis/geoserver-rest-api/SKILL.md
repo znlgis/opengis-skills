@@ -20,7 +20,7 @@ tags:
 >
 > **API 参考：** <https://docs.geoserver.org/stable/en/user/rest/api/index.html>
 >
-> **最新版本：** GeoServer 3.0.2（2026-10-19，安全修复版；[官方下载](https://geoserver.org/release/stable/)）
+> **最新版本：** GeoServer 3.0.2（2026-10-17 发布，安全修复版；[官方下载](https://geoserver.org/release/stable/)）
 >
 > **许可证：** GPL-2.0
 
@@ -47,13 +47,18 @@ REST API 的典型用途包括：
 
 所有写操作（POST / PUT / DELETE）均需认证。GeoServer 默认使用 HTTP Basic Auth：
 
-```bash
-# curl 方式
-curl -u admin:geoserver ...
+推荐用 `-u`，curl 自动生成 Basic 头；需要显式传头时用下面的等价写法（`YWRtaW46Z2Vvc2VydmVy` 是 `admin:geoserver` 的 base64）：
 
-# HTTP Header 方式
-Authorization: Basic YWRtaW46Z2Vvc2VydmVy
+```bash
+# 方式 1：curl -u（推荐）
+curl -u admin:geoserver http://localhost:8080/geoserver/rest/about/version.json
+
+# 方式 2：显式 Authorization 头
+curl -H "Authorization: Basic YWRtaW46Z2Vvc2VydmVy" \
+  http://localhost:8080/geoserver/rest/about/version.json
 ```
+
+> 凭据务必用环境变量传入（`curl -u "$GS_USER:$GS_PASS"`），不要写进脚本或提交到仓库。
 
 ---
 

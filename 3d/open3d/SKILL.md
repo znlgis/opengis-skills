@@ -292,17 +292,14 @@ Open3D 处理的是**有序/无序几何点集**（位置 + 可选法线/颜色�
 
 ---
 
-## 参考资源
+## AI 使用建议
 
-- 官方文档（稳定版）：<https://www.open3d.org/docs/release/>
-- Python API 索引：<https://www.open3d.org/docs/release/python_api/>
-- 点云教程：<https://www.open3d.org/docs/release/tutorial/geometry/pointcloud.html>
-- 表面重建教程：<https://www.open3d.org/docs/release/tutorial/geometry/surface_reconstruction.html>
-- 配准教程（ICP / 全局配准）：<https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html>
-- 可视化教程：<https://www.open3d.org/docs/release/tutorial/visualization/visualization.html>
-- 源码仓库：<https://github.com/isl-org/Open3D>
-
----
+- 用户提到「点云处理」「PLY/PCD 读写」「点云配准」「ICP / RANSAC」「泊松重建」「网格简化」「Open3D 可视化」时加载本技能。
+- 区分三条主线：**点云操作链**（读取→滤波→下采样→法线）、**配准**（RANSAC 粗 + ICP 精）、**网格重建**（法线一致化 → 泊松 → 简化）。
+- 一切重算法前先下采样；重建前必须先估计并一致化法线——这两点是排查结果异常的首要检查项。
+- 配准参数随点云尺度设定（阈值取 `voxel_size` 的倍数），不要硬编码固定数值。
+- 无头/服务器场景一律用 `OffscreenRenderer`，不要建议 `draw_geometries`。
+- **不要臆造**：Open3D 原生不支持 LAS/LAZ 与 3DGS 高斯 `.ply`；点云 IO 只有 `xyz/xyzn/xyzrgb/pts/ply/pcd`，网格 IO 为 `ply/stl/obj/off/gltf/glb`，函数名以官方 Python API 文档为准。
 
 ## 相关技能
 
@@ -313,11 +310,12 @@ Open3D 处理的是**有序/无序几何点集**（位置 + 可选法线/颜色�
 
 ---
 
-## AI 使用建议
+## 参考资源
 
-- 用户提到「点云处理」「PLY/PCD 读写」「点云配准」「ICP / RANSAC」「泊松重建」「网格简化」「Open3D 可视化」时加载本技能。
-- 区分三条主线：**点云操作链**（读取→滤波→下采样→法线）、**配准**（RANSAC 粗 + ICP 精）、**网格重建**（法线一致化 → 泊松 → 简化）。
-- 一切重算法前先下采样；重建前必须先估计并一致化法线——这两点是排查结果异常的首要检查项。
-- 配准参数随点云尺度设定（阈值取 `voxel_size` 的倍数），不要硬编码固定数值。
-- 无头/服务器场景一律用 `OffscreenRenderer`，不要建议 `draw_geometries`。
-- **不要臆造**：Open3D 原生不支持 LAS/LAZ 与 3DGS 高斯 `.ply`；点云 IO 只有 `xyz/xyzn/xyzrgb/pts/ply/pcd`，网格 IO 为 `ply/stl/obj/off/gltf/glb`，函数名以官方 Python API 文档为准。
+- 官方文档（稳定版）：<https://www.open3d.org/docs/release/>
+- Python API 索引：<https://www.open3d.org/docs/release/python_api/>
+- 点云教程：<https://www.open3d.org/docs/release/tutorial/geometry/pointcloud.html>
+- 表面重建教程：<https://www.open3d.org/docs/release/tutorial/geometry/surface_reconstruction.html>
+- 配准教程（ICP / 全局配准）：<https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html>
+- 可视化教程：<https://www.open3d.org/docs/release/tutorial/visualization/visualization.html>
+- 源码仓库：<https://github.com/isl-org/Open3D>

@@ -1,6 +1,6 @@
 ---
 name: ai-water-front
-description: "Use when building a Vue 3 smart-water map dashboard demo that pairs OpenLayers with a Dify AI chat assistant — natural-language queries rendered as GeoJSON highlights, GeoServer REST layer management, streaming SSE replies, and resizable panels. Stack: Vue 3.3 + Vite 4 + ol 8 + axios, dev proxy carrying Basic auth to GeoServer."
+description: "Use when building or debugging a Vue 3 + OpenLayers water-utility dashboard wired to a Dify chat assistant — natural-language queries returning GeoJSON highlights, streaming SSE via fetch + ReadableStream, GeoServer REST layer toggling through a Vite dev proxy with Basic auth, resizable panels and localStorage layout; also for CORS/401 on /geoserver/rest and "no features highlighted" from a CRS mismatch. ai-water-front demo stack: Vue 3.3 + Vite 4 + ol 8 + axios."
 tags:
   - vue
   - javascript
@@ -16,6 +16,8 @@ tags:
 > **项目地址：** <https://github.com/znlgis/ai-water-front>
 >
 > **教程：** <https://znlgis.github.io/demos/ai-water-front/>
+>
+> **依赖版本：** Vue 3.3 / Vite 4 / ol 8 / axios 1.7（取自仓库 `package.json`，截至 2026-10；demo 为快照工程，未跟随上游升到 ol 10）
 >
 > **许可证：** LGPL-2.1（以仓库为准）
 
@@ -322,15 +324,6 @@ window.clearGeoJsonLayers()                   // 清除高亮图层
 - 闪烁动画结束后要恢复 `setOpacity(1)`，否则图层会停留在半透明状态。
 - `mapInstance` 是模块级单例，地图挂载前为 `null`，服务函数使用前需判空。
 
-## AI 使用建议
-
-1. **先读入口文件**：`src/App.vue`（布局装配与面板尺寸持久化）、`src/components/DemoMap.vue`（OpenLayers 地图）、`src/mapInstance.js`（全局地图单例）是理解本项目的三个关键文件；AI 对话与 GeoJSON 渲染分别在 `src/services/difyClient.js` 与 `src/services/geoJsonService.js`。
-2. **常见改造点**：换底图 / 初始视野改 `DemoMap.vue` 中的 OSM 与 View 配置；接入其它 LLM 时保持 `difyClient.js` 的 `onMessage` / `onCompleted` / `onGeoJsonDetected` 回调接口即可；图层数据源改 `src/geoserver/` 下的 REST 封装。
-3. **约定结构不要破坏**：AI 回复须匹配 `{ "data": "[{ \"geom\": \"...\" }]" }` 约定，提取失败返回 `null` 不中断对话；高亮图层靠 `isGeoJsonLayer` 属性识别，清除逻辑依赖它。
-4. **投影别搞反**：数据是 `EPSG:4326`、地图是 `EPSG:3857`（`dataProjection` / `featureProjection`），新增渲染入口时照抄 `geoJsonService.js` 的写法。
-5. **凭据只在配置层**：Dify Key 放 `.env.local`；GeoServer Basic 认证由 `vite.config.js` 代理注入，业务代码始终用相对路径 `/geoserver/...`，生产部署改 Nginx 注入 `Authorization`。
-6. **调试入口**：DEV 模式用控制台 `window.testGeoJson(...)` / `window.clearGeoJsonLayers()` 验证渲染链路，不必依赖真实 AI 回复。
-
 ## 常见问题
 
 | 问题 | 解决方案 |
@@ -343,6 +336,15 @@ window.clearGeoJsonLayers()                   // 清除高亮图层
 | 面板尺寸不保存 | 检查浏览器是否禁用了 localStorage |
 | 生产环境 GeoServer 返回 401 | Nginx 代理需带上 `Authorization`（Base64 Basic）头，不能只代理路径 |
 | `npm run dev` 端口被占用 | 修改 `vite.config.js` 中的 `server.port` |
+
+## AI 使用建议
+
+1. **先读入口文件**：`src/App.vue`（布局装配与面板尺寸持久化）、`src/components/DemoMap.vue`（OpenLayers 地图）、`src/mapInstance.js`（全局地图单例）是理解本项目的三个关键文件；AI 对话与 GeoJSON 渲染分别在 `src/services/difyClient.js` 与 `src/services/geoJsonService.js`。
+2. **常见改造点**：换底图 / 初始视野改 `DemoMap.vue` 中的 OSM 与 View 配置；接入其它 LLM 时保持 `difyClient.js` 的 `onMessage` / `onCompleted` / `onGeoJsonDetected` 回调接口即可；图层数据源改 `src/geoserver/` 下的 REST 封装。
+3. **约定结构不要破坏**：AI 回复须匹配 `{ "data": "[{ \"geom\": \"...\" }]" }` 约定，提取失败返回 `null` 不中断对话；高亮图层靠 `isGeoJsonLayer` 属性识别，清除逻辑依赖它。
+4. **投影别搞反**：数据是 `EPSG:4326`、地图是 `EPSG:3857`（`dataProjection` / `featureProjection`），新增渲染入口时照抄 `geoJsonService.js` 的写法。
+5. **凭据只在配置层**：Dify Key 放 `.env.local`；GeoServer Basic 认证由 `vite.config.js` 代理注入，业务代码始终用相对路径 `/geoserver/...`，生产部署改 Nginx 注入 `Authorization`。
+6. **调试入口**：DEV 模式用控制台 `window.testGeoJson(...)` / `window.clearGeoJsonLayers()` 验证渲染链路，不必依赖真实 AI 回复。
 
 ## 相关技能
 

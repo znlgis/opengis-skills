@@ -1,12 +1,14 @@
 ---
 name: sqlsugar
-description: "Use when doing multi-database ORM operations in .NET — SQL Server, MySQL, PostgreSQL, SQLite, Oracle with fluent API, code-first, and LINQ. SqlSugar: high-performance .NET ORM supporting 10+ databases."
+description: "Use when doing multi-database ORM operations in .NET — SqlSugarClient/SqlSugarScope, Queryable<T> chain queries, ToPageList paging, Insertable/Updateable bulk, CodeFirst.InitTables, [SplitTable] sharding, slave connection config. Also for table-name mapping mismatches, unsafe shared SqlSugarClient across threads, and MySQL utf8mb4 mojibake. SqlSugar: .NET ORM for 10+ databases."
 tags:
   - dotnet
   - orm
   - database
   - code-first
   - sql
+  - sqlserver
+  - multi-database
 ---
 
 > **项目地址：** <https://github.com/DotNetNext/SqlSugar>
@@ -15,7 +17,7 @@ tags:
 >
 > **NuGet：** `SqlSugar` / `SqlSugarCore`
 >
-> **最新版本：** SqlSugarCore 5.1.4.221（.NET）/ SqlSugar 5.1.4.207（.NET Framework）（截至2026-09，NuGet）
+> **最新版本：** SqlSugarCore 5.1.4.221（.NET）/ SqlSugar 5.1.4.207（.NET Framework）（截至 2026-10，NuGet 实测）
 >
 > **许可证：** MIT
 
@@ -37,10 +39,32 @@ SqlSugar 主要特性：
 
 ## 安装
 
+### 方式一：dotnet CLI
+
 ```bash
 dotnet add package SqlSugarCore     # .NET 6+
 # 或
 dotnet add package SqlSugar         # .NET Framework
+```
+
+### 方式二：PackageReference
+
+```xml
+<ItemGroup>
+  <PackageReference Include="SqlSugarCore" Version="5.1.4.221" />
+</ItemGroup>
+```
+
+### 方式三：包管理器控制台
+
+```powershell
+Install-Package SqlSugarCore -Version 5.1.4.221
+```
+
+### 验证安装
+
+```bash
+dotnet list package | grep -i sqlsugar
 ```
 
 ---
@@ -269,6 +293,19 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 表名映射不对 | `[SugarTable("name")]` 显式指定实体对应的表名 |
+| 导航属性查不到数据 | `Includes` 需要配合 `Mapper` 显式配置映射关系，否则不会自动联表 |
+| 并发下报连接已关闭 / 数据错乱 | `SqlSugarClient` 非线程安全，多线程与 DI 场景改用 `SqlSugarScope` |
+| 中文乱码 | MySQL 用 `utf8mb4`，连接字符串加 `Charset=utf8mb4`，列与库排序规则一并设为 utf8mb4 |
+| 时间精度丢失 | 列改 `datetime(3)`（MySQL）或 `datetime2`（SQL Server） |
+| Code First 报 `InitTables` 无效 | 数据库未建或用错库：先 `DbMaintenance.CreateDatabase()`，再 `CodeFirst.InitTables<T>()` |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -297,18 +334,6 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 | 已有数据库（DB First） | SqlSugar（自动生成实体） |
 | 高性能批量处理 | SqlSugar + SqlBulkCopy |
 | MyBatis 风格 XML | SOD SQL-MAP |
-
----
-
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 表名映射不对 | `[SugarTable("name")]` 或全局 `EntityService` |
-| 外键关联未带条件 | `Mapper` 配合 `Includes` 显式指定 |
-| 多线程异常 | 使用 `SqlSugarScope`（线程安全） |
-| 中文乱码 | MySQL 用 `utf8mb4`，连接字符串加 `Charset=utf8mb4` |
-| 时间精度丢失 | 列改 `datetime(3)` 或 `datetime2` |
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: robotgo-flow
-description: "Use when building YAML-driven Windows RPA workflows in Go — step-by-step desktop automation with image template matching, interactive recording mode, hotkey triggers. RobotGo-Flow: YAML-based Windows RPA framework built on RobotGo."
+description: "Use when building YAML-driven Windows desktop RPA in Go — robotgo-flow run/record/capture/serve CLI, image template matching under a window then full-screen fallback, $input.<name> variable injection, on_error abort/skip/retry, human-like mouse and typing. Also for templates that never match, \"Unsupported class file\" / MinGW build failures, slow first compile, and resuming a workflow with run --from N."
 tags:
   - go
   - golang
@@ -15,13 +15,18 @@ tags:
 ---
 
 > **项目地址：** <https://github.com/znlgis/robotgo-flow>
+>
 > **官方文档：** <https://github.com/znlgis/robotgo-flow#readme>
 >
 > **底层库：** [go-vgo/robotgo](https://github.com/go-vgo/robotgo)
 >
 > **上游中文教程：** <https://znlgis.github.io/others/robotgo-flow/>（共 19 章）
 >
-> **许可证：** MIT License ｜ **最新版本：** v1.0.2（2026-09）
+> **许可证：** MIT
+>
+> **包管理器：** 源码构建（`scripts/build.ps1`，无可安装包）
+>
+> **版本：** v1.0.2（2026-09-11）
 
 ## 概述
 
@@ -235,6 +240,20 @@ go test ./internal/action/ -v
 
 ---
 
+## 常见问题（FAQ）
+
+| 问题 | 说明 |
+|------|------|
+| 模板匹配不到元素？ | 确认截图清晰、缩放一致；浏览器场景确保目标在窗口内；必要时重新 `capture`。 |
+| 首次编译很慢？ | 需编译 GLFW C 源码，约 4 分钟；后续增量编译约 1 秒。 |
+| 中文路径乱码？ | `internal/encoding` 自动处理 GBK↔UTF-8，无需手动干预。 |
+| 一定要 WPF 应用吗？ | 不需要；Go CLI 可独立使用，不依赖 .NET/WPF。 |
+| 如何从中途恢复执行？ | `run --from N`（1-indexed）；只有步骤可重入时才安全（例如已提交的表单不要重放）。 |
+| 电子从 YAML 里读到的中文变成乱码？ | 工作流文件用 UTF-8 保存；Windows 记事本另存为 UTF-8（非 ANSI），路径含中文时交给内置 `internal/encoding` 处理，不要自己转码。 |
+| `serve` 模式被 WPF 调用但没反应？ | JSON-Line 协议要求逐行 flush；检查 stdout 是否被其它日志污染（日志必须走 stderr）。 |
+
+---
+
 ## AI 使用建议
 
 - 生成工作流时优先用**模板匹配**（`templates/*.png`）而非硬编码坐标，以适应窗口移动。
@@ -245,15 +264,11 @@ go test ./internal/action/ -v
 
 ---
 
-## 常见问题（FAQ）
+## 相关技能
 
-| 问题 | 说明 |
-|------|------|
-| 模板匹配不到元素？ | 确认截图清晰、缩放一致；浏览器场景确保目标在窗口内；必要时重新 `capture`。 |
-| 首次编译很慢？ | 需编译 GLFW C 源码，约 4 分钟；后续增量编译约 1 秒。 |
-| 中文路径乱码？ | `internal/encoding` 自动处理 GBK↔UTF-8，无需手动干预。 |
-| 一定要 WPF 应用吗？ | 不需要；Go CLI 可独立使用，不依赖 .NET/WPF。 |
-| 如何从中途恢复执行？ | `run --from N`（1-indexed）。 |
+- **robotgo** — 底层 Go 桌面自动化库（本工具的引擎）：[../robotgo/SKILL.md](../robotgo/SKILL.md)
+- **go** — 用 Go 二次开发该工具链时的语言基础：[../go/SKILL.md](../go/SKILL.md)
+- **docker-compose** — 需要把被测系统或依赖服务一起拉起来时的编排方式：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
 
 ---
 
@@ -262,10 +277,3 @@ go test ./internal/action/ -v
 - 项目仓库：<https://github.com/znlgis/robotgo-flow>
 - robotgo 底层库：<https://github.com/go-vgo/robotgo>
 - 上游中文教程（19 章）：<https://znlgis.github.io/others/robotgo-flow/>
-
----
-
-## 相关技能
-
-- **robotgo** — 底层 Go 桌面自动化库（本工具的引擎）：[../robotgo/SKILL.md](../robotgo/SKILL.md)
-- **go** — 用 Go 二次开发该工具链时的语言基础：[../go/SKILL.md](../go/SKILL.md)

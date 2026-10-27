@@ -18,7 +18,7 @@ tags:
 >
 > **NuGet 元包：** [`Ara3D.SDK`](https://www.nuget.org/packages/Ara3D.SDK) ｜ **Ara 3D 官网：** <https://ara3d.com>
 >
-> **许可证：** MIT ｜ **最新版本：** `1.6.1`（由仓库 `Directory.Build.props` 的 `Ara3DVersion` 统一管理，所有包共享同一版本号）｜ **默认分支：** `main` ｜ **目标框架：** `net8.0` / `net8.0-windows`
+> **许可证：** MIT ｜ **最新版本：** `1.6.2`（由仓库 `Directory.Build.props` 的 `Ara3DVersion` 统一管理，所有包共享同一版本号）｜ **默认分支：** `main` ｜ **目标框架：** `net8.0` / `net8.0-windows`
 
 ## 概述
 
@@ -167,7 +167,7 @@ dotnet add package Ara3D.SDK            # 或完整 Windows 栈（TFM 需改为 
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Ara3D.SDK" Version="1.6.1" />
+    <PackageReference Include="Ara3D.SDK" Version="1.6.2" />
   </ItemGroup>
 </Project>
 ```
@@ -175,10 +175,10 @@ dotnet add package Ara3D.SDK            # 或完整 Windows 栈（TFM 需改为 
 也可只引用单个库以缩小依赖面（请保持版本一致）：
 
 ```xml
-<PackageReference Include="Ara3D.Collections" Version="1.6.1" />
-<PackageReference Include="Ara3D.Geometry" Version="1.6.1" />
-<PackageReference Include="Ara3D.IO.PLY" Version="1.6.1" />
-<PackageReference Include="Ara3D.BimOpenSchema.IO" Version="1.6.1" />
+<PackageReference Include="Ara3D.Collections" Version="1.6.2" />
+<PackageReference Include="Ara3D.Geometry" Version="1.6.2" />
+<PackageReference Include="Ara3D.IO.PLY" Version="1.6.2" />
+<PackageReference Include="Ara3D.BimOpenSchema.IO" Version="1.6.2" />
 ```
 
 > `Ara3D.IfcLoader` 需 `web-ifc-library.dll`（来自仓库 `vendor/`）出现在输出目录，通过 NuGet 引用时会随包携带；平台须为 **x64 Windows**。
@@ -200,7 +200,7 @@ pack.bat               :: 从 build/packages.txt 打包所有 NuGet（Release）
 
 ```bash
 dotnet nuget add source /path/to/ara3d-sdk/artifacts --name ara3d-local
-dotnet add package Ara3D.SDK --version 1.6.1 --source ara3d-local
+dotnet add package Ara3D.SDK --version 1.6.2 --source ara3d-local
 ```
 
 ---
@@ -367,24 +367,77 @@ public class TorusGenerator : IGenerator
 
 ---
 
-## 典型应用场景
+## 典型工作流：PLY 网格 → 变换 → PLY/GLB 双出口
 
-- **三维格式转换器**：读 IFC/STEP/PLY，写 glTF/GLB，批量转换与轻量化；
-- **参数化建模工具**：用 `IGenerator`/`IModifier` 在 Studio 中生成楼梯、幕墙、屋架、管道等；
-- **BIM 数据平台**：把 Revit/IFC 导出为 BOS（Parquet）进 DuckDB / 数据湖分析；
-- **自定义查看器/编辑器**：基于 `RenderModelData` 的 GPU 就绪缓冲区接入自研渲染器；
-- **Revit 加载项**：借助 Bowerbird 实时脚本或 BOS 导出插件扩展 Revit。
+输入一份现成的 PLY 网格，规整坐标后同时产出「可回灌建模工具链的 PLY」与「可进 Web 渲染器的 GLB」，写盘前做一次几何体检。整条链路只在 Windows + `net8.0-windows` 下成立。
 
----
+**步骤 1：建项目、装包**
 
-## AI 使用建议
+@@F@@bash
+dotnet new console -n MeshPipeline
+cd MeshPipeline
+dotnet add package Ara3D.SDK.Geometry
+dotnet add package Ara3D.IO.PLY
+@@F@@
 
-- **推荐场景**：用户需要 **.NET/C# 处理三维网格、BIM/IFC 数据、格式转换（IFC/STEP/PLY↔glTF/GLB/VIM）、或开发 Ara 3D Studio 插件**时加载本技能；纯 Web 3DGS 编辑请改用 [supersplat](../supersplat/SKILL.md)。
-- **TFM 选择**：只做几何/跨平台 → `Ara3D.SDK.Geometry`（`net8.0`）；需要文件 I/O、IFC、WPF → `Ara3D.SDK`/`Ara3D.SDK.IO`（`net8.0-windows`，仅 Windows x64）。
-- **必开 `AllowUnsafeBlocks`**：`F8`/`Memory`/`StepParser` 使用 `unsafe` 指针，`.csproj` 须设 `<AllowUnsafeBlocks>true</AllowUnsafeBlocks>`。
-- **版本一致**：所有 Ara3D 包共享同一版本号（当前 `1.6.1`），生成代码时不要混用不同版本。
-- **不可变几何**：`Scale`/`Rotate`/`Translate`/`Deform` 都返回新对象，务必接收返回值（`var m2 = m.Scale(...)`），不要期望原地修改。
-- **谨慎编造 API**：SDK 活跃迭代，若不确定签名，建议先反射或查源码/NuGet 包，避免臆造类名与方法。
+@@F@@xml
+<PropertyGroup>
+  <TargetFramework>net8.0-windows</TargetFramework>
+  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+</PropertyGroup>
+@@F@@
+
+缺 `AllowUnsafeBlocks` 时 `Ara3D.F8` 与 `Ara3D.Memory` 在编译期即失败。
+
+**步骤 2：读入并体检**
+
+@@F@@csharp
+using Ara3D.Geometry;
+using Ara3D.IO.PLY;
+
+TriangleMesh3D mesh = PlyImporter.LoadMesh("input/scan.ply");
+
+Console.WriteLine($"points={mesh.Points.Count} faces={mesh.Triangles.Count}");
+Console.WriteLine($"bounds={mesh.Bounds.Min} .. {mesh.Bounds.Max}");
+@@F@@
+
+坐标跑到 `1e6` 量级通常意味着源数据用了工程本地坐标系，需要在下一步平移到原点附近。
+
+**步骤 3：不可变变换**
+
+@@F@@csharp
+// 所有变换都返回新网格，绝不原地修改
+TriangleMesh3D normalized = mesh
+    .Translate(new Vector3(-mesh.Bounds.Min.X, -mesh.Bounds.Min.Y, -mesh.Bounds.Min.Z))
+    .Scale(0.001);   // 例如毫米 → 米
+
+Console.WriteLine($"after: {normalized.Points.Count} points");
+@@F@@
+
+**步骤 4：写出 PLY 与 GLB**
+
+@@F@@csharp
+using Ara3D.Models;   // Model3D / Material
+
+normalized.WritePly("out/scan-normalized.ply");   // TriangleMesh3D 扩展方法
+
+var model = Model3D.Create(normalized, Material.Default);   // 网格包装成场景模型
+model.WriteGlb("out/scan-normalized.glb");                  // IModel3D 扩展方法
+@@F@@
+
+`Model3D` 有来自 `TriangleMesh3D` 的隐式转换，单网格场景可把网格直接交给需要模型的 API。
+
+**步骤 5：验收**
+
+- `out/` 下两个文件都存在且非空；
+- 重新 `PlyImporter.LoadMesh` 读回 PLY，点数与步骤 3 打印一致；
+- GLB 在 Three.js / CesiumJS / Blender 中正常显示，模型不再偏移到远处。
+
+### 其他常见链路
+
+- **BIM 数据平台**：IFC/Revit 经 `Ara3D.BimOpenSchema` 转成 BOS 列式结构（EAV），再用其 IO 层落 Parquet/Excel 进 DuckDB 分析；具体类名以仓库 `examples/`、`docs/` 为准。
+- **Studio 插件**：实现 `IGenerator`/`IModifier`，把参数化造型或批量修改挂成 Studio 节点。
+- **自定义查看器 / Revit 加载项**：`RenderModelData` 产出 GPU 就绪缓冲区接自研渲染器；Revit 侧用 Bowerbird 实时脚本或 BOS 导出插件。
 
 ---
 
@@ -395,18 +448,21 @@ public class TorusGenerator : IGenerator
 | `AllowUnsafeBlocks` 报错 | `F8`/`Memory`/`StepParser` 使用 `unsafe` 指针，须在 `.csproj` 打开 `<AllowUnsafeBlocks>true</AllowUnsafeBlocks>` |
 | 找不到 `web-ifc-library.dll` | 使用 `Ara3D.IfcLoader` 时确保原生 DLL 复制到输出目录，且平台为 **x64 Windows**（勿用 AnyCPU 32 位） |
 | `net8.0` 引用了 Windows 专属包报 TFM 不兼容 | 把 `TargetFramework` 改为 `net8.0-windows` |
-| 版本冲突 / API 不匹配 | 确保所有 Ara3D 包版本一致（同为 `1.6.1`） |
+| 版本冲突 / API 不匹配 | 确保所有 Ara3D 包版本一致（同为 `1.6.2`） |
 | Linux/macOS 想用 IFC/PLY | 这些是 `net8.0-windows` 目标，无法在非 Windows 直接运行；可仅用 `Ara3D.SDK.Geometry` 的跨平台能力 |
 | 与 Xbim / OCCT 有何区别 | Xbim 专注 .NET BIM/IFC；OCCT 是 C++ 几何内核。Ara3D-SDK 强调**高性能海量三维数据处理 + SIMD + BOS + Studio 插件**的一体化 .NET 方案 |
 
 ---
 
-## 参考资源
+## AI 使用建议
 
-- **GitHub 仓库：** <https://github.com/ara3d/ara3d-sdk>（`docs/` 含工作流、包依赖图、发布流程；`examples/Workshop` 为入门课程）
-- **NuGet：** <https://www.nuget.org/packages/Ara3D.SDK>
-- **Ara 3D 官网：** <https://ara3d.com>
-- **上游中文教程：** <https://znlgis.github.io/3d/ara3d-sdk/>（10 章系统教程）
+- **推荐场景**：用户需要 **.NET/C# 处理三维网格、BIM/IFC 数据、格式转换（IFC/STEP/PLY↔glTF/GLB/VIM）、或开发 Ara 3D Studio 插件**时加载本技能；纯 Web 3DGS 编辑请改用 [supersplat](../supersplat/SKILL.md)。
+- **TFM 选择**：只做几何/跨平台 → `Ara3D.SDK.Geometry`（`net8.0`）；需要文件 I/O、IFC、WPF → `Ara3D.SDK`/`Ara3D.SDK.IO`（`net8.0-windows`，仅 Windows x64）。
+- **必开 `AllowUnsafeBlocks`**：`F8`/`Memory`/`StepParser` 使用 `unsafe` 指针，`.csproj` 须设 `<AllowUnsafeBlocks>true</AllowUnsafeBlocks>`。
+- **版本一致**：所有 Ara3D 包共享同一版本号（当前 `1.6.2`），生成代码时不要混用不同版本。
+- **不可变几何**：`Scale`/`Rotate`/`Translate`/`Deform` 都返回新对象，务必接收返回值（`var m2 = m.Scale(...)`），不要期望原地修改。
+- **谨慎编造 API**：SDK 活跃迭代，若不确定签名，建议先反射或查源码/NuGet 包，避免臆造类名与方法。
+
 ---
 
 ## 相关技能
@@ -416,3 +472,10 @@ public class TorusGenerator : IGenerator
 - **xbim** — .NET BIM / IFC 读写与几何：[../../cad/xbim/SKILL.md](../../cad/xbim/SKILL.md)
 - **occt** — C++ 几何内核（Ara3D 之外的底层选择）：[../../cad/occt/SKILL.md](../../cad/occt/SKILL.md)
 - **cadquery** — Python 参数化建模（跨语言对照）：[../../cad/cadquery/SKILL.md](../../cad/cadquery/SKILL.md)
+
+## 参考资源
+
+- **GitHub 仓库：** <https://github.com/ara3d/ara3d-sdk>（`docs/` 含工作流、包依赖图、发布流程；`examples/Workshop` 为入门课程）
+- **NuGet：** <https://www.nuget.org/packages/Ara3D.SDK>
+- **Ara 3D 官网：** <https://ara3d.com>
+- **上游中文教程：** <https://znlgis.github.io/3d/ara3d-sdk/>（10 章系统教程）

@@ -1,12 +1,15 @@
 ---
 name: ruoyi-cloud
-description: "Use when scaffolding Java Spring Cloud microservice backends — Nacos service discovery, Sentinel rate limiting, Seata distributed transactions, Spring Boot 3 + Vue 3 admin. RuoYi-Cloud: popular Chinese Spring Cloud microservice boilerplate framework."
+description: "Use when scaffolding a Java Spring Cloud microservice backend — Nacos discovery and config, Spring Cloud Gateway auth filter, Sentinel rate limiting, Seata distributed transactions, RBAC menus, code generator for CRUD plus Vue pages. RuoYi-Cloud v3.6.8 (Spring Boot 4.0.3, Spring Cloud 2025.1.0, JDK 17). Also for services not registering in Nacos, 401 loops from token TTL drift, Seata rollback not firing on tx-service-group mismatch, and RuoYi UI vs Vue3 repo confusion."
 tags:
   - java
   - spring-cloud
   - microservices
   - rbac
   - nacos
+  - sentinel
+  - seata
+  - vue
 ---
 
 > **项目地址：** <https://gitee.com/y_project/RuoYi-Cloud>
@@ -18,6 +21,10 @@ tags:
 > **文档：** <http://doc.ruoyi.vip/>
 >
 > **许可证：** MIT
+>
+> **包管理器：** Maven（后端）+ npm（`ruoyi-ui` 前端）/ Docker Compose（`docker/docker-compose.yml`）
+>
+> **版本：** v3.6.8（2026-03-29；Spring Boot 4.0.3、Spring Cloud 2025.1.0、Spring Cloud Alibaba 2025.1.0.0、JDK 17）
 
 ## 概述
 
@@ -28,29 +35,8 @@ RuoYi-Cloud 主要特性：
 - **认证**：JWT + Spring Security + OAuth2
 - **业务模块**：RBAC（菜单/角色/权限/部门/用户）、字典、参数、日志、文件、定时任务、监控
 - **代码生成**：单表/树表/主子表 → Mapper + Service + Controller + Vue 页面
-- **前端**：Vue 3 + Vite + Element Plus + Pinia
+- **前端**：仓库自带 `ruoyi-ui` 是 **Vue 2.6 + Element UI 2.15 + Vue CLI**（`vue-cli-service serve`）；官方另有 RuoYi-Cloud-Vue3 / Vue3-TypeScript 两个前端仓库（Vite + Pinia + Element Plus），可混搭使用
 - **DevOps**：Docker Compose 一键部署、SkyWalking / Prometheus 集成
-
----
-
-## 模块结构
-
-```text
-RuoYi-Cloud
-├── ruoyi-gateway        # API 网关
-├── ruoyi-auth           # 认证服务
-├── ruoyi-modules
-│   ├── ruoyi-system     # 系统模块
-│   ├── ruoyi-gen        # 代码生成
-│   ├── ruoyi-job        # 定时任务
-│   └── ruoyi-file       # 文件服务
-├── ruoyi-api            # 远程调用 Feign 接口
-├── ruoyi-common         # 公共工具
-├── ruoyi-visual
-│   ├── ruoyi-monitor    # Spring Boot Admin
-│   └── ruoyi-visual-name # Nacos / Sentinel UI 入口
-└── ruoyi-ui             # Vue 3 前端
-```
 
 ---
 
@@ -58,22 +44,22 @@ RuoYi-Cloud
 
 | 组件 | 版本 |
 |------|------|
-| RuoYi-Cloud | 3.6.8（最新，2026-03） |
-| Spring Boot | 4.0.x（v3.6.8 发布版）/ 3.x（springboot3 分支） |
-| Spring Cloud | 2025.1.x |
+| RuoYi-Cloud | 3.6.8（最新，2026-03-29） |
+| Spring Boot | 4.0.3（v3.6.8 的 `pom.xml`）/ 3.5.16（`springboot3` 分支） |
+| Spring Cloud | 2025.1.0 |
 | Spring Cloud Alibaba | 2025.1.0.0 |
-| JDK | 17+（Spring Boot 4 要求 17+） / 8（老分支） |
-| Maven | 3.9+（官方最新稳定为 3.10.0） |
+| JDK | 17（v3.6.8 的 `java.version`；老分支为 8） |
+| Maven | 3.9+ |
 | MySQL | 5.7+ / 8.0 |
 | Redis | 5.0+ |
 | Nacos | 2.x |
 | Sentinel | 1.8+ |
 | Seata | 1.6+（可选） |
-| Node.js | 18+ |
+| Node.js | 18+（`ruoyi-ui` 用 Vue CLI 5，建议 20 LTS） |
 
 ---
 
-## 启动步骤
+### 启动步骤
 
 ```bash
 # 1. 克隆
@@ -105,7 +91,32 @@ npm run dev   # http://localhost:80
 
 ---
 
-## 配置中心（Nacos）
+---
+
+## 核心 API/机制
+
+### 模块结构
+
+```text
+RuoYi-Cloud
+├── ruoyi-gateway        # API 网关
+├── ruoyi-auth           # 认证服务
+├── ruoyi-modules
+│   ├── ruoyi-system     # 系统模块
+│   ├── ruoyi-gen        # 代码生成
+│   ├── ruoyi-job        # 定时任务
+│   └── ruoyi-file       # 文件服务
+├── ruoyi-api            # 远程调用 Feign 接口
+├── ruoyi-common         # 公共工具
+├── ruoyi-visual
+│   ├── ruoyi-monitor    # Spring Boot Admin
+│   └── ruoyi-visual-name # Nacos / Sentinel UI 入口
+└── ruoyi-ui             # Vue 3 前端
+```
+
+---
+
+### 配置中心（Nacos）
 
 每个微服务启动时从 Nacos 拉取：
 
@@ -121,7 +132,7 @@ sentinel-ruoyi-gateway.json # Sentinel 限流规则
 
 ---
 
-## 网关与认证
+### 网关与认证
 
 请求流程：
 
@@ -157,7 +168,7 @@ curl -X POST http://localhost:8080/auth/login \
 
 ---
 
-## RBAC 权限
+### RBAC 权限
 
 - 数据库：`sys_user / sys_role / sys_menu / sys_dept / sys_role_menu / sys_user_role`
 - Spring Security：`@RequiresPermissions("system:user:list")`
@@ -171,7 +182,7 @@ public AjaxResult edit(@RequestBody SysUser user) { ... }
 
 ---
 
-## Feign 远程调用
+### Feign 远程调用
 
 ```java
 @FeignClient(value = "ruoyi-system", contextId = "remoteUserService")
@@ -183,7 +194,7 @@ public interface RemoteUserService {
 
 ---
 
-## Sentinel 限流
+### Sentinel 限流
 
 ```java
 @SentinelResource(value = "listUser",
@@ -196,7 +207,7 @@ public AjaxResult list() { ... }
 
 ---
 
-## Seata 分布式事务
+### Seata 分布式事务
 
 ```java
 @GlobalTransactional(rollbackFor = Exception.class)
@@ -211,7 +222,7 @@ public void createOrder(...) {
 
 ---
 
-## 代码生成
+### 代码生成
 
 1. 设计表（添加 `t_` 前缀业务表）
 2. 系统工具 → 代码生成 → 选表 → 编辑信息（生成路径/作者/包名/前端目录）
@@ -221,7 +232,7 @@ public void createOrder(...) {
 
 ---
 
-## 定时任务（Quartz）
+### 定时任务（Quartz）
 
 后台「系统监控 → 定时任务」 → 添加：
 
@@ -238,7 +249,7 @@ public class RyTask {
 
 ---
 
-## 日志与监控
+### 日志与监控
 
 - 操作日志、登录日志：`@Log(title = "...", businessType = ...)`
 - Spring Boot Admin：`http://localhost:9100/`
@@ -247,7 +258,7 @@ public class RyTask {
 
 ---
 
-## Docker 部署
+### Docker 部署
 
 ```bash
 cd docker
@@ -259,14 +270,12 @@ sh deploy.sh web        # 前端
 
 ---
 
-## 升级与定制
+### 升级与定制
 
 1. **保留扩展点**：新建模块 `ruoyi-modules-mybiz`，不要直接改 system
 2. **统一基础包名**：`com.ruoyi` 替换为公司域名（IDE 重构）
 3. **按需删除模块**：不需要 Seata 可移除依赖
 4. **多租户**：基于 MyBatis Plus 拦截器或 ShardingSphere 改造
-
----
 
 ---
 
@@ -305,6 +314,20 @@ sh deploy.sh web        # 前端
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 启动慢/服务发现不到 | 检查 Nacos 命名空间与 group 一致 |
+| 鉴权失败 401 | Redis 中 token 过期；时间不同步 |
+| 前端 401 反复 | 检查 axios 拦截器与刷新机制 |
+| 分布式事务不回滚 | Seata `tx-service-group` 与配置中心一致 |
+| 性能问题 | 网关 + 业务服务横向扩容；启用本地缓存 |
+| 服务注册上了却调不通（`No instances available`） | Nacos 里各服务的 `namespace`/`group` 必须一致；`lb://` 名称要与 `spring.application.name` 完全一致（大小写、连字符） |
+| 前端一直 401 但不报错 | Token 在 Redis 的 TTL 与 JWT 过期时间不一致，或机器时间漂移；先 `redis-cli ttl login_tokens:<uuid>` 对一遍 |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -335,21 +358,11 @@ sh deploy.sh web        # 前端
 
 ---
 
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 启动慢/服务发现不到 | 检查 Nacos 命名空间与 group 一致 |
-| 鉴权失败 401 | Redis 中 token 过期；时间不同步 |
-| 前端 401 反复 | 检查 axios 拦截器与刷新机制 |
-| 分布式事务不回滚 | Seata `tx-service-group` 与配置中心一致 |
-| 性能问题 | 网关 + 业务服务横向扩容；启用本地缓存 |
-
----
-
 ## 相关技能
 
-- RuoYi-Cloud 是 Java 生态的独立技能。如需 .NET 生态的类似框架，可参考 Admin.NET 后端（Furion + SqlSugar），它在架构思想上与 RuoYi 类似但技术栈不同。
+- **docker-compose** — `docker/docker-compose.yml` 起 MySQL/Redis/Nacos 的编排方式与排错：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
+- **go** — 需要旁路服务（回调、网关前置）时的另一后端语言对照：[../go/SKILL.md](../go/SKILL.md)
+- **postgis** — 业务表涉及空间数据时，PostgreSQL 侧的类型与索引（若把 MySQL 换掉）：[../../gis/postgis/SKILL.md](../../gis/postgis/SKILL.md)
 
 ---
 

@@ -174,7 +174,8 @@ if (transform->Transform(1, &x, &y)) {
     // x, y 已变换为 EPSG:3857 坐标
 }
 
-OCTDestroyCoordinateTransformation(transform);
+// C++ 用 DestroyCT 归还；OCTDestroyCoordinateTransformation 是 C API（接收 OGRCoordinateTransformationH）
+OGRCoordinateTransformation::DestroyCT(transform);
 ```
 
 ### Python
@@ -305,6 +306,7 @@ src_ds = None                             # 释放数据源
 | 通用 | 大栅格内存溢出 | 用 `RasterIO` 指定窗口分块读写，避免一次性读入整个影像 |
 | 通用 | 报错信息不明确 | C++ 用 `CPLGetLastErrorMsg()`，Python 用 `gdal.GetLastErrorMsg()` 获取详细错误 |
 | C++ | WKT 等 C 字符串泄漏 | 用 `CPLFree()` 释放（如 `exportToWkt` 返回值）；几何用 `OGRGeometryFactory::destroyGeometry()` |
+| C++ | 坐标变换释放方式混用 | C++ 用 `OGRCoordinateTransformation::DestroyCT()`；`OCTDestroyCoordinateTransformation()` 只接收 C API 的 `OGRCoordinateTransformationH` |
 | C++ | 编译 / 链接失败 | 用 `gdal-config --cflags --libs` 或 CMake `find_package(GDAL)` 配置编译参数 |
 | Python | 出错却不抛异常 | 脚本开头调用 `gdal.UseExceptions()` 启用异常模式 |
 | Python | 如何高效读写像素 | `band.ReadAsArray()` / `band.WriteArray(array)` 直接与 NumPy 数组互转 |

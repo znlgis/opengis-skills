@@ -1,6 +1,6 @@
 ---
 name: docker-compose
-description: "Use when orchestrating multi-container Docker applications from a single declarative compose.yaml — defining services, networks, and volumes, then building, starting, and stopping them as one unit. Covers image/build, ports, volumes, environment, depends_on, healthcheck, profiles, and the docker compose CLI."
+description: "Use when orchestrating multi-container Docker apps from one compose.yaml — services/networks/volumes, build vs image, ports and bind mounts, env_file and ${VAR} interpolation, depends_on with healthcheck conditions, profiles, deploy.resources limits. Docker Compose v5.6.1 CLI (docker compose up/down/ps/logs/watch). Also for \"docker: 'compose' is not a docker command\", \"ports is already allocated\", containers starting before the DB is ready, and data lost after \"down -v\"."
 tags:
   - docker
   - docker-compose
@@ -17,7 +17,11 @@ tags:
 >
 > **官方文档：** <https://docs.docker.com/compose/>
 >
-> **许可证：** Apache-2.0 ｜ **最新版本：** v5.6.0
+> **许可证：** Apache-2.0
+>
+> **包管理器：** Docker Compose v2+ 插件（`docker-compose-plugin` / Docker Desktop 自带）/ 源码（最新 v5.6.1，截至 2026-10）
+>
+> **版本：** v5.6.1（2026-10-21）
 
 ## 概述
 
@@ -61,7 +65,7 @@ sudo yum install docker-compose-plugin
 
 ```bash
 docker compose version
-# 预期输出：Docker Compose version v5.6.0
+# 预期输出：Docker Compose version v5.6.1
 ```
 
 > 独立的 `docker-compose`（v1，Python 实现）已停止维护，请使用 v2+ 的 `docker compose` 子命令。
@@ -303,24 +307,6 @@ services:
 
 ---
 
-## 参考资源
-
-- 官方文档：<https://docs.docker.com/compose/>
-- Compose 文件参考：<https://docs.docker.com/reference/compose-file/>
-- CLI 命令参考：<https://docs.docker.com/reference/cli/docker/compose/>
-- 项目仓库：<https://github.com/docker/compose>
-- Compose 规范：<https://github.com/compose-spec/compose-spec>
-
----
-
-## 相关技能
-
-- [geoserver-cloud](../../gis/geoserver-cloud/SKILL.md) — GeoServer 云原生微服务，本地开发或单机部署可用 Compose 编排。
-- [billionmail](../billionmail/SKILL.md) — 自托管邮件营销平台，官方推荐以 `docker compose` 部署。
-- [ruoyi-cloud](../ruoyi-cloud/SKILL.md) — Java 微服务脚手架，常用 Compose 编排 Nacos、MySQL 等依赖中间件。
-
----
-
 ## AI 使用建议
 
 ### 推荐工作流
@@ -346,3 +332,21 @@ services:
 | 多节点集群 / 自动扩缩容 | Kubernetes 或 Swarm |
 | 仅运行单个容器 | `docker run` |
 | 需要密钥托管与集中管理 | Compose `secrets` 或外部密钥管理服务 |
+
+---
+
+## 相关技能
+
+- [geoserver-cloud](../../gis/geoserver-cloud/SKILL.md) — GeoServer 云原生微服务，本地开发或单机部署可用 Compose 编排。
+- [billionmail](../billionmail/SKILL.md) — 自托管邮件营销平台，官方推荐以 `docker compose` 部署。
+- [ruoyi-cloud](../ruoyi-cloud/SKILL.md) — Java 微服务脚手架，常用 Compose 编排 Nacos、MySQL 等依赖中间件。
+
+---
+
+## 参考资源
+
+- 官方文档：<https://docs.docker.com/compose/>
+- Compose 文件参考：<https://docs.docker.com/reference/compose-file/>
+- CLI 命令参考：<https://docs.docker.com/reference/cli/docker/compose/>
+- 项目仓库：<https://github.com/docker/compose>
+- Compose 规范：<https://github.com/compose-spec/compose-spec>

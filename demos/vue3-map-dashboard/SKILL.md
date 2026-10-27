@@ -1,6 +1,6 @@
 ---
 name: vue3-map-dashboard
-description: "Use when running, studying or extending vue3-map-dashboard — an enterprise-style data dashboard screen demo built with Vue 3 Composition API, Element Plus and the Tianditu map API. Covers composables architecture, personnel realtime tracking on a dark-styled map, QWeather integration, pinyin search, XLSX data loading, cache and logging utilities with centralized configuration."
+description: "Use when running, studying or extending a Vue 3 enterprise data-wall demo — Element Plus layout, Tianditu JS API v4 dark basemap, realtime personnel tracking, QWeather integration, pinyin search, XLSX loading from public/data, composable architecture plus cache and leveled logging; also for a blank Tianditu map from a missing tk key, \"T is not defined\" script loading order, and pinyin filtering that breaks on polyphonic names."
 tags:
   - vue
   - javascript
@@ -15,6 +15,8 @@ tags:
 > **项目地址：** <https://github.com/znlgis/vue3-map-dashboard>
 >
 > **教程：** <https://znlgis.github.io/demos/vue3-map-dashboard/>
+>
+> **依赖版本：** Vue 3.4 / Element Plus 2.5 / Vite 6 / pinyin-pro 3.27 / xlsx 0.20.3（取自仓库 `package.json`，截至 2026-10）
 >
 > **许可证：** 以仓库为准
 
@@ -251,15 +253,6 @@ Dashboard.vue
 - **图表组件**：自研 ECharts 等图表组件时，`onUnmounted` 移除 window resize 监听并 `dispose()` 实例
 - **文档滞后**：README/教程中的 Vite 5 与 echarts-vendor 分包配置与当前仓库（Vite 8 + Rolldown codeSplitting、无 echarts）不一致，以 `package.json` 与源码为准
 
-## AI 使用建议
-
-1. **架构入口**：先读 `src/views/Dashboard.vue`（编排与 `Promise.all` 并行初始化）和三个 composable（`usePersonnel` / `useWeather` / `useRealtimeData`），组件集中在 `src/components/`。
-2. **常见改造点**：地图中心 / 缩放 / 深色样式改 `src/config/map.config.js`；配色改 `src/config/theme.config.js`；更新间隔、重试次数、日志开关改 `src/config/dashboard.config.js`，不要散落魔法数字。
-3. **密钥管理**：天地图 key 经 `.env`（`VITE_TIANDITU_KEY`）注入 `index.html` script 标签；和风天气 key 在 `map.config.js`；两者都不要提交仓库。
-4. **工具复用**：日志 / 计时用 `src/utils/logger.js`，缓存用 `src/utils/cache.js`（过期 + 容量上限），拼音搜索用 `src/utils/search.js`；新增数据模块参考「新增一个可复用的数据模块」工作流。
-5. **遵守既有约定**：composable 在 `onUnmounted` 清理定时器；回调式 API（如 `T.Geocoder`）保留超时兜底模式；免费额度下依赖缓存与控制刷新间隔。
-6. **注意文档滞后**：README / 教程提到的 Vite 5 与 echarts 分包与当前仓库不符（实际 Vite 8 + Rolldown codeSplitting、未内置 echarts），以 `package.json` 与源码为准；要图表需自行安装 echarts 并放入 `ChartCard` 插槽。
-
 ## 常见问题
 
 | 问题 | 解决方案 |
@@ -273,6 +266,15 @@ Dashboard.vue
 | 需要 ECharts 图表 | 当前仓库未内置 echarts，需自行 `npm install echarts`，并把图表组件放进 `ChartCard` 的插槽 |
 | 智能搜索查不到结果 | 确认 `public/data/excel/` 数据文件存在且能被 `loadData()` 读取；拼音/首字母匹配依赖 pinyin-pro 转换 |
 | 关闭控制台日志 | 在 `dashboard.config.js` 设置 `logging.enableConsoleLog: false`，或交由环境配置自动切换 |
+
+## AI 使用建议
+
+1. **架构入口**：先读 `src/views/Dashboard.vue`（编排与 `Promise.all` 并行初始化）和三个 composable（`usePersonnel` / `useWeather` / `useRealtimeData`），组件集中在 `src/components/`。
+2. **常见改造点**：地图中心 / 缩放 / 深色样式改 `src/config/map.config.js`；配色改 `src/config/theme.config.js`；更新间隔、重试次数、日志开关改 `src/config/dashboard.config.js`，不要散落魔法数字。
+3. **密钥管理**：天地图 key 经 `.env`（`VITE_TIANDITU_KEY`）注入 `index.html` script 标签；和风天气 key 在 `map.config.js`；两者都不要提交仓库。
+4. **工具复用**：日志 / 计时用 `src/utils/logger.js`，缓存用 `src/utils/cache.js`（过期 + 容量上限），拼音搜索用 `src/utils/search.js`；新增数据模块参考「新增一个可复用的数据模块」工作流。
+5. **遵守既有约定**：composable 在 `onUnmounted` 清理定时器；回调式 API（如 `T.Geocoder`）保留超时兜底模式；免费额度下依赖缓存与控制刷新间隔。
+6. **注意文档滞后**：README / 教程提到的 Vite 5 与 echarts 分包与当前仓库不符（实际 Vite 8 + Rolldown codeSplitting、未内置 echarts），以 `package.json` 与源码为准；要图表需自行安装 echarts 并放入 `ChartCard` 插槽。
 
 ## 相关技能
 

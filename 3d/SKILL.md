@@ -14,7 +14,7 @@ tags:
   - opensource
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 96 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引
 
 ## 概述
 

@@ -19,7 +19,7 @@ tags:
 >
 > **NuGet：** `SharpMap`、`SharpMap.UI`、`SharpMap.Extensions`、`SharpMap.Web`、`SharpMap.Layers.BruTile`
 >
-> **最新版本：** 1.2.0（截至2026-10，NuGet；发布于 2021-03，仓库未归档但维护低频）
+> **最新版本：** 1.2.0（截至 2026-10，NuGet；发布于 2021-03，仓库未归档但维护低频）
 >
 > **许可证：** LGPL-2.1-or-later
 
@@ -41,6 +41,8 @@ SharpMap 提供：
 
 ## 安装
 
+### 方式一：dotnet CLI
+
 ```bash
 dotnet add package SharpMap                 # 核心（netstandard2.0）
 dotnet add package SharpMap.UI              # WinForms MapBox 控件（.NET Framework 4.7.2）
@@ -49,6 +51,33 @@ dotnet add package SharpMap.Layers.BruTile  # 在线瓦片图层 TileAsyncLayer�
 dotnet add package SharpMap.Web             # ASP.NET WMS 服务
 dotnet add package ProjNet4GeoAPI           # 坐标变换（实现 GeoAPI 接口；ProjNet 2.x 与 SharpMap 1.2 类型不兼容）
 ```
+
+### 方式二：手写 csproj 的 PackageReference
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net472</TargetFramework>   <!-- SharpMap.UI 只有 .NET Framework 4.7.2 -->
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SharpMap" Version="1.2.0" />
+    <PackageReference Include="SharpMap.UI" Version="1.2.0" />
+    <PackageReference Include="SharpMap.Layers.BruTile" Version="1.2.0" />
+  </ItemGroup>
+</Project>
+```
+
+### 验证
+
+```bash
+dotnet --version        # 确认 SDK 可用
+dotnet restore          # 能还原 SharpMap 1.2.0 即包解析成功
+dotnet build            # 编译通过仅代表能构建，渲染结果仍需出图检查
+```
+
+> `dotnet restore` 通常伴随 NU1902/NU1903/NU1904 漏洞告警（SharpMap 1.2.0 发布于 2021-03，传递依赖较旧），这是已知状态，不要当成安装失败。
+
 
 ---
 
@@ -183,7 +212,93 @@ mapBox1.MouseDown += (s, e) => {
 
 ---
 
-## 性能建议
+## 典型工作流
+
+### 工作流 1：Shapefile 渲染 + 主题样式 + 输出图片
+
+输入 `data/countries.shp`（含 `NAME`、`POP_EST` 字段），输出 `output.png`。
+
+```csharp
+using SharpMap;
+using SharpMap.Layers;
+using SharpMap.Data.Providers;
+using SharpMap.Styles;
+using SharpMap.Rendering.Thematics;
+using System.Drawing;
+
+var map = new Map(new Size(1024, 768)) { SRID = 4326 };
+
+var prov = new ShapeFile("data/countries.shp", true);
+var layer = new VectorLayer("Countries", prov)
+{
+    Style = new VectorStyle
+    {
+        Fill = Brushes.LightGreen,
+        Outline = Pens.Black,
+        EnableOutline = true
+    }
+};
+
+// 按人口分档着色（DataRowView 索引器返回 object，需显式转换）
+layer.Theme = new CustomTheme(row =>
+{
+    var pop = Convert.ToInt64(row["POP_EST"]);
+    return new VectorStyle
+    {
+        Fill = new SolidBrush(pop > 100_000_000 ? Color.Red : Color.LightBlue)
+    };
+});
+map.Layers.Add(layer);
+
+map.Layers.Add(new LabelLayer("Labels")
+{
+    DataSource = prov,
+    LabelColumn = "NAME",
+    Style = new LabelStyle { Font = new Font("Arial", 10) }
+});
+
+map.ZoomToExtents();
+using var img = map.GetMap();     // System.Drawing.Image
+img.Save("output.png");
+```
+
+### 工作流 2：PostGIS 数据 + OSM 底图
+
+输入 PostGIS 表 `poi(geom, id)`，输出带在线底图的 `map_with_osm.png`。
+
+```csharp
+using BruTile.Predefined;
+
+// 1) OSM 底图：瓦片图层来自 SharpMap.Layers.BruTile 包
+var tileSrc = KnownTileSources.Create(KnownTileSource.OpenStreetMap);
+map.Layers.Add(new TileAsyncLayer(tileSrc, "OSM"));
+
+// 2) 底图是 Web Mercator，地图 SRID 必须同步，否则矢量层整体偏移
+map.SRID = 3857;
+
+// 3) PostGIS 矢量层：连接串后依次为表名、几何列、主键列
+var pgConn = "Host=localhost;Database=gisdb;User Id=postgres;Password=***";
+var poiProvider = new PostGIS(pgConn, "poi", "geom", "id");
+map.Layers.Add(new VectorLayer("POI", poiProvider)
+{
+    Style = new VectorStyle { Fill = Brushes.OrangeRed }
+});
+
+map.ZoomToExtents();
+using var img = map.GetMap();
+img.Save("map_with_osm.png");
+```
+
+```bash
+dotnet --version                              # 需 .NET Framework 4.7.2 工程或 net472 目标框架
+dotnet add package SharpMap --version 1.2.0
+dotnet add package SharpMap.UI --version 1.2.0
+dotnet build                                  # 通过后用 read_image 检查输出的 PNG
+```
+
+**验证产物**：只有 `dotnet build` 成功不算完成——用 `read_image` 打开 `output.png`，能看到按人口分色的面、标注文字与底图瓦片才算渲染正确。
+
+## 最佳实践与性能建议
 
 1. 预建空间索引（Shapefile `.qix`、PostGIS GiST）
 2. `TileAsyncLayer` 用于在线底图
@@ -200,83 +315,12 @@ mapBox1.MouseDown += (s, e) => {
 | 无图 | 检查 SRID、`ZoomToExtents` |
 | 文字模糊 | 设置高 DPI Aware、`MapBox.MapTransform` |
 | GDI+ 内存泄漏 | 释放 `Brush/Pen/Bitmap` |
-| Shapefile 中文乱码 | `new ShapeFile(path, true, false, Encoding.UTF8)` |
+| Shapefile 中文乱码 | DBF 无编码声明时 SharpMap 默认按 UTF-8 解码：`var shp = new ShapeFile("roads.shp"); shp.Encoding = System.Text.Encoding.GetEncoding("GBK");`（构造函数没有 Encoding 重载） |
 | 找不到 `SharpMap.UI.WinForms` 包 | 该包名在 NuGet 上不存在，WinForms 控件在 `SharpMap.UI` 包中 |
 | `CoordinateTransformation` 赋值编译错误 | ProjNet 2.x 不再实现 GeoAPI 接口，改用 `ProjNet4GeoAPI` 1.4.1 |
 | 找不到 `TileAsyncLayer` | 瓦片图层不在核心包中，需安装 `SharpMap.Layers.BruTile` |
 
 ---
-
-## 典型工作流
-
-### 工作流 1：Shapefile 渲染 + 主题样式 + 输出图片
-
-```csharp
-using SharpMap;
-using SharpMap.Layers;
-using SharpMap.Data.Providers;
-using SharpMap.Styles;
-using SharpMap.Rendering.Thematics;
-using System.Drawing;
-
-// 创建地图
-var map = new Map(new Size(1024, 768));
-map.SRID = 4326;
-
-// 添加 Shapefile 图层
-var prov = new ShapeFile("countries.shp", true);
-var layer = new VectorLayer("Countries", prov)
-{
-    Style = new VectorStyle
-    {
-        Fill = Brushes.LightGreen,
-        Outline = Pens.Black,
-        EnableOutline = true
-    }
-};
-
-// 按人口设置主题样式
-layer.Theme = new CustomTheme(row =>
-{
-    var pop = (int)row["POP_EST"];
-    return new VectorStyle
-    {
-        Fill = new SolidBrush(pop > 100_000_000 ? Color.Red : Color.LightBlue)
-    };
-});
-map.Layers.Add(layer);
-
-// 添加行政标注
-var labels = new LabelLayer("Labels")
-{
-    DataSource = prov, LabelColumn = "NAME",
-    Style = new LabelStyle { Font = new Font("Arial", 10) }
-};
-map.Layers.Add(labels);
-
-// 渲染
-map.ZoomToExtents();
-using var img = map.GetMap();
-img.Save("output.png");
-```
-
-### 工作流 2：PostGIS 数据 + OSM 底图 + WMS 发布
-
-```csharp
-// PostGIS 数据
-var pgConn = "Host=localhost;Database=gisdb;User Id=postgres;Password=pg";
-var poiProvider = new PostGIS(pgConn, "poi", "geom", "id");
-map.Layers.Add(new VectorLayer("POI", poiProvider)
-{
-    Style = new VectorStyle { Fill = Brushes.OrangeRed }
-});
-
-// OSM 底图
-using BruTile.Predefined;
-var tileSrc = KnownTileSources.Create(KnownTileSource.OpenStreetMap);
-map.Layers.Add(new TileAsyncLayer(tileSrc, "OSM"));
-map.SRID = 3857;
-```
 
 ## DeepSeek Harness 使用建议
 

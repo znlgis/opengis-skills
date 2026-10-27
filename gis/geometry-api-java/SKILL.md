@@ -124,8 +124,8 @@ MapGeometry mapGeom = new MapGeometry(pt, srWGS84);
 ```java
 SpatialReference sr = SpatialReference.create(4326);
 
-// 缓冲区
-Geometry buffered = GeometryEngine.buffer(point, sr, 100.0);
+// 缓冲区（返回 Polygon）
+Polygon buffered = GeometryEngine.buffer(point, sr, 100.0);
 
 // 交集
 Geometry inter = GeometryEngine.intersect(polygon1, polygon2, sr);
@@ -334,7 +334,7 @@ Geometry polygon = GeometryEngine.geometryFromWkt(
 
 SpatialReference sr = SpatialReference.create(4326);
 
-// 2. 缓冲区分析
+// 2. 缓冲区分析（GeometryEngine.buffer 返回 Polygon）
 Polygon buffered = GeometryEngine.buffer(polygon, sr, 2.0);
 
 // 3. 相交判断（算子调用）

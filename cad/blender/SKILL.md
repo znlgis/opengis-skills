@@ -1,6 +1,6 @@
 ---
 name: blender
-description: "Use when building or batch-processing 3D scenes with Blender's Python bpy API: constructing meshes and objects, Geometry Nodes procedural modeling, converting GIS data (GeoJSON/Shapefile) into building massing, developing add-ons, and exporting glTF/OBJ/STL in headless mode. Blender is the leading open-source 3D creation suite."
+description: "Use when scripting Blender's bpy API or batch-processing scenes headless — bpy.data mesh/object creation, Geometry Nodes groups via interface.new_socket, glTF/OBJ/STL export (export_scene.gltf, wm.obj_export, wm.stl_export), GIS footprints to building massing, add-on/extension development; also for \"context is incorrect\" from bpy.ops under blender -b, --python-exit-code CI gating, and ModuleNotFoundError for system packages."
 tags:
   - 3d
   - blender
@@ -22,11 +22,13 @@ tags:
 >
 > **许可证：** GPL-2.0-or-later
 >
-> **最新稳定版：** 5.2.2 LTS（2026-09-15 发布，见 [GitHub Tags](https://github.com/blender/blender/tags)；上一 LTS 系列为 4.5）
+> **包管理器：** `winget install BlenderFoundation.Blender` / `brew install --cask blender` / `sudo snap install blender --classic`（最新 5.2.3，截至 2026-10）
+>
+> **版本：** 5.2.3（2026-10-22；5.2 为 LTS 系列，见 <https://download.blender.org/release/Blender5.2/>）
 
 ## 概述
 
-Blender 是开源 3D 创作套件，通过内置 Python 解释器暴露完整的 `bpy` API：脚本可读写全部场景数据、调用几乎全部界面功能，适合程序化建模、GIS 数据三维化与无头批处理。Python API 随 Blender 版本发布（当前 5.2.2 LTS），无需单独安装。
+Blender 是开源 3D 创作套件，通过内置 Python 解释器暴露完整的 `bpy` API：脚本可读写全部场景数据、调用几乎全部界面功能，适合程序化建模、GIS 数据三维化与无头批处理。Python API 随 Blender 版本发布（当前 5.2.3，5.2 为 LTS 系列），无需单独安装。
 
 核心模块：
 
@@ -245,6 +247,8 @@ bpy.ops.export_scene.gltf(filepath="city.glb", export_format='GLB')
 
 ## 典型工作流
 
+**输入**：建模脚本或 GeoJSON 要素数据；**输出**：`.blend` 工程或 glTF/OBJ/STL 文件。
+
 1. **准备环境**：无头服务器用官网包安装，`blender -b --python-expr "import bpy"` 验证可用。
 2. **编写脚本**：以 `bpy.ops.wm.read_factory_settings(use_empty=True)` 开始，用 `bpy.data` 创建网格/对象并 `link` 到集合。
 3. **建模**：简单体块直接 `from_pydata`；参数化或迭代规则用 Geometry Nodes 节点组 + 修饰器。
@@ -280,15 +284,11 @@ bpy.ops.export_scene.gltf(filepath="city.glb", export_format='GLB')
 
 ---
 
-## 参考资源
+## AI 使用建议
 
-- 官方手册（脚本与扩展章节）：<https://docs.blender.org/manual/en/latest/advanced/scripting/index.html>
-- Python API 文档：<https://docs.blender.org/api/current/>
-- API Quickstart：<https://docs.blender.org/api/current/info_quickstart.html>
-- 命令行参数：<https://docs.blender.org/manual/en/latest/advanced/command_line/arguments.html>
-- Add-on 教程：<https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html>
-- 扩展（Extensions）指南：<https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html>
-- 下载与版本：<https://www.blender.org/download/>
+- **推荐工作流模式**：AI 生成 Blender 脚本时先确定运行模式（GUI 交互或 `blender -b -P` 无头），无头脚本一律从 `bpy.data` 出发；GIS 类任务先输出 GeoJSON 中间文件再生成体块脚本，避免在 Blender 内做重投影。
+- **关键注意事项**：① `bpy.ops` 依赖上下文，无头环境优先 `bpy.data`；② 修改属性后调用 `bpy.context.view_layer.update()` 或重新获取 depsgraph；③ 导出操作符参数（`export_format`、`export_selected_objects`）必须显式给出；④ Blender 内置 Python 不加载系统第三方包；⑤ 版本差异集中在节点组接口（`interface.new_socket`）与导入导出操作符名称（`wm.obj_export`/`wm.stl_export`），生成代码前确认目标版本。
+- **常用代码模式**：`read_factory_settings(use_empty=True)` → `bpy.data.meshes.new` + `from_pydata` → `objects.new` + `collection.objects.link` → 设置变换/修饰器 → `export_scene.gltf` / `wm.stl_export`；批处理外壳 `blender -b --python-exit-code 1 -P pipeline.py -- <args>`。
 
 ---
 
@@ -301,8 +301,12 @@ bpy.ops.export_scene.gltf(filepath="city.glb", export_format='GLB')
 
 ---
 
-## AI 使用建议
+## 参考资源
 
-- **推荐工作流模式**：AI 生成 Blender 脚本时先确定运行模式（GUI 交互或 `blender -b -P` 无头），无头脚本一律从 `bpy.data` 出发；GIS 类任务先输出 GeoJSON 中间文件再生成体块脚本，避免在 Blender 内做重投影。
-- **关键注意事项**：① `bpy.ops` 依赖上下文，无头环境优先 `bpy.data`；② 修改属性后调用 `bpy.context.view_layer.update()` 或重新获取 depsgraph；③ 导出操作符参数（`export_format`、`export_selected_objects`）必须显式给出；④ Blender 内置 Python 不加载系统第三方包；⑤ 版本差异集中在节点组接口（`interface.new_socket`）与导入导出操作符名称（`wm.obj_export`/`wm.stl_export`），生成代码前确认目标版本。
-- **常用代码模式**：`read_factory_settings(use_empty=True)` → `bpy.data.meshes.new` + `from_pydata` → `objects.new` + `collection.objects.link` → 设置变换/修饰器 → `export_scene.gltf` / `wm.stl_export`；批处理外壳 `blender -b --python-exit-code 1 -P pipeline.py -- <args>`。
+- 官方手册（脚本与扩展章节）：<https://docs.blender.org/manual/en/latest/advanced/scripting/index.html>
+- Python API 文档：<https://docs.blender.org/api/current/>
+- API Quickstart：<https://docs.blender.org/api/current/info_quickstart.html>
+- 命令行参数：<https://docs.blender.org/manual/en/latest/advanced/command_line/arguments.html>
+- Add-on 教程：<https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html>
+- 扩展（Extensions）指南：<https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html>
+- 下载与版本：<https://www.blender.org/download/>

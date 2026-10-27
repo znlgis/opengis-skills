@@ -20,7 +20,7 @@ tags:
 >
 > **下载：** <https://geoserver.org/release/stable/>
 >
-> **最新版本：** 3.0.2（2026-10-19，安全修复版，生产应优先升级；[官方下载](https://geoserver.org/release/stable/)）
+> **最新版本：** 3.0.2（2026-10-17 发布，安全修复版，生产应优先升级；[官方下载](https://geoserver.org/release/stable/)）
 >
 > **运行环境：** Java 17 或 21；3.0.2 内含 GeoTools 35.2、GeoWebCache 2.0.2
 >
@@ -205,6 +205,9 @@ curl -u admin:geoserver -XPOST \
 | 图层范围空白 | 重新计算 native bounds |
 | WFS-T 403 | Data 规则允许 `w` 权限 |
 | 跨域 | 配置 CORS 过滤器 |
+| 改了 SLD 但预览不变 | 图层被 GeoWebCache 缓存：Tile Caching 里 Truncate 该图层，或给 GetMap 加 `&tiled=false` |
+| 忘记管理员密码 | 数据目录 `security/users.properties` 里恢复，改完重启；GeoServer 3.x 默认改由 security 配置文件管理 |
+| 启动报 `UnsupportedClassVersionError` | JVM 版本低于 17：换成 JDK 17 或 21 再启动 3.0.x 分发包 |
 
 ---
 

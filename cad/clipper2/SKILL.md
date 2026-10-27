@@ -1,6 +1,6 @@
 ---
 name: clipper2
-description: "Use when performing high-performance 2D polygon boolean operations (union, intersection, difference, XOR) and offsetting via C++, C#, or Python bindings. Clipper2: the modern polygon clipping library with robust numerical handling."
+description: "Use when doing 2D polygon boolean ops (Union/Intersect/Difference/Xor) or offsetting (InflatePaths) with Clipper2 — PathD/PathsD floating mode and Path64/Paths64 integer mode, ClipperD precision, PolyTreeD hole hierarchy, FillRule and JoinType tuning. Available via NuGet Clipper2 (2.0.0), vcpkg, npm clipper2-js, and C++/Delphi sources; also for empty output sets, self-intersections after inflate, and missing Centroid/GetAllPaths helpers."
 tags:
   - 2d
   - geometry
@@ -16,9 +16,9 @@ tags:
 >
 > **官方文档：** <http://www.angusj.com/clipper2/Docs/Overview.htm>
 >
-> **最新稳定版：** 2.0.1（截至2026年9月，tag `Clipper2_2.0.1`）
+> **包管理器：** NuGet `Clipper2` 2.0.0 ｜ vcpkg `clipper2` ｜ npm `clipper2-js` 1.2.4 ｜ 源码 tag `Clipper2_2.0.1`（2025-12-19，截至 2026-10）
 >
-> **NuGet：** `Clipper2`
+> **版本：** 上游 tag `Clipper2_2.0.1`；NuGet 稳定包仍为 `2.0.0`，二者 API 相同，装包时以 NuGet 版本为准
 >
 > **许可证：** Boost Software License 1.0
 
@@ -39,7 +39,7 @@ Clipper2 相对 Clipper1 的提升：
 ### C#
 
 ```bash
-dotnet add package Clipper2     # 提供 Clipper2Lib 命名空间
+dotnet add package Clipper2     # 2.0.0，提供 Clipper2Lib 命名空间
 ```
 
 ### C++
@@ -53,12 +53,24 @@ vcpkg install clipper2
 ### JavaScript
 
 ```bash
-npm install clipper2-js        # 第三方原生 TS/JS 移植；另有 WASM 移植 js-angusj-clipper
+npm install clipper2-js        # 1.2.4，第三方原生 TS/JS 移植；另有 WASM 移植 js-angusj-clipper 1.3.1
+```
+
+### 验证
+
+```bash
+# C#：包能还原且命名空间可解析，跑通一个 union 即可视为就绪
+dotnet list package | grep Clipper2
+
+# Node：确认版本
+node -e "console.log(require('clipper2-js/package.json').version)"
 ```
 
 ---
 
-## 核心数据结构（C#）
+## 核心 API
+
+### 核心数据结构（C#）
 
 ```csharp
 using Clipper2Lib;
@@ -73,7 +85,7 @@ PathsD clip = new() { /* ... */ };
 
 ---
 
-## 布尔运算
+### 布尔运算
 
 ```csharp
 using Clipper2Lib;
@@ -96,7 +108,7 @@ PathsD x = Clipper.Xor(a, b, FillRule.NonZero);
 
 ---
 
-## 多边形偏移（Inflate / 缩进）
+### 多边形偏移（Inflate / 缩进）
 
 ```csharp
 PathsD outline = new() {
@@ -121,7 +133,7 @@ PathsD inner = Clipper.InflatePaths(outline, -10,
 
 ---
 
-## 高级用法（ClipperD/Clipper64 类）
+### 高级用法（ClipperD/Clipper64 类）
 
 需要更精细控制（PolyTree、ZFill 回调等）：
 
@@ -148,7 +160,7 @@ PathsD flat = Clipper.PolyTreeToPathsD(tree);
 
 ---
 
-## 实用工具
+### 实用工具
 
 ```csharp
 double area = Clipper.Area(path);                       // 有符号面积（PathD 或 PathsD 都有重载）
@@ -173,7 +185,7 @@ PathD mink = Clipper.MinkowskiSum(pattern, path, false);
 
 ---
 
-## C++ 用法
+### C++ 用法
 
 ```cpp
 #include "clipper2/clipper.h"
@@ -189,6 +201,8 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 ---
 
 ## 典型工作流
+
+**输入**：`PathD`/`Path64` 轮廓集合；**输出**：布尔/偏移结果的 `PathsD`/`Paths64`，再转下游格式。
 
 ### 工作流一：2D 轮廓布尔运算（C#）
 
@@ -220,6 +234,19 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 
 ---
 
+## 与其它库对比
+
+| 库 | 语言 | 主要特性 |
+|----|------|---------|
+| **Clipper2** | C++/C#/Delphi/JS | 高性能布尔+偏移，AGG 兼容 |
+| **CGAL Boolean** | C++ | 精确算术，复杂但慢 |
+| **JTS / NTS** | Java/.NET | 完整空间分析，速度中等 |
+| **Boost.Polygon** | C++ | 仅整数，高性能 |
+
+---
+
+---
+
 ## 常见问题
 
 | 问题 | 解决 |
@@ -229,17 +256,8 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 | 浮点精度异常 | 改用 `Path64` 或 `ClipperD(precision)` |
 | 与 Clipper1 不兼容 | API 已变化，参考迁移指南 |
 | 找不到 `Centroid` / `GetAllPaths` | C# 绑定没有这两个函数：形心自行按 `Area` 加权计算，PolyTree 压平用 `Clipper.PolyTreeToPathsD(tree)` |
-
----
-
-## 与其它库对比
-
-| 库 | 语言 | 主要特性 |
-|----|------|---------|
-| **Clipper2** | C++/C#/Delphi/JS | 高性能布尔+偏移，AGG 兼容 |
-| **CGAL Boolean** | C++ | 精确算术，复杂但慢 |
-| **JTS / NTS** | Java/.NET | 完整空间分析，速度中等 |
-| **Boost.Polygon** | C++ | 仅整数，高性能 |
+| 想用 Python 调 Clipper2 | 官方没有发布 PyPI 包（`pip install clipper2` 不可用）；Python 侧要么装 Clipper1 系的 `pyclipper`，要么用 `shapely`（底层 GEOS）替代，或自己编译 C++ 版写绑定 |
+| C++ 编译报 `clipper2/clipper.h: No such file` | include 目录要指向 `CPP/Clipper2Lib/include`；CMake 里 `add_subdirectory(CPP/Clipper2Lib)` 后链接 `Clipper2Lib` 目标，不要只拷 `clipper.h` 漏掉 `clipper.core.h`/`clipper.engine.h` |
 
 ---
 

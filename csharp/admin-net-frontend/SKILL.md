@@ -1,6 +1,6 @@
 ---
 name: admin-net-frontend
-description: "Use when building Vue 3 admin dashboard frontends with dynamic routing, permission-based menus, and CRUD page generation. Admin.NET Frontend: Vue 3 + Vite + TypeScript admin UI for Admin.NET backend."
+description: "Use when building Vue 3 admin dashboards with dynamic routing and permission-based menus — getAPI(XxxApi) generated clients, v-auth button permissions, Pinia user store, api_build regeneration, Nginx try_files + /hubs WebSocket proxy. Also for blank pages from wrong component paths, API types out of date after backend changes, and SignalR notifications not arriving. Admin.NET Frontend: Vue 3 + Vite + TS admin UI."
 tags:
   - vue
   - vue3
@@ -17,7 +17,7 @@ tags:
 >
 > **前端代码目录：** `Web/`（Vue3 应用）
 >
-> **当前版本：** v2.4.x（upstream 分支 `v2` 的 `Web/package.json` 为 2.4.33，仓库最近推送 2026-03-30）
+> **当前版本：** v2.4.x（`Web/package.json` 为 2.4.33；upstream `v2` 分支最后提交 2026-01-30，znlgis 维护 `v2` 分支最后提交 2026-03-26，后者已升到 Vite 8 / vue-router 5.0.3；截至 2026-10 实测）
 >
 > **在线文档：** <https://adminnet.top/>
 >
@@ -29,12 +29,12 @@ tags:
 
 Admin.NET 前端基于 **vue-next-admin** 模板二次开发，采用 **Vue 3 Composition API** + **TypeScript** + **Element Plus** + **Vite 7** 技术栈。项目提供完整的企业级中后台管理界面，包括登录认证、动态菜单/路由、RBAC 权限控制、多语言、主题切换、SignalR 实时通讯等能力。
 
-**核心技术栈（版本对齐 upstream master，截至2026-09）：**
+**核心技术栈（版本对齐 upstream `v2`/`master` 的 `Web/package.json`，截至 2026-10 实测）：**
 - **框架：** Vue 3.5+（Composition API + `<script setup>`）
 - **语言：** TypeScript 5.9
-- **构建：** Vite 7+ / pnpm 10
+- **构建：** Vite 7+（znlgis 维护分支已升到 Vite 8）/ pnpm 10
 - **UI 组件：** Element Plus 2.x
-- **路由：** Vue Router 5
+- **路由：** Vue Router 5（upstream 5.0.0，znlgis 分支 5.0.3）
 - **状态管理：** Pinia 3
 - **国际化：** vue-i18n 11
 - **HTTP 客户端：** Axios
@@ -100,14 +100,22 @@ Web/
 ```bash
 cd Web
 
-# 安装依赖
+# 方式一：pnpm（唯一受支持的方式，项目含 pnpm-workspace.yaml）
 pnpm install
-
-# 开发模式运行
 pnpm run dev
-
-# 生产构建
 pnpm run build
+
+# 方式二：Corepack 固定 pnpm 版本后安装（避免全局版本漂移）
+corepack enable
+corepack prepare pnpm@latest --activate
+pnpm install
+```
+
+```bash
+# 验证：Node 与 pnpm 版本、依赖是否完整
+node -v
+pnpm -v
+pnpm list vue vite element-plus --depth 0
 ```
 
 ### 环境变量
@@ -265,6 +273,8 @@ server {
 
 - **admin-net-backend** — Admin.NET 配套后端（.NET + Furion + SqlSugar）：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
 - **furion** — 后端使用的 .NET Web 框架，前端通过其动态 API 自动生成接口：[../furion/SKILL.md](../furion/SKILL.md)
+- **sqlsugar** — 后端 ORM，接口返回结构变化时前端 `api_build` 需同步重新生成：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
+- **sentry** — 后端错误追踪，前端上报的异常与后端 issue 可关联排查：[../sentry/SKILL.md](../sentry/SKILL.md)
 
 ---
 

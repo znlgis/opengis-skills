@@ -21,7 +21,7 @@ tags:
 >
 > **示例：** <https://openlayers.org/en/latest/examples/>
 >
-> **最新版本：** 10.11.0（截至2026-10，npm `ol`）
+> **最新版本：** 10.11.0（截至 2026-10，npm `ol`）
 >
 > **许可证：** BSD-2-Clause
 
@@ -226,12 +226,70 @@ new VectorLayer({ source: clusterSource, style: clusterStyleFn });
 
 ## 典型工作流
 
-1. **创建 Map**：`new Map({ target, layers, view })` → 设置投影和初始中心
+以「底图 + GeoJSON 行政区 + 绘制编辑」为例，输入 `public/data/districts.geojson`，输出可浏览、可勾绘的面图层页面。
+
+1. **创建 Map**：`new Map({ target, layers, view })` → `new View({ center: fromLonLat([116.39, 39.9]), zoom: 10 })`
 2. **添加底图**：`TileLayer` + `OSM`/`XYZ`/`TileWMS` Source
-3. **加载矢量数据**：`VectorLayer` + `VectorSource` + `GeoJSON`/`MVT` Format
-4. **应用样式**：使用 `Style` 函数按属性动态渲染
+3. **加载矢量数据**：`VectorLayer` + `VectorSource` + `GeoJSON` Format
+4. **应用样式**：`layer.setStyle(fn)` 按属性动态渲染（不设样式矢量图层不渲染）
 5. **添加交互**：`Draw`/`Modify`/`Select`/`Snap` Interaction
-6. **性能优化**：`declutter` 避让标注、`renderMode: 'image'` 静态图层
+6. **导出结果**：`geojson.writeFeatures(source.getFeatures())` 落盘
+7. **性能优化**：`declutter` 避让标注、`renderMode: 'image'` 静态图层
+
+```js
+import Map from 'ol/Map.js';
+import View from 'ol/View.js';
+import TileLayer from 'ol/layer/Tile.js';
+import OSM from 'ol/source/OSM.js';
+import VectorLayer from 'ol/layer/Vector.js';
+import VectorSource from 'ol/source/Vector.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
+import { fromLonLat } from 'ol/proj.js';
+import { Style, Fill, Stroke, Text } from 'ol/style.js';
+import Draw from 'ol/interaction/Draw.js';
+
+// 显式 dataProjection / featureProjection，避免 4326 数据直接落在 3857 视图上偏移
+const geojson = new GeoJSON({
+  dataProjection: 'EPSG:4326',
+  featureProjection: 'EPSG:3857'
+});
+
+const vectorLayer = new VectorLayer({
+  source: new VectorSource({
+    url: '/data/districts.geojson',
+    format: geojson
+  }),
+  style: (feature) => new Style({
+    fill: new Fill({ color: 'rgba(70,130,180,0.25)' }),
+    stroke: new Stroke({ color: '#4682b4', width: 1.5 }),
+    text: new Text({
+      text: feature.get('name'),
+      font: '12px sans-serif',
+      overflow: true
+    })
+  })
+});
+
+const map = new Map({
+  target: 'map',
+  layers: [new TileLayer({ source: new OSM() }), vectorLayer],
+  view: new View({ center: fromLonLat([116.39, 39.9]), zoom: 9 })
+});
+
+// 直接在同一个矢量图层上绘制；画完把全部要素序列化回 EPSG:4326
+const drawSource = vectorLayer.getSource();
+map.addInteraction(new Draw({ source: drawSource, type: 'Polygon' }));
+
+drawSource.on('addfeature', () => {
+  const text = geojson.writeFeatures(drawSource.getFeatures(), {
+    dataProjection: 'EPSG:4326',
+    featureProjection: 'EPSG:3857'
+  });
+  console.log(text);           // 可直接提交给后端保存
+});
+```
+
+**验证产物**：`npm run build` 后打开页面，底图与行政区面同时显示；再画一个多边形，控制台应输出对应 GeoJSON（坐标已转回 EPSG:4326）。
 
 ---
 

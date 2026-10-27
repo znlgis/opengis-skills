@@ -17,11 +17,13 @@ tags:
 
 > **项目地址：** <https://github.com/znlgis/opengis-daf>
 >
+> **版本：** 仓库主线（截至 2026-10，无 Release tag、无 NuGet 包；以 `global.json` 的 .NET SDK 10.0.301 为准）
+>
 > **许可证：** MIT License
 >
 > **文档：** <https://github.com/znlgis/opengis-daf/tree/main/docs>（快速入门、方案配置指南、算子参考、CLI 参考）
 >
-> **底层依赖：** GDAL/OGR 3.x、NetTopologySuite 2.6、Npgsql 10、Serilog 4.4
+> **底层依赖：** GDAL/OGR 3.x、NetTopologySuite 2.6.0、Npgsql 10.0.3、Serilog 4.4.0（实测各 `*.csproj`）
 
 ## 概述
 
@@ -193,7 +195,7 @@ dotnet demo/plugin/OpenGisDAF.PluginHostDemo/bin/Release/net10.0/OpenGisDAF.Plug
 
 ---
 
-## 常见工作流
+## 典型工作流
 
 ### 先质检、后分析（推荐）
 

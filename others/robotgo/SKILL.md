@@ -1,6 +1,6 @@
 ---
 name: robotgo
-description: "Use when automating desktop GUI operations in Go — mouse/keyboard control, screen capture, image recognition via OpenCV, global hotkeys via gohook. RobotGo: cross-platform Go desktop automation (RPA) library for macOS, Windows, and Linux."
+description: "Use when automating desktop GUI in Go — robotgo.Move/Click/KeyTap, CaptureImg vs CaptureScreen, bitmap.Find template matching, gohook global hotkeys, gcv OpenCV matching, clipboard and window control. RobotGo v1.3.7: cross-platform Go desktop automation for macOS/Windows/Linux. Also for black screenshots or silently ignored input on macOS (missing accessibility/screen-recording grants), \"png.h not found\", clipboard errors without xsel/xclip, and Wayland needing -tags wayland/libei."
 tags:
   - go
   - golang
@@ -18,7 +18,11 @@ tags:
 >
 > **官方文档：** <https://github.com/go-vgo/robotgo#documentation>
 >
-> **许可证：** Apache-2.0 ｜ **最新版本：** v1.3.5（2026-10-07，稳定线）；v2.0.0-beta4（纯 Go 预发布线）｜ **默认分支：** `master`
+> **许可证：** Apache-2.0
+>
+> **包管理器：** `go get github.com/go-vgo/robotgo`（最新 v1.3.7，截至 2026-10）
+>
+> **版本：** v1.3.7（2026-10-22，稳定线）；v2.0.0-beta4（纯 Go 预发布线）｜ 默认分支 `master`
 >
 > **生态子库：**
 >
@@ -414,18 +418,6 @@ robotgo.KeySleep = 50                      // 键盘操作后等待 50ms
 
 ---
 
-## AI 使用建议
-
-1. **优先用 CaptureImg 而非 CaptureScreen**：CaptureImg 返回 `image.Image` 无需手动释放，避免内存泄漏。
-2. **中文输入用剪贴板**：`Type()` 可能被活动输入法拦截/转换。中文文本建议 `WriteAll()` + `KeyTap("ctrl", "v")`。
-3. **macOS 权限**：程序运行前必须授予终端/IDE 的「辅助功能」和「屏幕录制」权限，否则鼠标键盘静默失效、截图全黑。
-4. **位图模板需同环境截取**：`bitmap.Find` 要求精确像素匹配，不同分辨率/DPI/主题/抗锯齿下会失败。
-5. **防无限循环**：robotgo 模拟的键鼠事件会被 gohook 捕获。用状态标志区分「程序触发」和「用户操作」。
-6. **v1.0+ API 变更**：若从 v0.100.x 迁移，注意 `FindBitmap`/`OpenBitmap`/`SaveBitmap` 已移至 `bitmap` 子库，`GetBitmapSize` 改为 `GetImgSize(path)`。
-7. **CGO 交叉编译极困难**：Cgo 模式需要目标平台的 C 交叉工具链和系统头文件。推荐在各平台原生构建，或使用 Cgo-free 后端。
-
----
-
 ## 常见问题（FAQ）
 
 | 问题 | 原因 | 解决方案 |
@@ -441,6 +433,18 @@ robotgo.KeySleep = 50                      // 键盘操作后等待 50ms
 
 ---
 
+## AI 使用建议
+
+1. **优先用 CaptureImg 而非 CaptureScreen**：CaptureImg 返回 `image.Image` 无需手动释放，避免内存泄漏。
+2. **中文输入用剪贴板**：`Type()` 可能被活动输入法拦截/转换。中文文本建议 `WriteAll()` + `KeyTap("ctrl", "v")`。
+3. **macOS 权限**：程序运行前必须授予终端/IDE 的「辅助功能」和「屏幕录制」权限，否则鼠标键盘静默失效、截图全黑。
+4. **位图模板需同环境截取**：`bitmap.Find` 要求精确像素匹配，不同分辨率/DPI/主题/抗锯齿下会失败。
+5. **防无限循环**：robotgo 模拟的键鼠事件会被 gohook 捕获。用状态标志区分「程序触发」和「用户操作」。
+6. **v1.0+ API 变更**：若从 v0.100.x 迁移，注意 `FindBitmap`/`OpenBitmap`/`SaveBitmap` 已移至 `bitmap` 子库，`GetBitmapSize` 改为 `GetImgSize(path)`。
+7. **CGO 交叉编译极困难**：Cgo 模式需要目标平台的 C 交叉工具链和系统头文件。推荐在各平台原生构建，或使用 Cgo-free 后端。
+
+---
+
 ## RobotGo-Pro（商业版）
 
 RobotGo-Pro 是非开源商业版本，提供 JavaScript、Python、Lua 等多语言绑定，包含技术支持和新特性。本技能仅覆盖开源 Go 版本。
@@ -451,6 +455,7 @@ RobotGo-Pro 是非开源商业版本，提供 JavaScript、Python、Lua 等多�
 
 - **robotgo-flow** — 基于 RobotGo 的 YAML 桌面自动化工作流（上层封装）：[../robotgo-flow/SKILL.md](../robotgo-flow/SKILL.md)
 - **go** — RobotGo 使用的 Go 语言本身（并发、模块与工具链）：[../go/SKILL.md](../go/SKILL.md)
+- **docker-compose** — 把 RobotGo 采集/回放服务容器化时的编排方式（注意 GUI 与 X11 的限制）：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
 
 ---
 

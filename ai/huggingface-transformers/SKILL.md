@@ -1,6 +1,6 @@
 ---
 name: huggingface-transformers
-description: "Use when running or fine-tuning Hugging Face Transformers models in Python — pipeline() inference for text classification and generation, loading weights with AutoModel/AutoTokenizer, device_map and dtype memory management, tokenizer usage, Trainer fine-tuning, and BGE embeddings for Chinese RAG. Covers transformers v5.x, PyTorch integration, and how its in-process inference differs from Ollama local deployment."
+description: "Use when running or fine-tuning Hugging Face Transformers models in Python — pipeline() inference, AutoModel/AutoTokenizer from_pretrained, device_map + dtype memory management, Trainer fine-tuning, BGE embeddings for Chinese RAG; also for CUDA out of memory on load, transformers 5.21 `Requires-Python >=3.11`, `pipeline("summarization")` removed in v5, and ImportError after upgrading. transformers 5.21.0 + PyTorch."
 tags:
   - transformers
   - huggingface
@@ -18,7 +18,8 @@ tags:
 > **官方文档：** <https://huggingface.co/docs/transformers/>
 >
 > **许可证：** Apache-2.0
-> **最新版本：** v5.19.0（PyPI 与 GitHub Releases 双核实，截至 2026-10）
+>
+> **最新版本：** v5.21.0（PyPI 与 `releases/latest` 双核实，截至 2026-10；5.21.0 上传于 2026-10-26）
 
 ## 概述
 
@@ -36,7 +37,7 @@ Transformers 是库（进程内推理/训练），与 Ollama 这类独立推理�
 
 ## 环境准备
 
-要求 Python >= 3.10（v5 起）。
+要求 Python **>= 3.11**（5.21.0 起，实测 `requires_python`；5.19–5.20 仍为 >= 3.10）。
 
 ```bash
 # 核心：Transformers 与 PyTorch
@@ -305,7 +306,9 @@ print((q_vector @ doc_vectors.T).softmax(dim=-1))
 
 | 问题 | 排查与解决 |
 |------|-----------|
-| `ImportError: cannot import name ...` | 版本不匹配，先 `pip install -U transformers`；确认 Python >= 3.10 |
+| `ImportError: cannot import name ...` | 版本不匹配，先 `pip install -U transformers`；5.21+ 需 Python >= 3.11 |
+| `pip install transformers` 报 `Requires-Python >=3.11` | 5.21.0 起最低 Python 3.11；要么升级解释器，要么钉 `transformers==5.20.x`（仍支持 3.10） |
+| 从 4.x 升到 5.x 后 TF/JAX 代码报错 | v5 移除 TensorFlow 与 JAX 后端，只保留 PyTorch；相关代码需迁移到 torch 或留在 4.x |
 | 模型下载慢或超时 | 设镜像端点 `export HF_ENDPOINT=https://hf-mirror.com`，或 `hf auth login` 后用官方源；检查 `HF_HOME` 磁盘空间 |
 | CUDA out of memory | 用 `device_map="auto"` + `dtype="auto"`；降 `batch_size`；开 `BitsAndBytesConfig` 量化；`torch.cuda.empty_cache()` |
 | 明明有 GPU 却跑在 CPU | 检查 `torch.cuda.is_available()`；CUDA 版 torch 未装或驱动不匹配，按官网 index-url 重装 |
@@ -314,28 +317,6 @@ print((q_vector @ doc_vectors.T).softmax(dim=-1))
 | 生成结果被截断 | `max_new_tokens` 太小或超 `model_max_length`；调大生成长度并检查 tokenizer 的 `max_length` |
 | `trust_remote_code` 相关报错 | 部分模型需 `trust_remote_code=True` 加载自定义代码，确认来源可信后再开启 |
 | Tokenizer 报 `text_target` 未知 | 该参数用于 seq2seq 标签编码，普通编码直接传位置参数或用 `padding`/`truncation` |
-
----
-
-## 参考资源
-
-- 官方文档：<https://huggingface.co/docs/transformers/>
-- 快速上手：<https://huggingface.co/docs/transformers/quicktour>
-- Pipeline 指南：<https://huggingface.co/docs/transformers/main_classes/pipelines>
-- 训练与 Trainer：<https://huggingface.co/docs/transformers/main_classes/trainer>
-- 模型与数据集 Hub：<https://huggingface.co/models>、<https://huggingface.co/datasets>
-- 中文嵌入模型：<https://huggingface.co/BAAI/bge-large-zh-v1.5>
-- 版本发布：<https://github.com/huggingface/transformers/releases>
-- PyPI：<https://pypi.org/project/transformers/>
-
----
-
-## 相关技能
-
-- [ollama](../ollama/SKILL.md) — 本地推理服务，适合开箱即用跑 GGUF LLM；Transformers 侧重进程内推理与微调
-- [langchain](../langchain/SKILL.md) — LLM 应用编排框架，可直接封装 Transformers 模型与 HuggingFaceEmbeddings
-- [dify](../dify/SKILL.md) — LLM 应用平台，可接入 Transformers 嵌入模型构建 RAG 知识库
-- [docutranslate](../docutranslate/SKILL.md) — 文档翻译工具，可配合本地 Transformers 模型做离线翻译
 
 ---
 
@@ -357,3 +338,23 @@ print((q_vector @ doc_vectors.T).softmax(dim=-1))
 - **任务名随版本变**：`summarization` 等在 v5 已移除，硬编码旧任务名会失败
 - **精度与显存**：`dtype="auto"` 是显存优化的第一手段，量化是第二手段，换模型是最后手段
 - **离线环境**：先在有网机器预下载到 `HF_HOME` 缓存，再设 `HF_HUB_OFFLINE=1` 复用
+
+## 相关技能
+
+- [ollama](../ollama/SKILL.md) — 本地推理服务，适合开箱即用跑 GGUF LLM；Transformers 侧重进程内推理与微调
+- [langchain](../langchain/SKILL.md) — LLM 应用编排框架，可直接封装 Transformers 模型与 HuggingFaceEmbeddings
+- [dify](../dify/SKILL.md) — LLM 应用平台，可接入 Transformers 嵌入模型构建 RAG 知识库
+- [docutranslate](../docutranslate/SKILL.md) — 文档翻译工具，可配合本地 Transformers 模型做离线翻译
+
+---
+
+## 参考资源
+
+- 官方文档：<https://huggingface.co/docs/transformers/>
+- 快速上手：<https://huggingface.co/docs/transformers/quicktour>
+- Pipeline 指南：<https://huggingface.co/docs/transformers/main_classes/pipelines>
+- 训练与 Trainer：<https://huggingface.co/docs/transformers/main_classes/trainer>
+- 模型与数据集 Hub：<https://huggingface.co/models>、<https://huggingface.co/datasets>
+- 中文嵌入模型：<https://huggingface.co/BAAI/bge-large-zh-v1.5>
+- 版本发布：<https://github.com/huggingface/transformers/releases>
+- PyPI：<https://pypi.org/project/transformers/>

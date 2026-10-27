@@ -1,6 +1,6 @@
 ---
 name: occt
-description: "Use when developing custom CAD/CAM/CAE applications requiring a production-grade 3D geometric kernel — B-Rep modeling, Boolean operations, fillets, STEP/IGES I/O, meshing. OCCT (Open CASCADE Technology): the industrial C++ geometry kernel that powers FreeCAD, KiCad, and many commercial CAD systems."
+description: "Use when building CAD/CAM/CAE features on OCCT 8.0.1 — TopoDS_Shape B-Rep modeling, BRepAlgoAPI/BOPAlgo booleans, BRepFilletAPI fillets, STEPControl_Reader/Writer, IGES exchange, BRepMesh_IncrementalMesh, or PythonOCC/opencascade.js; also when a boolean/fillet returns an empty shape, TopoDS_Shape copies land in the wrong place (reference semantics, use BRepBuilderAPI_Copy), or STEP loses non-ASCII attributes. OCCT: LGPL geometry kernel behind FreeCAD and KiCad."
 tags:
   - 3d
   - geometry
@@ -10,6 +10,7 @@ tags:
   - step
   - iges
   - mesh
+  - pythonocc
 ---
 
 > **项目地址：** <https://github.com/Open-Cascade-SAS/OCCT>
@@ -22,7 +23,7 @@ tags:
 >
 > **许可证：** LGPL-2.1（带例外条款）
 >
-> **最新稳定版：** 8.0.1（2026-07 发布，见 [OCCT Releases](https://github.com/Open-Cascade-SAS/OCCT/releases)）
+> **最新稳定版：** 8.0.1（2026-07-30 发布，截至 2026-10，见 [OCCT Releases](https://github.com/Open-Cascade-SAS/OCCT/releases)）
 
 ## 概述
 
@@ -52,8 +53,20 @@ brew install opencascade
 # Conda（含 PythonOCC）
 conda install -c conda-forge pythonocc-core
 
-# 源码：CMake 构建（OCCT 8.0.0 起要求 C++17、CMake ≥ 3.10；VTK 默认关闭，需 -DUSE_VTK=ON 开启）
+# 源码：CMake 构建（CMake ≥ 3.10；C++ 标准缺省 C++17，可用 -DBUILD_CPP_STANDARD=C++20 调高；
+# VTK 默认关闭，需 -DUSE_VTK=ON 开启）
 ```
+
+验证安装（头文件与库是否就位）：
+
+```bash
+ls /usr/include/opencascade/Standard_Version.hxx     # Linux 发行版包
+grep -m1 OCC_VERSION_STRING /usr/include/opencascade/Standard_Version.hxx
+brew --prefix opencascade                            # macOS Homebrew 安装前缀
+python -c "import OCC; print(OCC.__file__)"           # pythonocc-core 可导入即装好；其内置 OCCT 版本随发行包，见 conda 包说明
+```
+
+> pythonocc-core 的版本号与 OCCT 版本号不同步（PyPI 上最新为 0.16），升级前先确认该发行包内置的 OCCT 版本，再决定用哪套 API。
 
 > **版本提示：** OCCT 8.0 起有重大变更：`Standard_Failure` 改为继承 `std::exception`；`Raise()`/`Throw()`/`Instance()` 静态助手被移除（改用 `throw` 关键字）；`Standard_Mutex` 等退役，改用 `std::mutex`/`std::lock_guard`。从 7.x 升级需留意这些破坏性变更。最新版本请参见 [OCCT Releases](https://github.com/Open-Cascade-SAS/OCCT/releases)。
 
@@ -197,13 +210,15 @@ for (TopExp_Explorer ex(shape, TopAbs_FACE); ex.More(); ex.Next()) {
 
 ---
 
-## OCC.js（Web）
+## opencascade.js（Web / WebAssembly）
 
-```js
+```javascript
 import opencascade from 'opencascade.js';
 const oc = await opencascade();
 const box = new oc.BRepPrimAPI_MakeBox_2(100, 60, 30).Shape();
 ```
+
+opencascade.js 的类名带 `_N` 后缀表示重载变体（如 `BRepPrimAPI_MakeBox_2` 对应三边长的构造），具体后缀以你绑定到的 opencascade.js 版本生成的 `*.d.ts` 为准——照着改前先在生成目录里搜类名。
 
 ---
 

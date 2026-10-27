@@ -123,7 +123,8 @@ var transformedPolygon = polygon.TransformedPolygon(transform);
 // 拉伸
 var extrude = new Extrude(profile, 3.0, Vector3.ZAxis);
 
-// 扫掠
+// 扫掠：需要先给出扫掠路径
+var path = new Line(new Vector3(0, 0, 0), new Vector3(0, 0, 3));
 var sweep = new Sweep(profile, path, angle);
 
 // CSG 布尔运算

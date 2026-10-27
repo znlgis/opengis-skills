@@ -1,6 +1,6 @@
 ---
 name: kicad
-description: "Use when designing electronic circuits and PCBs — schematic capture, PCB layout, 3D viewer, SPICE simulation, Gerber export. KiCad: the leading open-source EDA/PCB design suite."
+description: "Use when doing schematic capture or PCB layout in KiCad (10.0.x) — Eeschema symbols and hierarchical sheets, Pcbnew board setup, net classes, zones, DRC/ERC, and scripting via kicad-cli (sch export pdf/netlist, pcb export gerbers/drill/pos/step) or the pcbnew Python module. Also for pcbnew wxPoint-to-VECTOR2I mismatches across versions, Gerber sets rejected by fabricators like JLC, and footprint assignment lost when syncing schematic to board."
 tags:
   - eda
   - pcb
@@ -20,7 +20,9 @@ tags:
 >
 > **许可证：** GPL-3.0+
 >
-> **最新稳定版：** 10.0.6（GitHub 上最新的已发布 Release，2026-08-29，见 [Releases](https://github.com/KiCad/kicad-source-mirror/releases)）；镜像仓库已出现 `10.0.7` 标签，安装时以 [kicad.org/download](https://www.kicad.org/download/) 的平台包为准。版本号 `10.99.0` 是下一大版本（11.0）系列的开发版
+> **包管理器：** `kicad`（Ubuntu PPA `ppa:kicad/kicad-10.0-releases` / `brew install --cask kicad` / Windows 安装包，最新 10.0.7 截至 2026-10）
+>
+> **版本：** 10.0.7（GitHub 镜像 Release `10.0.7`，2026-10-16；版本号 `10.99.0` 是下一大版本 11.0 的开发版）
 
 ## 概述
 
@@ -38,12 +40,12 @@ KiCad 主要程序：
 | BOM 工具 | 物料清单 |
 | CLI（KiCad 7+） | 自动化（`kicad-cli`） |
 
-当前稳定线为 **10.0.x**（最新 10.0.6，见文首版本行）。KiCad 7+ 相对 6.x 的改进：
+当前稳定线为 **10.0.x**（最新 10.0.7，见文首版本行）。现代版本相对 5.x 的关键变化：
 
-- 全新原生 Python API（`pcbnew`），支持脚本扩展
-- 标准 IPC-2581 输出
-- 多板设计 / 互连
-- DRC 规则丰富（差分对、长度匹配）
+- 文件格式改为 S-expression（`.kicad_sch` / `.kicad_pcb` / `.kicad_pro`），旧 `.lib` / `.mod` 需导入
+- 官方 CLI `kicad-cli`（7.0 起）替代旧 `pcbnew_do` 脚本，可无头导出制造文件
+- Python `pcbnew` 模块持续演进：7.0 起坐标类型由 `wxPoint` 换成 `VECTOR2I`，配 `pcbnew.VECTOR2I_MM(x, y)` / `pcbnew.FromMM(v)` 使用
+- 支持 IPC-2581 / ODB++ 等制造输出，DRC 规则支持差分对与长度匹配
 
 ---
 
@@ -64,7 +66,9 @@ brew install --cask kicad
 
 ---
 
-## 原理图（Eeschema）要点
+## 核心 API
+
+### 原理图（Eeschema）要点
 
 - 元件：`A` 添加；`R/L/C` 等快捷键
 - 连线：`W` Wire、`B` Bus
@@ -75,7 +79,7 @@ brew install --cask kicad
 
 ---
 
-## PCB（Pcbnew）要点
+### PCB（Pcbnew）要点
 
 - 板框：Edge.Cuts 层用 `Polygon` 或 `Line` 画
 - 摆件：拖动 / 旋转 / 翻面 (`F`)
@@ -88,7 +92,7 @@ brew install --cask kicad
 
 ---
 
-## 库管理
+### 库管理
 
 - 全局库：`Preferences → Manage Symbol/Footprint Libraries`（按用户/项目级别）
 - 推荐项目级库：在项目目录新建 `lib/` 放 `.kicad_sym` / `.pretty/`
@@ -96,7 +100,7 @@ brew install --cask kicad
 
 ---
 
-## 制造输出（Gerber + Drill）
+### 制造输出（Gerber + Drill）
 
 ```text
 File → Plot
@@ -114,29 +118,31 @@ File → Plot
 
 ---
 
-## 命令行自动化（CLI，KiCad 7+）
+### 命令行自动化（CLI，KiCad 7+）
 
 ```bash
-# 原理图导出 PDF
-kicad-cli sch export pdf project/main.kicad_sch -o sch.pdf
-
-# 网表
+# 原理图导出 PDF / 网表 / BOM
+kicad-cli sch export pdf     project/main.kicad_sch -o sch.pdf
 kicad-cli sch export netlist project/main.kicad_sch -o net.net
+kicad-cli sch export bom     project/main.kicad_sch -o bom.csv
 
-# Gerber + Drill
+# Gerber + Drill（-o 是输出目录，不是文件）
 kicad-cli pcb export gerbers project/board.kicad_pcb -o gerber/
 kicad-cli pcb export drill   project/board.kicad_pcb -o gerber/
 
-# Pick & Place
-kicad-cli pcb export pos     project/board.kicad_pcb --format csv -o pos.csv
+# Pick & Place（贴片坐标）
+kicad-cli pcb export pos --format csv project/board.kicad_pcb -o pos.csv
 
-# STEP（3D）
-kicad-cli pcb export step    project/board.kicad_pcb -o board.step
+# STEP（3D）/ BOM
+kicad-cli pcb export step project/board.kicad_pcb -o board.step
+
+# 版本自检
+kicad-cli version
 ```
 
 ---
 
-## Python 脚本（pcbnew）
+### Python 脚本（pcbnew）
 
 ```python
 import pcbnew
@@ -156,11 +162,15 @@ board.Add(track)
 pcbnew.SaveBoard("out.kicad_pcb", board)
 ```
 
-KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + `pcbnew.FromMM`。
+坐标单位与类型是版本分界点：**7.0 起** `PCB_TRACK.SetStart` 等签名接收 `VECTOR2I`（用 `pcbnew.VECTOR2I_MM(x, y)` 构造毫米坐标，`pcbnew.FromMM(v)` 转内部纳米单位）；6.x 及更早用 `wxPoint` + `pcbnew.FromMM`。
+
+`pcbnew` 是编译进 KiCad 的模块，不是 PyPI 包：Windows 用安装目录附带的 `python.exe`；Linux 由发行版包提供，先用 `python3 -c "import pcbnew"` 确认可用再写脚本，不要在系统 Python 里 `pip install pcbnew`。
 
 ---
 
 ## 典型工作流
+
+**输入**：原理图（`.kicad_sch`）与封装库；**输出**：Gerber + 钻孔 + 贴片坐标 + BOM（CI 场景下为整套制造文件 ZIP）。
 
 ```text
 新建 Project (.kicad_pro)
@@ -221,6 +231,9 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 | Gerber 不全 | 板厂常需要 `F.Mask/B.Mask/F.Silk/B.Silk/Edge.Cuts/F.Cu/B.Cu` + 钻孔 |
 | 覆铜失效 | 重新 Refill；检查热焊盘连接 |
 | 嘉立创不识别 | 输出格式选 X2；勾选 `Plot pad on silk` 关闭 |
+| `kicad-cli: command not found` | CLI 自 7.0 起随主程序安装；Windows 在 `C:\Program Files\KiCad\<ver>\bin`，macOS 在 `/Applications/KiCad/KiCad.app/Contents/MacOS`，加入 PATH 后 `kicad-cli version` 验证 |
+| 脚本里 `import pcbnew` 失败 | 用 KiCad 自带 Python，不要 `pip install pcbnew`（该模块无 PyPI 发布）；Linux 装发行版的 `kicad` 包后 `python3 -c "import pcbnew"` 验证 |
+| 从原理图更新后 PCB 元件消失 | 网表同步（Update PCB from Schematic）会按 reference 匹配；改过 reference/删过封装需先重新注释（Annotate）再同步 |
 
 ---
 
@@ -234,8 +247,10 @@ KiCad 8 中改用 `pcbnew.VECTOR2I` + `pcbnew.FromMM`，旧 5/6 用 `wxPoint` + 
 
 ## 相关技能
 
-- **freecad** — 3D 参数化 CAD，可与 KiCad 3D 模型协同：[../freecad/SKILL.md](../freecad/SKILL.md)
-- **occt** — OCCT 几何内核（KiCad 3D Viewer 底层依赖）：[../occt/SKILL.md](../occt/SKILL.md)
+- **freecad** — 3D 参数化 CAD，可导入 KiCad 的 STEP 做机壳/装配检查：[../freecad/SKILL.md](../freecad/SKILL.md)
+- **occt** — OCCT 几何内核（KiCad 3D Viewer 与 STEP 导出链路的底层依赖）：[../occt/SKILL.md](../occt/SKILL.md)
+- **blender** — 3D 场景与渲染（PCB 展示图、产品级渲染）：[../blender/SKILL.md](../blender/SKILL.md)
+- **cadquery** — Python 参数化 CAD（需要按板框尺寸生成结构件时使用）：[../cadquery/SKILL.md](../cadquery/SKILL.md)
 
 ---
 

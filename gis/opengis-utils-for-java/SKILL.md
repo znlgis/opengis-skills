@@ -17,7 +17,7 @@ tags:
 >
 > **官方文档：** <https://github.com/znlgis/opengis-utils-for-java#readme>
 >
-> **Maven 坐标：** `com.znlgis.ogu4j:ogu4j:1.0.0`（截至2026-10 尚未发布到 Maven Central，需从源码 `mvn install` 安装到本地仓库）
+> **Maven 坐标：** `com.znlgis.ogu4j:ogu4j:1.0.0`（截至 2026-10 尚未发布到 Maven Central，需从源码 `mvn install` 安装到本地仓库）
 >
 > **许可证：** LGPL-2.1-or-later
 
@@ -133,7 +133,7 @@ com.znlgis.ogu4j
 
 > 常见任务快速参考（Quick Reference: Common Tasks）完整内容见 [reference/common-tasks.md](reference/common-tasks.md)
 
-## Data Format Support Matrix
+## 数据格式支持矩阵
 
 | Format | DataFormatType | GeoTools | GDAL | Read | Write | Notes |
 |--------|---------------|----------|------|------|-------|-------|
@@ -147,9 +147,9 @@ com.znlgis.ogu4j
 
 ---
 
-## Data Model Reference
+## 数据模型参考
 
-### OguLayer (Core)
+### OguLayer（核心）
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -211,7 +211,7 @@ com.znlgis.ogu4j
 
 **Constructors:** `OguCoordinate(x, y)`, `OguCoordinate(x, y, z)`
 
-### DbConnBaseModel (PostGIS connection)
+### DbConnBaseModel（PostGIS 连接）
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -225,7 +225,7 @@ com.znlgis.ogu4j
 
 ---
 
-## Enumerations Quick Reference
+## 枚举速查
 
 ### GeometryType
 
@@ -251,7 +251,7 @@ com.znlgis.ogu4j
 
 ---
 
-## Exception Hierarchy
+## 异常层次
 
 ```text
 Exception
@@ -267,7 +267,7 @@ RuntimeException
 
 ---
 
-## Architecture & Design Patterns
+## 架构与设计模式
 
 - **Factory Pattern:** `GisEngineFactory` creates engine instances; use `GisEngineType.AUTO` for automatic selection (prefers GDAL if available)
 - **Strategy Pattern:** `LayerReader` / `LayerWriter` interfaces define pluggable format-specific I/O strategies
@@ -277,18 +277,20 @@ RuntimeException
 
 ---
 
-## DeepSeek Harness 使用建议
+## 常见问题
 
-- **加载与引用**：用 `skill("opengis-utils-for-java")` 加载（用户也可输入 `/opengis-utils-for-java`）；`reference/common-tasks.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
-- **执行环境**：先 `java -version` 与 `mvn -version`（需 JDK 17+、Maven 3.8+），Windows 用 `pwsh`；`mvn -v` 里显示的 JDK 才是 Maven 实际使用的，与 shell 的 `java` 不一致时改 `JAVA_HOME` 再重试。
-- **源码安装（本库未发布到 Central）**：`git clone https://github.com/znlgis/opengis-utils-for-java.git` 后 `mvn install -DskipTests`，产物落在 `~/.m2/repository/com/znlgis/ogu4j/ogu4j/1.0.0/`；用 `mvn dependency:tree -Dincludes=com.znlgis.ogu4j` 确认坐标可解析。不要在 `pom.xml` 里直接写 `ogu4j:1.0.0` 后指望从 Central 下载。
-- **仓库与网络**：GeoTools 依赖不在 Central，`pom.xml` 必须带 `https://repo.osgeo.org/repository/release/`，否则 `Could not resolve dependencies for org.geotools:*`；离线或私服缺包时如实报告依赖不可下载，不要自行换版本或加未知仓库。
-- **原生 GDAL 匹配**：GDAL 引擎绑定 `org.gdal:gdal` 3.13.0，本机需装 GDAL 3.13.x 且 `java.library.path` 能找到 `gdal_jni`（Windows 上 `java -XshowSettings:properties -version 2>&1 | Select-String library.path`）；报 `UnsatisfiedLinkError: no gdal_jni in java.library.path` 说明原生库缺失或版本不符，此时改用 `GisEngineType.GEOTOOLS`。
-- **验证产物**：写最小 main 读一个 Shapefile/GeoJSON → `OguLayerUtil.readLayer(DataFormatType.SHP, path, null, null, null, GisEngineType.AUTO)`，打印 `layer.getWkid()`、`layer.getFeatureCount()`，再 `writeLayer` 成 GeoJSON 并重新读回比对要素数与 CRS；`mvn -q -DskipTests package` 只说明能编译。
-- **常见误操**：`AUTO` 在本机有原生 GDAL 时会优先走 GDAL，想复现纯 Java 结果必须显式传 `GisEngineType.GEOTOOLS`；`OguFeature.geometry` 是 WKT 字符串，做运算前先 `GeometryUtil.wkt2Geometry()`；`DataStore` 与 OGR `DataSource` 要在 `finally` 里释放，否则文件被占用后 `writeLayer` 覆盖失败。
-- **安全与权限**：PostGIS 连接串（`PG: host=... password=...`）里的密码不要回显到输出；`mvn install` 会写 `~/.m2`、示例代码会写 `/data` 等绝对路径，覆盖已有数据前先确认路径并征得用户同意。
+| 问题 | 解决 |
+|------|------|
+| `mvn install` 依赖解析失败 | 配置 osgeo 仓库（GeoTools 依赖不在 Maven Central）；确认 Maven 3.8+ 与 JDK 17+ |
+| 找不到 `com.znlgis.ogu4j:ogu4j` 依赖 | 该库尚未发布到 Maven Central，先在本仓库执行 `mvn install` 安装到本地仓库 |
+| 运行时报 GDAL 相关 `UnsatisfiedLinkError` | 本地缺少与 `org.gdal:gdal` 3.13.0 匹配的原生 GDAL；安装 GDAL 3.13.x，或改用 `GisEngineType.GEOTOOLS` |
+| FileGDB 读写失败 | FileGDB 仅 GDAL 引擎支持：安装原生 GDAL 并使用 `GisEngineType.GDAL` 或 `AUTO` |
+| Shapefile 字段名被截断 | DBF 规范限制 10 字符，使用 `ShpUtil.formatFieldName()` 自动截断 |
+| PostGIS 连接失败 | 检查连接串格式（`PG: host=... port=... dbname=... user=... password=... active_schema=...`）与 schema 名称 |
 
-## Important Notes for AI Developers
+---
+
+## AI 编码约定
 
 1. **Always use `OguLayerUtil` as the primary entry point** for reading/writing GIS data. It handles engine selection and format routing.
 
@@ -330,28 +332,9 @@ RuntimeException
 
 ---
 
-## 常见问题
+## 典型工作流
 
-| 问题 | 解决 |
-|------|------|
-| `mvn install` 依赖解析失败 | 配置 osgeo 仓库（GeoTools 依赖不在 Maven Central）；确认 Maven 3.8+ 与 JDK 17+ |
-| 找不到 `com.znlgis.ogu4j:ogu4j` 依赖 | 该库尚未发布到 Maven Central，先在本仓库执行 `mvn install` 安装到本地仓库 |
-| 运行时报 GDAL 相关 `UnsatisfiedLinkError` | 本地缺少与 `org.gdal:gdal` 3.13.0 匹配的原生 GDAL；安装 GDAL 3.13.x，或改用 `GisEngineType.GEOTOOLS` |
-| FileGDB 读写失败 | FileGDB 仅 GDAL 引擎支持：安装原生 GDAL 并使用 `GisEngineType.GDAL` 或 `AUTO` |
-| Shapefile 字段名被截断 | DBF 规范限制 10 字符，使用 `ShpUtil.formatFieldName()` 自动截断 |
-| PostGIS 连接失败 | 检查连接串格式（`PG: host=... port=... dbname=... user=... password=... active_schema=...`）与 schema 名称 |
-
----
-
-## 相关技能
-
-- **geotools** — Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
-- **jts** — JTS Topology Suite：[../jts/SKILL.md](../jts/SKILL.md)
-- **geometry-api-java** — Esri Geometry API：[../geometry-api-java/SKILL.md](../geometry-api-java/SKILL.md)
-- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
-- **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
-
-## 典型工作流示例
+以「Shapefile → 面积筛选 → 缓冲 → 投影 → GeoJSON」为例：输入 `/data/parcels.shp`（EPSG:4326），输出 `/data/output.geojson`（EPSG:4528）。
 
 ```java
 import com.znlgis.ogu4j.datasource.OguLayerUtil;
@@ -388,7 +371,37 @@ OguLayerUtil.writeLayer(
     DataFormatType.GEOJSON, projected,
     "/data/output.geojson", null, null, GisEngineType.AUTO
 );
+
+// Step 6: 回读验证——要素数与 CRS 必须与预期一致，否则说明引擎或投影没生效
+OguLayer check = OguLayerUtil.readLayer(
+    DataFormatType.GEOJSON, "/data/output.geojson",
+    null, null, null, GisEngineType.AUTO
+);
+System.out.println(check.getWkid() + " / " + check.getFeatureCount());
 ```
+
+**验收**：`mvn -q -DskipTests package` 只说明能编译；实际运行上面的 main，打印的 WKID 应为 4528、要素数等于筛选后数量，`output.geojson` 用 `ogrinfo -so` 复查一遍。
+
+---
+
+## DeepSeek Harness 使用建议
+
+- **加载与引用**：用 `skill("opengis-utils-for-java")` 加载（用户也可输入 `/opengis-utils-for-java`）；`reference/common-tasks.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证工程建在会话工作区。
+- **执行环境**：先 `java -version` 与 `mvn -version`（需 JDK 17+、Maven 3.8+），Windows 用 `pwsh`；`mvn -v` 里显示的 JDK 才是 Maven 实际使用的，与 shell 的 `java` 不一致时改 `JAVA_HOME` 再重试。
+- **源码安装（本库未发布到 Central）**：`git clone https://github.com/znlgis/opengis-utils-for-java.git` 后 `mvn install -DskipTests`，产物落在 `~/.m2/repository/com/znlgis/ogu4j/ogu4j/1.0.0/`；用 `mvn dependency:tree -Dincludes=com.znlgis.ogu4j` 确认坐标可解析。不要在 `pom.xml` 里直接写 `ogu4j:1.0.0` 后指望从 Central 下载。
+- **仓库与网络**：GeoTools 依赖不在 Central，`pom.xml` 必须带 `https://repo.osgeo.org/repository/release/`，否则 `Could not resolve dependencies for org.geotools:*`；离线或私服缺包时如实报告依赖不可下载，不要自行换版本或加未知仓库。
+- **原生 GDAL 匹配**：GDAL 引擎绑定 `org.gdal:gdal` 3.13.0，本机需装 GDAL 3.13.x 且 `java.library.path` 能找到 `gdal_jni`（Windows 上 `java -XshowSettings:properties -version 2>&1 | Select-String library.path`）；报 `UnsatisfiedLinkError: no gdal_jni in java.library.path` 说明原生库缺失或版本不符，此时改用 `GisEngineType.GEOTOOLS`。
+- **验证产物**：写最小 main 读一个 Shapefile/GeoJSON → `OguLayerUtil.readLayer(DataFormatType.SHP, path, null, null, null, GisEngineType.AUTO)`，打印 `layer.getWkid()`、`layer.getFeatureCount()`，再 `writeLayer` 成 GeoJSON 并重新读回比对要素数与 CRS；`mvn -q -DskipTests package` 只说明能编译。
+- **常见误操**：`AUTO` 在本机有原生 GDAL 时会优先走 GDAL，想复现纯 Java 结果必须显式传 `GisEngineType.GEOTOOLS`；`OguFeature.geometry` 是 WKT 字符串，做运算前先 `GeometryUtil.wkt2Geometry()`；`DataStore` 与 OGR `DataSource` 要在 `finally` 里释放，否则文件被占用后 `writeLayer` 覆盖失败。
+- **安全与权限**：PostGIS 连接串（`PG: host=... password=...`）里的密码不要回显到输出；`mvn install` 会写 `~/.m2`、示例代码会写 `/data` 等绝对路径，覆盖已有数据前先确认路径并征得用户同意。
+
+## 相关技能
+
+- **geotools** — Java GIS 工具库：[../geotools/SKILL.md](../geotools/SKILL.md)
+- **jts** — JTS Topology Suite：[../jts/SKILL.md](../jts/SKILL.md)
+- **geometry-api-java** — Esri Geometry API：[../geometry-api-java/SKILL.md](../geometry-api-java/SKILL.md)
+- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **gdal-api** — GDAL 编程 API：[../gdal-api/SKILL.md](../gdal-api/SKILL.md)
 
 ## 参考资源
 

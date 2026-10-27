@@ -1,12 +1,14 @@
 ---
 name: furion
-description: "Use when building .NET Web API applications with minimal boilerplate — dynamic controllers, automatic dependency injection, JWT authentication, Swagger, event bus. Furion: lightweight convention-over-configuration .NET enterprise web framework."
+description: "Use when building .NET Web API apps with minimal boilerplate — IDynamicApiController dynamic controllers, ITransient/IScoped/ISingleton auto DI, JWT, Swagger. Also for endpoints missing from Swagger, DI not resolving because the marker interface is missing, and App not initialized. Furion: convention-over-configuration .NET web framework."
 tags:
   - dotnet
   - webapi
   - framework
   - dynamic-api
   - jwt
+  - swagger
+  - dependency-injection
 ---
 
 > **项目地址：** <https://gitee.com/dotnetchina/Furion>
@@ -17,7 +19,7 @@ tags:
 >
 > **NuGet：** `Furion`、`Furion.Pure`
 >
-> **最新版本：** `Furion` 4.9.9.96 / `Furion.Pure` 4.9.9.10（截至2026-10，NuGet；`5.0.0-preview.*` 为预览线，未转正）
+> **最新版本：** `Furion` 4.9.9.98 / `Furion.Pure` 4.9.9.10（截至 2026-10，NuGet 实测；`5.0.0-preview.*` 为预览线，未转正）
 >
 > **许可证：** MIT + Apache-2.0
 
@@ -42,11 +44,35 @@ Furion 主要特性：
 
 ## 安装
 
+### 方式一：dotnet CLI
+
 ```bash
 dotnet add package Furion
 # 或基础版（不含全部子包）
 dotnet add package Furion.Pure
 ```
+
+### 方式二：PackageReference
+
+```xml
+<ItemGroup>
+  <PackageReference Include="Furion" Version="4.9.9.98" />
+</ItemGroup>
+```
+
+### 方式三：包管理器控制台
+
+```powershell
+Install-Package Furion -Version 4.9.9.98
+```
+
+### 验证安装
+
+```bash
+dotnet list package | grep -i furion
+```
+
+包引用成功后，`builder.Inject()` 能编译通过即接入完成。
 
 ---
 
@@ -296,6 +322,18 @@ var jwt = App.GetConfig<JwtSettings>("JWTSettings");
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| 接口未暴露 | 服务实现 `IDynamicApiController` 并 `AddInject()` |
+| Swagger 不显示 | 启用 `app.UseInject()`；检查 `SpecificationDocumentSettings.GroupOpenApiInfos` |
+| DI 不生效 | 实现类需带 `ITransient/IScoped/ISingleton` 之一 |
+| 单元测试 | 使用 `Furion.UnitTesting` 包，或调用 `App.Initialize()` |
+| `App` 未初始化 | 异步入口需 `Inject()` 完成后 |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -325,22 +363,12 @@ var jwt = App.GetConfig<JwtSettings>("JWTSettings");
 
 ---
 
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| 接口未暴露 | 服务实现 `IDynamicApiController` 并 `AddInject()` |
-| Swagger 不显示 | 启用 `app.UseInject()`；检查 `SpecificationDocumentSettings.GroupOpenApiInfos` |
-| DI 不生效 | 实现类需带 `ITransient/IScoped/ISingleton` 之一 |
-| 单元测试 | 使用 `Furion.UnitTesting` 包，或调用 `App.Initialize()` |
-| `App` 未初始化 | 异步入口需 `Inject()` 完成后 |
-
----
-
 ## 相关技能
 
 - **sqlsugar** — Furion 默认推荐的 ORM，提供链式查询与多数据库支持：[../sqlsugar/SKILL.md](../sqlsugar/SKILL.md)
 - **admin-net-backend** — 基于 Furion + SqlSugar 的完整后台框架，适合直接生成项目：[../admin-net-backend/SKILL.md](../admin-net-backend/SKILL.md)
+- **serilog** — 结构化日志，替换或补充 Furion 内置日志输出：[../serilog/SKILL.md](../serilog/SKILL.md)
+- **polly** — 弹性策略，配合 `IHttpRemote` 处理远程调用故障：[../polly/SKILL.md](../polly/SKILL.md)
 
 ---
 

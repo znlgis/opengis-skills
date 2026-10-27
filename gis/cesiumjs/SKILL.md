@@ -21,7 +21,7 @@ tags:
 >
 > **Sandcastle：** <https://sandcastle.cesium.com/>
 >
-> **最新版本：** 1.146.0（截至2026-10，npm `cesium`）
+> **最新版本：** 1.146.0（截至 2026-10，npm `cesium`）
 >
 > **许可证：** Apache-2.0
 
@@ -40,28 +40,38 @@ CesiumJS 提供：
 
 ## 安装
 
+### 方式一：npm
+
 ```bash
 npm install cesium
+npm ls cesium            # 验证：应显示 cesium@1.146.0
 ```
-
-```html
-<link href="https://cdn.jsdelivr.net/npm/cesium/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/cesium/Build/Cesium/Cesium.js"></script>
-```
-
-> **1.146 变更：** 数学/几何/时间/工具类被拆分为新包 `@cesium/core`（`cesium@1.146.0` 依赖 `@cesium/core@^0.1.0`）。从 `cesium` 主包导入的代码不受影响；直接按子路径引用 `@cesium/engine` 的代码需改从 `@cesium/core` 导入（旧导出计划在后续版本移除，1.146 仍可用）。
-
-### Vite 集成
 
 ```js
 import { defineConfig } from 'vite';
 import cesium from 'vite-plugin-cesium';
+
 export default defineConfig({ plugins: [cesium()] });
 ```
 
-### Webpack 集成
+### 方式二：CDN
 
-需将 `node_modules/cesium/Build/Cesium/{Workers,Assets,Widgets}` 拷贝到输出目录，并设置 `window.CESIUM_BASE_URL`。
+```html
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.146.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.146.0/Build/Cesium/Cesium.js"></script>
+```
+
+```bash
+# 验证 CDN 版本可达
+curl.exe -I https://cdn.jsdelivr.net/npm/cesium@1.146.0/Build/Cesium/Cesium.js   # 期望 200
+```
+
+### 打包器接入
+
+- **Vite**：用 `vite-plugin-cesium`，按上面的 `vite.config.js` 注册，插件负责拷贝静态资源
+- **Webpack**：将 `node_modules/cesium/Build/Cesium/{Workers,Assets,Widgets}` 拷到输出目录，并在入口最早处设置 `window.CESIUM_BASE_URL`
+
+> **1.146 变更：** 数学/几何/时间/工具类被拆分为新包 `@cesium/core`（`cesium@1.146.0` 依赖 `@cesium/core@^0.1.0`）。从 `cesium` 主包导入的代码不受影响；直接按子路径引用 `@cesium/engine` 的代码需改从 `@cesium/core` 导入（旧导出计划在后续版本移除，1.146 仍可用）。
 
 ---
 
@@ -231,11 +241,51 @@ viewer.trackedEntity = entity;
 
 ## 典型工作流
 
-1. **初始化 Viewer**：使用 `Cesium.Viewer` 创建三维地球，设置地形和影像提供者
-2. **加载数据**：根据数据类型选择合适 API——GeoJSON/CZML 用 `DataSource`，3D 瓦片用 `Cesium3DTileset`，单模型用 `Entity.model`
-3. **设置相机**：使用 `camera.flyTo()` 定位到目标区域
-4. **添加交互**：通过 `ScreenSpaceEventHandler` 处理点击拾取
-5. **性能优化**：根据场景复杂度启用 `requestRenderMode`、调整 `maximumScreenSpaceError`
+以「GeoJSON 点位 + 倾斜摄影 3D Tiles」为例，输入 `data/poi.geojson` 与 `/tiles/tileset.json`，输出可点击拾取的三维场景。
+
+1. **初始化 Viewer**：`new Cesium.Viewer('cesiumContainer', { terrainProvider: await Cesium.createWorldTerrainAsync() })`
+2. **加载矢量数据**：`GeoJsonDataSource.load()` → `viewer.dataSources.add(ds)` → `viewer.flyTo(ds)`
+3. **加载 3D Tiles**：`Cesium3DTileset.fromUrl()` → `scene.primitives.add(tileset)` → `viewer.zoomTo(tileset)`
+4. **添加交互**：`ScreenSpaceEventHandler` + `scene.pick()` 取 `picked.id`，`camera.pickEllipsoid()` 取经纬度
+5. **性能与释放**：静态要素用 Primitive，`requestRenderMode = true`，卸载时 `tileset.destroy()` / `viewer.destroy()`
+
+```js
+import * as Cesium from 'cesium';
+import 'cesium/Build/Cesium/Widgets/widgets.css';
+
+Cesium.Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_TOKEN;
+
+const viewer = new Cesium.Viewer('cesiumContainer', {
+  terrainProvider: await Cesium.createWorldTerrainAsync(),
+  timeline: false,
+  animation: false
+});
+
+// 1) GeoJSON 点位：统一改成扁平圆点，避免默认图钉遮挡
+const ds = await Cesium.GeoJsonDataSource.load('/data/poi.geojson', { clampToGround: true });
+viewer.dataSources.add(ds);
+for (const entity of ds.entities.values) {
+  entity.billboard = undefined;
+  entity.point = new Cesium.PointGraphics({ pixelSize: 8, color: Cesium.Color.ORANGE });
+}
+await viewer.flyTo(ds);
+
+// 2) 3D Tiles：加载倾斜摄影并飞到数据范围
+const tileset = await Cesium.Cesium3DTileset.fromUrl('/tiles/tileset.json', {
+  maximumScreenSpaceError: 16
+});
+viewer.scene.primitives.add(tileset);
+await viewer.zoomTo(tileset);
+
+// 3) 点击拾取：先试 3D Tiles / 点要素，再回退到椭球面坐标
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction((e) => {
+  const picked = viewer.scene.pick(e.position);
+  console.log('picked:', Cesium.defined(picked) ? picked.id : null);
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+```
+
+**验证产物**：`npm run build` 后 `python -m http.server 5173 -d dist`，`curl.exe -I http://localhost:5173/Cesium/Workers/createVerticesFromHeightmap.js` 返回 200 才说明 Workers 已随产物发布。
 
 ---
 
@@ -255,9 +305,10 @@ viewer.trackedEntity = entity;
 
 | 问题 | 解决 |
 |------|------|
-| 黑屏 | 检查 `CESIUM_BASE_URL` 与静态资源 |
+| 黑屏 / 资源 404 | 控制台报 `Unable to determine Cesium base URL automatically, try defining a global variable called CESIUM_BASE_URL.` 时，在入口最早处设 `window.CESIUM_BASE_URL = '/Cesium'`，并确认 `Workers/Assets/Widgets` 已随构建产物发布 |
 | 模型贴地不准 | `HeightReference.CLAMP_TO_GROUND` 或地形采样 |
-| 性能卡顿 | 启用 `requestRenderMode`，降低 `maximumScreenSpaceError` |
+| 性能卡顿 | 启用 `requestRenderMode`，降低 `maximumScreenSpaceError`；静态要素改 Primitive |
+| 报 `WebGL 2 context is required` | 浏览器/环境未提供 WebGL2（无头浏览器、远程桌面软件渲染）；开启硬件加速或改用支持 WebGL2 的环境 |
 | 国内瓦片偏移 | 使用 GCJ02→WGS84 纠偏 |
 | Token 过期 | 不需要 ion 时不设置 token；或自托管 |
 

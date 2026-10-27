@@ -20,7 +20,7 @@ tags:
 >
 > **最新版本：** 9.4.0（截至 2026-10，npm `deck.gl` 与 GitHub Release 一致）
 >
-> **许可证：** MIT（`gh api repos/visgl/deck.gl --jq '.license.spdx_id'` 核实）
+> **许可证：** MIT
 
 ## 概述
 
@@ -99,7 +99,7 @@ const deck = new Deck({
   controller: true,          // 设为 true 启用拖拽/缩放/旋转
   layers: [],
   getTooltip: ({object}) => object,
-  useDevicePixels: true      // 关闭可显著降低高分屏下的像素开销
+  useDevicePixels: true      // 设 false 可显著降低高分屏下的像素开销
 });
 
 deck.setProps({layers: []}); // 后续增量更新，勿重建 Deck 实例
@@ -360,7 +360,7 @@ deck.pickObject({x: 100, y: 100, radius: 4, layerIds: ['stations']}); // 程序�
 4. 需要矢量瓦片数据时叠加 `MVTLayer`
 5. 绑定 `getTooltip` 与 `onClick` 实现悬停与点击反馈
 6. 数据刷新时调用 `overlay.setProps({layers: [...]})`，保持 `data` 引用稳定
-7. 组件卸载时调用 `overlay.finalize()` 释放 GPU 资源
+7. 组件卸载时 `map.removeControl(overlay)`（MapboxOverlay 无公开 `finalize()`，由 onRemove 释放内部 Deck）
 
 ```javascript
 import {MapboxOverlay} from '@deck.gl/mapbox';
@@ -422,23 +422,6 @@ map.addControl(overlay);
 
 ---
 
-## 参考资源
-
-- 官方文档与示例：<https://deck.gl/>
-- 独立模式快速上手：<https://deck.gl/docs/get-started/using-standalone>
-- 与底图集成：<https://deck.gl/docs/get-started/using-with-map>
-- 图层目录：<https://deck.gl/docs/api-reference/layers>
-- `MapboxOverlay` API：<https://deck.gl/docs/api-reference/mapbox/mapbox-overlay>
-- 性能调优指南：<https://deck.gl/docs/developer-guide/performance>
-- 源码与发布记录：<https://github.com/visgl/deck.gl>
-
-## 相关技能
-
-- **mapbox-gl-js** — 矢量瓦片底图与 Style Spec，deck.gl 的常见底图搭档：[../mapbox-gl-js/SKILL.md](../mapbox-gl-js/SKILL.md)
-- **openlayers** — 开源 2D WebGIS 库，投影、MVT 与高级交互：[../openlayers/SKILL.md](../openlayers/SKILL.md)
-- **leaflet** — 轻量 2D 瓦片地图，适合中小数据量与简单场景：[../leaflet/SKILL.md](../leaflet/SKILL.md)
-- **cesiumjs** — 三维地球与 3D Tiles 可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
-
 ## DeepSeek Harness 使用建议
 
 - **加载与引用**：用 `skill("deck-gl")` 加载（用户也可输入 `/deck-gl`）；本技能无 reference 子目录，示例代码写入会话工作区工程，技能目录只读。
@@ -449,3 +432,20 @@ map.addControl(overlay);
 - **数据与坐标**：位置一律 `[经度, 纬度]`；保持 `data` 引用稳定，不要在渲染路径里 `filter`/`map` 生成新数组，否则 GPU 缓冲反复重建。
 - **常见症状**：空白画布先查容器高度与底图；数据变了画面不变用 `updateTriggers`；tooltip 无反应是 `pickable` 默认 false。
 - **安全与权限**：装包、起 dev server 前先征得用户同意；用 Mapbox 底图时提醒 token 与计费。
+
+## 相关技能
+
+- **mapbox-gl-js** — 矢量瓦片底图与 Style Spec，deck.gl 的常见底图搭档：[../mapbox-gl-js/SKILL.md](../mapbox-gl-js/SKILL.md)
+- **openlayers** — 开源 2D WebGIS 库，投影、MVT 与高级交互：[../openlayers/SKILL.md](../openlayers/SKILL.md)
+- **leaflet** — 轻量 2D 瓦片地图，适合中小数据量与简单场景：[../leaflet/SKILL.md](../leaflet/SKILL.md)
+- **cesiumjs** — 三维地球与 3D Tiles 可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
+
+## 参考资源
+
+- 官方文档与示例：<https://deck.gl/>
+- 独立模式快速上手：<https://deck.gl/docs/get-started/using-standalone>
+- 与底图集成：<https://deck.gl/docs/get-started/using-with-map>
+- 图层目录：<https://deck.gl/docs/api-reference/layers>
+- `MapboxOverlay` API：<https://deck.gl/docs/api-reference/mapbox/mapbox-overlay>
+- 性能调优指南：<https://deck.gl/docs/developer-guide/performance>
+- 源码与发布记录：<https://github.com/visgl/deck.gl>

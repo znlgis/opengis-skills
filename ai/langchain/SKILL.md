@@ -1,6 +1,6 @@
 ---
 name: langchain
-description: "Use when building LLM applications with LangChain — LCEL chains (prompt | model | parser), tool-calling agents via create_agent, @tool definitions, RAG pipelines (loaders, splitters, vector stores, retrievers), short-term memory with LangGraph checkpointers, and GIS workflows such as natural-language PostGIS queries or GDAL command agents. Covers langchain 1.x (MIT, Python 3.10+)."
+description: "Use when building LLM apps in Python with LangChain 1.4.7 — LCEL chains (prompt | model | parser), create_agent with @tool and checkpointer+thread_id memory, RAG (loaders, splitters, PGVector, retriever), init_chat_model across providers; also for `ModuleNotFoundError: langchain.memory`, agent forgetting earlier turns, tools never called, and langchain-core version mismatch."
 tags:
   - llm
   - agent
@@ -17,7 +17,8 @@ tags:
 > **官方文档：** <https://python.langchain.com/>（现重定向至 <https://docs.langchain.com/oss/python/langchain/overview>）
 >
 > **许可证：** MIT
-> **最新版本：** langchain 1.4.6、langchain-core 1.6.10（PyPI，2026-10；GitHub 最新 Release 标签为 `langchain-core==1.6.10`，LangChain 已按包独立发版）
+>
+> **最新版本：** langchain 1.4.7、langchain-core 1.7.0（PyPI 实测，截至 2026-10；GitHub 最新 Release 标签即 `langchain-core==1.7.0`，LangChain 已按包独立发版）
 
 ## 概述
 
@@ -35,11 +36,11 @@ LangChain 是用于构建 LLM 应用的 Python 框架，1.x 起以 LangGraph 为
 
 | 包 | 内容 | 当前版本 |
 |------|------|---------|
-| langchain | 主包：agents、chat_models、tools | 1.4.6 |
-| langchain-core | Runnable/LCEL、消息、提示词、解析器、向量库接口 | 1.6.10 |
-| langgraph | 运行时：checkpointer、store | 1.2.15 |
+| langchain | 主包：agents、chat_models、tools | 1.4.7 |
+| langchain-core | Runnable/LCEL、消息、提示词、解析器、向量库接口 | 1.7.0 |
+| langgraph | 运行时：checkpointer、store | 1.2.18 |
 | langchain-community | 社区集成：文档加载器、向量库 | 0.4.2 |
-| langchain-openai | OpenAI / Azure 集成 | 1.7.2 |
+| langchain-openai | OpenAI / Azure 集成 | 1.7.3 |
 | langchain-text-splitters | 文本切分器 | 1.1.3 |
 | langchain-classic | 旧版链与 memory（兼容维护） | 1.0.8 |
 
@@ -400,28 +401,6 @@ print(result["messages"][-1].text)
 
 ---
 
-## 参考资源
-
-- 官方文档（现址）：<https://docs.langchain.com/oss/python/langchain/overview>
-- Quickstart：<https://docs.langchain.com/oss/python/langchain/quickstart>
-- Agents 指南：<https://docs.langchain.com/oss/python/langchain/agents>
-- Tools 指南：<https://docs.langchain.com/oss/python/langchain/tools>
-- 检索与 RAG：<https://docs.langchain.com/oss/python/langchain/retrieval>
-- 集成目录（加载器/向量库）：<https://docs.langchain.com/oss/python/integrations/vectorstores/pgvector>
-- API Reference：<https://reference.langchain.com/python/>
-- GitHub Releases：<https://github.com/langchain-ai/langchain/releases>
-
----
-
-## 相关技能
-
-- **dify** — 可视化 LLM 应用平台，适合不想写代码的 RAG/工作流场景：[../dify/SKILL.md](../dify/SKILL.md)
-- **deepseek-harness** — 插件化 Agent Harness（TypeScript），可与 LangChain 服务互补：[../deepseek-harness/SKILL.md](../deepseek-harness/SKILL.md)
-- **docutranslate** — 基于 LLM 的多格式文件翻译，可作为 RAG 文档预处理环节：[../docutranslate/SKILL.md](../docutranslate/SKILL.md)
-- **openclaw** — 多通道个人 AI 助手 Gateway，可承载 LangChain 构建的对话服务：[../openclaw/SKILL.md](../openclaw/SKILL.md)
-
----
-
 ## AI 使用建议
 
 ### 推荐工作流
@@ -439,3 +418,23 @@ print(result["messages"][-1].text)
 - **工具错误处理**：工具内抛异常会中断调用；用 `wrap_tool_call` 中间件把异常转为 `ToolMessage` 让模型自行纠错
 - **包版本**：`langchain` 与 `langchain-core` 大版本需配套（1.x 搭配 1.x）；混装 0.x 与 1.x 会出现导入错误
 - **不要编造**：`init_chat_model` 的 provider 名、`@tool` 参数、checkpointer 路径均以官方文档为准，升级后优先查 reference.langchain.com
+
+## 相关技能
+
+- **dify** — 可视化 LLM 应用平台，适合不想写代码的 RAG/工作流场景：[../dify/SKILL.md](../dify/SKILL.md)
+- **deepseek-harness** — 插件化 Agent Harness（TypeScript），可与 LangChain 服务互补：[../deepseek-harness/SKILL.md](../deepseek-harness/SKILL.md)
+- **docutranslate** — 基于 LLM 的多格式文件翻译，可作为 RAG 文档预处理环节：[../docutranslate/SKILL.md](../docutranslate/SKILL.md)
+- **openclaw** — 多通道个人 AI 助手 Gateway，可承载 LangChain 构建的对话服务：[../openclaw/SKILL.md](../openclaw/SKILL.md)
+
+---
+
+## 参考资源
+
+- 官方文档（现址）：<https://docs.langchain.com/oss/python/langchain/overview>
+- Quickstart：<https://docs.langchain.com/oss/python/langchain/quickstart>
+- Agents 指南：<https://docs.langchain.com/oss/python/langchain/agents>
+- Tools 指南：<https://docs.langchain.com/oss/python/langchain/tools>
+- 检索与 RAG：<https://docs.langchain.com/oss/python/langchain/retrieval>
+- 集成目录（加载器/向量库）：<https://docs.langchain.com/oss/python/integrations/vectorstores/pgvector>
+- API Reference：<https://reference.langchain.com/python/>
+- GitHub Releases：<https://github.com/langchain-ai/langchain/releases>

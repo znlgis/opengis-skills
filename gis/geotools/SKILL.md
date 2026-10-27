@@ -36,7 +36,9 @@ GeoTools 是一个成熟、模块化的开源 Java GIS 工具库，由 OSGeo 基
 - **OGC Web 服务**：WMS / WFS / WCS 客户端
 - **几何运算**：基于 JTS Topology Suite 的全套几何计算
 
-**环境要求：** JDK 8（GeoTools ≤ 28）；JDK 11（GeoTools 29–33）；JDK 17（GeoTools 34+，当前 35.x）
+**环境要求：** GeoTools 34+（当前 35.x）要求 **JDK 17**，35.x 官方构建文档另列出可选 JDK 21；更早分支的历史矩阵为 ≤28 用 JDK 8、29–33 用 JDK 11，具体以官方安装文档为准。
+
+> 官方构建要求（实测 <https://docs.geotools.org/stable/userguide/build/install/index.html>）："Java Development Kit 17 (JDK 17)"，可选 JDK 21；PR 同时用 JDK 17 与 21 测试。
 
 ---
 

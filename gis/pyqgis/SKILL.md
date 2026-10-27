@@ -1,6 +1,6 @@
 ---
 name: pyqgis
-description: "Use when scripting QGIS with Python — QgsApplication standalone init, QgsVectorLayer / QgsRasterLayer loading, processing.run after Processing.initialize(), QgsGeometry / QgsExpression, QgsMapSettings rendering and QgsLayoutExporter PDF/PNG export, qgis._3d, or debugging \"import qgis.core\" failures. PyQGIS for QGIS 4.2.3 and LTR 3.44.15, Python 3.12."
+description: "Use when scripting QGIS with Python — QgsApplication standalone init, QgsVectorLayer / QgsRasterLayer loading, processing.run after Processing.initialize(), QgsGeometry / QgsExpression, QgsMapSettings rendering and QgsLayoutExporter PDF/PNG export, qgis._3d, or debugging \"import qgis.core\" failures. PyQGIS for QGIS 4.2.3 and LTR 3.44.15 (use the interpreter bundled with QGIS, not system Python)."
 tags:
   - python
   - qgis
@@ -39,7 +39,7 @@ PyQGIS 主要包含以下模块：
 | `qgis.core` | 核心类——图层、要素、几何、坐标系、项目、Processing 等 |
 | `qgis.gui` | GUI 组件——地图画布、地图工具、符号选择器等 |
 | `qgis.analysis` | 空间分析——插值、网络分析、栅格计算等 |
-| `qgis.processing` | Processing 算法调用入口（`processing.run()`） |
+| `processing` | Processing 算法调用入口（独立 Python 模块，`processing.run()`；非 `qgis.processing`） |
 | `qgis.server` | QGIS Server Python 插件接口 |
 | `qgis._3d` | 3D 地图视图相关类 |
 | `qgis.PyQt` | PyQt5/PyQt6 兼容层 |
@@ -51,7 +51,13 @@ PyQGIS 主要包含以下模块：
 ### 前置条件
 
 - 安装 QGIS 4.2+（当前稳定版）或 3.44 LTR（长期支持版）（[查看 QGIS LTR/最新版](https://qgis.org/download/)）
-- Python 3.12+（QGIS 4.x 自带的 Python 环境）
+- 使用 **QGIS 发行包自带的 Python 解释器**（4.2 的 Windows 安装目录为 `apps/Python312`），不要用系统 Python 直接 `pip install qgis`
+
+探测发行包实际使用的解释器版本（在任何 QGIS Python 环境里）：
+
+```bash
+python -c "import sys; print(sys.version)"
+```
 
 ### 在 QGIS Python 控制台中使用
 
@@ -176,7 +182,7 @@ python3 my_pyqgis_script.py
 
 | 类 | 模块 | 用途 |
 |---|---|---|
-| `processing.run()` | `qgis.processing` | **执行 Processing 算法的核心入口** |
+| `processing.run()` | `processing`（QGIS 插件目录模块） | **执行 Processing 算法的核心入口** |
 | `QgsProcessingFeedback` | `qgis.core` | 算法执行反馈（进度、日志） |
 | `QgsProcessingContext` | `qgis.core` | 算法执行上下文 |
 | `QgsProcessingAlgorithm` | `qgis.core` | 自定义算法基类 |
@@ -380,18 +386,6 @@ qgs.exitQgis()
 
 更多工作流（批量缓冲融合、栅格裁剪、打印布局导出）见 [reference/processing-rendering.md](reference/processing-rendering.md)。
 
-## DeepSeek Harness 使用建议
-
-- **加载与引用**：用 `skill("pyqgis")` 加载（用户也可输入 `/pyqgis`）；`reference/vector-raster-layers.md`、`reference/processing-rendering.md` 按需 `read`，路径相对 Base directory；技能目录只读，脚本、导出图与中间数据写到会话工作区。
-- **执行环境**：必须用 QGIS 自带的解释器（Windows 在 `C:\Program Files\QGIS 4.2\apps\Python312\python.exe`，LTR 为 `QGIS 3.44`），不要用系统 Python；命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行），`export QT_QPA_PLATFORM=offscreen` 改写为 `$env:QT_QPA_PLATFORM = "offscreen"`。
-- **先探测版本**：`python -c "from qgis.core import Qgis; print(Qgis.QGIS_VERSION)"`；本技能同时覆盖 4.2.3（最新）与 3.44.15（LTR），4.x 与 3.x 存在 API 差异，回答里要写明按哪个版本写、低版本哪些类/方法不可用。
-- **验证产物**：独立脚本按 `QgsApplication` → `initQgis()` → 处理 → `exitQgis()` 收尾；写出后重开图层核对 `isValid()`、`featureCount()`、`crs().authid()`，`processing.run()` 的返回值只给路径，结果要二次打开；渲染或布局导出的 PNG 可用 `read_image` 看是否空白。
-- **模块名易错**：3D 模块是 `qgis._3d`（下划线，不是 `qgis.3d`），例如 `from qgis._3d import Qgs3DMapSettings`；`processing.run()` 前必须先 `Processing.initialize()`，否则报算法不存在。
-- **进程与日志**：批量脚本不要跨任务复用同一个 `QgsProject.instance()`；长任务放后台作业，QGIS 日志（`QgsApplication.messageLog()`）与 stderr 重定向到文件后分段 `read`。
-- **安全与权限**：`startEditing()`/`commitChanges()` 直接改源数据（Shapefile、PostGIS），先备份或把中间结果写 `memory:`；覆盖已有输出文件、安装 QGIS、把数据写进系统目录前先征得用户同意。
-
----
-
 ## 常见问题
 
 | 问题 | 解决 |
@@ -407,6 +401,18 @@ qgs.exitQgis()
 
 ---
 
+## DeepSeek Harness 使用建议
+
+- **加载与引用**：用 `skill("pyqgis")` 加载（用户也可输入 `/pyqgis`）；`reference/vector-raster-layers.md`、`reference/processing-rendering.md` 按需 `read`，路径相对 Base directory；技能目录只读，脚本、导出图与中间数据写到会话工作区。
+- **执行环境**：必须用 QGIS 自带的解释器（Windows 在 `C:\Program Files\QGIS 4.2\apps\Python312\python.exe`，LTR 为 `QGIS 3.44`），不要用系统 Python；命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行），`export QT_QPA_PLATFORM=offscreen` 改写为 `$env:QT_QPA_PLATFORM = "offscreen"`。
+- **先探测版本**：`python -c "from qgis.core import Qgis; print(Qgis.QGIS_VERSION)"`；本技能同时覆盖 4.2.3（最新）与 3.44.15（LTR），4.x 与 3.x 存在 API 差异，回答里要写明按哪个版本写、低版本哪些类/方法不可用。
+- **验证产物**：独立脚本按 `QgsApplication` → `initQgis()` → 处理 → `exitQgis()` 收尾；写出后重开图层核对 `isValid()`、`featureCount()`、`crs().authid()`，`processing.run()` 的返回值只给路径，结果要二次打开；渲染或布局导出的 PNG 可用 `read_image` 看是否空白。
+- **模块名易错**：3D 模块是 `qgis._3d`（下划线，不是 `qgis.3d`），例如 `from qgis._3d import Qgs3DMapSettings`；`processing.run()` 前必须先 `Processing.initialize()`，否则报算法不存在。
+- **进程与日志**：批量脚本不要跨任务复用同一个 `QgsProject.instance()`；长任务放后台作业，QGIS 日志（`QgsApplication.messageLog()`）与 stderr 重定向到文件后分段 `read`。
+- **安全与权限**：`startEditing()`/`commitChanges()` 直接改源数据（Shapefile、PostGIS），先备份或把中间结果写 `memory:`；覆盖已有输出文件、安装 QGIS、把数据写进系统目录前先征得用户同意。
+
+---
+
 ## 相关技能
 
 - **qgis-process** — QGIS 命令行处理工具：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
@@ -418,8 +424,10 @@ qgs.exitQgis()
 ## 参考资源
 
 - **QGIS 源码仓库：** <https://github.com/qgis/QGIS>
-- **PyQGIS 开发者手册（3.44）：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/>
-- **PyQGIS API 参考（3.44）：** <https://qgis.org/pyqgis/3.44/>
+- **PyQGIS 开发者手册（3.44，4.2 章节尚未定稿）：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/>
+- **PyQGIS API 参考（4.2）：** <https://qgis.org/pyqgis/4.2/>
 - **QGIS 文档仓库：** <https://github.com/qgis/QGIS-Documentation>
-- **QGIS 用户手册：** <https://docs.qgis.org/3.44/en/docs/user_manual/>
-- **PyQGIS 速查表：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/cheat_sheet.html>
+- **QGIS 用户手册（3.44）：** <https://docs.qgis.org/3.44/en/docs/user_manual/>
+- **PyQGIS 速查表（3.44）：** <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/cheat_sheet.html>
+
+> **注意：** `docs.qgis.org/4.2/...` 目前会 302 跳到 `/testing/`，4.2 的 cookbook 与用户手册尚未定稿；查阅 4.2 类与方法签名以 <https://qgis.org/pyqgis/4.2/> 为准。

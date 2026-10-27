@@ -1,6 +1,6 @@
 ---
 name: hermes-agent
-description: "Use when building self-learning AI agents that improve through experience — terminal-first interface, tool calling, memory persistence, autonomous task execution. Hermes Agent: self-improving general-purpose AI agent with local-first architecture."
+description: "Use when you want a terminal agent that learns from experience — hermes setup/model/tools/doctor, skills + persistent memory + session search, hermes gateway for Telegram/Discord/Slack/WhatsApp/Signal, hermes cron create for scheduled jobs, MCP and subagents; also for `hermes: command not found` after install.sh, Python 3.15 unsupported-engine errors, and Windows users wrongly told to use WSL2. Hermes Agent (Nous Research), Python 3.11-3.14."
 tags:
   - ai
   - agent
@@ -16,8 +16,9 @@ tags:
 >
 > **官网 / 文档：** <https://nousresearch.com/> ｜ <https://hermes-agent.nousresearch.com/docs>
 >
-> **许可证：** MIT ｜ **语言：** Python（≥ 3.11）
-> **最新版本：** v0.22.1（语义化版本，2026-10-14 发布，见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
+> **许可证：** MIT ｜ **语言：** Python（3.11 – 3.14，`requires-python = ">=3.11,<3.15"`）
+>
+> **最新版本：** v0.22.5（2026-10-23 发布，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
 
 ## 概述
 
@@ -46,7 +47,7 @@ source ~/.bashrc      # 或 source ~/.zshrc
 hermes                # 进入 TUI
 ```
 
-> Windows 不直接支持，请安装 **WSL2** 后在 WSL 内执行 Linux 流程。Termux 默认安装 `.[termux]` 子集（跳过尚未测试的浏览器与 WhatsApp 部分）。
+> Windows 自 v0.22 起**原生支持**（CLI、gateway、TUI、工具均可直接跑，无需 WSL2）；仍可用 WSL2 走 Linux 一键脚本。Termux 默认安装 `.[termux]` 子集（跳过尚未测试的浏览器与 WhatsApp 部分）。
 
 手动 / 开发安装（uv）：
 
@@ -92,19 +93,25 @@ Hermes 区别于普通 Agent 的关键在于「学习」：
 ### 工作流一：快速上手
 
 ```bash
-hermes setup          # 初始化配置
-hermes model           # 选择/配置模型
-hermes chat            # 开始对话
+hermes setup      # 初始化配置（向导）
+hermes model      # 选择/配置 Provider 与模型
+hermes            # 不带子命令直接启动终端 TUI
 ```
-创建第一个技能：让 Hermes 监听你的工作 → 自动总结模式 → 写入技能文件。
+
+创建第一个技能：让 Hermes 监听你的工作 → 自动总结模式 → 写入技能文件。之后可用 `hermes skills list` 查看、`hermes memory` 管理记忆。
 
 ### 工作流二：长期运行部署
 
 ```bash
-hermes serve --gateway telegram --gateway discord  # 启动多通道 Gateway
-hermes cron --schedule "0 9 * * *" "daily-brief"    # 定时任务
+# 启动消息网关（Telegram / Discord / Slack / WhatsApp / Signal 共用同一 gateway 进程）
+hermes gateway
+
+# 定时任务：schedule 支持 "30m" / "every 2h" / cron 表达式
+hermes cron create "0 9 * * *" "汇总昨天的提交并生成晨报" --name daily-brief --deliver telegram
+hermes cron list --all
 ```
-定期审查 `~/.hermes/memories/` 和 `~/.hermes/skills/` 确保记忆质量。
+
+> `hermes serve` 是无界面的 Web/API 服务（`--host` / `--port` / `--stop` / `--status`），**不是**消息网关；旧文档里的 `hermes serve --gateway telegram` 已不存在。定期审查 `~/.hermes/memories/` 和 `~/.hermes/skills/` 确保记忆质量。
 
 ### 工作流三：团队协作
 
@@ -134,7 +141,10 @@ hermes cron --schedule "0 9 * * *" "daily-brief"    # 定时任务
 | 问题 | 解决 |
 |------|------|
 | 安装失败 | 确认 Python ≥ 3.11；脚本依赖 `uv`，可先手动装 uv 再 `uv pip install -e ".[all]"` |
-| Windows 能跑吗 | 不直接支持，装 WSL2 后在 WSL 内安装 |
+| Windows 能跑吗 | 能，v0.22+ 原生支持（CLI/gateway/TUI/tools）；老教程要求 WSL2 已过时，WSL2 仍可选 |
+| `pip install` 报 `Requires-Python >=3.11,<3.15` | 用 Python 3.11–3.14 建 venv；3.15 尚未支持 |
+| `hermes serve --gateway` 报无法识别参数 | `serve` 只起 Web/API 服务；消息网关用 `hermes gateway` |
+| `hermes` 安装后不在 PATH | `install.sh` 会把 `~/.local/bin` 写入 shell rc；重开终端或 `source ~/.bashrc`，Termux 用 `~/bin` |
 | Android 部分功能缺失 | Termux 默认装 `.[termux]` 子集（跳过浏览器/WhatsApp），按官方 Termux Guide 手动补齐 |
 | 选不到模型 | 先 `hermes model` 配置 Provider 与 API Key；`hermes doctor` 排错 |
 | 它“记住”的东西在哪 | 持久化记忆/技能存于 Hermes 主目录（`~/.hermes/` 或 `$HERMES_HOME`） |

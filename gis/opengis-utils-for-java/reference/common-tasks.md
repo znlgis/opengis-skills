@@ -1,12 +1,12 @@
-# OpenGIS Utils for Java Common Tasks Reference
+# OpenGIS Utils for Java 常用任务参考
 
-Common task quick reference split from SKILL.md.
+从 SKILL.md 拆出的常用任务速查，Java 版本按 OGU4J 1.0.0 编写。
 
 ---
 
-## Quick Reference: Common Tasks
+## 常用任务速查
 
-### 1. Read a GIS Layer (Shapefile / GeoJSON / PostGIS / FileGDB / TXT)
+### 1. 读取图层（Shapefile / GeoJSON / PostGIS / FileGDB / TXT）
 
 ```java
 import com.znlgis.ogu4j.datasource.OguLayerUtil;
@@ -48,7 +48,7 @@ import com.znlgis.ogu4j.datasource.GtTxtUtil;
 OguLayer layer = GtTxtUtil.loadTxt("/path/to/file.txt", null);  // null = auto-detect fields
 ```
 
-### 2. Write a GIS Layer
+### 2. 写出图层
 
 ```java
 import com.znlgis.ogu4j.datasource.OguLayerUtil;
@@ -93,7 +93,7 @@ metadata.setMeasureUnit("米");
 GtTxtUtil.saveTxt(layer, "/path/to/output.txt", metadata, null, 39);
 ```
 
-### 3. Format Conversion (One-Step)
+### 3. 格式转换（一步完成）
 
 ```java
 // SHP → GeoJSON
@@ -105,7 +105,7 @@ OguLayer layer = OguLayerUtil.readLayer(DataFormatType.GEOJSON, geojsonPath, nul
 OguLayerUtil.writeLayer(DataFormatType.POSTGIS, layer, connStr, "tableName", null, GisEngineType.AUTO);
 ```
 
-### 4. Work with the Layer Model
+### 4. 使用图层模型
 
 ```java
 import com.znlgis.ogu4j.engine.model.layer.*;
@@ -157,7 +157,7 @@ int featureCount = layer.getFeatureCount();
 int fieldCount = layer.getFieldCount();
 ```
 
-### 5. Geometry Operations (GeometryUtil)
+### 5. 几何运算（GeometryUtil）
 
 ```java
 import com.znlgis.ogu4j.geometry.GeometryUtil;
@@ -241,7 +241,7 @@ boolean norm = GeometryUtil.equalsNorm(geomA, geomB);
 boolean topo = GeometryUtil.equalsTopo(geomA, geomB);
 ```
 
-### 6. WKT-Based Geometry Operations (ESRI Geometry API)
+### 6. 基于 WKT 的几何运算（ESRI Geometry API）
 
 These methods work directly with WKT strings, without creating JTS Geometry objects. Useful when geometry data is in WKT format. Method names end with `Wkt`.
 
@@ -280,7 +280,7 @@ boolean simple = GeometryUtil.isSimpleWkt(wkt, 4490);
 String simplified = GeometryUtil.simplifyWkt(wkt, 4490);
 ```
 
-### 7. Coordinate Reference System (CrsUtil)
+### 7. 坐标参考系（CrsUtil）
 
 ```java
 import com.znlgis.ogu4j.engine.util.CrsUtil;
@@ -317,7 +317,7 @@ Map<Integer, CoordinateReferenceSystem> crsList = CrsUtil.getSupportedCRSList();
 Map.Entry<Integer, CoordinateReferenceSystem> entry = CrsUtil.getSupportedCRS(4490);
 ```
 
-### 8. Engine API (Advanced Usage)
+### 8. 引擎 API（高级用法）
 
 ```java
 import com.znlgis.ogu4j.engine.*;
@@ -343,7 +343,7 @@ OguLayer layer = reader.read(path, layerName, attrFilter, spatialFilterWkt);
 writer.write(layer, path, layerName, options);
 ```
 
-### 9. Utility Classes
+### 9. 工具类
 
 ```java
 // ZIP operations

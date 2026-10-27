@@ -1,6 +1,6 @@
 ---
 name: ollama
-description: "Use when running local LLMs — pull and manage models, write Modelfiles, call the REST API (generate/chat/embed) with streaming, use the OpenAI-compatible endpoint, or tune context length, GPU offload and keep-alive. Ollama: MIT-licensed local inference runtime for Llama, Qwen, DeepSeek, Gemma, gpt-oss and embedding models."
+description: "Use when running local LLMs — ollama pull/run/ps, Modelfile templates, /api/generate|chat|embed NDJSON streaming, OpenAI-compatible /v1/chat/completions and /v1/responses, tuning num_ctx/num_gpu/keep_alive and OLLAMA_* env vars; also for `connection refused` on 127.0.0.1:11434, OOM on a model that does not fit VRAM, CPU-only inference despite a GPU, and pull timeouts behind a proxy. Ollama v0.40.11."
 tags:
   - llm
   - local-inference
@@ -20,7 +20,10 @@ tags:
 > **官方文档：** <https://docs.ollama.com/>（仓库文档目录：<https://github.com/ollama/ollama/tree/main/docs>）
 >
 > **许可证：** MIT
-> **最新版本：** v0.40.4（截至 2026-10 的最新 Release，见 [GitHub Releases](https://github.com/ollama/ollama/releases)）
+>
+> **最新版本：** v0.40.11（截至 2026-10，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/ollama/ollama/releases)）
+>
+> **npm SDK：** `ollama`（0.6.4，实测 npm registry）
 
 ## 概述
 
@@ -397,28 +400,6 @@ curl http://localhost:11434/api/embed -d '{
 
 ---
 
-## 参考资源
-
-- 官网与模型库：<https://ollama.com/>、<https://ollama.com/library>
-- 文档站：<https://docs.ollama.com/>；API 参考：<https://docs.ollama.com/api>
-- 仓库文档目录：<https://github.com/ollama/ollama/tree/main/docs>
-- Modelfile 文档：<https://docs.ollama.com/modelfile>
-- OpenAI 兼容文档：<https://docs.ollama.com/openai>
-- GPU 支持说明：<https://docs.ollama.com/gpu>
-- 版本发布：<https://github.com/ollama/ollama/releases>
-- 问题排查：<https://docs.ollama.com/troubleshooting>
-
----
-
-## 相关技能
-
-- [dify](../dify/SKILL.md) — LLM 应用开发平台，可将 Ollama 配置为本地模型供应商
-- [docutranslate](../docutranslate/SKILL.md) — 文档翻译工具，可与本地模型配合完成离线翻译
-- [hermes-agent](../hermes-agent/SKILL.md) — 自学习通用型 AI 智能体，需要本地推理时可用 Ollama 提供后端
-- [opencode](../opencode/SKILL.md) — 终端 AI 编码智能体，支持接入 Ollama 本地模型
-
----
-
 ## AI 使用建议
 
 ### 推荐工作流
@@ -427,7 +408,7 @@ curl http://localhost:11434/api/embed -d '{
 2. **模型先拉后用**：任何 API / SDK 调用前先 `ollama pull <model>`，避免运行时才暴露模型缺失
 3. **调试用 CLI，集成交付用 API**：交互调试用 `ollama run`，代码集成用 `/api/chat` 或 OpenAI 兼容层
 4. **参数改动小步走**：每次只调一个参数（num_ctx / num_gpu / keep_alive），用 `eval_count` 与 `eval_duration` 量化对比
-5. **版本敏感**：Ollama 迭代快（当前 v0.40.4），API 字段与 CLI 命令以当前版本的 `--help` 与官方文档为准
+5. **版本敏感**：Ollama 迭代快（当前 v0.40.11），API 字段与 CLI 命令以当前版本的 `--help` 与官方文档为准
 
 ### 关键模式与常见陷阱
 
@@ -447,3 +428,23 @@ curl http://localhost:11434/api/embed -d '{
 | 已有 OpenAI SDK 代码迁移 | OpenAI 兼容层（`/v1/chat/completions`） |
 | 固定系统提示词 / 默认参数 | Modelfile + `ollama create` |
 | RAG / 语义检索 | `/api/embed` + 向量库 |
+
+## 相关技能
+
+- [dify](../dify/SKILL.md) — LLM 应用开发平台，可将 Ollama 配置为本地模型供应商
+- [docutranslate](../docutranslate/SKILL.md) — 文档翻译工具，可与本地模型配合完成离线翻译
+- [hermes-agent](../hermes-agent/SKILL.md) — 自学习通用型 AI 智能体，需要本地推理时可用 Ollama 提供后端
+- [opencode](../opencode/SKILL.md) — 终端 AI 编码智能体，支持接入 Ollama 本地模型
+
+---
+
+## 参考资源
+
+- 官网与模型库：<https://ollama.com/>、<https://ollama.com/library>
+- 文档站：<https://docs.ollama.com/>；API 参考：<https://docs.ollama.com/api>
+- 仓库文档目录：<https://github.com/ollama/ollama/tree/main/docs>
+- Modelfile 文档：<https://docs.ollama.com/modelfile>
+- OpenAI 兼容文档：<https://docs.ollama.com/openai>
+- GPU 支持说明：<https://docs.ollama.com/gpu>
+- 版本发布：<https://github.com/ollama/ollama/releases>
+- 问题排查：<https://docs.ollama.com/troubleshooting>

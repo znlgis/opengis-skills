@@ -24,7 +24,7 @@ tags:
 >
 > **许可证：** MIT
 >
-> **最新版本：** v5.15.1（2026-08）
+> **最新版本：** v5.15.1（npm `@photo-sphere-viewer/core`，截至 2026-10）
 
 ## 概述
 
@@ -42,6 +42,8 @@ tags:
 | **框架集成** | 原生 ES 模块，React wrapper 可用 |
 
 > **唯一运行时依赖：** Three.js（`^0.185.1`）。所有适配器和插件作为 `@photo-sphere-viewer/*` 独立 NPM 包发布。
+>
+> **注意：** 旧的无作用域包 `photo-sphere-viewer` 已标记 deprecated（停在 4.8.1），v5 一律用 `@photo-sphere-viewer/core`，不要装旧包。
 
 ---
 
@@ -280,19 +282,16 @@ const viewer = new Viewer({
 
 > 插件系统、MarkersPlugin 与虚拟导览（VirtualTourPlugin）的完整用法见 [reference/plugins.md](reference/plugins.md)
 
-## AI 使用建议
+## 常见问题
 
-- **推荐工作流模式**：AI 助手应将全景项目组织为「Viewer 核心配置 → 适配器选择 → 插件组合 → 标记定义」的结构。初始用 `EquirectangularAdapter` + `MarkersPlugin` + `GalleryPlugin` 组合覆盖 80% 场景，后续按需添加 `VirtualTourPlugin` 或 `GyroscopePlugin`。
-- **关键注意事项**：① `panorama` 路径需确保 CORS 头正确配置（`Access-Control-Allow-Origin: *`）；② 所有时长/速度参数以毫秒为单位（`speed: 1500` = 1.5 秒）或 `'3rpm'` 格式（每分钟旋转次数计算）；③ `MarkersPlugin` 的 CSS 样式需通过 `className` + 外部 CSS 控制，不建议内联大量样式；④ `setPanorama()` 后标记需重新设置，除非使用 `VirtualTourPlugin` 管理节点。
-- **常用代码模式**：
-  - **基础查看器**：`new Viewer({ container, panorama })` + `@photo-sphere-viewer/core/index.css`
-  - **标记**：`MarkersPlugin.withConfig({ markers: [{ id, position, image, tooltip }] })`
-  - **画廊**：`GalleryPlugin.withConfig({ items: [{ id, name, panorama, thumbnail }] })`
-  - **导览**：`VirtualTourPlugin.withConfig({ nodes, startNodeId, positionMode: 'manual' })`
-  - **动画**：`viewer.animate({ yaw, pitch, zoom, speed: 1500 })`
-  - **获取插件**：`viewer.getPlugin(MarkersPlugin).addMarker(...)`
-
----
+| 问题 | 解决 |
+|------|------|
+| 全景图加载不出来 | 多为 CORS：给图片源配 `Access-Control-Allow-Origin`，本地调试用同源或 dev server 代理 |
+| 移动端陀螺仪 / 立体 VR 无效 | 这些能力需要 HTTPS 环境（+ `gyroscope-plugin` / `stereo-plugin`） |
+| 切图后标记丢了 | `setPanorama()` 会重置标记；跨场景管理交给 `VirtualTourPlugin` |
+| 速度快慢不好调 | 时长参数是毫秒（`speed: 1500` 即 1.5 秒）或 `'3rpm'` 这类角度速度格式 |
+| 极点拉伸 / 变形 | 等距柱状图适配器 5.14.2+ 可用 `shader: true`（像素着色器）消除极点扭曲 |
+| 想直接用 React | 用官方生态的 `react-photo-sphere-viewer` wrapper，或自行在 `useEffect` 里 new Viewer |
 
 ---
 
@@ -322,16 +321,19 @@ const viewer = new Viewer({
 
 ---
 
-## 常见问题
+## AI 使用建议
 
-| 问题 | 解决 |
-|------|------|
-| 全景图加载不出来 | 多为 CORS：给图片源配 `Access-Control-Allow-Origin`，本地调试用同源或 dev server 代理 |
-| 移动端陀螺仪 / 立体 VR 无效 | 这些能力需要 HTTPS 环境（+ `gyroscope-plugin` / `stereo-plugin`） |
-| 切图后标记丢了 | `setPanorama()` 会重置标记；跨场景管理交给 `VirtualTourPlugin` |
-| 速度快慢不好调 | 时长参数是毫秒（`speed: 1500` 即 1.5 秒）或 `'3rpm'` 这类角度速度格式 |
-| 极点拉伸 / 变形 | 等距柱状图适配器 5.14.2+ 可用 `shader: true`（像素着色器）消除极点扭曲 |
-| 想直接用 React | 用官方生态的 `react-photo-sphere-viewer` wrapper，或自行在 `useEffect` 里 new Viewer |
+- **推荐工作流模式**：AI 助手应将全景项目组织为「Viewer 核心配置 → 适配器选择 → 插件组合 → 标记定义」的结构。初始用 `EquirectangularAdapter` + `MarkersPlugin` + `GalleryPlugin` 组合覆盖 80% 场景，后续按需添加 `VirtualTourPlugin` 或 `GyroscopePlugin`。
+- **关键注意事项**：① `panorama` 路径需确保 CORS 头正确配置（`Access-Control-Allow-Origin: *`）；② 所有时长/速度参数以毫秒为单位（`speed: 1500` = 1.5 秒）或 `'3rpm'` 格式（每分钟旋转次数计算）；③ `MarkersPlugin` 的 CSS 样式需通过 `className` + 外部 CSS 控制，不建议内联大量样式；④ `setPanorama()` 后标记需重新设置，除非使用 `VirtualTourPlugin` 管理节点。
+- **常用代码模式**：
+  - **基础查看器**：`new Viewer({ container, panorama })` + `@photo-sphere-viewer/core/index.css`
+  - **标记**：`MarkersPlugin.withConfig({ markers: [{ id, position, image, tooltip }] })`
+  - **画廊**：`GalleryPlugin.withConfig({ items: [{ id, name, panorama, thumbnail }] })`
+  - **导览**：`VirtualTourPlugin.withConfig({ nodes, startNodeId, positionMode: 'manual' })`
+  - **动画**：`viewer.animate({ yaw, pitch, zoom, speed: 1500 })`
+  - **获取插件**：`viewer.getPlugin(MarkersPlugin).addMarker(...)`
+
+---
 
 ---
 
@@ -353,5 +355,3 @@ const viewer = new Viewer({
 - React wrapper：<https://www.npmjs.com/package/react-photo-sphere-viewer>
 - 中文教程（znlgis）：<https://znlgis.github.io/3d/Photo-Sphere-Viewer/>
 - NPM（core）：<https://www.npmjs.com/package/@photo-sphere-viewer/core>
-
----

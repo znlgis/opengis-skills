@@ -1,17 +1,17 @@
-# OpenGIS Utils for .NET Utility Classes Reference
+# OpenGIS Utils for .NET 工具类参考
 
-OguLayerUtil, GeometryUtil, CrsUtil, ShpUtil, PostgisUtil, GtTxtUtil and GDAL configuration split from SKILL.md.
+从 SKILL.md 拆出的 OguLayerUtil、GeometryUtil、CrsUtil、ShpUtil、PostgisUtil、GtTxtUtil 与 GDAL 配置参考，按 OpenGIS.Utils 1.1.2 编写。
 
 ---
 
-## Data I/O — OguLayerUtil (Recommended Entry Point)
+## 数据读写 — OguLayerUtil（推荐入口）
 
 ```csharp
 using OpenGIS.Utils.DataSource;
 using OpenGIS.Utils.Engine.Enums;
 ```
 
-### Read
+### 读取
 
 ```csharp
 OguLayer layer = OguLayerUtil.ReadLayer(
@@ -28,7 +28,7 @@ OguLayer layer = OguLayerUtil.ReadLayer(
 OguLayer layer = await OguLayerUtil.ReadLayerAsync(DataFormatType.GEOJSON, "data.geojson");
 ```
 
-### Write
+### 写出
 
 ```csharp
 OguLayerUtil.WriteLayer(
@@ -44,7 +44,7 @@ OguLayerUtil.WriteLayer(
 await OguLayerUtil.WriteLayerAsync(DataFormatType.SHP, layer, "output.shp");
 ```
 
-### Format Conversion
+### 格式转换
 
 ```csharp
 OguLayerUtil.ConvertFormat(
@@ -59,13 +59,13 @@ await OguLayerUtil.ConvertFormatAsync(
 );
 ```
 
-### Utilities
+### 工具
 
 ```csharp
 IList<string> names = OguLayerUtil.GetLayerNames(DataFormatType.FILEGDB, "data.gdb");
 ```
 
-### Supported Format ↔ Driver
+### 支持的格式 ↔ 驱动
 
 | DataFormatType | Driver Name | Extension |
 |---|---|---|
@@ -80,7 +80,7 @@ IList<string> names = OguLayerUtil.GetLayerNames(DataFormatType.FILEGDB, "data.g
 
 ---
 
-## Geometry Operations — GeometryUtil
+## 几何运算 — GeometryUtil
 
 ```csharp
 using OpenGIS.Utils.Geometry;
@@ -88,7 +88,7 @@ using OpenGIS.Utils.Geometry;
 
 All methods are `public static`.
 
-### Format Conversion
+### 几何格式转换
 
 ```csharp
 OgrGeometry geom = GeometryUtil.Wkt2Geometry(string wkt);
@@ -99,7 +99,7 @@ string geojson   = GeometryUtil.Geometry2Geojson(OgrGeometry geom);
 
 > **Note:** `Geojson2Wkt(string)` and `Geojson2Geometry(string)` parse GeoJSON strings (bare geometry, `Feature`, or `FeatureCollection` — the first feature's geometry is used) through the GDAL GeoJSON driver. Unparseable input, or input without a geometry, raises `ArgumentException`. For whole files use `GdalReader` or `OguLayerUtil.ReadLayer(DataFormatType.GEOJSON, path)`.
 
-### Spatial Relationships (OgrGeometry)
+### 空间关系（OgrGeometry）
 
 ```csharp
 bool GeometryUtil.Intersects(OgrGeometry a, OgrGeometry b)
@@ -111,14 +111,14 @@ bool GeometryUtil.Overlaps(OgrGeometry a, OgrGeometry b)
 bool GeometryUtil.Disjoint(OgrGeometry a, OgrGeometry b)
 ```
 
-### Spatial Relationships (WKT convenience)
+### 空间关系（WKT 便捷方法）
 
 ```csharp
 bool GeometryUtil.IntersectsWkt(string wktA, string wktB)
 bool GeometryUtil.ContainsWkt(string wktA, string wktB)
 ```
 
-### Spatial Analysis (OgrGeometry)
+### 空间分析（OgrGeometry）
 
 ```csharp
 OgrGeometry GeometryUtil.Buffer(OgrGeometry geom, double distance)
@@ -129,7 +129,7 @@ OgrGeometry GeometryUtil.Difference(OgrGeometry a, OgrGeometry b)
 OgrGeometry GeometryUtil.SymDifference(OgrGeometry a, OgrGeometry b)
 ```
 
-### Spatial Analysis (WKT convenience)
+### 空间分析（WKT 便捷方法）
 
 ```csharp
 string GeometryUtil.BufferWkt(string wkt, double distance)
@@ -137,7 +137,7 @@ string GeometryUtil.IntersectionWkt(string wktA, string wktB)
 string GeometryUtil.UnionWkt(IEnumerable<string> wktList)
 ```
 
-### Geometry Properties
+### 几何属性
 
 ```csharp
 double       GeometryUtil.Area(OgrGeometry geom)
@@ -150,7 +150,7 @@ GeometryType GeometryUtil.GetGeometryType(OgrGeometry geom)
 bool         GeometryUtil.IsEmpty(OgrGeometry geom)
 ```
 
-### Geometry Properties (WKT convenience)
+### 几何属性（WKT 便捷方法）
 
 ```csharp
 double GeometryUtil.AreaWkt(string wkt)
@@ -158,7 +158,7 @@ double GeometryUtil.LengthWkt(string wkt)
 string GeometryUtil.CentroidWkt(string wkt)
 ```
 
-### Geometry Operations
+### 几何操作
 
 ```csharp
 OgrGeometry GeometryUtil.Boundary(OgrGeometry geom)
@@ -169,14 +169,14 @@ OgrGeometry GeometryUtil.Densify(OgrGeometry geom, double distanceTolerance)
 string      GeometryUtil.SimplifyWkt(string wkt, double tolerance)
 ```
 
-### Topology Validation
+### 拓扑校验
 
 ```csharp
 TopologyValidationResult GeometryUtil.IsValid(OgrGeometry geom)
 SimpleGeometryResult     GeometryUtil.IsSimple(OgrGeometry geom)
 ```
 
-### Equality & Distance
+### 相等与距离
 
 ```csharp
 bool   GeometryUtil.EqualsExact(OgrGeometry a, OgrGeometry b)
@@ -188,7 +188,7 @@ bool   GeometryUtil.IsWithinDistance(OgrGeometry a, OgrGeometry b, double maxDis
 
 ---
 
-## Coordinate Reference Systems — CrsUtil
+## 坐标参考系 — CrsUtil
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -216,7 +216,7 @@ bool   CrsUtil.IsProjectedCRS(int wkid)     // Is projected CRS?
 
 ---
 
-## Shapefile Utilities — ShpUtil
+## Shapefile 工具 — ShpUtil
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -233,7 +233,7 @@ void      ShpUtil.RepairShapefile(string shpPath)
 
 ---
 
-## PostGIS Utilities — PostgisUtil
+## PostGIS 工具 — PostgisUtil
 
 ```csharp
 using OpenGIS.Utils.Engine.Util;
@@ -248,7 +248,7 @@ void     PostgisUtil.CreateSpatialIndex(string connectionString, string tableNam
 
 ---
 
-## National Land Survey TXT Format — GtTxtUtil
+## 国土调查 TXT 格式 — GtTxtUtil
 
 ```csharp
 using OpenGIS.Utils.DataSource;
@@ -263,7 +263,7 @@ string        GtTxtUtil.FormatTxtLine(OguCoordinate coordinate, int zoneNumber)
 
 ---
 
-## GDAL Configuration
+## GDAL 配置
 
 ```csharp
 using OpenGIS.Utils.Configuration;
@@ -277,7 +277,7 @@ IList<string> GdalConfiguration.GetSupportedDrivers()
 bool         GdalConfiguration.IsDriverAvailable(string driverName)
 ```
 
-### LibrarySettings (Global Defaults)
+### LibrarySettings（全局默认值）
 
 | Property | Type | Default | Description |
 |---|---|---|---|
@@ -288,4 +288,3 @@ bool         GdalConfiguration.IsDriverAvailable(string driverName)
 | `UseGdalExceptions` | `bool` | `true` | GDAL exception mode |
 
 ---
-

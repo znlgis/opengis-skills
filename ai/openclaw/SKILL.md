@@ -17,10 +17,14 @@ tags:
 >
 > **许可证：** MIT ｜ **语言：** TypeScript
 >
-> **最新版本：** v2026.10.3（2026-10-13，日历版本号，见 [Releases](https://github.com/openclaw/openclaw/releases)）
+> **最新版本：** v2026.10.8（日历版本号，截至 2026-10，见 [Releases](https://github.com/openclaw/openclaw/releases)）
+>
+> **运行时：** Node 24.22.1+ 或 26.12.1+（推荐 Node 26）
 > **发布频道：** latest / beta / dev（参见 [GitHub Releases](https://github.com/openclaw/openclaw/releases)）
 
-> **注意：** OpenClaw 的助手可以执行命令、读写文件、控制设备并接入你的私人聊天账号。**对外暴露前**务必阅读官方 [Security](https://docs.openclaw.ai/gateway/security) 与 [Exposure runbook](https://docs.openclaw.ai/gateway/security/exposure-runbook)，并配置沙箱与访问控制。
+> **注意：** OpenClaw 的助手可以执行命令、读写文件、控制设备并接入你的私人聊天账号。**对外暴露前**务必阅读官方 [Security](https://docs.openclaw.ai/gateway/security)、[Exposure runbook](https://docs.openclaw.ai/gateway/security/exposure-runbook) 与 [Sandboxing](https://docs.openclaw.ai/gateway/sandboxing)，并配置沙箱与访问控制。默认情况下主会话的工具直接在宿主机上执行。
+
+> **配对机制：** 能收私信（DM）的通道默认对陌生发送者启用配对，用 `openclaw pairing approve <channel> <code>` 批准。
 
 ## 概述
 
@@ -40,7 +44,9 @@ OpenClaw 是「本地优先、单一信任边界、面向个人助手场景的�
 推荐用引导式 `onboard`（支持 macOS / Linux / Windows）：
 
 ```bash
-npm install -g openclaw@latest
+# npm 12 或 11.16+ 用带 --allow-scripts 的写法（安装脚本需要执行）
+npm install -g openclaw@latest --allow-scripts=openclaw
+# npm 11.15 及更早：去掉 --allow-scripts=openclaw
 # 或 pnpm add -g openclaw@latest
 
 # 引导设置 Gateway、workspace、通道、技能，并安装常驻守护进程（launchd/systemd 用户服务）
@@ -50,6 +56,15 @@ openclaw onboard --install-daemon
 openclaw gateway status
 openclaw gateway stop
 openclaw gateway --port 18789 --verbose   # 默认端口 18789
+openclaw dashboard                        # 打开 Control UI，发一条消息确认助手可用
+```
+
+验证安装：
+
+```bash
+node -v                # 需要 24.22.1+ 或 26.12.1+
+openclaw --version
+openclaw gateway status
 ```
 
 最小配置 `~/.openclaw/openclaw.json`（仅设置模型与默认值，JSON5 语法）：
@@ -117,6 +132,8 @@ pnpm gateway:watch           # 开发期按需重建运行时
 | 助手执行了危险命令 | 收紧沙箱，把 `bash`/`process` 等设为 `ask`/`deny`，限定可用工具 |
 | 想远程访问 | 优先 Tailscale 等私网；公网暴露前按 Security + Exposure runbook 加固 |
 | 端口冲突 | `openclaw gateway --port <port>`（默认 18789） |
+| `npm install -g openclaw` 装完命令没了或没跑起来 | npm 12 / 11.16+ 必须带 `--allow-scripts=openclaw` 才会执行安装脚本；早期 npm 则不能带该参数 |
+| 启动报 Node 版本不符 | OpenClaw 要求 Node 24.22.1+ 或 26.12.1+；`node -v` 确认后升级 |
 | 多账号互相串话 | 用多智能体路由，把通道/账号映射到隔离 agent（独立 workspace） |
 
 ---

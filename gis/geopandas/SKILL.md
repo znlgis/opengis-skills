@@ -18,7 +18,7 @@ tags:
 >
 > **官网：** <https://geopandas.org>
 >
-> **最新版本：** 1.2.0（截至2026-10，PyPI）
+> **最新版本：** 1.2.0（截至 2026-10，PyPI）
 >
 > **许可证：** BSD-3-Clause
 
@@ -342,6 +342,18 @@ m = gdf.explore(column="population", cmap="viridis",
 
 ---
 
+## 性能提示
+
+- **GeoParquet** 比 Shapefile/GeoJSON 读写快 5-10 倍，优先使用
+- **空间索引** `.sindex` 自动构建 STRtree，`query()` 和 `nearest()` 可大幅加速空间查询
+- **矩形裁剪** `clip_by_rect()` 或 `clip(gdf, (xmin,ymin,xmax,ymax))` 比多边形裁剪快
+- **`pyogrio` 引擎**（默认）比 `fiona` 快 2-5 倍
+- 大数据集用 `read_file(rows=slice(0, 1000))` 先预览
+- `dissolve()` 使用 `method="coverage"` 对已知不重叠的多边形更快
+- 避免逐行循环几何操作，使用向量化方法（如 `buffer()`, `intersection()` 等）
+
+---
+
 ## 常见问题
 
 | 问题 | 原因 | 解决方案 |
@@ -374,16 +386,6 @@ m = gdf.explore(column="population", cmap="viridis",
 - **pyqgis** — QGIS Python 绑定：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
 - **postgis** — 空间数据库：[../postgis/SKILL.md](../postgis/SKILL.md)
 - **geopipe-agent** — AI 原生分析流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
-
-## 性能提示
-
-- **GeoParquet** 比 Shapefile/GeoJSON 读写快 5-10 倍，优先使用
-- **空间索引** `.sindex` 自动构建 STRtree，`query()` 和 `nearest()` 可大幅加速空间查询
-- **矩形裁剪** `clip_by_rect()` 或 `clip(gdf, (xmin,ymin,xmax,ymax))` 比多边形裁剪快
-- **`pyogrio` 引擎**（默认）比 `fiona` 快 2-5 倍
-- 大数据集用 `read_file(rows=slice(0, 1000))` 先预览
-- `dissolve()` 使用 `method="coverage"` 对已知不重叠的多边形更快
-- 避免逐行循环几何操作，使用向量化方法（如 `buffer()`, `intersection()` 等）
 
 ---
 

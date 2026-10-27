@@ -1,6 +1,6 @@
 ---
 name: sentry
-description: "Use when adding error tracking, performance monitoring, and release health to .NET applications — ASP.NET Core, MAUI, WPF, Blazor, EF Core integration. Sentry .NET SDK: cross-platform error and performance monitoring with source map support, breadcrumbs, and alerting."
+description: "Use when adding error tracking, performance monitoring or release health to .NET apps — builder.WebHost.UseSentry, SetBeforeSend, SentrySdk.CaptureException, TracesSampleRate, StartTransaction/StartChild spans, Source Context, symbol upload. Also for events not arriving because Dsn is empty (the SDK stays silent), tracing producing no transactions, PII leaking into events, and StartChildSpan no longer existing in 6.x. Sentry .NET SDK."
 tags:
   - dotnet
   - csharp
@@ -17,7 +17,7 @@ tags:
 >
 > **NuGet：** <https://www.nuget.org/packages/Sentry>
 >
-> **最新版本：** Sentry / Sentry.AspNetCore 6.12.1（截至2026-10，NuGet）
+> **最新版本：** Sentry / Sentry.AspNetCore 6.12.1（截至 2026-10，NuGet 实测）
 >
 > **许可证：** MIT
 
@@ -56,6 +56,8 @@ Sentry 是一个开源的 **错误追踪与性能监控平台**，.NET SDK 支�
 
 ### 安装
 
+#### 方式一：dotnet CLI
+
 ```bash
 # ASP.NET Core 项目
 dotnet add package Sentry.AspNetCore
@@ -68,6 +70,26 @@ dotnet add package Sentry.EntityFramework     # EF6（EF Core 无需此包）
 dotnet add package Sentry.DiagnosticSource    # HTTP / ADO.NET 自动 Span
 dotnet add package Sentry.OpenTelemetry       # OTel 桥接
 dotnet add package Sentry.Profiling           # 性能剖析
+```
+
+#### 方式二：PackageReference
+
+```xml
+<ItemGroup>
+  <PackageReference Include="Sentry.AspNetCore" Version="6.12.1" />
+</ItemGroup>
+```
+
+#### 方式三：包管理器控制台
+
+```powershell
+Install-Package Sentry.AspNetCore -Version 6.12.1
+```
+
+#### 验证安装
+
+```bash
+dotnet list package | grep -i sentry
 ```
 
 ### 初始化
@@ -124,13 +146,14 @@ SentrySdk.ConfigureScope(s => s.Transaction = transaction);
 
 try
 {
-    // Span: 数据库查询
-    var dbSpan = transaction.StartChildSpan("db.query", "SELECT * FROM orders");
+    // Span: 数据库查询（6.12.1 的 ISpan 只有 StartChild(operation)，
+    // 带 description 的重载是 SpanExtensions 扩展方法）
+    var dbSpan = transaction.StartChild("db.query", "SELECT * FROM orders");
     var orders = await db.QueryAsync("SELECT * FROM orders WHERE ...");
     dbSpan.Finish();
 
     // Span: 业务逻辑
-    var bizSpan = transaction.StartChildSpan("business.process");
+    var bizSpan = transaction.StartChild("business.process");
     ProcessOrders(orders);
     bizSpan.Finish();
 

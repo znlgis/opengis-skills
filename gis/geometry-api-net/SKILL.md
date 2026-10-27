@@ -19,19 +19,18 @@ tags:
 >
 > **NuGet：** `OpenGIS.Esri.Geometry.Core`（最新 1.0.9，截至 2026-10）
 >
-> **注意：** 原 Esri 仓库（github.com/Esri/geometry-api-net）已不再维护（404）。此分支由 znlgis 社区维护，已重命名为 OpenGIS.Esri.Geometry。
->
 > **许可证：** LGPL-2.1
-> 
-> 本文件旨在帮助 AI 快速理解并使用 geometry-api-net 库进行空间几何开发。
+>
+> **注意：** 原 Esri 仓库（github.com/Esri/geometry-api-net）已停止维护（404）；此分支由 znlgis 社区维护，包名与命名空间已改为 `OpenGIS.Esri.Geometry`。
 
 ## 概述
 
-这是一个 .NET Standard 2.0 的空间几何计算库，提供 6 种几何类型、28 个空间运算算子（含 DE-9IM 驱动的 9 个谓词、多边形布尔运算、缓冲/简化/MakeValid 与大地测量）和 4 种序列化格式（WKT/EWKT、WKB/EWKB、GeoJSON、Esri JSON），核心引擎已与 PostGIS/GEOS 交叉验证。
+这是一个 .NET Standard 2.0 的空间几何计算库，提供 6 种几何类型（Point、MultiPoint、Line、Polyline、Polygon、Envelope）、35 个算子类（`Operators` 命名空间 27 个几何算子 + `IO` 命名空间 8 个读写算子，含 8 个 DE-9IM 谓词：Contains/Crosses/Disjoint/Equals/Intersects/Overlaps/Touches/Within）和 4 种序列化格式（WKT/EWKT、WKB/EWKB、GeoJSON、Esri JSON）。
 
-- **核心包**: `OpenGIS.Esri.Geometry.Core`
-- **JSON 扩展包**: `OpenGIS.Esri.Geometry.Json`
-- **许可证**: LGPL-2.1-only
+- **核心包**：`OpenGIS.Esri.Geometry.Core`（`GeometryEngine` 提供 39 个静态便捷方法）
+- **JSON 扩展包**：`OpenGIS.Esri.Geometry.Json`（System.Text.Json 转换器）
+- **许可证**：LGPL-2.1-only
+- **能力边界**：不提供 `MakeValid`，`Simplify` 只做抽稀、不修复自相交环；需要几何修复请在上游（GEOS/PostGIS/JTS）完成后再导入。
 
 ## 快速开始
 
@@ -163,6 +162,50 @@ result.VertexIndex   // int, 最近顶点索引
 result.Distance      // double, 距离
 result.IsRightSide   // bool, 是否在多路径几何的右侧
 ```
+
+---
+
+## 典型工作流
+
+端到端：WKT 读入 → 有效性校验 → 叠加分析 → 输出 GeoJSON 与 Esri JSON。
+
+```csharp
+using OpenGIS.Esri.Geometry.Core;
+using OpenGIS.Esri.Geometry.Core.Geometries;
+using OpenGIS.Esri.Geometry.Core.IO;
+
+// 1. 从 WKT 读入输入几何（环由库自动闭合）
+Geometry parcel = GeometryEngine.GeometryFromWkt(
+    "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))");
+Geometry zone = GeometryEngine.GeometryFromWkt(
+    "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))");
+
+// 2. 校验：先确认几何本身可用，不要拿 0 容差去"修复"
+if (!parcel.IsValid() || !zone.IsValid())
+    throw new InvalidOperationException("输入几何无效，请先修正数据");
+
+// 3. 叠加：求交集（5×5 的方形重叠区）
+Geometry overlapArea = GeometryEngine.Intersection(parcel, zone);
+bool intersects = GeometryEngine.Intersects(parcel, zone);   // true
+double area = GeometryEngine.Area(overlapArea);              // 约 25（内部容差带来 1e-6 级误差）
+
+// 4. 输出两种格式
+string geoJson = GeometryEngine.GeometryToGeoJson(overlapArea);
+string esriJson = EsriJsonExportOperator.Instance.Execute(overlapArea);
+
+// 5. 回读校验：序列化再反序列化，几何应一致
+Geometry roundTrip = GeometryEngine.GeometryFromGeoJson(geoJson);
+bool same = GeometryEngine.Equals(overlapArea, roundTrip);
+```
+
+**输出与验收**：
+
+- `overlapArea` 是 `(5,5)-(10,10)` 的矩形，`GeometryEngine.Area()` 实测约 `24.999998`（默认容差 `1e-10` 下的浮点结果，不要断言严格等于 25）。
+- `geoJson` 形如 `{"type":"Polygon","coordinates":[[[10,5],...]]}`；`esriJson` 形如 `{"rings":[[[10,5],...]]}`。
+- `same` 必须为 `true`；若为 `false`，先检查环是否闭合、坐标顺序是否一致。
+- `GeometryEngine.Simplify(geometry, tolerance)` 的 `tolerance` 必须为正，传 `0.0` 会抛 `ArgumentException: Tolerance must be positive`；且 `Simplify` 只做抽稀，不保证把自相交环修成有效面，需修复无效数据请在上游处理。
+
+> 注意：集合运算返回 `Geometry` 基类，需要面积/环等具体成员时按实际类型（`Polygon`/`Polyline`）转型后再用。
 
 ---
 
@@ -304,6 +347,20 @@ dotnet run --project samples/OpenGIS.Esri.Geometry.Samples
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| NuGet 安装后找不到命名空间 | 同时安装 `OpenGIS.Esri.Geometry.Core` 与（可选）`OpenGIS.Esri.Geometry.Json`；命名空间为 `OpenGIS.Esri.Geometry.Core.*` |
+| Polygon 面积 / 包含判断异常 | 环必须闭合（首尾点相同）；注意 `IsValid()` 对自相交环较宽松，可能返回 true |
+| `Simplify` 抛 `ArgumentException: Tolerance must be positive` | 容差必须为正，不能传 `0.0`；`Simplify` 只抽稀，不修复自相交 |
+| 浮点坐标比较误差 | 内部容差 `GeometryConstants.DefaultTolerance`（1e-10），为内部常量、不可外部配置；面积等断言用近似比较 |
+| 集合运算返回值类型不符预期 | 返回 `Geometry` 基类，需按实际类型做类型转换后使用 |
+| 无法 `new` 算子实例 | 所有 Operator 类通过 `Instance` 属性获取 Lazy 单例 |
+| 修改 `GetRing()` / `GetPath()` 结果报错 | 返回 `IReadOnlyList<Point>` 只读视图，需要复制后修改 |
+| `GeodesicDistance` 结果异常 | 基于 WGS84（Vincenty 公式），输入必须是经纬度坐标；`GeodesicArea` 使用球面超量公式 |
+| GeoJSON 导出类型与预期不符 | 单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`；Envelope 导出为 `Polygon` |
+
 ## DeepSeek Harness 使用建议
 
 - **加载与引用**：用 `skill("geometry-api-net")` 加载（用户也可输入 `/geometry-api-net`）；`reference/geometry-types.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，示例工程建在会话工作区。
@@ -314,19 +371,6 @@ dotnet run --project samples/OpenGIS.Esri.Geometry.Samples
 - **编译期陷阱**：`Polygon.AddRing` 必须闭合（首尾点相同）否则面积/包含判断异常；集合运算返回 `Geometry` 基类，要按 `Point`/`Polygon` 转型后再用；容差 `GeometryConstants.DefaultTolerance`（1e-10）是内部常量，无法外部调整。
 - **大地测量前提**：`GeodesicDistance`/`GeodesicArea` 基于 WGS84（Vincenty），输入必须是经纬度；对投影坐标（如 EPSG:3857 米制）调用会得到无意义结果。
 - **安全与权限**：`dotnet restore` 需访问 NuGet 源，离线时先确认本地缓存；修改全局 `NuGet.config`、安装 SDK 或写入系统目录前先征得用户同意，命令输出里不要回显私有源凭据。
-
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| NuGet 安装后找不到命名空间 | 同时安装 `OpenGIS.Esri.Geometry.Core` 与（可选）`OpenGIS.Esri.Geometry.Json`；命名空间为 `OpenGIS.Esri.Geometry.Core.*` |
-| Polygon 面积 / 包含判断异常 | 环必须闭合（首尾点相同），可先用 `GeometryEngine.Simplify` 修复 |
-| 浮点坐标比较误差 | 内部容差 `GeometryConstants.DefaultTolerance`（1e-10），为内部常量、不可外部配置 |
-| 集合运算返回值类型不符预期 | 返回 `Geometry` 基类，需按实际类型做类型转换后使用 |
-| 无法 `new` 算子实例 | 所有 Operator 类通过 `Instance` 属性获取 Lazy 单例 |
-| 修改 `GetRing()` / `GetPath()` 结果报错 | 返回 `IReadOnlyList<Point>` 只读视图，需要复制后修改 |
-| `GeodesicDistance` 结果异常 | 基于 WGS84（Vincenty 公式），输入必须是经纬度坐标；`GeodesicArea` 使用球面超量公式 |
-| GeoJSON 导出类型与预期不符 | 单路径 Polyline 导出为 `LineString`，多路径导出为 `MultiLineString`；Envelope 导出为 `Polygon` |
 
 ## 相关技能
 

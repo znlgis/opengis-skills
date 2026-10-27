@@ -1,6 +1,6 @@
 ---
 name: opencode
-description: "Use when working with a model-agnostic terminal AI coding agent that uses opencode.json for declarative configuration — MCP servers, custom commands, agent routing, skills. OpenCode: configuration-as-code terminal AI coding agent with multi-model support."
+description: "Use when configuring a model-agnostic terminal AI coding agent through opencode.json — $schema validation, permission allow/ask/deny for bash/edit/webfetch, small_model cost routing, MCP local|remote servers, custom agents and commands, tui.json themes, opencode run for CI and opencode serve for SDK; also for /undo failing outside a Git repo, no model after /connect, and config keys silently merged instead of replaced. OpenCode v1.19.4."
 tags:
   - ai
   - agent
@@ -17,7 +17,8 @@ tags:
 > **官网 / 文档：** <https://opencode.ai> ｜ **配置 Schema：** <https://opencode.ai/config.json> ｜ **TUI Schema：** <https://opencode.ai/tui.json>
 >
 > **许可证：** MIT
-> **版本：** 迭代快，以本机 `opencode --version` 为准（2026-10-11 上游最新 Release 为 v1.19.0）
+>
+> **版本：** v1.19.4（截至 2026-10，实测 `releases/latest` 重定向与 npm `opencode-ai` latest 一致）；迭代快，以本机 `opencode --version` 为准
 
 > **注意：** OpenCode 迭代非常快，命令、配置字段与模型名称请以你当前版本的 `opencode --help`、TUI 内 `/help` 及在线 JSON Schema 为准。
 

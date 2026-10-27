@@ -1,6 +1,6 @@
 ---
 name: fy_layout
-description: "Use when doing construction site layout planning with the FeiYang LightCAD platform — fence, lawn, foundation pit, road, prefab house 2D/3D modeling. FY_Layout: construction site layout secondary development plugin for LightCAD/LightBIM."
+description: "Use when writing C# plugins for the FeiYang LightCAD/LightBIM platform (construction site layout) — ILcPlugin registration, ElementType with fixed GUID, [CommandClass]/[CommandMethod] commands, TabItem ribbon menus, 2D Action plus Shape/Solid Provider pairs for fence, lawn, foundation pit, road, prefab house. Also for \"LightCAD.Core reference not found\" build errors, plugins that load but show no commands, and 2D shapes rendering with empty 3D solids."
 tags:
   - 2d
   - 3d
@@ -19,7 +19,9 @@ tags:
 >
 > **许可证：** CC-BY-NC 4.0（README「授权协议」章，非商业使用）
 >
-> **版本：** 仓库无公开 Release/Tag，以 master 为准（最后推送 2026-03-16）；插件工程（`QdLayout`）与平台主仓 [lightcad1](https://github.com/znlgis/lightcad1) 都是 `net8.0-windows` / `net8.0` 目标，引用平台 DLL 时保持同一 TFM，不要混用其它 .NET 版本的 SDK DLL
+> **包管理器：** 无 NuGet 包——直接引用仓库内 `Libs/` 下的飞扬平台 DLL + 主程序 `飞扬主程序/lightcad.EXE`
+>
+> **版本：** 仓库无公开 Release/Tag，以 `master` 为准（最后推送 2026-03-16，截至 2026-10）；插件工程（`QdLayout`）与平台目标为 `net8.0-windows`，引用平台 DLL 时保持同一 TFM，不要混用其它 .NET 版本的 SDK DLL
 >
 > **配套教程：** <https://znlgis.github.io/cad/LightCAD/>（飞扬平台 20 章）
 
@@ -61,13 +63,27 @@ cd FY_Layout
 # 使用 VS2022 打开 LightBIM.sln
 ```
 
+### 编译与验证
+
+```bash
+# 还原（工程引用的是 Libs/ 下的本地 DLL，不是 NuGet 包）
+dotnet restore LightBIM.sln
+
+# 编译，确认 QdLayout.dll 与 Provider 都产出
+dotnet build LightBIM.sln -c Debug
+```
+
+验证顺序：启动 `飞扬主程序/lightcad.EXE` → 新建图纸 → 命令行输入 `Fence`（或别名 `W`）能画出围墙 → 切三维视图能看到实体。两者都成立才说明插件与 Provider 链路完整。
+
 ### 调试方式
 
 飞扬最新组件和启动程序为 `飞扬主程序/lightcad.EXE`。编译后使用 VS2022 **附加进程** 的方式进行断点调试。
 
 ---
 
-## 项目结构
+## 核心 API
+
+### 项目结构
 
 ```text
 FY_Layout/
@@ -117,7 +133,7 @@ FY_Layout/
 
 ---
 
-## 核心 SDK 引用一览
+### 核心 SDK 引用一览
 
 | DLL | 命名空间 | 用途 |
 |-----|---------|------|
@@ -134,9 +150,9 @@ FY_Layout/
 
 ---
 
-## 插件开发核心概念
+### 插件开发核心概念
 
-### 1. 插件入口（ILcPlugin）
+#### 1. 插件入口（ILcPlugin）
 
 每个飞扬插件必须实现 `ILcPlugin` 接口，在 `Loaded()` 中注册元素类型和 Action，在 `Completed()` 中初始化 UI。
 
@@ -184,7 +200,7 @@ namespace QdLayout
 }
 ```
 
-### 2. 元素类型定义（ElementType）
+#### 2. 元素类型定义（ElementType）
 
 通过静态字段定义场布元素，每个元素包含唯一 GUID、名称、显示名和实体类型：
 
@@ -223,7 +239,7 @@ namespace QdLayout
 }
 ```
 
-### 3. 命令注册（CommandClass / CommandMethod）
+#### 3. 命令注册（CommandClass / CommandMethod）
 
 使用 `[CommandClass]` 和 `[CommandMethod]` 特性注册绘图命令：
 
@@ -262,7 +278,7 @@ namespace QdLayout
 }
 ```
 
-### 4. UI 菜单定义（TabItem / TabButton）
+#### 4. UI 菜单定义（TabItem / TabButton）
 
 通过 `TabItem`、`TabButtonGroup`、`TabButton` 构建插件工具栏菜单：
 
@@ -300,7 +316,7 @@ public static TabItem LayoutItem = new TabItem
 
 ---
 
-## 场布元素一览
+### 场布元素一览
 
 | 元素名称 | ElementType 名 | 实体类 | 2D Action | 3D Action | 说明 |
 |---------|---------------|--------|-----------|-----------|------|
@@ -323,7 +339,7 @@ public static TabItem LayoutItem = new TabItem
 
 ---
 
-## 已注册命令一览
+### 已注册命令一览
 
 | 命令名 | 快捷键 | Action 类 | 方法 | 说明 |
 |--------|--------|----------|------|------|

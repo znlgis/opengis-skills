@@ -17,7 +17,9 @@ tags:
 >
 > **官方文档：** <https://pdal.io/>
 >
-> **最新版本：** 2.10.2（2026-06 发布，[发布页](https://github.com/PDAL/PDAL/releases)）
+> **Conda：** `pdal` / `python-pdal`（conda-forge，最新 2.10.2，截至 2026-10）
+>
+> **PyPI：** `pdal`（Python 绑定，最新 3.5.5，截至 2026-10；版本号与主库独立）
 >
 > **许可证：** BSD-3-Clause
 
@@ -66,9 +68,11 @@ pip install PDAL   # 依赖系统已安装 PDAL 库（提供 pdal-config）
 ### 验证安装
 
 ```bash
-pdal --version                  # 输出如 pdal 2.10.2
+pdal --version                  # 输出如 PDAL 2.10.2 (…)
+pdal --help                     # 列出全部子命令（info/translate/pipeline/…）
 pdal --drivers                  # 列出可用的 readers/filters/writers
-pdal --options filters.smrf     # 查看某个 stage 的全部参数与默认值
+pdal --options filters.smrf     # 查看某个 driver 的参数与默认值
+pdal info --help                # 查看单个子命令的参数
 ```
 
 ## 核心 API/命令
@@ -309,7 +313,7 @@ for las_file in glob.glob("tiles/*.las"):
 - 重投影后用 writer 的 `scale_*/offset_* = "auto"`，防止坐标精度截断
 - 输出统一用 LAZ（`compression: "true"`）减小体积，GDAL/QGIS 可直接读取
 - 用 `tag` + `inputs` 构建分支与合并（filters.merge），tag 必须先定义
-- `pdal ground` 命令自 2.6.0 起弃用，改用 filters.smrf 的 pipeline 写法
+- `pdal ground` 自 2.6.0 标记 DEPRECATED，2.7 从默认安装移除、2.8 完全移除；一律改用 `filters.smrf` 的 pipeline 写法
 - SMRF 参数需按数据调整：window 参考最大建筑物尺寸，slope/threshold 可参考 SMRF 论文的参数组合
 
 ## 常见问题
@@ -324,20 +328,7 @@ for las_file in glob.glob("tiles/*.las"):
 | writers.gdal 输出了多波段 | 默认 `output_type: "all"`，指定 `mean` 或 `idw` 等单值即可输出单波段 |
 | 重投影后坐标精度变差 | 在 writer 中设置 `scale_x/y/z` 与 `offset_x/y/z: "auto"` |
 | 地面分类效果不佳 | 调整 smrf 的 window/slope/threshold/scalar，先检查数据坐标系与高程单位 |
-
-## 参考资源
-
-- **官方文档：** <https://pdal.io/> | [Pipeline](https://pdal.io/en/latest/pipeline.html) | [命令行应用](https://pdal.io/en/latest/apps/index.html) | [Stage 参考](https://pdal.io/en/latest/stages/index.html) | [Python 绑定](https://pdal.io/en/latest/python.html)
-- **GitHub：** <https://github.com/PDAL/PDAL>
-- **Docker 镜像：** <https://hub.docker.com/r/pdal/pdal>
-- **示例数据：** <https://github.com/PDAL/data>
-
-## 相关技能
-
-- **gdal** — 栅格/矢量处理，DEM 后处理：[../gdal/SKILL.md](../gdal/SKILL.md)
-- **qgis-process** — QGIS 命令行批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
-- **geopandas** — Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
-- **shapely** — 几何对象计算，与裁剪范围构造相关：[../shapely/SKILL.md](../shapely/SKILL.md)
+| 报 `Couldn't create <cls> stage of type '<type>'.` | stage 名拼错或该版本没有此 stage：先 `pdal --drivers` 确认存在，再核对 `readers.*`/`filters.*`/`writers.*` 前缀 |
 
 ## DeepSeek Harness 使用建议
 
@@ -348,3 +339,17 @@ for las_file in glob.glob("tiles/*.las"):
 - **注意执行模式**：stream mode 不能跑 `filters.outlier`、`filters.smrf` 这类需要全局统计的 stage，大文件先按 tile 拆分；`writers.gdal` 默认 `output_type: "all"` 会输出多波段，单波段 DEM 要显式写 `idw`/`mean`。
 - **Python 场景**：`pipeline.execute()` 返回处理的点数而不是数组，数据在 `pipeline.arrays`（NumPy 结构化数组）；排查失败看 `pipeline.log`，不要只看异常栈。
 - **安全与权限**：`pdal translate` 与各 writer 会覆盖同名输出，先确认目标文件名；`pdal pipeline --stdin` 和 Docker 挂载以调用者/容器用户写盘，Linux 下注意属主；安装 PDAL 或下载大点云前先征得用户同意。
+
+## 相关技能
+
+- **gdal** — 栅格/矢量处理，DEM 后处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **qgis-process** — QGIS 命令行批处理：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)
+- **geopandas** — Python 矢量数据处理：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **shapely** — 几何对象计算，与裁剪范围构造相关：[../shapely/SKILL.md](../shapely/SKILL.md)
+
+## 参考资源
+
+- **官方文档：** <https://pdal.io/en/stable/> | [Pipeline](https://pdal.io/en/stable/pipeline.html) | [命令行应用](https://pdal.io/en/stable/apps/index.html) | [Stage 参考](https://pdal.io/en/stable/stages/stages.html) | [维度列表](https://pdal.io/en/stable/dimensions.html) | [Python 绑定](https://pdal.io/en/stable/python.html)
+- **GitHub：** <https://github.com/PDAL/PDAL>
+- **Docker 镜像：** <https://hub.docker.com/r/pdal/pdal>
+- **示例数据：** <https://github.com/PDAL/data>

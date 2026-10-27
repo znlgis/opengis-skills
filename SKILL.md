@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise. Index of 96 skills across 8 categories: gis (32), cad (21), csharp (9), ai (14), iot (2), 3d (6), demos (4), others (8). Tag-based search and on-demand loading for GDAL, GeoServer, MapServer, Leaflet, PROJ, PostGIS, JTS, CesiumJS, FreeCAD, Blender, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Dify, Ollama, LangChain, SuperSplat, CHAGS and more."
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise. Index of 114 skills across 8 categories: gis (40), cad (21), csharp (12), ai (17), iot (4), 3d (6), demos (4), others (10). Tag-based search and on-demand loading for GDAL, GeoServer, MapServer, Leaflet, PROJ, PostGIS, DuckDB Spatial, GeoLibre, JTS, CesiumJS, FreeCAD, Blender, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Serilog, Dify, Ollama, LangChain, vLLM, MinerU, SuperSplat, Home Assistant, CHAGS and more."
 tags:
   - gis
   - cad
@@ -30,7 +30,7 @@ tags:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域，以及通用工具（others）与项目演示（demos），共 8 个分类、96 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent**（Claude、Cursor、Cline、Copilot Chat、DeepSeek 等）的技能（Skill）集合，涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域，以及通用工具（others）与项目演示（demos），共 8 个分类、114 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -62,7 +62,7 @@ tags:
 
 ## 技能索引
 
-### 🌍 GIS — 地理信息系统（32 个）
+### 🌍 GIS — 地理信息系统（40 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -98,6 +98,14 @@ tags:
 | [pdal](./gis/pdal/SKILL.md) | PDAL：点云与 LiDAR 处理流水线 | `point-cloud` `lidar` `las` `pipeline` |
 | [mapbox-gl-js](./gis/mapbox-gl-js/SKILL.md) | Mapbox GL JS：矢量瓦片 WebGL 地图 | `javascript` `vector-tiles` `webgl` `map` |
 | [deck-gl](./gis/deck-gl/SKILL.md) | deck.gl：GPU 大规模数据可视化 | `javascript` `webgl` `visualization` `geospatial` |
+| [geolibre](./gis/geolibre/SKILL.md) | 云原生 GIS 应用：浏览器/桌面/Notebook/MCP | `webgis` `duckdb` `mcp` `desktop` |
+| [geonode](./gis/geonode/SKILL.md) | 地理空间 CMS：Django + GeoServer + PostGIS 数据门户 | `cms` `django` `portal` `metadata` |
+| [duckdb-spatial](./gis/duckdb-spatial/SKILL.md) | DuckDB 空间扩展：空间 SQL 与 GeoParquet | `duckdb` `sql` `geoparquet` `analytics` |
+| [spatialite](./gis/spatialite/SKILL.md) | SQLite 空间扩展：单文件空间数据库 | `sqlite` `database` `spatial` `sql` |
+| [whitebox-tools](./gis/whitebox-tools/SKILL.md) | Rust 地形/水文/LiDAR 分析引擎（CLI + Python） | `cli` `hydrology` `terrain-analysis` `python` |
+| [kepler-gl](./gis/kepler-gl/SKILL.md) | React/Redux 地理数据可视化应用与组件库 | `react` `redux` `visualization` `jupyter` |
+| [projnet4geoapi](./gis/projnet4geoapi/SKILL.md) | .NET 坐标参考系与投影引擎（NuGet ProjNet 2.x） | `dotnet` `projection` `coordinate-systems` `wkt` |
+| [brutile](./gis/brutile/SKILL.md) | .NET 瓦片访问库（HTTP 瓦片源 + MBTiles 离线） | `dotnet` `tiles` `mbtiles` `tms` |
 
 ### 📐 CAD — 计算机辅助设计（21 个）
 
@@ -125,7 +133,7 @@ tags:
 | [design-drawing-svg-md](./cad/design-drawing-svg-md/SKILL.md) | 设计图 SVG+MD 双载体记录（钢结构施工图→可复现图纸描述） | `svg` `markdown` `pdf` `steel-structure` `llm` |
 | [blender](./cad/blender/SKILL.md) | Blender：Python 脚本化 3D 建模与导出 | `3d` `python` `bpy` `gltf` |
 
-### 🛠️ C# — .NET 生态（9 个）
+### 🛠️ C# — .NET 生态（12 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -138,13 +146,16 @@ tags:
 | [sqlsugar](./csharp/sqlsugar/SKILL.md) | 国产高性能多数据库 ORM | `orm` `dotnet` `database` |
 | [dotnet-reactor](./csharp/dotnet-reactor/SKILL.md) | .NET 商业级混淆/加壳/授权 | `dotnet` `obfuscation` `security` |
 | [sentry](./csharp/sentry/SKILL.md) | Sentry .NET SDK：错误追踪与性能监控 | `dotnet` `error-tracking` `monitoring` |
+| [serilog](./csharp/serilog/SKILL.md) | Serilog：结构化日志（sink / enricher / JSON） | `dotnet` `logging` `structured-logging` |
+| [polly](./csharp/polly/SKILL.md) | Polly：v8 ResiliencePipeline 重试/超时/断路器 | `dotnet` `resilience` `retry` |
+| [hangfire](./csharp/hangfire/SKILL.md) | Hangfire：持久化后台任务与 Cron 调度 | `dotnet` `background-jobs` `cron` |
 
-### 🤖 AI — LLM/Agent（14 个）
+### 🤖 AI — LLM/Agent（17 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [dify](./ai/dify/SKILL.md) | 开源 LLM 应用开发平台 | `llm` `rag` `workflow` `agent` |
-| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | OpenCode 多模型编排插件（Agent Harness） | `agent` `opencode` `orchestration` |
+| [oh-my-openagent](./ai/oh-my-openagent/SKILL.md) | OmO 5.x 独立 CLI（senpi 引擎，多模型并行与 AST/LSP 工具） | `agent` `omo` `orchestration` `cli` |
 | [superpowers-zh](./ai/superpowers-zh/SKILL.md) | 中文 AI 编程方法论 Skills 集合 | `methodology` `chinese` `skill` |
 | [hermes-agent](./ai/hermes-agent/SKILL.md) | 自学习通用型 AI 智能体（终端优先） | `agent` `self-improving` `terminal` |
 | [openclaw](./ai/openclaw/SKILL.md) | 多通道个人 AI 助手 Gateway | `agent` `gateway` `assistant` |
@@ -157,13 +168,18 @@ tags:
 | [ollama](./ai/ollama/SKILL.md) | Ollama：本地大模型推理运行时 | `llm` `local-inference` `rest-api` |
 | [llamaindex](./ai/llamaindex/SKILL.md) | LlamaIndex：RAG 索引与查询框架 | `llm` `rag` `indexing` `python` |
 | [huggingface-transformers](./ai/huggingface-transformers/SKILL.md) | Transformers：模型推理与微调框架 | `transformers` `llm` `pytorch` `nlp` |
+| [vllm](./ai/vllm/SKILL.md) | vLLM：高吞吐 LLM 推理服务（OpenAI 兼容） | `llm` `inference` `serving` `python` |
+| [crewai](./ai/crewai/SKILL.md) | CrewAI：角色化多 Agent 协作框架 | `agent` `multi-agent` `orchestration` `python` |
+| [mineru](./ai/mineru/SKILL.md) | MinerU：PDF/Office → Markdown/JSON 文档解析 | `pdf` `parsing` `markdown` `rag` |
 
-### 📡 IoT — 物联网（2 个）
+### 📡 IoT — 物联网（4 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [ke3036-keyes-pico](./iot/ke3036-keyes-pico/SKILL.md) | Keyes Raspberry Pi Pico 学习套件 | `micropython` `rp2040` `sensor` |
 | [node-red](./iot/node-red/SKILL.md) | Node-RED：低代码 IoT 数据流编排 | `iot` `mqtt` `low-code` `javascript` |
+| [home-assistant](./iot/home-assistant/SKILL.md) | Home Assistant：本地优先家居自动化平台 | `automation` `rest-api` `mqtt` `yaml` |
+| [esphome](./iot/esphome/SKILL.md) | ESPHome：YAML 生成 ESP32/ESP8266 固件 | `esp32` `yaml` `ota` `firmware` |
 
 ### 🧊 3D — 三维/高斯泼溅/全景（6 个）
 
@@ -185,7 +201,7 @@ tags:
 | [ai-water-front](./demos/ai-water-front/SKILL.md) | OpenLayers + Dify AI 助手的智慧水务前端 | `openlayers` `dify` `dashboard` |
 | [openlayers-vue3-demo](./demos/openlayers-vue3-demo/SKILL.md) | vue3-openlayers 声明式地图 + GeoServer 图层树 | `openlayers` `geoserver` `wms` |
 
-### 🗂️ Others — 其它（8 个）
+### 🗂️ Others — 其它（10 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -197,6 +213,8 @@ tags:
 | [robotgo-flow](./others/robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 | `go` `rpa` `yaml` `windows` |
 | [chags](./others/chags/SKILL.md) | 中国历史典故儿童游戏合集（Vue3 + Phaser，17 典故） | `vue` `phaser` `game` |
 | [docker-compose](./others/docker-compose/SKILL.md) | Docker Compose：多容器应用编排工具 | `docker` `containers` `orchestration` |
+| [bamboobuddy](./others/bamboobuddy/SKILL.md) | 儿童日常养成游戏（Vue3 + Phaser，17 章教程） | `vue` `phaser` `game` `education` |
+| [ffmpeg](./others/ffmpeg/SKILL.md) | FFmpeg：音视频转码、切片与纹理帧提取 | `video` `transcoding` `hls` `cli` |
 
 ---
 
@@ -208,7 +226,7 @@ tags:
 
 | 标签 | 相关技能 |
 |------|---------|
-| `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, clipper1, freecad, kicad, libredwg, grass-gis, blender, open3d, geopipe-agent, langchain, llamaindex, deepseek-harness, docutranslate, hermes-agent |
+| `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, clipper1, freecad, kicad, libredwg, grass-gis, blender, open3d, geopipe-agent, langchain, llamaindex, deepseek-harness, docutranslate, hermes-agent, geolibre, mineru, vllm, crewai, whitebox-tools, kepler-gl |
 | `java` | gdal-api, geotools, jts, geometry-api-java, opengis-utils-for-java, geoserver, geoserver-cloud, ruoyi-cloud |
  | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, lightcad, sharpmap, mapsui, opengis-utils-for-net, opengis-daf, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
 | `javascript` / `typescript` | cesiumjs, openlayers, leaflet, mapbox-gl-js, deck-gl, qcad, chili3d, node-red, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
@@ -217,31 +235,33 @@ tags:
 | `shell` | qgis-process, acme.sh |
 | `vue` | admin-net-frontend, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
 | `micropython` | ke3036-keyes-pico |
-| `crs` / `reprojection` | proj |
+| `crs` / `reprojection` | proj, projnet4geoapi |
 
 ### 按功能领域
 
 | 标签 | 相关技能 |
 |------|---------|
 | `geometry` | jts, nettopologysuite, shapely, geometry-api-java, geometry-api-net, geopandas, postgis, opengis-utils-for-java, opengis-utils-for-net, occt, xbim, clipper1, clipper2, ara3d-sdk, elements, opencsg-net |
-| `raster` | gdal, gdal-api, grass-gis, qgis-process, geopipe-agent, geotools, postgis, pyqgis |
-| `vector` | gdal, gdal-api, geopandas, grass-gis, geopipe-agent, geotools, opengis-utils-for-java, opengis-utils-for-net, opengis-daf, postgis, pyqgis |
-| `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api, mapserver, qgis-server, geotools, mapsui, openlayers, sharpmap |
+| `raster` | gdal, gdal-api, grass-gis, qgis-process, geopipe-agent, geotools, postgis, pyqgis, whitebox-tools |
+| `vector` | gdal, gdal-api, geopandas, grass-gis, geopipe-agent, geotools, opengis-utils-for-java, opengis-utils-for-net, opengis-daf, postgis, pyqgis, spatialite, duckdb-spatial |
+| `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api, mapserver, qgis-server, geotools, mapsui, openlayers, sharpmap, geonode |
 | `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, blender, open3d, fy_layout, photo-sphere-viewer, supersplat, ara3d-sdk, elements, opencsg-net |
 | `2d` | openlayers, leaflet, qcad, librecad, sharpmap, lightcad, clipper1, clipper2, fy_layout, solvespace |
-| `orm` / `database` | sod, sqlsugar, postgis |
-| `agent` / `llm` | dify, langchain, llamaindex, ollama, huggingface-transformers, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate, deepseek-harness, my-opencode-deepseek-config |
+| `orm` / `database` | sod, sqlsugar, postgis, spatialite, duckdb-spatial |
+| `agent` / `llm` | dify, langchain, llamaindex, ollama, huggingface-transformers, vllm, crewai, mineru, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate, deepseek-harness, my-opencode-deepseek-config |
 | `pipeline` / `workflow` | dify, opengis-all, pdal, llamaindex, geopipe-agent, opengis-daf, qgis-process, robotgo-flow |
-| `automation` / `rpa` | geoserver-rest-api, qgis-process, grass-gis, node-red, acme.sh, robotgo, robotgo-flow |
-| `lidar` / `point-cloud` | pdal, open3d |
+| `automation` / `rpa` | geoserver-rest-api, qgis-process, grass-gis, node-red, acme.sh, robotgo, robotgo-flow, whitebox-tools, home-assistant |
+| `lidar` / `point-cloud` | pdal, open3d, whitebox-tools |
 | `vector-tiles` / `webgl` | cesiumjs, supersplat, photo-sphere-viewer, mapbox-gl-js, deck-gl |
-| `docker` / `containers` | geoserver-cloud, docker-compose |
+| `docker` / `containers` | geoserver-cloud, docker-compose, geolibre, vllm, home-assistant |
 | `iot` / `mqtt` | node-red |
 | `autocad` | ifoxcad, lightningcad, tongwen |
 | `svg` / `markdown` / `pdf` | design-drawing-svg-md |
 | `panorama` | photo-sphere-viewer, map-360-demo |
-| `dashboard` / `demo` | vue3-map-dashboard, ai-water-front, map-360-demo, openlayers-vue3-demo, node-red |
-| `game` / `education` | chags |
+| `dashboard` / `demo` | vue3-map-dashboard, ai-water-front, map-360-demo, openlayers-vue3-demo, node-red, kepler-gl, geolibre |
+| `iot` / `automation` | node-red, home-assistant, esphome, robotgo, robotgo-flow |
+| `video` / `media` | ffmpeg |
+| `game` / `education` | chags, bamboobuddy |
 
 ---
 
@@ -309,7 +329,7 @@ tags:
 4. **环境准备/安装**
 5. **核心 API/命令** — 含代码示例
 6. **典型工作流** — 端到端操作步骤
-7. **AI 使用建议** — AI 助手专项指导
+7. **AI 使用建议** — AI 助手专项指导（dsh/DeepSeek Harness 场景下部分技能写作「DeepSeek Harness 使用建议」，两者等价，后者含 `skill()` 加载、`run_code`/`pwsh` 工具映射等 dsh 专属说明）
 8. **常见问题（FAQ）**
 9. **参考资源**
 

@@ -137,5 +137,5 @@
 5. 参数旁注：弧/长圆孔补 `data-params`（与 MD 图元 JSON 同源）
 6. metadata 同源生成：从 MD 附录生成 `<metadata id="sheet-meta">`（JSON 用 CDATA 包裹）
 
-提取参数（DPI、渲染器及版本、fitz 版本）固化进 MD 元信息层，保证换版/复跑可复现。
+提取参数（DPI、渲染器及版本、PyMuPDF 版本）固化进 MD 元信息层，保证换版/复跑可复现。
 

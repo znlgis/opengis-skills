@@ -36,10 +36,23 @@ tags:
 ## 安装
 
 ```bash
-dotnet add package Mapsui.Wpf            # 或 Mapsui.Maui / Mapsui.Avalonia / ...
-dotnet add package Mapsui.Tiling
-dotnet add package Mapsui.Nts
+# 按 UI 框架选一个
+dotnet add package Mapsui.Wpf --version 5.1.0      # WPF（net8.0-windows / net9.0-windows）
+dotnet add package Mapsui.Maui --version 5.1.0     # MAUI，或 Mapsui.Avalonia / Mapsui.WinUI / Mapsui.Blazor
+# 按数据源按需追加
+dotnet add package Mapsui.Tiling --version 5.1.0   # 瓦片底图
+dotnet add package Mapsui.Nts --version 5.1.0      # NTS 几何 / Shapefile
 ```
+
+### 验证
+
+```bash
+dotnet --list-sdks                        # 需 .NET 8/9 SDK
+dotnet restore                            # 能解析 Mapsui 5.1.0 即包可用
+dotnet build                              # 编译通过后才进入渲染验证
+```
+
+> 所有 `Mapsui.*` 子包版本必须一致（同样写 5.1.0），混版会在运行时抛类型加载异常。
 
 ---
 
@@ -85,18 +98,26 @@ MapControl.Map = map;
 ```csharp
 using Mapsui.Nts;
 using Mapsui.Styles;
+using NetTopologySuite.NtsGeometryServices;
 
-var features = new List<IFeature>();
-foreach (var f in geoJsonFeatures)
-    features.Add(new GeometryFeature(f.Geometry) {
+// 视图坐标系为 EPSG:3857，经纬度数据必须先投影
+var factory = NtsGeometryServices.Instance.CreateGeometryFactory(3857);
+
+var features = new List<IFeature>
+{
+    new GeometryFeature(factory.CreatePoint(SphericalMercator.FromLonLat(116.397, 39.908).ToCoordinate()))
+    {
         Styles = { new VectorStyle {
             Fill = new Brush(Color.Red),
             Outline = new Pen(Color.Black, 1)
         }}
-    });
+    }
+};
 
 map.Layers.Add(new MemoryLayer("Roads") { Features = features, Style = null });
 ```
+
+> 线/面要素用 `factory.CreateLineString(coords)` / `factory.CreatePolygon(shell, holes)`，坐标同样要先 `SphericalMercator.FromLonLat` 投影。
 
 ---
 
@@ -179,6 +200,72 @@ MapControl.Info += (s, e) => {
 
 ---
 
+## 典型工作流
+
+### 工作流 1：加载底图 + GeoJSON 矢量数据
+
+输入 POI 记录（含 `Lon` / `Lat` / `Name`），输出 WPF 窗口里可拖拽缩放的底图 + 红色点图层。
+
+```csharp
+using Mapsui;
+using Mapsui.Tiling;
+using Mapsui.Nts;
+using Mapsui.Styles;
+using Mapsui.Projections;
+
+var map = new Map();
+
+// 1. OSM 底图（来自 Mapsui.Tiling）
+map.Layers.Add(OpenStreetMap.CreateTileLayer());
+
+// 2. 构造点图层。Mapsui 的视图坐标系默认是 Web Mercator（EPSG:3857），
+//    GeoJSON/业务数据里的经纬度必须先投影，否则会画到南太平洋附近。
+var features = new List<IFeature>();
+var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(3857);
+
+foreach (var item in poiList)              // item：含 Lon / Lat / Name 的 POI 记录
+{
+    var p = SphericalMercator.FromLonLat(item.Lon, item.Lat).ToCoordinate();
+    var feature = new GeometryFeature(factory.CreatePoint(p)) { ["name"] = item.Name };
+    feature.Styles.Add(new SymbolStyle
+    {
+        SymbolScale = 0.8,
+        Fill = new Brush(Color.Red),
+        Outline = new Pen(Color.White, 1)
+    });
+    features.Add(feature);
+}
+var dataLayer = new MemoryLayer("Data") { Features = features, Style = null };
+map.Layers.Add(dataLayer);
+
+// 3. 定位到北京
+var center = SphericalMercator.FromLonLat(116.4, 39.9).ToMPoint();
+map.Navigator.CenterOnAndZoomTo(center, map.Navigator.Resolutions[10]);
+
+MapControl.Map = map;   // 忘记这一步窗口就是空白
+```
+
+### 工作流 2：Shapefile + WMS 叠加
+
+输入 `data/china.shp` 与返回 `rivers` 图层的 WMS，输出底图 + 行政界 + 河流栅格图层。
+
+```csharp
+using Mapsui.Nts.Providers.Shapefile;
+using Mapsui.Providers.Wms;
+
+// 1. Shapefile 矢量层（需 Mapsui.Nts）
+var shpProvider = new ShapeFile("data/china.shp", true);
+map.Layers.Add(new Layer("China") { DataSource = shpProvider });
+
+// 2. WMS 栅格层：构造参数依次为服务地址，图层名数组
+var wmsProvider = new WmsProvider("https://geo.example.com/wms?", new[] { "rivers" });
+map.Layers.Add(new ImageLayer("Rivers") { DataSource = wmsProvider });
+
+map.ZoomToExtents();
+```
+
+**验证产物**：`dotnet build` 通过不等于出图。无头环境用 `Mapsui.Rendering.Skia.MapRenderer` 把 `map` 渲染成 PNG 再 `read_image` 检查；有窗口时请用户运行后提供截图。
+
 ## 性能优化
 
 1. 海量点 → `RasterizingTileLayer` 包一层（按瓦片预渲染）
@@ -197,59 +284,10 @@ MapControl.Info += (s, e) => {
 | 找不到 `Mapsui.UI.Wpf` 包 | NuGet 包名为 `Mapsui.Wpf`（v3 起启用该名称；程序集仍为 `Mapsui.UI.Wpf.dll`） |
 | 投影错误 | `SphericalMercator.FromLonLat` 转换 |
 | MAUI 空白 | `MauiProgram` 中 `UseSkiaSharp()` + `UseMapsui()` |
-| Shapefile 中文乱码 | 指定 Encoding |
+| Shapefile 中文乱码 | Mapsui 的 DBF 默认按 UTF-7 解析，中文会乱码：`.dbf` 缺 .cpg 声明时按实际编码赋值 `new ShapeFile(path, true) { Encoding = Encoding.GetEncoding("GBK") }`（属性赋值，不是构造参数） |
 | `GeometryFeature` / 瓦片类型找不到 | 矢量要素需安装 `Mapsui.Nts`，瓦片图层需安装 `Mapsui.Tiling` |
 
 ---
-
-## 典型工作流
-
-### 工作流 1：加载底图 + GeoJSON 矢量数据
-
-```csharp
-using Mapsui;
-using Mapsui.Tiling;
-using Mapsui.Nts;
-using Mapsui.Styles;
-using NetTopologySuite.IO;
-
-var map = new Map();
-
-// 1. 添加 OSM 底图
-map.Layers.Add(OpenStreetMap.CreateTileLayer());
-
-// 2. 读取 GeoJSON 并添加为矢量图层
-var gjReader = new GeoJsonReader();
-var features = new List<IFeature>();
-foreach (var f in geojsonFeatures)
-{
-    features.Add(new GeometryFeature(f.Geometry)
-    {
-        Styles = { new VectorStyle { Fill = new Brush(Color.Red) } }
-    });
-}
-map.Layers.Add(new MemoryLayer("Data") { Features = features });
-
-// 3. 定位
-var center = SphericalMercator.FromLonLat(116.4, 39.9).ToMPoint();
-map.Navigator.CenterOnAndZoomTo(center, map.Navigator.Resolutions[10]);
-
-MapControl.Map = map;
-```
-
-### 工作流 2：Shapefile + WMS 叠加
-
-```csharp
-// Shapefile 图层
-var shpProvider = new ShapeFile("china.shp", true);
-map.Layers.Add(new Layer("China") { DataSource = shpProvider });
-
-// WMS 图层（叠加）
-var wmsProvider = new WmsProvider("https://geo.example.com/wms?", new[] { "rivers" });
-map.Layers.Add(new ImageLayer("Rivers") { DataSource = wmsProvider });
-
-map.ZoomToExtents();
-```
 
 ## DeepSeek Harness 使用建议
 
@@ -257,7 +295,7 @@ map.ZoomToExtents();
 - **执行环境**：先 `dotnet --list-sdks`；Mapsui 5.1.0 的目标框架是 net8.0/net9.0（`Mapsui.Wpf` 为 net8.0-windows/net9.0-windows），低于 .NET 8 的工程不能直接引用。命令交给 `pwsh`，例如 `dotnet add package Mapsui.Wpf --version 5.1.0`。
 - **验证产物**：`dotnet build` 只证明编译通过；无头渲染用 `Mapsui.Rendering.Skia.MapRenderer.RenderToBitmapStream(map, ...)` 输出 PNG 的 MemoryStream（参数以 IntelliSense 为准），落盘后 `read_image` 检查；WinForms/WPF 窗口 DSH 看不到，需用户运行后提供截图。
 - **投影**：定位坐标必须 `SphericalMercator.FromLonLat(lon, lat)` 转换，直接用经纬度会定位到南太平洋。
-- **数据**：Shapefile 中文要指定 `Encoding`（UTF8 或 GBK）；矢量要素装 `Mapsui.Nts`，瓦片装 `Mapsui.Tiling`，UI 包装 `Mapsui.Wpf`/`Mapsui.Maui`。
+- **数据**：Shapefile 中文要设 `ShapeFile.Encoding`（UTF8 或 GBK）；矢量要素装 `Mapsui.Nts`，瓦片装 `Mapsui.Tiling`，UI 包装 `Mapsui.Wpf`/`Mapsui.Maui`。
 - **常见症状**：`MapControl` 空白先查是否赋值 `MapControl.Map`；MAUI 空白查 `UseSkiaSharp()` 与 `UseMapsui()` 是否注册。
 - **安全与权限**：新建工程、装包、运行桌面程序前先征得用户同意；PostGIS/瓦片服务的密码不要写进代码或回答。
 

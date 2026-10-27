@@ -1,6 +1,6 @@
 ---
 name: ifoxcad
-description: "Use when developing AutoCAD plugins with .NET/C# — entity creation, layer management, block references, transaction handling. iFoxCAD: AutoCAD .NET secondary development framework with simplified API wrappers."
+description: "Use when writing AutoCAD / ZWCAD / GstarCAD plugins in C# with IFoxCAD (NuGet IFox.CAD.ACAD 0.9.12) — DBTrans transaction wrapper, CurrentSpace.AddEntity, LayerTable.AddOrChange, block attributes, SSGet, EditorEx prompts, multi-CAD GlobalUsings aliases. Also for \"eNotInDatabase\" on an entity Id, entities vanishing when DBTrans is disposed without Commit, and acdbmgd reference errors fixed by AutoCAD.NET + ExcludeAssets=runtime."
 tags:
   - autocad
   - dotnet
@@ -15,11 +15,13 @@ tags:
 >
 > **GitHub 镜像：** <https://github.com/inspirefunction/ifoxcad>
 >
-> **NuGet：** `IFox.CAD.ACAD`（AutoCAD）｜`IFox.CAD.ZCAD`（中望）｜`IFox.CAD.GCAD`（浩辰）
+> **官方文档：** <https://inspirefunction.github.io/ifoxdoc/>
 >
 > **许可证：** MIT
 >
-> **版本：** 仓库默认分支为 `v0.9`（`src/Directory.Build.props` 中 `<Version>0.9.9.1</Version>`），NuGet 上 `IFox.CAD.ACAD` / `IFox.CAD.ZCAD` 已发到 0.9.12；旧包 `IFoxCAD.Cad` 停在 0.4.0，GitHub tag 只到 `v0.7.3-beta8`——**tag 不是 v0.9 线的发布信号，以默认分支与 NuGet 版本为准**
+> **包管理器：** NuGet `IFox.CAD.ACAD` / `IFox.CAD.ZCAD` / `IFox.CAD.GCAD`（最新稳定 0.9.12，另见预览 0.9.13-beta1，截至 2026-10）
+>
+> **版本：** 0.9.12（NuGet 稳定线）。仓库默认分支为 `v0.9`（`src/Directory.Build.props` 里 `<Version>0.9.9.1</Version>`），旧包 `IFoxCAD.Cad` 停在 0.4.0、GitHub tag 只到 `v0.7.3-beta8`——**tag 不是 v0.9 线的发布信号，以默认分支与 NuGet 版本为准**
 
 ## 概述
 
@@ -56,13 +58,24 @@ CAD 依赖 DLL 推荐用官方 NuGet 包，带 `ExcludeAssets="runtime"`（等�
 
 仓库自身的组合：AutoCAD 目标 `net8.0-windows`（`AutoCAD.NET` 25.0.1，条件编译符号 `acad;a2025`）与 `net48`（`AutoCAD.NET` 20.0.0，符号 `acad;a2024`）；中望目标 `net48;net472`（符号 `zcad;z2025`）。
 
+### 验证
+
+```bash
+# 确认包已还原并检查实际版本
+dotnet list package | grep IFox.CAD
+```
+
+编译通过后在 AutoCAD 命令行 `NETLOAD` 加载 DLL，执行自定义命令能出图即为就绪。
+
 ### 项目模板
 
 参考官方仓库工程结构：<https://gitee.com/inspirefunction/ifoxcad>
 
 ---
 
-## 项目骨架
+## 核心 API
+
+### 项目骨架
 
 ```csharp
 using IFoxCAD.Cad;
@@ -82,7 +95,7 @@ public class MyApp : IExtensionApplication
 
 ---
 
-## 事务封装：DBTrans
+### 事务封装：DBTrans
 
 ```csharp
 [CommandMethod("DRAWLINE")]
@@ -103,7 +116,7 @@ public void DrawLine()
 
 ---
 
-## 用户交互（Editor 扩展）
+### 用户交互（Editor 扩展）
 
 ```csharp
 var ed = Env.Editor;
@@ -130,7 +143,7 @@ var psr = ed.SSGet(filter: new SelectionFilter(new[] {
 
 ---
 
-## 实体创建与样式
+### 实体创建与样式
 
 ```csharp
 using var tr = new DBTrans();
@@ -149,7 +162,7 @@ tr.Commit();
 
 ---
 
-## 块（Block）
+### 块（Block）
 
 ```csharp
 using var tr = new DBTrans();
@@ -173,7 +186,7 @@ tr.Commit();
 
 ---
 
-## 图层
+### 图层
 
 ```csharp
 using var tr = new DBTrans();
@@ -192,7 +205,7 @@ tr.LayerTable.AddOrChange("钢筋", l => {
 
 ---
 
-## 几何运算
+### 几何运算
 
 IFoxCAD 在 AutoCAD `Geometry` 之上补齐常用计算与转换（`CurveEx` / `GeometryEx`）：
 
@@ -215,7 +228,7 @@ double a = Vector3d.XAxis.AngleOnPlane(Plane.XY);
 
 ---
 
-## 选择集与过滤
+### 选择集与过滤
 
 ```csharp
 var ed = Env.Editor;
@@ -239,7 +252,7 @@ if (res.Status == PromptStatus.OK)
 
 ---
 
-## 命令注册
+### 命令注册
 
 ```csharp
 public class MyCommands
@@ -254,7 +267,7 @@ public class MyCommands
 
 ---
 
-## 多 CAD 兼容
+### 多 CAD 兼容
 
 v0.9 线把平台差异拆到各自工程里（`src/IFoxCAD.AutoCad`、`src/IFoxCAD.ZwCad`、`src/IFoxCAD.GstarCad`），共享代码在 `src/CADShared`。主要手法是**每个平台工程一个 `GlobalUsings.cs` 做全局 using 与别名对齐**（如把 `Application` 别名成 `Acap`、`Core.Application` 别名成 `Acaop`），少量差异点再用条件编译：
 
@@ -277,6 +290,8 @@ v0.9 线把平台差异拆到各自工程里（`src/IFoxCAD.AutoCad`、`src/IFox
 ---
 
 ## 典型工作流
+
+**输入**：插件工程或待处理的 DWG；**输出**：可在 CAD 中 `NETLOAD` 的 DLL，或改好的图纸文件。
 
 ### 工作流一：新建 AutoCAD 插件项目
 

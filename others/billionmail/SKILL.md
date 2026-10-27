@@ -1,12 +1,15 @@
 ---
 name: billionmail
-description: "Use when setting up self-hosted email marketing and transactional email — SMTP relay, newsletter campaigns, bounce handling, delivery analytics. BillionMail: self-hosted email marketing platform with multi-tenant support."
+description: "Use when self-hosting bulk email or transactional mail — Postfix + Dovecot, newsletter campaigns with rate limiting, DKIM/MX/PTR setup, bounce and unsubscribe handling, delivery analytics, webmail. BillionMail 4.9: docker compose / install.sh deployed mail platform by the aaPanel team. Also for Gmail spam placement, \"port 25 blocked\" by cloud vendors, SPF/DKIM/DMARC failures scored by mail-tester, and invalid unsubscribe links."
 tags:
   - email
   - smtp
   - self-hosted
   - newsletter
   - marketing
+  - postfix
+  - docker
+  - devops
 ---
 
 > **项目地址：** <https://github.com/Billionmail/BillionMail>
@@ -15,7 +18,11 @@ tags:
 >
 > **官方文档：** <https://docs.billionmail.com/>
 >
-> **许可证：** AGPL-3.0（社区版）｜ **最新版本：** v4.9（2025-12）
+> **许可证：** AGPL-3.0（社区版）
+>
+> **包管理器：** Docker Compose（`docker compose up -d`）/ 一键脚本 `bash install.sh`（最新 v4.9，截至 2026-10）
+>
+> **版本：** v4.9（2025-12-11）
 
 ## 概述
 
@@ -107,6 +114,8 @@ cd /opt && git clone https://github.com/Billionmail/BillionMail && cd BillionMai
 ---
 
 ## API（事务邮件）
+
+> 端点与字段以你部署的版本为准（各版本路径有调整）：先用 `curl -s http://your-server/api/` 或控制台的「API / 文档」入口确认实际路径，再照下面形态调用。
 
 ```bash
 curl -X POST https://your-server/api/v1/mail/send \
@@ -264,6 +273,21 @@ curl -X POST https://mail.example.com/api/v1/mail/send \
 
 ---
 
+## 常见问题
+
+| 问题 | 解决 |
+|------|------|
+| Gmail 进垃圾箱 | 修复 SPF/DKIM/DMARC；预热 IP；降低发送量 |
+| 25 端口被封 | 联系云厂商 / 用 587 + Relay |
+| 退订链接无效 | 检查 `UNSUBSCRIBE_BASE_URL`；TLS 证书 |
+| WebMail 无法登录 | 检查 Dovecot 与账号密码；查看容器日志 |
+| 大文件附件失败 | 调整 `message_size_limit` |
+| 部署后打不开控制台 | 检查 80/443 是否被占用、`DOMAIN` 是否与实际访问域名一致、容器 `docker compose ps` 是否全部 healthy |
+| DKIM 校验不通过（`dkim=permerror`） | TXT 记录被换行/引号截断：把 `v=DKIM1; k=rsa; p=...` 拼成单行，用 `dig +short TXT default._domainkey.example.com` 核对完整值 |
+| 发出去的邮件进了收件人隔离区 | 反向解析（PTR）与 HELO 不一致：先让机房把 PTR 指到 `mail.example.com`，再核对 `swaks` 的 HELO 名 |
+
+---
+
 ## AI 使用建议
 
 ### 推荐工作流
@@ -293,21 +317,11 @@ curl -X POST https://mail.example.com/api/v1/mail/send \
 
 ---
 
-## 常见问题
-
-| 问题 | 解决 |
-|------|------|
-| Gmail 进垃圾箱 | 修复 SPF/DKIM/DMARC；预热 IP；降低发送量 |
-| 25 端口被封 | 联系云厂商 / 用 587 + Relay |
-| 退订链接无效 | 检查 `UNSUBSCRIBE_BASE_URL`；TLS 证书 |
-| WebMail 无法登录 | 检查 Dovecot 与账号密码；查看容器日志 |
-| 大文件附件失败 | 调整 `message_size_limit` |
-
----
-
 ## 相关技能
 
-- BillionMail 是独立的邮件平台，与其它技能无直接技术依赖。如需前端界面定制，可参考 Admin.NET 前后端框架。
+- **acme.sh** — 给邮件域的 Web 控制台/WebMail 申请与自动续期 TLS 证书：[../acme.sh/SKILL.md](../acme.sh/SKILL.md)
+- **docker-compose** — BillionMail 的部署方式本身就是 Compose（`docker compose up -d`）：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
+- **go** — 写发信/退信回调服务时的常用后端语言（SMTP 客户端、Webhook 服务）：[../go/SKILL.md](../go/SKILL.md)
 
 ---
 

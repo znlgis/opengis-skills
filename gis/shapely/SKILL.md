@@ -18,7 +18,7 @@ tags:
 >
 > **PyPI：** <https://pypi.org/project/shapely/>
 >
-> **最新版本：** 2.2.0（截至2026-10，PyPI）
+> **包管理器：** `shapely`（最新 2.2.0，截至 2026-10，PyPI）
 >
 > **许可证：** BSD-3-Clause
 
@@ -35,7 +35,7 @@ Shapely 是 Python 计算几何的核心库，基于 GEOS（Geometry Engine - Op
 - **格式读写**：WKT、WKB、GeoJSON
 - **双重 API**：函数式（向量化，支持 NumPy 广播）+ OOP（标量便捷）
 
-**环境要求：** Python 3.11+（Shapely 2.2 起；2.1 为 3.10+），NumPy >= 1.26，GEOS >= 3.10。PyPI 二进制 wheel 内含 GEOS 3.14.1。
+**环境要求：** Python 3.11+（Shapely 2.2 起；2.1 为 3.10+），NumPy >= 1.26，GEOS >= 3.10。PyPI 二进制 wheel 内含 GEOS 3.14。
 
 ---
 
@@ -55,28 +55,28 @@ python -c "import shapely; print(shapely.__version__, shapely.geos_version)"
 
 ---
 
-## Geometry Types
+## 几何类型
 
-| Type | Class | Description |
+| 类型 | 类 | 说明 |
 |------|-------|-------------|
-| Point | `shapely.Point` | Single coordinate (x, y [, z [, m]]) |
-| LineString | `shapely.LineString` | Ordered sequence of 2+ points |
-| LinearRing | `shapely.LinearRing` | Closed, simple LineString |
-| Polygon | `shapely.Polygon` | Exterior ring + optional holes |
-| MultiPoint | `shapely.MultiPoint` | Collection of Points |
-| MultiLineString | `shapely.MultiLineString` | Collection of LineStrings |
-| MultiPolygon | `shapely.MultiPolygon` | Collection of Polygons |
-| GeometryCollection | `shapely.GeometryCollection` | Heterogeneous collection |
+| Point | `shapely.Point` | 单个坐标 (x, y [, z [, m]]) |
+| LineString | `shapely.LineString` | 由 2 个以上点组成的有序序列 |
+| LinearRing | `shapely.LinearRing` | 闭合的简单 LineString |
+| Polygon | `shapely.Polygon` | 外环 + 可选内环（洞） |
+| MultiPoint | `shapely.MultiPoint` | 点集合 |
+| MultiLineString | `shapely.MultiLineString` | 线集合 |
+| MultiPolygon | `shapely.MultiPolygon` | 面集合 |
+| GeometryCollection | `shapely.GeometryCollection` | 异构几何集合 |
 
-Z coordinates are **ignored for all spatial analysis** — operations are performed in the x-y plane only.
+**所有空间分析都忽略 Z 值** —— 运算只在 x-y 平面进行。
 
-## Dual API Pattern
+## 双 API 模式
 
-Shapely provides two APIs. Prefer the **function-based API** for arrays and performance; use the **OOP API** for scalar convenience.
+Shapely 提供两套 API：处理数组、追求性能时优先用**函数式 API**，只做单个几何的便捷操作时用**面向对象 API**。
 
-### Function-based (vectorized, NumPy ufunc)
+### 函数式 API（向量化，NumPy ufunc）
 
-All functions release the GIL during GEOS execution, support NumPy broadcasting, and handle arrays natively.
+这些函数在 GEOS 运算期间释放 GIL，支持 NumPy 广播，并原生处理数组。
 
 ```python
 import shapely
@@ -89,7 +89,7 @@ shapely.buffer(geoms, 1.0)            # array of polygons
 shapely.distance(geoms, other)        # array of distances
 ```
 
-### OOP (method-based, scalar)
+### 面向对象 API（方法式，标量）
 
 ```python
 from shapely import Point, Polygon
@@ -103,7 +103,7 @@ poly.contains(p)
 poly.intersection(other)
 ```
 
-### Operator overloading
+### 运算符重载
 
 ```python
 geom1 & geom2    # intersection
@@ -112,9 +112,9 @@ geom1 - geom2    # difference
 geom1 ^ geom2    # symmetric_difference
 ```
 
-## Geometry Creation
+## 几何对象创建
 
-### From coordinates (OOP)
+### 从坐标创建（面向对象）
 
 ```python
 from shapely import Point, LineString, LinearRing, Polygon
@@ -132,7 +132,7 @@ MultiPolygon([poly1, poly2])
 GeometryCollection([point, line, poly])
 ```
 
-### From coordinates (vectorized)
+### 从坐标创建（向量化）
 
 ```python
 import shapely
@@ -149,7 +149,7 @@ shapely.multipolygons(...)
 shapely.geometrycollections(...)
 ```
 
-### From serialization formats
+### 从序列化格式创建
 
 ```python
 # WKT
@@ -169,7 +169,7 @@ shapely.from_ragged_array(geometry_type, coords, offsets)
 shapely.to_ragged_array(geometries)
 ```
 
-### From/to GeoJSON-like dict (`__geo_interface__`)
+### 与 GeoJSON 字典互转（`__geo_interface__`）
 
 ```python
 from shapely.geometry import shape, mapping
@@ -180,7 +180,7 @@ d = mapping(geom)  # {"type": "Point", "coordinates": (0.0, 0.0)}
 
 > 构造操作、空间谓词、集合运算、测量、空间索引、仿射与坐标变换及线性参考的完整 API 见 [reference/operations-reference.md](reference/operations-reference.md)
 
-## Validation
+## 有效性校验
 
 ```python
 shapely.is_valid(geom)
@@ -188,9 +188,9 @@ shapely.is_valid_reason(geom)
 shapely.make_valid(geom, method="linework")   # or "structure"
 ```
 
-## Prepared Geometry
+## 预处理几何（Prepared Geometry）
 
-Caches spatial index for repeated predicate tests against the same geometry.
+为同一几何的重复谓词判断缓存空间索引。
 
 ```python
 shapely.prepare(geom)            # in-place, returns True if newly prepared
@@ -198,61 +198,112 @@ shapely.destroy_prepared(geom)   # free cache
 shapely.is_prepared(geom)
 ```
 
-## Missing Values
+## 缺失值
 
-`None` represents missing geometries. Consistent behavior:
-- Predicates return `False`
-- Measurements return `nan`
-- Constructive operations return `None`
+`None` 表示缺失几何，各函数行为保持一致：
+- 谓词返回 `False`
+- 度量返回 `nan`
+- 构造类操作返回 `None`
 
-Use `shapely.is_missing(obj)` to check, distinct from `shapely.is_empty(geom)`.
+用 `shapely.is_missing(obj)` 判断，注意它与 `shapely.is_empty(geom)`（空几何）不同。
 
-## Important Caveats
+## 重要注意事项
 
-1. **Z ignored in analysis**: All spatial operations work in x-y plane only. Geometries with different z values may still intersect or be equal.
+1. **分析中忽略 Z 值**：所有空间运算只在 x-y 平面进行，Z 值不同的几何仍可能相交或相等。
 
-2. **`contains` excludes boundary**: `contains(line, endpoint)` is `False`. Use `covers()` or `intersects()` if you need boundary inclusion.
+2. **`contains` 不含边界**：`contains(line, endpoint)` 为 `False`；需要把边界算在内时用 `covers()` 或 `intersects()`。
 
-3. **`set_coordinates` modifies in-place**: Copy geometry first with `.copy()` if originals must be preserved.
+3. **`set_coordinates` 原地修改**：需保留原几何时，先 `.copy()`。
 
-4. **`clip_by_rect` may produce invalid output**: The fast clip is not guaranteed to yield valid topology.
+4. **`clip_by_rect` 可能产出无效几何**：这个快速裁剪不保证拓扑有效。
 
-5. **WKB drops LinearRing**: LinearRings become LineStrings during WKB serialization.
+5. **WKB 丢失 LinearRing**：LinearRing 在 WKB 序列化时变成 LineString。
 
-6. **`to_geojson` drops Z**: Third dimension is silently discarded; LinearRing outputs as `null`.
+6. **`to_geojson` 丢弃 Z**：第三维被静默丢弃，LinearRing 输出为 `null`。
 
-7. **OOP vs function `buffer` defaults differ**: `Point(0,0).buffer(1)` uses `quad_segs=16`; `shapely.buffer(Point(0,0), 1)` uses `quad_segs=8`.
+7. **面向对象与函数式 `buffer` 默认值不同**：`Point(0,0).buffer(1)` 用 `quad_segs=16`，`shapely.buffer(Point(0,0), 1)` 用 `quad_segs=8`。
 
-8. **`set_precision` changes vertex order**: Returned geometry is in "mild canonical form" — vertex order should not be relied upon.
+8. **`set_precision` 改变顶点顺序**：返回几何处于"轻度规范化"形式，不要依赖其顶点顺序。
 
-9. **NaN coordinates**: Creating geometries with NaN/Inf is allowed by default. Use `handle_nan='error'` or `handle_nan='skip'` in creation functions to control this.
+9. **NaN 坐标**：默认允许用 NaN/Inf 构造几何；需要控制时在创建函数里传 `handle_nan='error'` 或 `handle_nan='skip'`。
 
-10. **Prepared state not preserved**: After any operation producing a new geometry, `prepare()` must be called again.
+10. **预处理状态不保留**：任何产生新几何的运算之后，都要重新调用 `prepare()`。
 
-11. **GEOS version gates**: `concave_hull`, `constrained_delaunay_triangles`, `remove_repeated_points` require GEOS >= 3.11. `coverage_simplify`, `has_m`, `get_m` require GEOS >= 3.12. `coverage_clean` requires GEOS >= 3.14; top-level `split` requires GEOS >= 3.15 (older GEOS falls back to `shapely.ops.split`).
+11. **GEOS 版本门槛**：`concave_hull`、`constrained_delaunay_triangles`、`remove_repeated_points` 需 GEOS >= 3.11；`coverage_simplify`、`has_m`、`get_m` 需 GEOS >= 3.12；`coverage_clean` 需 GEOS >= 3.14；顶层 `split` 需 GEOS >= 3.15（低版本自动回退到 `shapely.ops.split`）。
 
-12. **`shapely.ops.transform` deprecated**: since 2.2 use `shapely.transform` (per-coordinate) or `shapely.transform_coordseq` (per-coordinate sequence) instead. The `multithreading_enabled` decorator is also deprecated.
+12. **`shapely.ops.transform` 已弃用**：2.2 起改用 `shapely.transform`（按坐标逐点）或 `shapely.transform_coordseq`（按坐标序列）；`multithreading_enabled` 装饰器同样已弃用。
 
-## 典型工作流与常用模式（Common Patterns）
+## 典型工作流
 
-### Point-in-polygon test for many points
+端到端：WKT 读入 → 有效性修复 → 裁剪/缓冲 → 写回 GeoJSON，全程用函数式 API。
+
 ```python
-from shapely import STRtree, points
+import json
+import numpy as np
+import shapely
 
-pts = points(np.random.rand(10000, 2))
-tree = STRtree(pts)
-idx = tree.query(polygon, predicate="intersects")
-inside_points = pts[idx]
+# 1. 读入输入几何（WKT 或 WKB）
+parcels = shapely.from_wkt([
+    "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+    "POLYGON ((20 20, 30 30, 30 20, 20 30, 20 20))",   # 自相交的"蝴蝶结"，无效
+])
+clip_poly = shapely.from_wkt("POLYGON ((5 5, 25 5, 25 25, 5 25, 5 5))")
+
+# 2. 先查有效性，无效的再修复（不要盲目 buffer(0)）
+print(shapely.is_valid(parcels))                       # [True False]
+print(shapely.is_valid_reason(parcels[1]))             # Self-intersection[25 25]
+parcels = np.where(shapely.is_valid(parcels), parcels,
+                   shapely.make_valid(parcels))        # 无效的那个变成 MultiPolygon
+
+# 3. 空间运算：裁剪 + 缓冲区
+clipped = shapely.intersection(parcels, clip_poly)
+buffered = shapely.buffer(clipped, 1.0, quad_segs=8)   # 显式指定 quad_segs
+
+# 4. 度量（示例坐标无投影，面积即平面面积）
+print(shapely.area(clipped))                            # 每个几何的面积数组
+
+# 5. 写出 GeoJSON（FeatureCollection）
+features = [
+    {"type": "Feature", "properties": {"id": int(i)},
+     "geometry": json.loads(shapely.to_geojson(g))}
+    for i, g in enumerate(buffered) if not shapely.is_empty(g)
+]
+with open("clipped.geojson", "w", encoding="utf-8") as fh:
+    json.dump({"type": "FeatureCollection", "features": features}, fh)
 ```
 
-### Batch union of many polygons
+**输出与验收**：`clipped.geojson` 中每个 Feature 都能被 `shapely.from_geojson()` 重新读入；`shapely.is_valid()` 全为 `True`；面积量级应与输入量级同阶（若用经纬度坐标，先投影再算，见下）。
+
+## 常用模式
+
+### 大批量点落在面内判断
 ```python
+import numpy as np
+import shapely
+from shapely import STRtree, points
+
+rng = np.random.default_rng(0)
+pts = points(rng.random((10000, 2)))
+polygon = shapely.box(0.2, 0.2, 0.6, 0.6)      # 待查询的面
+
+tree = STRtree(pts)                             # 索引点集
+idx = tree.query(polygon, predicate="intersects")
+inside_points = pts[idx]                        # 落面内的点
+```
+
+### 批量合并大量多边形
+```python
+import shapely
+
 result = shapely.union_all(polygon_array)
 ```
 
-### Coordinate projection (e.g., with pyproj)
+### 坐标投影（配合 pyproj）
 ```python
+import numpy as np
+import shapely
 from pyproj import Transformer
+
 transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
 
 def project(coords):
@@ -262,31 +313,22 @@ def project(coords):
 projected = shapely.transform(geom, project)
 ```
 
-### Extract all coordinates from mixed geometries
+### 从混合几何中提取全部坐标
 ```python
+import shapely
+
 coords = shapely.get_coordinates(geom_array, include_z=False)
 # coords shape: (N, 2)
 ```
 
-### Spatial join pattern
+### 空间连接模式
 ```python
+from shapely import STRtree
+
 tree = STRtree(right_geoms)
 left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 # left_idx[i] and right_idx[i] are paired matches
 ```
-
-## DeepSeek Harness 使用建议
-
-- **加载与引用**：用 `skill("shapely")` 加载（用户也可输入 `/shapely`）；`reference/operations-reference.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证脚本与产物写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`，仅暴露 `run_code` 的会话在 `tools.pwsh` 里跑）；`python` 不一定是 QGIS/GDAL 自带环境，先 `python -c "import sys; print(sys.executable, sys.version)"`。
-- **先探测版本**：`python -c "import shapely; print(shapely.__version__, shapely.geos_version)"`；本技能按 2.2.0 编写，PyPI wheel 内含 GEOS 3.14.1。GEOS 低版本请按第 11 条降级（如 `coverage_clean` 需 3.14、`shapely.split` 需 3.15）。
-- **验证产物（必做）**：`print(shapely.is_valid(g), shapely.is_valid_reason(g))` 报无效原因；面积/长度做量级断言；序列化回读 `shapely.from_wkt(shapely.to_wkt(g, rounding_precision=-1)).equals(g)`，改过几何后再核对一次 `geom_type` 与 `get_num_geometries()`。
-- **报错先查有效性**：`TopologyException: side location conflict` 基本都是输入几何自相交，先 `shapely.make_valid(g)`（可指定 `method="structure"`）再算，不要直接加 `buffer(0)`。
-- **性能与内存**：批量操作走向量化函数（`shapely.union_all`、`shapely.buffer(geoms, r)`），别逐条 OOP 循环；十万级以上几何先 `STRtree(geoms)` 过滤，再对小集合做精确谓词。
-- **典型误操**：`set_coordinates()`/`shapely.prepare()` 都是原地修改，先 `.copy()`；`shapely.buffer` 默认 `quad_segs=8` 与 `Point.buffer()` 的 16 不同，比较结果前显式传参。
-- **安全**：`pip install shapely` 前先征得用户同意；输出 WKT/坐标前确认数据是否敏感（精确坐标可反推位置），大几何 dump 到文件再分段读，别刷屏。
-
----
 
 ## 常见问题
 
@@ -300,18 +342,24 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 | STRtree 查询返回空数组 | 检查几何是否 `None`/`Empty`；确认查询几何与索引几何的 CRS 一致 |
 | WKB 序列化丢失 LinearRing | WKB 规范不支持 LinearRing，会自动转为 LineString |
 | `to_geojson` 丢失 Z 坐标 | GeoJSON 标准不支持 Z，改用 WKB 或自定义序列化 |
-| `shapely.ops.transform` 弃用警告 | 2.2 起弃用 | 改用 `shapely.transform` 或 `shapely.transform_coordseq` |
+| `shapely.ops.transform` 弃用警告 | 2.2 起弃用，改用 `shapely.transform` 或 `shapely.transform_coordseq` |
 
 ---
 
-## 相关技能
+## DeepSeek Harness 使用建议
 
-- **geopandas** — 基于 Shapely 的矢量数据分析库：[../geopandas/SKILL.md](../geopandas/SKILL.md)
-- **pyqgis** — QGIS Python 绑定（也使用 GEOS/QgsGeometry）：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
-- **jts** — Java 几何计算（Shapely 的 GEOS 底层是 JTS 的 C++ 移植）：[../jts/SKILL.md](../jts/SKILL.md)
-- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
+- **加载与引用**：用 `skill("shapely")` 加载（用户也可输入 `/shapely`）；`reference/operations-reference.md` 按需 `read`，路径相对加载结果中的 Base directory；技能目录只读，验证脚本与产物写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`，仅暴露 `run_code` 的会话在 `tools.pwsh` 里跑）；`python` 不一定是 QGIS/GDAL 自带环境，先 `python -c "import sys; print(sys.executable, sys.version)"`。
+- **先探测版本**：`python -c "import shapely; print(shapely.__version__, shapely.geos_version)"`；本技能按 2.2.0 编写，PyPI wheel 内含 GEOS 3.14。GEOS 低版本请按第 11 条降级（如 `coverage_clean` 需 3.14、`shapely.split` 需 3.15）。
+- **验证产物（必做）**：`print(shapely.is_valid(g), shapely.is_valid_reason(g))` 报无效原因；面积/长度做量级断言；序列化回读 `shapely.from_wkt(shapely.to_wkt(g, rounding_precision=-1)).equals(g)`，改过几何后再核对一次 `geom_type` 与 `get_num_geometries()`。
+- **报错先查有效性**：`TopologyException: side location conflict` 基本都是输入几何自相交，先 `shapely.make_valid(g)`（可指定 `method="structure"`）再算，不要直接加 `buffer(0)`。
+- **性能与内存**：批量操作走向量化函数（`shapely.union_all`、`shapely.buffer(geoms, r)`），别逐条 OOP 循环；十万级以上几何先 `STRtree(geoms)` 过滤，再对小集合做精确谓词。
+- **典型误操**：`set_coordinates()`/`shapely.prepare()` 都是原地修改，先 `.copy()`；`shapely.buffer` 默认 `quad_segs=8` 与 `Point.buffer()` 的 16 不同，比较结果前显式传参。
+- **安全**：`pip install shapely` 前先征得用户同意；输出 WKT/坐标前确认数据是否敏感（精确坐标可反推位置），大几何 dump 到文件再分段读，别刷屏。
 
-## Package Structure
+---
+
+## 包结构
 
 ```text
 shapely/
@@ -338,6 +386,15 @@ shapely/
 ├── algorithms/              # polylabel, oriented_envelope fallback
 └── plotting.py              # Matplotlib helpers (experimental)
 ```
+
+---
+
+## 相关技能
+
+- **geopandas** — 基于 Shapely 的矢量数据分析库：[../geopandas/SKILL.md](../geopandas/SKILL.md)
+- **pyqgis** — QGIS Python 绑定（也使用 GEOS/QgsGeometry）：[../pyqgis/SKILL.md](../pyqgis/SKILL.md)
+- **jts** — Java 几何计算（Shapely 的 GEOS 底层是 JTS 的 C++ 移植）：[../jts/SKILL.md](../jts/SKILL.md)
+- **gdal** — 命令行数据处理：[../gdal/SKILL.md](../gdal/SKILL.md)
 
 ---
 

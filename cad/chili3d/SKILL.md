@@ -1,6 +1,6 @@
 ---
 name: chili3d
-description: "Use when building or extending browser-based 3D CAD in TypeScript with Chili3D — npm-workspaces source build (rspack), chili-wasm Open CASCADE bindings, command and Plugin contracts with .chiliplugin packaging, STEP/IGES/BREP/STL exchange, ribbon and i18n contributions, measurement tools. Chili3D: a pure-web parametric CAD that runs OCCT in the browser."
+description: "Use when building or extending browser-based parametric CAD in TypeScript with Chili3D — npm-workspaces rspack build, chili-wasm Open CASCADE bindings, @command/ICommand plus Plugin contracts and .chiliplugin packaging, STEP/IGES/BREP/STL exchange, ribbon and i18n contributions; also for \"SharedArrayBuffer is not defined\"/chili-wasm load failures without COOP+COEP headers, initWasm() returning nothing in Node, and plugin buttons missing after install."
 tags:
   - web
   - 3d
@@ -18,7 +18,9 @@ tags:
 >
 > **许可证：** AGPL-3.0
 >
-> **最新稳定版：** 0.7.1（GitHub tag `0.7.1`，2026-09-19；仓库内各包版本一致，npm 上仅 `@chili3d/core` 已发布 0.7.0）
+> **包管理器：** npm workspaces（根 `package.json` 版本 `0.7.1`；npm 上仅 `@chili3d/core` 已发布 `0.7.0`，其余 `@chili3d/*` 为工作区包，截至 2026-10）
+>
+> **版本：** 0.7.1（GitHub tag `0.7.1`，2026-09-19）
 >
 > **中文教程：** <https://znlgis.github.io/cad/chili3d/>
 
@@ -38,17 +40,6 @@ Chili3D 主要特性：
 
 ---
 
-## 在线使用
-
-直接打开 <https://chili3d.com/>：
-
-1. 选择「新建」或导入 STEP/IGES/BREP
-2. 左侧工具栏：Sketch / Box / Cylinder / Sphere / ...
-3. 右侧属性面板：编辑参数、变换
-4. 顶部 Ribbon：Boolean / Fillet / Chamfer / Offset / Array
-5. 文件 → 导出（STEP / IGES / BREP / STL）
-
----
 
 ## 环境准备：本地部署与二次开发
 
@@ -83,9 +74,21 @@ docker compose up -d  # 构建并在 http://localhost:8080 提供服务
 
 构建产物是静态站点，可直接部署到 Nginx / Cloudflare Pages / GitHub Pages。
 
+### 在线试用（免安装）
+
+直接打开 <https://chili3d.com/>：
+
+1. 选择「新建」或导入 STEP/IGES/BREP
+2. 左侧工具栏：Sketch / Box / Cylinder / Sphere / ...
+3. 右侧属性面板：编辑参数、变换
+4. 顶部 Ribbon：Boolean / Fillet / Chamfer / Offset / Array
+5. 文件 → 导出（STEP / IGES / BREP / STL）
+
 ---
 
-## 项目结构
+## 核心 API
+
+### 项目结构
 
 ```text
 chili3d/
@@ -113,7 +116,7 @@ chili3d/
 
 ---
 
-## 二次开发的正确姿势
+### 二次开发的正确姿势
 
 Chili3D 是**应用 + 插件**模型，不是可 `npm install` 的嵌入式 SDK：`@chili3d/*` 中只有 `@chili3d/core` 发布到了 npm（0.7.0），`web/wasm/app/builder` 等仍是工作区包。因此二次开发有两条路：
 
@@ -131,7 +134,7 @@ Chili3D 是**应用 + 插件**模型，不是可 `npm install` 的嵌入式 SDK�
 
 ---
 
-## 命令系统
+### 命令系统
 
 命令是 `ICommand` 实现类，用 `command()` 装饰器注册到 `CommandStore`；元数据是 `CommandData`（`key` / `icon` / `toggle` / `helpText` / `helpUrl` / `isApplicationCommand`）：
 
@@ -155,7 +158,7 @@ export class HelloWorldCommand implements ICommand {
 
 ---
 
-## 插件契约（Plugin）
+### 插件契约（Plugin）
 
 `@chili3d/core` 的 `Plugin` 类型是声明式的：把命令、Ribbon、i18n、服务与「AI 手册章节」一次性交给框架。
 
@@ -186,7 +189,7 @@ export default MyPlugin;
 
 ---
 
-## 直接调用几何内核
+### 直接调用几何内核
 
 `@chili3d/wasm` 提供 `initWasm()`：浏览器里由 Emscripten 自己取 `.wasm`，Node（如 MCP 服务与集成测试）需传入 `wasmBinary`：
 
@@ -206,7 +209,7 @@ const wasm = await initWasm();
 
 ---
 
-## 文件 I/O
+### 文件 I/O
 
 - **项目文件**：应用内保存为 Chili3D 自有 JSON 文档（`IStorage` + `Serialized`），支持完整撤销/重做
 - **导入**：File → Import → STEP / IGES / BREP / STL
@@ -215,13 +218,15 @@ const wasm = await initWasm();
 
 ---
 
-## 渲染层（@chili3d/three）
+### 渲染层（@chili3d/three）
 
 渲染包内是 `threeView.ts` / `threeGeometry.ts` / `threeGeometryFactory.ts` / `threeHelper.ts` / `threeHighlighter.ts` / `materials.ts` / `meshExporter.ts` / `cameraController.ts` / `threeAnnotation.ts` / `outlinePass.js`，负责把 shape 转成 three 几何、高亮、剖面、导出与相机控制。改材质与高亮行为从这里入手，命令与文档逻辑保持在 `@chili3d/core`，不要把 OCCT 调用写进 UI 层。
 
 ---
 
 ## 典型工作流
+
+**输入**：2D 草图轮廓或 STEP/IGES 文件；**输出**：STEP/STL 模型或 `.chiliplugin` 插件包。
 
 ### 工作流一：在线参数化建模与导出
 

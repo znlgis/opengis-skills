@@ -17,11 +17,13 @@ tags:
 >
 > **官方文档：** <https://nodered.org/docs/>
 >
+> **npm：** `node-red` 5.0.9（`latest` dist-tag，截至 2026-10）｜ **Node 要求：** `>=22.9`（`package.json` 的 `engines`）
+>
 > **许可证：** Apache-2.0
 
 ## 概述
 
-Node-RED 是构建在 Node.js 之上的低代码事件驱动编程工具，用于把设备、API 和在线服务以「连线」的方式编排成数据流。它最初由 IBM 新兴技术团队发起，现为 OpenJS Foundation 项目，最新版本 5.0.8。运行时以「消息在节点之间传递」为核心模型：每个节点接收一个 JavaScript 对象 `msg`，处理后交给下一个节点。流（flow）在浏览器中的编辑器里以拖拽方式搭建，保存为 JSON（默认 `flows_<hostname>.json`）。
+Node-RED 是构建在 Node.js 之上的低代码事件驱动编程工具，用于把设备、API 和在线服务以「连线」的方式编排成数据流。它最初由 IBM 新兴技术团队发起，现为 OpenJS Foundation 项目，最新版本 5.0.9。运行时以「消息在节点之间传递」为核心模型：每个节点接收一个 JavaScript 对象 `msg`，处理后交给下一个节点。流（flow）在浏览器中的编辑器里以拖拽方式搭建，保存为 JSON（默认 `flows_<hostname>.json`）。
 
 关键概念：
 
@@ -36,7 +38,7 @@ Node-RED 是构建在 Node.js 之上的低代码事件驱动编程工具，用�
 
 ## 环境准备
 
-要求 Node.js 已安装（受支持的 LTS 版本）。
+需要 Node.js `>=22.9`（`node-red` 5.x 的 `engines` 要求；低于此版本会安装失败或运行时报错）。
 
 ### 方式一：npm 全局安装
 
@@ -314,26 +316,6 @@ npm i node-red-dashboard
 
 ---
 
-## 参考资源
-
-- Node-RED 官方文档：<https://nodered.org/docs/>
-- 用户指南：<https://nodered.org/docs/user-guide/>
-- 本地安装：<https://nodered.org/docs/getting-started/local>
-- Docker 部署：<https://nodered.org/docs/getting-started/docker>
-- 配置（settings.js）：<https://nodered.org/docs/user-guide/runtime/configuration>
-- 消息与上下文：<https://nodered.org/docs/user-guide/messages>、<https://nodered.org/docs/user-guide/context>
-- 编写函数：<https://nodered.org/docs/user-guide/writing-functions>
-- 节点库与 Dashboard：<https://flows.nodered.org/node/node-red-dashboard>
-- 项目仓库：<https://github.com/node-red/node-red>
-
----
-
-## 相关技能
-
-- **ke3036-keyes-pico** — Raspberry Pi Pico（RP2040）MicroPython 开发，可作为 Node-RED 流的传感器/设备端数据源（Wi-Fi + MQTT 上报）：[../ke3036-keyes-pico/SKILL.md](../ke3036-keyes-pico/SKILL.md)
-
----
-
 ## AI 使用建议
 
 ### 推荐工作流
@@ -361,3 +343,21 @@ npm i node-red-dashboard
 | 设备数据上云 | `mqtt in` 订阅 + `function` 处理 + `mqtt out` 转发 |
 | 对外提供接口 | `http in` / `http response` + `httpNodeAuth` |
 | 可视化监控面板 | FlowFuse Dashboard（`node-red-dashboard` 已弃用） |
+
+## 相关技能
+
+- **ke3036-keyes-pico** — Raspberry Pi Pico（RP2040）MicroPython 开发，可作为 Node-RED 流的传感器/设备端数据源（Wi-Fi + MQTT 上报）：[../ke3036-keyes-pico/SKILL.md](../ke3036-keyes-pico/SKILL.md)
+
+---
+
+## 参考资源
+
+- Node-RED 官方文档：<https://nodered.org/docs/>
+- 用户指南：<https://nodered.org/docs/user-guide/>
+- 本地安装：<https://nodered.org/docs/getting-started/local>
+- Docker 部署：<https://nodered.org/docs/getting-started/docker>
+- 配置（settings.js）：<https://nodered.org/docs/user-guide/runtime/configuration>
+- 消息与上下文：<https://nodered.org/docs/user-guide/messages>、<https://nodered.org/docs/user-guide/context>
+- 编写函数：<https://nodered.org/docs/user-guide/writing-functions>
+- 节点库与 Dashboard：<https://flows.nodered.org/node/node-red-dashboard>
+- 项目仓库：<https://github.com/node-red/node-red>

@@ -1,6 +1,6 @@
 ---
 name: openlayers-vue3-demo
-description: "Use when building OpenLayers maps with Vue 3 declarative components (vue3-openlayers) — WMS tile layers, dynamic layer trees loaded from the GeoServer REST API, layer-switcher/zoom/scale-line/context-menu controls, and a Vite dev proxy injecting Basic auth. Bilibili livestream demo for a one-map GIS dashboard on Docker GeoServer + PostGIS."
+description: "Use when building a declarative OpenLayers map in Vue 3 with vue3-openlayers — WMS tile layers, a layer tree loaded from the GeoServer REST API, layer switcher / zoom / scale line / context menu controls, and a Vite dev proxy that injects Basic auth; also for an empty layer tree (401 on /rest/layers.json), blank WMS tiles from a flipped bbox or wrong CRS, and "Failed to resolve component: ol-map". Demo pairs Docker GeoServer + PostGIS + Nginx."
 tags:
   - vue
   - typescript
@@ -17,6 +17,8 @@ tags:
 > **项目地址：** <https://github.com/znlgis/openlayers-vue3-demo>
 >
 > **教程：** <https://znlgis.github.io/demos/vue3-openlayers/>
+>
+> **依赖版本：** Vue 3.5 / vue3-openlayers 11.2 / Vite 5（取自仓库 `package.json`，截至 2026-10）
 >
 > **许可证：** LGPL-2.1（以仓库为准）
 
@@ -303,15 +305,6 @@ export default defineConfig({
 - 首次启动 GeoServer 容器需初始化数据目录，等待 1-2 分钟再访问。
 - 右键菜单等控件对触屏设备支持有限，移动端需另行适配。
 
-## AI 使用建议
-
-1. **两个核心文件**：`src/components/DemoMap.vue`（声明式地图 + 动态图层树 + 控件）与 `src/geoserver/Layers.js`（REST 封装，`GeoServerRestApi.js` 为聚合入口）；`main.js` 只做组件库注册。
-2. **常见改造点**：换 GeoServer 地址 / 端口改 `vite.config.js` 代理的 `target` 并同步认证头；调整默认可见图层改 `DemoMap.vue` 中 `visible` 初值（示例为 `ne:countries` 默认可见）。
-3. **命名空间别混淆**：`Map` / `Layers` / `Sources` / `MapControls` 是 vue3-openlayers 的组件命名空间而非 ol 类，与原生 ol API（参见 `gis/openlayers` 技能）混用时注意对象类型不同。
-4. **数据清洗**：`getLayerGroup(name)` 返回的 `publishables.published` 可能混入非图层对象，必须过滤 `@type !== 'layer'`；图层默认 `visible: false` 惰性加载，不要改成全部可见。
-5. **代理约定**：前端只用相对路径 `/geoserver/...`，Basic 认证由 Vite 代理注入；生产部署换 Nginx 反向代理并同样注入 `Authorization`。
-6. **扩展方向**：沿用 `src/geoserver/` 的封装模式继续实现工作区 / 图层增删改查，即可达成教程规划的「树状服务管理」。
-
 ## 常见问题
 
 | 问题 | 解决方案 |
@@ -324,6 +317,15 @@ export default defineConfig({
 | npm 安装缓慢 | 切换镜像 `npm config set registry http://registry.npmmirror.com` |
 | 端口冲突（8080 / 8765 / 5432） | 修改 `docker run -p` 映射，并同步调整代理 target |
 | 接口 200 但地图空白 | 确认 `#map` 容器有宽高（DemoMap.vue 中 `width/height: 100%`） |
+
+## AI 使用建议
+
+1. **两个核心文件**：`src/components/DemoMap.vue`（声明式地图 + 动态图层树 + 控件）与 `src/geoserver/Layers.js`（REST 封装，`GeoServerRestApi.js` 为聚合入口）；`main.js` 只做组件库注册。
+2. **常见改造点**：换 GeoServer 地址 / 端口改 `vite.config.js` 代理的 `target` 并同步认证头；调整默认可见图层改 `DemoMap.vue` 中 `visible` 初值（示例为 `ne:countries` 默认可见）。
+3. **命名空间别混淆**：`Map` / `Layers` / `Sources` / `MapControls` 是 vue3-openlayers 的组件命名空间而非 ol 类，与原生 ol API（参见 `gis/openlayers` 技能）混用时注意对象类型不同。
+4. **数据清洗**：`getLayerGroup(name)` 返回的 `publishables.published` 可能混入非图层对象，必须过滤 `@type !== 'layer'`；图层默认 `visible: false` 惰性加载，不要改成全部可见。
+5. **代理约定**：前端只用相对路径 `/geoserver/...`，Basic 认证由 Vite 代理注入；生产部署换 Nginx 反向代理并同样注入 `Authorization`。
+6. **扩展方向**：沿用 `src/geoserver/` 的封装模式继续实现工作区 / 图层增删改查，即可达成教程规划的「树状服务管理」。
 
 ## 相关技能
 

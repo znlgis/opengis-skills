@@ -101,7 +101,7 @@ curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json
 
 ---
 
-> 阶段一（数据获取与信息查询）与阶段二（数据处理与转换）的完整操作手册见 [reference/data-stages.md](reference/data-stages.md)
+> 阶段一（数据获取与信息查询）、阶段二（数据处理与转换）、阶段三（空间分析）的完整操作手册见 [reference/data-stages.md](reference/data-stages.md)
 
 ## 核心 API 与命令速查
 
@@ -119,278 +119,82 @@ curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json
 
 ---
 
-## 阶段三：空间分析
+## 阶段三：空间分析（速查）
 
-### 3.1 缓冲区分析
+| 任务 | 命令入口 |
+|------|----------|
+| 缓冲区 | `qgis_process run native:buffer -- INPUT=... DISTANCE=... OUTPUT=...` |
+| 交集/联合/差集 | `native:intersection / native:union / native:difference` |
+| 融合 | `native:dissolve -- FIELD=...` |
+| 空间连接 | `native:joinattributesbylocation -- PREDICATE=0` |
+| 按属性/位置提取 | `native:extractbyattribute / native:extractbylocation` |
+| 栅格波段运算 | `gdal_calc.py -A nir.tif -B red.tif --calc="(A-B)/(A+B)"` |
+| DEM 分析 | `gdal_contour -i 10 / qgis_process run gdal:slope|aspect|hillshade` |
+| 插值成 DEM | `gdal_grid -a invdist:power=2:zfield=Z` |
+| 栅格矢量互转 | `gdal_polygonize.py / qgis_process run gdal:rasterize` |
+| 地图渲染导出 | `PyQGIS QgsMapRendererSequentialJob / QgsLayoutExporter` |
 
-```bash
-# qgis_process
-qgis_process run native:buffer -- \
-  INPUT=points.shp DISTANCE=1000 SEGMENTS=16 OUTPUT=buffered.gpkg
-```
-
-```python
-# PyQGIS (processing)
-result = processing.run("native:buffer", {
-    'INPUT': '/data/roads.shp',
-    'DISTANCE': 50,
-    'SEGMENTS': 10,
-    'DISSOLVE': False,
-    'OUTPUT': '/data/roads_buffer.shp'
-})
-```
-
-```python
-# PyQGIS (几何操作)
-buffered = geom.buffer(100, 16)
-```
-
-```python
-# GDAL Python API (OGR 几何)
-from osgeo import ogr
-pt = ogr.Geometry(ogr.wkbPoint)
-pt.SetPoint_2D(0, 116.4, 39.9)
-buffer = pt.Buffer(1.0)
-```
-
-### 3.2 叠加分析（交集/联合/差集）
-
-```bash
-# qgis_process — 交集
-qgis_process run native:intersection -- \
-  INPUT=layer1.shp OVERLAY=layer2.shp OUTPUT=intersection.shp
-
-# qgis_process — 联合
-qgis_process run native:union -- \
-  INPUT=layer1.shp OVERLAY=layer2.shp OUTPUT=union.shp
-
-# qgis_process — 差集
-qgis_process run native:difference -- \
-  INPUT=layer1.shp OVERLAY=layer2.shp OUTPUT=difference.shp
-```
-
-```python
-# PyQGIS
-result = processing.run("native:intersection", {
-    'INPUT': layer1, 'OVERLAY': layer2, 'OUTPUT': 'memory:intersected'
-})
-```
-
-```python
-# PyQGIS 几何级别操作
-intersection = geom1.intersection(geom2)
-union = geom1.combine(geom2)
-difference = geom1.difference(geom2)
-sym_diff = geom1.symDifference(geom2)
-```
-
-```python
-# GDAL OGR 几何级别操作
-inter   = polygon.Intersection(pt)
-united  = polygon.Union(pt)
-diff    = polygon.Difference(pt)
-```
-
-### 3.3 融合（Dissolve）
-
-```bash
-# qgis_process
-qgis_process run native:dissolve -- \
-  INPUT=polygons.shp FIELD=type OUTPUT=dissolved.gpkg
-```
-
-```python
-# PyQGIS
-result = processing.run("native:dissolve", {
-    'INPUT': '/data/polygons.shp',
-    'FIELD': ['type'],
-    'OUTPUT': '/data/dissolved.gpkg'
-})
-```
-
-### 3.4 空间连接
-
-```bash
-# qgis_process — 按位置连接属性
-qgis_process run native:joinattributesbylocation -- \
-  INPUT=points.shp JOIN=polygons.shp PREDICATE=0 OUTPUT=joined.shp
-```
-
-```python
-# PyQGIS
-result = processing.run("native:joinattributesbylocation", {
-    'INPUT': points_layer,
-    'JOIN': polygons_layer,
-    'PREDICATE': [0],  # 0=相交
-    'METHOD': 0,       # 0=一对一
-    'OUTPUT': 'memory:joined'
-})
-```
-
-### 3.5 栅格计算（波段运算）
-
-```bash
-# NDVI 计算
-gdal_calc.py -A nir.tif -B red.tif \
-  --calc="(A-B)/(A+B)" --outfile=ndvi.tif
-
-# 栅格掩膜
-gdal_calc.py -A input.tif --calc="A*(A>100)" \
-  --outfile=masked.tif --NoDataValue=0
-
-# 两个栅格平均
-gdal_calc.py -A input1.tif -B input2.tif \
-  --calc="(A+B)/2" --outfile=mean.tif
-```
-
-### 3.6 DEM 分析
-
-```bash
-# 等值线提取
-gdal_contour -a elevation dem.tif contours.shp -i 10
-
-# qgis_process — 坡度分析
-qgis_process run gdal:slope -- INPUT=dem.tif OUTPUT=slope.tif
-
-# qgis_process — 坡向分析
-qgis_process run gdal:aspect -- INPUT=dem.tif OUTPUT=aspect.tif
-
-# qgis_process — 山体阴影
-qgis_process run gdal:hillshade -- INPUT=dem.tif OUTPUT=hillshade.tif
-```
-
-```python
-# PyQGIS — 坡度分析
-result = processing.run("gdal:slope", {
-    'INPUT': '/data/dem.tif',
-    'OUTPUT': '/data/slope.tif'
-})
-```
-
-### 3.7 散点插值（创建 DEM）
-
-```bash
-# 反距离加权（IDW）插值
-gdal_grid -a invdist:power=2:smoothing=0 \
-  -zfield Z input_points.shp output_dem.tif
-
-# 指定输出范围和分辨率
-gdal_grid -outsize 512 512 -tr 10 10 \
-  -a average input_points.shp output_dem.tif
-```
-
-### 3.8 栅格矢量互转
-
-```bash
-# 栅格转矢量（多边形化）
-gdal_polygonize.py input.tif output.shp
-
-# qgis_process
-qgis_process run gdal:polygonize -- INPUT=input.tif OUTPUT=output.shp
-
-# 矢量转栅格
-qgis_process run gdal:rasterize -- \
-  INPUT=input.shp FIELD=value OUTPUT=output.tif
-```
-
-### 3.9 空间查询与过滤
-
-```bash
-# ogr2ogr — 属性过滤
-ogr2ogr output.shp input.shp -where "population > 1000000"
-
-# ogr2ogr — 空间过滤
-ogr2ogr output.shp input.shp -spat 116.0 39.5 117.0 40.5
-
-# qgis_process — 按属性提取
-qgis_process run native:extractbyattribute -- \
-  INPUT=input.shp FIELD=type OPERATOR=0 VALUE=road OUTPUT=roads.shp
-
-# qgis_process — 按位置提取
-qgis_process run native:extractbylocation -- \
-  INPUT=points.shp INTERSECT=boundary.shp PREDICATE=0 OUTPUT=extracted.shp
-```
-
-```python
-# PyQGIS — 要素查询
-from qgis.core import QgsFeatureRequest, QgsRectangle
-
-# 属性过滤
-request = QgsFeatureRequest().setFilterExpression('"population" > 10000')
-for feature in layer.getFeatures(request):
-    print(feature["name"])
-
-# 空间范围过滤
-rect = QgsRectangle(116.0, 39.0, 117.0, 40.0)
-request = QgsFeatureRequest().setFilterRect(rect)
-for feature in layer.getFeatures(request):
-    print(feature.id())
-```
-
-```python
-# GDAL Python API — 空间过滤 + 属性过滤
-from osgeo import ogr
-
-ds = ogr.Open("input.shp")
-layer = ds.GetLayer(0)
-layer.SetSpatialFilterRect(116.0, 39.5, 117.0, 40.5)
-layer.SetAttributeFilter("POPULATION > 1000000")
-
-for feature in layer:
-    print(feature.GetField("NAME"))
-ds = None
-```
-
-### 3.10 地图渲染与导出
-
-```python
-# PyQGIS — 渲染为 PNG
-from qgis.core import QgsMapSettings, QgsMapRendererSequentialJob
-from qgis.PyQt.QtCore import QSize
-
-settings = QgsMapSettings()
-settings.setLayers([layer])
-settings.setDestinationCrs(layer.crs())
-settings.setExtent(layer.extent())
-settings.setOutputSize(QSize(1920, 1080))
-
-job = QgsMapRendererSequentialJob(settings)
-job.start()
-job.waitForFinished()
-job.renderedImage().save("/data/map_output.png")
-```
-
-```python
-# PyQGIS — 导出 PDF
-from qgis.core import QgsProject, QgsPrintLayout, QgsLayoutItemMap, QgsLayoutExporter
-
-project = QgsProject.instance()
-layout = QgsPrintLayout(project)
-layout.initializeDefaults()
-
-map_item = QgsLayoutItemMap(layout)
-map_item.setRect(20, 20, 200, 150)
-map_item.setExtent(layer.extent())
-map_item.setLayers([layer])
-layout.addLayoutItem(map_item)
-
-exporter = QgsLayoutExporter(layout)
-exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
-```
-
----
+> 完整的 3.1-3.10 逐项示例（qgis_process、PyQGIS、GDAL Python API 三种写法）见 [reference/data-stages.md](reference/data-stages.md)。
 
 > 阶段四（发布 GIS 地图服务）的完整 GeoServer REST 操作见 [reference/data-stages.md](reference/data-stages.md)
 > 端到端工作流示例、内置算法速查、GDAL 命令速查、数据格式与环境变量见 [reference/workflow-cheatsheets.md](reference/workflow-cheatsheets.md)
 
 ## 典型工作流
 
-1. **探索数据**：`ogrinfo -json` / `gdalinfo -json` — 获取结构化元数据
-2. **格式转换**：`ogr2ogr` / `gdal_translate` — 统一数据格式
-3. **坐标统一**：`ogr2ogr -t_srs` / `gdalwarp -t_srs` — 统一坐标系
-4. **空间分析**：`qgis_process run` / `processing.run()` — 执行分析算法
-5. **结果验证**：`ogrinfo -json` / `gdalinfo -json` — 验证输出
-6. **发布服务**：GeoServer REST API — 上传并发布地图服务
+### 端到端：Shapefile → 缓冲分析 → GeoServer 发布 → Web 预览
+
+输入 `data/roads.shp`（EPSG:4326），输出 `http://localhost:8080/geoserver/wms` 上可用的图层 `demo:roads_buffer`。
+
+1. **探索数据**：`ogrinfo -so -al data/roads.shp` 确认要素数与 CRS
+2. **统一格式与坐标系**：`ogr2ogr -t_srs EPSG:3857 roads_3857.gpkg data/roads.shp`
+3. **空间分析**：`qgis_process run native:buffer -- INPUT=roads_3857.gpkg DISTANCE=500 OUTPUT=roads_buffer.gpkg`
+4. **验证结果**：`ogrinfo -so roads_buffer.gpkg roads_buffer` 核对方框与要素数
+5. **发布服务**：GeoServer REST 建工作空间 → 上传 GeoPackage → 发布图层
+6. **前端预览**：OpenLayers `TileWMS` 指向 `/geoserver/wms`，`LAYERS: 'demo:roads_buffer'`
+
+```bash
+# 1~4：本地分析与验证
+ogrinfo -so -al data/roads.shp
+ogr2ogr -t_srs EPSG:3857 roads_3857.gpkg data/roads.shp
+QT_QPA_PLATFORM=offscreen qgis_process run native:buffer -- \
+  INPUT=roads_3857.gpkg DISTANCE=500 SEGMENTS=8 OUTPUT=roads_buffer.gpkg
+ogrinfo -so roads_buffer.gpkg roads_buffer
+
+# 5：发布（GeoServer 3.0.2，默认 admin/geoserver）
+BASE=http://localhost:8080/geoserver/rest
+curl -u admin:geoserver -X POST "$BASE/workspaces" \
+  -H 'Content-Type: application/json' \
+  -d '{"workspace":{"name":"demo"}}'
+
+curl -u admin:geoserver -X PUT "$BASE/workspaces/demo/datastores/roads/file.gpkg?configure=all" \
+  -H 'Content-Type: application/geopackage+sqlite3' \
+  --data-binary @roads_buffer.gpkg
+
+# 6：回读确认图层已发布
+curl -u admin:geoserver "$BASE/layers/demo:roads_buffer.json"
+```
+
+```js
+// 6：OpenLayers 前端预览
+import Map from 'ol/Map.js';
+import View from 'ol/View.js';
+import TileLayer from 'ol/layer/Tile.js';
+import TileWMS from 'ol/source/TileWMS.js';
+
+new Map({
+  target: 'map',
+  layers: [new TileLayer({
+    source: new TileWMS({
+      url: 'http://localhost:8080/geoserver/wms',
+      params: { LAYERS: 'demo:roads_buffer', TILED: true }
+    })
+  })],
+  view: new View({ center: [12968000, 4863000], zoom: 12 })
+});
+```
+
+**验收**：`curl -u admin:geoserver .../layers/demo:roads_buffer.json` 返回 200 且含 `"enabled": true`；前端地图能看到缓冲区图形。任一步失败都不要继续后续阶段——先修当前阶段的产物。
+
 
 ---
 
@@ -404,17 +208,6 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 | `GDAL_NUM_THREADS` | GDAL 处理线程数 | `ALL_CPUS` |
 | `GDAL_CACHEMAX` | 块缓存大小（MB） | `512` |
 | `CPL_DEBUG` | 调试日志级别 | `ON` |
-
----
-
-## DeepSeek Harness 使用建议
-
-- **加载与引用**：用 `skill("opengis-all")` 加载（用户也可输入 `/opengis-all`）；本页是阶段索引，详细步骤在 `reference/data-stages.md` 与 `reference/workflow-cheatsheets.md`，按当前阶段 `read`，不要一次全读。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。示例是 Linux/bash 写法，按平台改写 `apt`、`/tmp`、`export` 与反引号；Windows 路径加引号。
-- **先探测工具链**：`gdalinfo --version`、`qgis_process --version`、`python3 -c "from osgeo import gdal; print(gdal.VersionInfo())"`、`curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"`；缺哪个阶段就加载相邻技能（如 `skill("gdal")`、`skill("qgis-process")`）。
-- **分阶段交付**：每阶段产物落盘到工作区（GeoPackage/COG/GeoJSON），下一阶段只读取产物；先用 `ogrinfo -so`、`gdalinfo -json` 看摘要，不要把大文件或大段输出贴进上下文。
-- **验证**：转换后重新打开结果核对 CRS、范围、要素数；发布后用 `curl` 回读 REST 资源或 `GetCapabilities`；无显示器环境设置 `QT_QPA_PLATFORM=offscreen`；`qgis_process` 参数先用 `qgis_process help <id> --json` 确认。
-- **安全**：`gdal_edit.py`、覆盖输出、GeoServer `?recurse=true` 删除均不可逆；先备份并确认路径，安装 GDAL/QGIS、启动服务或使用数据库凭据前先征得用户同意。
 
 ---
 
@@ -432,6 +225,17 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 
 ---
 
+## DeepSeek Harness 使用建议
+
+- **加载与引用**：用 `skill("opengis-all")` 加载（用户也可输入 `/opengis-all`）；本页是阶段索引，详细步骤在 `reference/data-stages.md` 与 `reference/workflow-cheatsheets.md`，按当前阶段 `read`，不要一次全读。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。示例是 Linux/bash 写法，按平台改写 `apt`、`/tmp`、`export` 与反引号；Windows 路径加引号。
+- **先探测工具链**：`gdalinfo --version`、`qgis_process --version`、`python3 -c "from osgeo import gdal; print(gdal.VersionInfo())"`、`curl -u admin:geoserver "http://localhost:8080/geoserver/rest/about/version.json"`；缺哪个阶段就加载相邻技能（如 `skill("gdal")`、`skill("qgis-process")`）。
+- **分阶段交付**：每阶段产物落盘到工作区（GeoPackage/COG/GeoJSON），下一阶段只读取产物；先用 `ogrinfo -so`、`gdalinfo -json` 看摘要，不要把大文件或大段输出贴进上下文。
+- **验证**：转换后重新打开结果核对 CRS、范围、要素数；发布后用 `curl` 回读 REST 资源或 `GetCapabilities`；无显示器环境设置 `QT_QPA_PLATFORM=offscreen`；`qgis_process` 参数先用 `qgis_process help <id> --json` 确认。
+- **安全**：`gdal_edit.py`、覆盖输出、GeoServer `?recurse=true` 删除均不可逆；先备份并确认路径，安装 GDAL/QGIS、启动服务或使用数据库凭据前先征得用户同意。
+
+---
+
 ## 相关技能
 
 - **gdal** — GDAL 命令行工具：[../gdal/SKILL.md](../gdal/SKILL.md)
@@ -442,6 +246,10 @@ exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
 - **geopipe-agent** — AI 驱动的 GIS 流水线：[../geopipe-agent/SKILL.md](../geopipe-agent/SKILL.md)
 - **openlayers** — 前端 2D 地图可视化：[../openlayers/SKILL.md](../openlayers/SKILL.md)
 - **cesiumjs** — 前端 3D 地球可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
+- **duckdb-spatial** — 用 SQL 直接分析 Shapefile/GeoParquet：[../duckdb-spatial/SKILL.md](../duckdb-spatial/SKILL.md)
+- **geolibre** — 浏览器/桌面里做 GIS，无需服务端：[../geolibre/SKILL.md](../geolibre/SKILL.md)
+- **whitebox-tools** — 地形/水文/LiDAR 批量分析：[../whitebox-tools/SKILL.md](../whitebox-tools/SKILL.md)
+- **pdal** — 点云 LAS/LAZ 处理与 DEM 生成：[../pdal/SKILL.md](../pdal/SKILL.md)
 
 ## 参考资源
 

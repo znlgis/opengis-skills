@@ -1,6 +1,6 @@
 ---
 name: gis-skills
-description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, or building web map applications. Index of 32 skills: GDAL, GeoServer, QGIS, PostGIS, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, Leaflet, MapServer, QGIS Server, PROJ, PDAL, Mapbox GL JS, deck.gl and more."
+description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, running desktop or cloud-native GIS apps, or building web map applications. Index of 40 skills: GDAL, GeoServer, QGIS, PostGIS, DuckDB Spatial, SpatiaLite, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, Leaflet, MapServer, QGIS Server, PROJ, PDAL, GeoLibre, GeoNode, WhiteboxTools, Mapbox GL JS, deck.gl and more."
 tags:
   - gis
   - geospatial
@@ -12,11 +12,11 @@ tags:
   - webmapping
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 96 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引
 
 ## 概述
 
-本分类涵盖 **32 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务的完整链路：
+本分类涵盖 **40 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务与桌面应用的完整链路：
 
 ```text
 数据源 → 命令行处理 → 编程分析 → 空间数据库 → 地图服务 → 前端可视化
@@ -44,12 +44,15 @@ tags:
 | [proj](./proj/SKILL.md) | 坐标转换与投影库（CRS/EPSG，GDAL 底层引擎） | `crs` `reprojection` `cli` `epsg` |
 | [grass-gis](./grass-gis/SKILL.md) | 模块化 GIS 栅格/矢量分析套件 | `gis` `raster` `vector` `python` |
 | [pdal](./pdal/SKILL.md) | 点云数据处理库（LAS/LAZ，点云界 GDAL） | `point-cloud` `lidar` `pipeline` `cli` |
+| [whitebox-tools](./whitebox-tools/SKILL.md) | Rust 地形/水文/LiDAR 分析引擎（CLI + Python） | `cli` `hydrology` `terrain-analysis` `python` |
 
 ### 🗄️ 空间数据库
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [postgis](./postgis/SKILL.md) | PostgreSQL 空间数据库扩展 | `database` `sql` `spatial` `postgresql` |
+| [duckdb-spatial](./duckdb-spatial/SKILL.md) | DuckDB 空间扩展：列式库做空间 SQL 与 GeoParquet | `duckdb` `sql` `geoparquet` `analytics` |
+| [spatialite](./spatialite/SKILL.md) | SQLite 空间扩展：单文件空间数据库、RTree 索引 | `sqlite` `database` `spatial` `sql` |
 
 ### 🔧 几何运算库
 
@@ -86,6 +89,7 @@ tags:
 | [leaflet](./leaflet/SKILL.md) | 轻量级移动端 Web 2D 地图库 | `javascript` `web` `2d` `map` |
 | [mapbox-gl-js](./mapbox-gl-js/SKILL.md) | WebGL 矢量瓦片地图库（需 access token） | `javascript` `webgl` `vector-tiles` `map` |
 | [deck-gl](./deck-gl/SKILL.md) | GPU 大规模地理数据可视化框架 | `javascript` `webgl` `visualization` `geo` |
+| [kepler-gl](./kepler-gl/SKILL.md) | React/Redux 地理数据可视化应用与组件库 | `react` `redux` `visualization` `jupyter` |
 
 ### 📦 .NET GIS 组件
 
@@ -94,7 +98,16 @@ tags:
 | [nettopologysuite](./nettopologysuite/SKILL.md) | JTS 的 .NET 移植 | `dotnet` `geometry` |
 | [sharpmap](./sharpmap/SKILL.md) | .NET WinForms/Web 地图渲染库 | `dotnet` `winforms` `csharp` `2d` |
 | [mapsui](./mapsui/SKILL.md) | .NET 跨平台地图控件 | `dotnet` `maui` `csharp` `map` |
+| [projnet4geoapi](./projnet4geoapi/SKILL.md) | .NET 坐标参考系与投影引擎（NuGet ProjNet 2.x） | `dotnet` `projection` `coordinate-systems` `wkt` |
+| [brutile](./brutile/SKILL.md) | .NET 瓦片访问库（HTTP 瓦片源 + MBTiles 离线） | `dotnet` `tiles` `mbtiles` `tms` |
 | [opengis-daf](./opengis-daf/SKILL.md) | 方案驱动 GIS 分析与质检框架（.NET 10 / C# 14） | `dotnet` `spatial-analysis` `gis` `csharp` |
+
+### 🧭 桌面与平台应用
+
+| 技能 | 简介 | 关键标签 |
+|------|------|---------|
+| [geolibre](./geolibre/SKILL.md) | 云原生 GIS 应用：浏览器/桌面/Notebook/MCP 四种形态 | `webgis` `duckdb` `mcp` `desktop` |
+| [geonode](./geonode/SKILL.md) | 地理空间 CMS：Django + GeoServer + PostGIS 数据门户 | `cms` `django` `portal` `metadata` |
 
 ### 🧩 综合/工具集
 
@@ -121,6 +134,10 @@ tags:
 | "前端 3D 地球" | `cesiumjs/SKILL.md` |
 | "前端 2D 地图" | `openlayers/SKILL.md` |
 | "AI 驱动的 GIS 流水线" | `geopipe-agent/SKILL.md` |
+| "在浏览器/桌面里做 GIS（无服务端）" | `geolibre/SKILL.md` |
+| "用 SQL 直接分析 Shapefile/Parquet" | `duckdb-spatial/SKILL.md` |
+| "嵌入式/单文件空间数据库" | `spatialite/SKILL.md` |
+| "地形/水文/LiDAR 批量分析" | `whitebox-tools/SKILL.md` |
 | "方案驱动的分析/质检流水线" | `opengis-daf/SKILL.md` |
 | "完整 GIS 处理链路" | `opengis-all/SKILL.md` |
 

@@ -1,6 +1,6 @@
 # OpenGIS Data Pipeline Stages Reference
 
-Stage 1 (data acquisition/query), stage 2 (processing/conversion) and stage 4 (GeoServer publishing) split from SKILL.md.
+Stage 1 (data acquisition/query), stage 2 (processing/conversion), stage 3 (spatial analysis) and stage 4 (GeoServer publishing) split from SKILL.md.
 
 ---
 
@@ -435,6 +435,267 @@ gdal_edit.py -mo DATUM=WGS84 -mo SOURCE=USGS input.tif
 
 ---
 
+## 阶段三：空间分析
+
+### 3.1 缓冲区分析
+
+```bash
+# qgis_process
+qgis_process run native:buffer -- \
+  INPUT=points.shp DISTANCE=1000 SEGMENTS=16 OUTPUT=buffered.gpkg
+```
+
+```python
+# PyQGIS (processing)
+result = processing.run("native:buffer", {
+    'INPUT': '/data/roads.shp',
+    'DISTANCE': 50,
+    'SEGMENTS': 10,
+    'DISSOLVE': False,
+    'OUTPUT': '/data/roads_buffer.shp'
+})
+```
+
+```python
+# PyQGIS (几何操作)
+buffered = geom.buffer(100, 16)
+```
+
+```python
+# GDAL Python API (OGR 几何)
+from osgeo import ogr
+pt = ogr.Geometry(ogr.wkbPoint)
+pt.SetPoint_2D(0, 116.4, 39.9)
+buffer = pt.Buffer(1.0)
+```
+
+### 3.2 叠加分析（交集/联合/差集）
+
+```bash
+# qgis_process — 交集
+qgis_process run native:intersection -- \
+  INPUT=layer1.shp OVERLAY=layer2.shp OUTPUT=intersection.shp
+
+# qgis_process — 联合
+qgis_process run native:union -- \
+  INPUT=layer1.shp OVERLAY=layer2.shp OUTPUT=union.shp
+
+# qgis_process — 差集
+qgis_process run native:difference -- \
+  INPUT=layer1.shp OVERLAY=layer2.shp OUTPUT=difference.shp
+```
+
+```python
+# PyQGIS
+result = processing.run("native:intersection", {
+    'INPUT': layer1, 'OVERLAY': layer2, 'OUTPUT': 'memory:intersected'
+})
+```
+
+```python
+# PyQGIS 几何级别操作
+intersection = geom1.intersection(geom2)
+union = geom1.combine(geom2)
+difference = geom1.difference(geom2)
+sym_diff = geom1.symDifference(geom2)
+```
+
+```python
+# GDAL OGR 几何级别操作
+inter   = polygon.Intersection(pt)
+united  = polygon.Union(pt)
+diff    = polygon.Difference(pt)
+```
+
+### 3.3 融合（Dissolve）
+
+```bash
+# qgis_process
+qgis_process run native:dissolve -- \
+  INPUT=polygons.shp FIELD=type OUTPUT=dissolved.gpkg
+```
+
+```python
+# PyQGIS
+result = processing.run("native:dissolve", {
+    'INPUT': '/data/polygons.shp',
+    'FIELD': ['type'],
+    'OUTPUT': '/data/dissolved.gpkg'
+})
+```
+
+### 3.4 空间连接
+
+```bash
+# qgis_process — 按位置连接属性
+qgis_process run native:joinattributesbylocation -- \
+  INPUT=points.shp JOIN=polygons.shp PREDICATE=0 OUTPUT=joined.shp
+```
+
+```python
+# PyQGIS
+result = processing.run("native:joinattributesbylocation", {
+    'INPUT': points_layer,
+    'JOIN': polygons_layer,
+    'PREDICATE': [0],  # 0=相交
+    'METHOD': 0,       # 0=一对一
+    'OUTPUT': 'memory:joined'
+})
+```
+
+### 3.5 栅格计算（波段运算）
+
+```bash
+# NDVI 计算
+gdal_calc.py -A nir.tif -B red.tif \
+  --calc="(A-B)/(A+B)" --outfile=ndvi.tif
+
+# 栅格掩膜
+gdal_calc.py -A input.tif --calc="A*(A>100)" \
+  --outfile=masked.tif --NoDataValue=0
+
+# 两个栅格平均
+gdal_calc.py -A input1.tif -B input2.tif \
+  --calc="(A+B)/2" --outfile=mean.tif
+```
+
+### 3.6 DEM 分析
+
+```bash
+# 等值线提取
+gdal_contour -a elevation dem.tif contours.shp -i 10
+
+# qgis_process — 坡度分析
+qgis_process run gdal:slope -- INPUT=dem.tif OUTPUT=slope.tif
+
+# qgis_process — 坡向分析
+qgis_process run gdal:aspect -- INPUT=dem.tif OUTPUT=aspect.tif
+
+# qgis_process — 山体阴影
+qgis_process run gdal:hillshade -- INPUT=dem.tif OUTPUT=hillshade.tif
+```
+
+```python
+# PyQGIS — 坡度分析
+result = processing.run("gdal:slope", {
+    'INPUT': '/data/dem.tif',
+    'OUTPUT': '/data/slope.tif'
+})
+```
+
+### 3.7 散点插值（创建 DEM）
+
+```bash
+# 反距离加权（IDW）插值
+gdal_grid -a invdist:power=2:smoothing=0 \
+  -zfield Z input_points.shp output_dem.tif
+
+# 指定输出范围和分辨率
+gdal_grid -outsize 512 512 -tr 10 10 \
+  -a average input_points.shp output_dem.tif
+```
+
+### 3.8 栅格矢量互转
+
+```bash
+# 栅格转矢量（多边形化）
+gdal_polygonize.py input.tif output.shp
+
+# qgis_process
+qgis_process run gdal:polygonize -- INPUT=input.tif OUTPUT=output.shp
+
+# 矢量转栅格
+qgis_process run gdal:rasterize -- \
+  INPUT=input.shp FIELD=value OUTPUT=output.tif
+```
+
+### 3.9 空间查询与过滤
+
+```bash
+# ogr2ogr — 属性过滤
+ogr2ogr output.shp input.shp -where "population > 1000000"
+
+# ogr2ogr — 空间过滤
+ogr2ogr output.shp input.shp -spat 116.0 39.5 117.0 40.5
+
+# qgis_process — 按属性提取
+qgis_process run native:extractbyattribute -- \
+  INPUT=input.shp FIELD=type OPERATOR=0 VALUE=road OUTPUT=roads.shp
+
+# qgis_process — 按位置提取
+qgis_process run native:extractbylocation -- \
+  INPUT=points.shp INTERSECT=boundary.shp PREDICATE=0 OUTPUT=extracted.shp
+```
+
+```python
+# PyQGIS — 要素查询
+from qgis.core import QgsFeatureRequest, QgsRectangle
+
+# 属性过滤
+request = QgsFeatureRequest().setFilterExpression('"population" > 10000')
+for feature in layer.getFeatures(request):
+    print(feature["name"])
+
+# 空间范围过滤
+rect = QgsRectangle(116.0, 39.0, 117.0, 40.0)
+request = QgsFeatureRequest().setFilterRect(rect)
+for feature in layer.getFeatures(request):
+    print(feature.id())
+```
+
+```python
+# GDAL Python API — 空间过滤 + 属性过滤
+from osgeo import ogr
+
+ds = ogr.Open("input.shp")
+layer = ds.GetLayer(0)
+layer.SetSpatialFilterRect(116.0, 39.5, 117.0, 40.5)
+layer.SetAttributeFilter("POPULATION > 1000000")
+
+for feature in layer:
+    print(feature.GetField("NAME"))
+ds = None
+```
+
+### 3.10 地图渲染与导出
+
+```python
+# PyQGIS — 渲染为 PNG
+from qgis.core import QgsMapSettings, QgsMapRendererSequentialJob
+from qgis.PyQt.QtCore import QSize
+
+settings = QgsMapSettings()
+settings.setLayers([layer])
+settings.setDestinationCrs(layer.crs())
+settings.setExtent(layer.extent())
+settings.setOutputSize(QSize(1920, 1080))
+
+job = QgsMapRendererSequentialJob(settings)
+job.start()
+job.waitForFinished()
+job.renderedImage().save("/data/map_output.png")
+```
+
+```python
+# PyQGIS — 导出 PDF
+from qgis.core import QgsProject, QgsPrintLayout, QgsLayoutItemMap, QgsLayoutExporter
+
+project = QgsProject.instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+
+map_item = QgsLayoutItemMap(layout)
+map_item.setRect(20, 20, 200, 150)
+map_item.setExtent(layer.extent())
+map_item.setLayers([layer])
+layout.addLayoutItem(map_item)
+
+exporter = QgsLayoutExporter(layout)
+exporter.exportToPdf("/data/output.pdf", QgsLayoutExporter.PdfExportSettings())
+```
+
+---
+
 ## 阶段四：发布 GIS 地图服务（GeoServer REST API）
 
 **基础 URL：** `http://{host}:{port}/geoserver/rest`
@@ -603,6 +864,3 @@ curl -u admin:geoserver -XPOST \
 | 清空图层缓存 | POST | `/gwc/rest/seed/{layer}.json` |
 | 查看缓存任务 | GET | `/gwc/rest/seed/{layer}.json` |
 | 批量截断 | POST | `/gwc/rest/masstruncate` |
-
----
-

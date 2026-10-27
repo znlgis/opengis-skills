@@ -18,6 +18,8 @@ tags:
 >
 > **官方文档：** <https://postgis.net/docs/>
 >
+> **最新版本：** 3.6.4（截至 2026-10，[Releases](https://github.com/postgis/postgis/releases)）；3.7 系列已到 3.7.0rc3，尚未正式发布
+>
 > **许可证：** GPL-2.0+
 
 ## 概述
@@ -30,7 +32,7 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 - **坐标参考系**：内置 6000+ EPSG 投影，自动 ST_Transform
 - **数据导入导出**：与 GDAL/ogr2ogr/shp2pgsql 无缝集成
 
-**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.4；3.7 仍处 RC 阶段、尚未正式发布，候选版为 3.7.0rc2，截至 2026-10）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
+**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.4；3.7 仍处 RC 阶段，候选版为 3.7.0rc3，截至 2026-10）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
 
 ---
 
@@ -191,14 +193,63 @@ SELECT ST_Clip(rast, geom, true) FROM dem, region WHERE region.id=1;
 
 ---
 
-## 典型工作流
+## 典型工作流：Shapefile 入 PostGIS → 空间连接 → 导出 GeoJSON
 
-1. **安装扩展**：`CREATE EXTENSION postgis;` 启用空间功能
-2. **建表**：包含 `geometry(Point, 4326)` 或 `geography(Point, 4326)` 类型的几何列
-3. **建索引**：`CREATE INDEX ON table USING GIST(geom)` —— 必建空间索引
-4. **导入数据**：使用 `shp2pgsql`（Shapefile）、`ogr2ogr`（通用）、`raster2pgsql`（栅格）
-5. **空间查询**：用 `&&` 先做包围盒粗筛（走 GiST 索引），再用 `ST_Within`/`ST_Intersects` 精筛
-6. **验证结果**：`EXPLAIN ANALYZE` 查看查询计划，确认索引被使用
+**输入**：`data/poi.shp`（点，EPSG:4326）、`data/districts.shp`（面，EPSG:4326）。
+
+**步骤 1 —— 入库并建索引**（`shp2pgsql -I` 自动建 GiST 索引，`-s 4326` 指定 SRID）：
+
+```bash
+shp2pgsql -s 4326 -I -W UTF-8 data/poi.shp public.poi \
+  | psql -d gisdb -v ON_ERROR_STOP=1
+shp2pgsql -s 4326 -I -W UTF-8 data/districts.shp public.districts \
+  | psql -d gisdb -v ON_ERROR_STOP=1
+psql -d gisdb -c "VACUUM ANALYZE poi, districts;"
+```
+
+**步骤 2 —— 空间连接**（点落在哪个区；先用 `&&` 走索引再 `ST_Within` 精筛）：
+
+```sql
+CREATE TABLE poi_with_district AS
+SELECT p.id, p.name, d.name AS district, p.geom
+FROM poi AS p
+JOIN districts AS d
+  ON p.geom && d.geom           -- 包围盒粗筛，走 GiST
+ AND ST_Within(p.geom, d.geom); -- 精确判断
+
+CREATE INDEX ON poi_with_district USING GIST (geom);
+```
+
+**步骤 3 —— 导出 GeoJSON**（`-t_srs EPSG:4326` 保证输出为经纬度）：
+
+```bash
+ogr2ogr -f GeoJSON out/poi_with_district.geojson \
+  "PG:host=localhost dbname=gisdb user=postgres" poi_with_district \
+  -t_srs EPSG:4326
+```
+
+**输出与验收**：
+
+```sql
+-- 落在区内的点数（INNER JOIN 会过滤掉区外的点，因此 <= POI 总数）
+SELECT count(*) FROM poi_with_district;
+
+-- 未匹配数 = POI 总数 - 已匹配数（差值即落在所有区之外的点）
+SELECT (SELECT count(*) FROM poi)
+     - (SELECT count(*) FROM poi_with_district) AS unmatched;
+
+-- SRID 应为 4326
+SELECT ST_SRID(geom) FROM poi_with_district LIMIT 1;
+
+-- 确认连接走 GiST：计划里应出现 poi_geom_idx 上的 Index/Bitmap Index Scan
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT count(*) FROM poi AS p JOIN districts AS d
+  ON p.geom && d.geom AND ST_Within(p.geom, d.geom);
+```
+
+若两边 SRID 不一致，`&&` 会退化为逐行比较且可能报 `Operation on mixed SRID`；先 `ST_Transform` 统一到 4326 再入库。
+
+最后用 `ogrinfo -al -so out/poi_with_district.geojson` 核对要素数与字段，不要只凭 psql 的 `INSERT 0 n` 判定成功。
 
 ---
 

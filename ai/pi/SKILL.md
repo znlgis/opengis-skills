@@ -1,6 +1,6 @@
 ---
 name: pi
-description: "Use when needing a minimal, extensible terminal AI coding agent harness in TypeScript with plugin architecture. Pi: minimalist terminal AI coding agent emphasizing simplicity and composability."
+description: "Use when you need a minimal, extensible terminal AI coding agent harness in TypeScript — npm @earendil-works/pi-coding-agent 1.4.0, extensions/skills/prompt templates, multi-provider (OpenAI/Anthropic/Google) routing, container isolation (Docker/Gondolin/OpenShell); also for `pi: command not found`, Node >=22.19.0 engine errors, and EACCES on a global install. Pi: minimalist terminal coding agent."
 tags:
   - ai
   - agent
@@ -16,10 +16,9 @@ tags:
 >
 > **官网 / 文档：** <https://pi.dev> ｜ <https://pi.dev/docs/latest>
 >
-> **最新发布：** 参见 [GitHub Releases](https://github.com/earendil-works/pi/releases)
+> **npm：** `@earendil-works/pi-coding-agent`（最新 1.4.0，截至 2026-10；另有 `legacy-node20` 0.74.2 通道）
 >
 > **许可证：** MIT
-> **最新版本：** npm `latest` 1.2.0（另有 `legacy-node20` 0.74.2 通道）；迭代快，以 `pi --version` / npm 当前版本为准
 
 ## 概述
 
@@ -143,6 +142,9 @@ Pi 默认继承启动进程权限，不自带强制权限沙箱。生产建议�
 | 模型调用异常 | 核对 Provider API Key、Base URL 与模型名称配置 |
 | 想限制工具权限 | 使用容器化/沙箱运行，不要直接在高权限宿主机执行不受信任的任务 |
 | 团队想统一规范 | 将 Skills/模板/配置文件纳入仓库版本控制并走 PR 审查 |
+| 安装报 `EBADENGINE` / `Unsupported engine` | Node 版本低于 22.19.0：升级 Node，或改用 `legacy-node20` 通道的 0.74.2 |
+| 全局安装报 `EACCES` | 不要用 `sudo npm i -g`：改 `npm config set prefix ~/.npm-global` 后重装，或改用 nvm/npx |
+| `npm install` 在源码里跑构建脚本失败 | monorepo 用官方流程：`npm install --ignore-scripts && npm run build` |
 
 ---
 

@@ -20,7 +20,7 @@ tags:
 >
 > **在线文档：** <https://docs.qgis.org/4.2/en/docs/user_manual/processing/standalone.html>
 >
-> **最新版本：** QGIS 4.2.3；3.44 LTR 最新 3.44.15（截至2026-10，GitHub Releases；`qgis_process` 自 QGIS 3.16 起可用）
+> **最新版本：** QGIS 4.2.3；3.44 LTR 最新 3.44.15（截至 2026-10，GitHub Releases；`qgis_process` 自 QGIS 3.16 起可用）
 >
 > **许可证：** GPL-2.0+
 
@@ -300,17 +300,70 @@ qgis_process run /path/to/my_script.py -- INPUT=data.shp OUTPUT=result.shp
 
 ---
 
-> 常用内置算法速查、参数类型参考与典型工作流示例见 [reference/algorithm-cheatsheet.md](reference/algorithm-cheatsheet.md)
+> 常用内置算法速查与参数类型参考见 [reference/algorithm-cheatsheet.md](reference/algorithm-cheatsheet.md)
 
-## DeepSeek Harness 使用建议
+## 典型工作流
 
-- **加载与引用**：用 `skill("qgis-process")` 加载（用户也可输入 `/qgis-process`）；`reference/algorithm-cheatsheet.md` 按需 `read`，但算法参数一律以 `qgis_process help <id> --json` 的实时输出为准；技能目录只读，输出数据写会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。Windows 下 `qgis_process` 在 `C:\Program Files\QGIS 4.2\bin`（LTR 为 `C:\Program Files\QGIS 3.44\bin`）或 OSGeo4W Shell 里；PowerShell 设 `$env:QT_QPA_PLATFORM = "offscreen"`，不要照抄 `export`。
-- **先探测版本**：`qgis_process --version`（QGIS 4.2.3 或 LTR 3.44.15）、`qgis_process list`；低于 3.16 没有 `qgis_process`，只能改用 PyQGIS 脚本；`--no-python`、`--skip-loading-plugins` 可显著加快启动。
-- **验证产物**：`run ... --json` 里的 `results.OUTPUT` 是实际写出的绝对路径，再用 `ogrinfo -so`（矢量）或 `gdalinfo -json`（栅格）核对要素数、CRS、范围；日志中出现 `returned non-zero` 说明算法内部失败，不要只看进程退出码。
-- **参数约定**：`--` 之后的参数不带前导 `--`；枚举传数字索引（`help --json` 里的 `available_options` 是映射表）；多值参数重复同一键（`LAYERS=a.shp LAYERS=b.shp`）；路径含空格或中文时加引号，尽量用绝对路径。
-- **常见报错**：`Algorithm <id> not found!` 先查 provider 前缀（`native:`、`gdal:`、`grass:`），`The following mandatory parameters were not specified` 回看 `help --json`，`requires a QGIS project to execute` 补 `--project_path`。
-- **安全与权限**：`OUTPUT=` 指向已有文件会被覆盖；`--project_path` 会加载项目内的数据源与凭证，注意不要把含密码的项目传给外部环境；启动 Docker 或安装 QGIS 前先征得用户同意，长任务放后台作业。
+目标：把 `data/points.shp` 做 50 m 缓冲区写入 GeoPackage，并在 CI 中批量重复同一流程。
+
+### 1. 先用 help 确认参数，不要凭记忆
+
+```bash
+qgis_process help native:buffer --json > buffer-help.json
+```
+
+读取 `parameters` 中 `INPUT` / `DISTANCE` / `SEGMENTS` / `OUTPUT` 的名称与类型；`DISTANCE` 是 `distance` 类型，单位取图层 CRS 单位（投影坐标系下即米，地理坐标系下是度，极易算错）。
+
+### 2. 运行算法写出 GPKG
+
+```bash
+qgis_process run native:buffer --json -- \
+  INPUT=data/points.shp \
+  DISTANCE=50 \
+  SEGMENTS=8 \
+  DISSOLVE=false \
+  OUTPUT=out/points_buffer_50m.gpkg
+```
+
+`results.OUTPUT` 是实际写出的绝对路径，用它决定后续校验对象，不要自己拼路径。
+
+### 3. 校验产物
+
+```bash
+ogrinfo -so out/points_buffer_50m.gpkg points_buffer_50m
+```
+
+核对要素数、CRS、几何类型；GPKG 内图层名默认取输出文件名（去扩展名）。`log` 里出现 `returned non-zero` 时即使进程退出码为 0 也算失败。
+
+### 4. 批量循环（CI 脚本）
+
+```bash
+mkdir -p out
+for f in data/*.shp; do
+  base=$(basename "$f" .shp)
+  qgis_process run native:buffer --json -- \
+    INPUT="$f" DISTANCE=50 OUTPUT="out/${base}_buffer.gpkg" \
+    || { echo "FAILED: $f" >&2; exit 1; }
+done
+```
+
+每次 `run` 都会新起一个 QGIS 进程（数秒开销）；文件量大时改用 PyQGIS 的 `processing.run()` 在单进程内循环，见 [../pyqgis/SKILL.md](../pyqgis/SKILL.md)。
+
+输入 `data/points.shp` → `native:buffer` → `out/points_buffer_50m.gpkg` → `ogrinfo` 校验，构成 qgis_process 批处理的最小闭环。
+
+## 常见问题
+
+| 问题 | 解决方案 |
+|------|---------|
+| 提示 `command not found: qgis_process` | 将 QGIS 的 `bin` 目录加入 `PATH`；Windows 下改用 OSGeo4W Shell 运行 |
+| 无显示器的服务器上崩溃或卡住 | 设置环境变量 `QT_QPA_PLATFORM=offscreen` |
+| `Algorithm <id> not found!` | 用 `qgis_process list` 确认算法 ID 与 Provider 前缀（如 `native:`、`gdal:`） |
+| 缺少必填参数 | 先用 `qgis_process help <id> --json` 查看参数名、类型与默认值 |
+| 枚举参数报错 | 枚举值需传数字索引，`help --json` 中的 `available_options` 提供索引映射 |
+| 多值参数只生效一项 | 在 `--` 之后多次指定同一参数（如 `LAYERS=a.shp LAYERS=b.shp`） |
+| 路径含空格或中文时报错 | 使用绝对路径并对参数值加引号 |
+| 启动速度慢 | 不需要 Python/插件时添加 `--no-python` 与 `--skip-loading-plugins` |
+| 模型/脚本或算法不可用 | 报 `File <path> is not a valid Processing model!` / `... is not a valid Processing script!` / `not available for use outside of the QGIS desktop application` 时，改用 QGIS 桌面或 PyQGIS 脚本 |
 
 ---
 
@@ -329,19 +382,15 @@ qgis_process run /path/to/my_script.py -- INPUT=data.shp OUTPUT=result.shp
 
 ---
 
-## 常见问题
+## DeepSeek Harness 使用建议
 
-| 问题 | 解决方案 |
-|------|---------|
-| 提示 `command not found: qgis_process` | 将 QGIS 的 `bin` 目录加入 `PATH`；Windows 下改用 OSGeo4W Shell 运行 |
-| 无显示器的服务器上崩溃或卡住 | 设置环境变量 `QT_QPA_PLATFORM=offscreen` |
-| `Algorithm <id> not found!` | 用 `qgis_process list` 确认算法 ID 与 Provider 前缀（如 `native:`、`gdal:`） |
-| 缺少必填参数 | 先用 `qgis_process help <id> --json` 查看参数名、类型与默认值 |
-| 枚举参数报错 | 枚举值需传数字索引，`help --json` 中的 `available_options` 提供索引映射 |
-| 多值参数只生效一项 | 在 `--` 之后多次指定同一参数（如 `LAYERS=a.shp LAYERS=b.shp`） |
-| 路径含空格或中文时报错 | 使用绝对路径并对参数值加引号 |
-| 启动速度慢 | 不需要 Python/插件时添加 `--no-python` 与 `--skip-loading-plugins` |
-| 模型/脚本或算法不可用 | 报 `File <path> is not a valid Processing model!` / `... is not a valid Processing script!` / `not available for use outside of the QGIS desktop application` 时，改用 QGIS 桌面或 PyQGIS 脚本 |
+- **加载与引用**：用 `skill("qgis-process")` 加载（用户也可输入 `/qgis-process`）；`reference/algorithm-cheatsheet.md` 按需 `read`，但算法参数一律以 `qgis_process help <id> --json` 的实时输出为准；技能目录只读，输出数据写会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。Windows 下 `qgis_process` 在 `C:\Program Files\QGIS 4.2\bin`（LTR 为 `C:\Program Files\QGIS 3.44\bin`）或 OSGeo4W Shell 里；PowerShell 设 `$env:QT_QPA_PLATFORM = "offscreen"`，不要照抄 `export`。
+- **先探测版本**：`qgis_process --version`（QGIS 4.2.3 或 LTR 3.44.15）、`qgis_process list`；低于 3.16 没有 `qgis_process`，只能改用 PyQGIS 脚本；`--no-python`、`--skip-loading-plugins` 可显著加快启动。
+- **验证产物**：`run ... --json` 里的 `results.OUTPUT` 是实际写出的绝对路径，再用 `ogrinfo -so`（矢量）或 `gdalinfo -json`（栅格）核对要素数、CRS、范围；日志中出现 `returned non-zero` 说明算法内部失败，不要只看进程退出码。
+- **参数约定**：`--` 之后的参数不带前导 `--`；枚举传数字索引（`help --json` 里的 `available_options` 是映射表）；多值参数重复同一键（`LAYERS=a.shp LAYERS=b.shp`）；路径含空格或中文时加引号，尽量用绝对路径。
+- **常见报错**：`Algorithm <id> not found!` 先查 provider 前缀（`native:`、`gdal:`、`grass:`），`The following mandatory parameters were not specified` 回看 `help --json`，`requires a QGIS project to execute` 补 `--project_path`。
+- **安全与权限**：`OUTPUT=` 指向已有文件会被覆盖；`--project_path` 会加载项目内的数据源与凭证，注意不要把含密码的项目传给外部环境；启动 Docker 或安装 QGIS 前先征得用户同意，长任务放后台作业。
 
 ---
 

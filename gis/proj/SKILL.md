@@ -20,7 +20,7 @@ tags:
 >
 > **命令行文档：** <https://proj.org/en/stable/apps/index.html>
 >
-> **最新版本：** 9.9.0（截至 2026-10，PROJ 版本号即其数据版本）
+> **最新版本：** 9.9.0（截至 2026-10）
 >
 > **许可证：** MIT
 
@@ -147,14 +147,16 @@ projinfo --dump-db-structure
 ### cs2cs — 坐标系转换
 
 ```bash
-# EPSG 代码：WGS 84 经纬度 → UTM 31N（EPSG 轴序为纬度在前）
+# EPSG 代码：WGS 84 经纬度 → UTM 32N（EPSG:4326 轴序为纬度在前，故 56 是纬度、12 是经度）
 echo 56 12 | cs2cs EPSG:4326 EPSG:25832
 
-# 多行输入
-cs2cs EPSG:4326 EPSG:32631 <<EOF
+# 多行输入（45N 为纬度、2E 为经度）
+cs2cs EPSG:4326 EPSG:32631 <<'EOF'
 45N 2E
 EOF
 ```
+
+> **轴序要点：** 输入 `AUTHORITY:CODE` 或 WKT 时按该 CRS 定义的轴序解析，`EPSG:4326` 是纬度在前；用 `-r` 反转输入、`-s` 反转输出。下文示例一律先纬度后经度。
 
 PROJ 字符串写法（`+to` 分隔源与目标）：
 
@@ -242,8 +244,9 @@ projsync --list-files
 ### 模式 1：WGS 84 经纬度 → UTM / Web Mercator
 
 ```bash
-echo 116.391 39.907 | cs2cs EPSG:4326 EPSG:32650   # 北京 → UTM 50N
-echo 116.391 39.907 | cs2cs EPSG:4326 EPSG:3857    # → Web Mercator
+# 先纬度后经度：39.907 是纬度、116.391 是经度（北京）
+echo 39.907 116.391 | cs2cs EPSG:4326 EPSG:32650   # 北京 → UTM 50N
+echo 39.907 116.391 | cs2cs EPSG:4326 EPSG:3857    # → Web Mercator
 ```
 
 ### 模式 2：CGCS2000 中国坐标系操作
@@ -255,8 +258,8 @@ projinfo EPSG:4490
 # 查询 3 度带高斯-克吕格投影（114E 中央经线，即 38 带）
 projinfo EPSG:4547
 
-# WGS 84 经纬度 → CGCS2000 3 度带投影
-echo 114.0 30.5 | cs2cs EPSG:4326 EPSG:4547
+# WGS 84 经纬度 → CGCS2000 3 度带投影（30.5N 114.0E，纬度在前）
+echo 30.5 114.0 | cs2cs EPSG:4326 EPSG:4547
 ```
 
 ### 模式 3：查找并确认转换路径
@@ -266,17 +269,15 @@ echo 114.0 30.5 | cs2cs EPSG:4326 EPSG:4547
 projinfo -s EPSG:4326 -t EPSG:4547 --summary
 
 # 再用 cs2cs 执行，必要时强制使用最佳转换
-echo 114.0 30.5 | cs2cs EPSG:4326 EPSG:4547 --only-best
+echo 30.5 114.0 | cs2cs EPSG:4326 EPSG:4547 --only-best
 ```
 
 ### 模式 4：批量转换坐标文本
 
 ```bash
 #!/bin/bash
-# 输入文件每行 "lon lat"，批量转为目标 CRS
-while read -r lon lat; do
-  echo "$lat $lon" | cs2cs EPSG:4326 EPSG:3857
-done < points.txt > points_3857.txt
+# 输入文件每行 "lat lon"（纬度在前，与 EPSG:4326 轴序一致）
+cs2cs EPSG:4326 EPSG:3857 points.txt > points_3857.txt
 ```
 
 ### 模式 5：为缺失网格下载数据
@@ -285,7 +286,7 @@ done < points.txt > points_3857.txt
 # 按目标区域下载转换网格后执行高精度转换
 projsync --bbox 73,18,135,54
 export PROJ_NETWORK=ON
-echo 116.391 39.907 | cs2cs EPSG:4326 EPSG:4547 --only-best
+echo 39.907 116.391 | cs2cs EPSG:4326 EPSG:4547 --only-best
 ```
 
 ---
@@ -316,15 +317,15 @@ echo 116.391 39.907 | cs2cs EPSG:4326 EPSG:4547 --only-best
 
 ---
 
-## 参考资源
+## DeepSeek Harness 使用建议
 
-- **官方文档：** <https://proj.org/> | [命令行工具](https://proj.org/en/stable/apps/index.html) | [快速上手](https://proj.org/en/stable/usage/quickstart.html) | [资源文件与 proj.db](https://proj.org/en/stable/resource_files.html)
-- **工具手册：** [projinfo](https://proj.org/en/stable/apps/projinfo.html) | [cs2cs](https://proj.org/en/stable/apps/cs2cs.html) | [proj](https://proj.org/en/stable/apps/proj.html) | [projsync](https://proj.org/en/stable/apps/projsync.html)
-- **转换原理：** <https://proj.org/en/stable/operations/operations_computation.html>
-- **EPSG 代码查询：** <https://epsg.io/>
-- **源码仓库：** <https://github.com/OSGeo/PROJ>
-
----
+- **加载与引用**：用 `skill("proj")` 加载（用户也可输入 `/proj`）；本技能没有 reference 子目录，正文即全部内容，更细的参数用 `projinfo --help`、`cs2cs --help`、`projinfo --list-crs` 现场查；技能目录只读，脚本与结果写到会话工作区。
+- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文的 `export PROJ_DATA=...` 在 PowerShell 写作 `$env:PROJ_DATA = "C:\OSGeo4W\share\proj"`；heredoc（`<<EOF`）在 pwsh 不可用，改用管道 `"56 12" | cs2cs EPSG:4326 EPSG:25832` 或先把输入写成文件再重定向。
+- **先探测版本**：`projinfo --version`（同时打印 `proj.db` 路径）、`projinfo --searchpaths`；本技能按 PROJ 9.9.0 编写，低于 9.1 用 `PROJ_LIB` 而非 `PROJ_DATA`，低于 9.3 的 `proj` 不能直接接受 `EPSG:xxxx`。
+- **验证转换**：用已知点对拍——`echo "39.907 116.391" | cs2cs EPSG:4326 EPSG:32650` 应得到东坐标约 44 万、北坐标约 442 万，量级不对通常是轴序或单位问题；结构化核对用 `projinfo -o PROJJSON -q EPSG:4326`，转换路径用 `projinfo -s A -t B --summary` 看候选操作与精度。
+- **轴序与降级**：`EPSG:4326` 纬度在前（输入先 lat 后 lon），`proj` 命令内部经度在前要用 `-r`；高精度转换加 `--only-best`，否则缺网格时会静默退回精度更低的操作。
+- **大输出处理**：`projinfo EPSG:4326` 的 WKT 有上百行，重定向到文件再分段 `read`；批量转换把 `cs2cs EPSG:4326 EPSG:3857 points.txt` 一次跑完，不要逐行起进程。
+- **安全与权限**：`projsync --all` 会从 CDN 下载数 GB 网格、`PROJ_NETWORK=ON` 也会联网，先确认网络与磁盘；`sqlite3 proj.db` 只做只读查询，不要写库；改 `PROJ_DATA` 会影响同机 GDAL/PostGIS，先征得用户同意。
 
 ## 相关技能
 
@@ -335,12 +336,10 @@ echo 116.391 39.907 | cs2cs EPSG:4326 EPSG:4547 --only-best
 
 ---
 
-## DeepSeek Harness 使用建议
+## 参考资源
 
-- **加载与引用**：用 `skill("proj")` 加载（用户也可输入 `/proj`）；本技能没有 reference 子目录，正文即全部内容，更细的参数用 `projinfo --help`、`cs2cs --help`、`projinfo --list-crs` 现场查；技能目录只读，脚本与结果写到会话工作区。
-- **执行环境**：命令交给 dsh 的 shell 工具（Windows 用 `pwsh`；仅暴露 `run_code` 的会话在 `tools.pwsh` 中执行）。正文的 `export PROJ_DATA=...` 在 PowerShell 写作 `$env:PROJ_DATA = "C:\OSGeo4W\share\proj"`；heredoc（`<<EOF`）在 pwsh 不可用，改用管道 `"56 12" | cs2cs EPSG:4326 EPSG:25832` 或先把输入写成文件再重定向。
-- **先探测版本**：`projinfo --version`（同时打印 `proj.db` 路径）、`projinfo --searchpaths`；本技能按 PROJ 9.9.0 编写，低于 9.1 用 `PROJ_LIB` 而非 `PROJ_DATA`，低于 9.3 的 `proj` 不能直接接受 `EPSG:xxxx`。
-- **验证转换**：用已知点对拍——`echo "116.391 39.907" | cs2cs EPSG:4326 EPSG:32650` 应得到东坐标约 45 万、北坐标约 442 万，量级不对通常是轴序或单位问题；结构化核对用 `projinfo -o PROJJSON -q EPSG:4326`，转换路径用 `projinfo -s A -t B --summary` 看候选操作与精度。
-- **轴序与降级**：`EPSG:4326` 纬度在前（输入先 lat 后 lon），`proj` 命令内部经度在前要用 `-r`；高精度转换加 `--only-best`，否则缺网格时会静默退回精度更低的操作。
-- **大输出处理**：`projinfo EPSG:4326` 的 WKT 有上百行，重定向到文件再分段 `read`；批量转换把 `cs2cs EPSG:4326 EPSG:3857 points.txt` 一次跑完，不要逐行起进程。
-- **安全与权限**：`projsync --all` 会从 CDN 下载数 GB 网格、`PROJ_NETWORK=ON` 也会联网，先确认网络与磁盘；`sqlite3 proj.db` 只做只读查询，不要写库；改 `PROJ_DATA` 会影响同机 GDAL/PostGIS，先征得用户同意。
+- **官方文档：** <https://proj.org/> | [命令行工具](https://proj.org/en/stable/apps/index.html) | [快速上手](https://proj.org/en/stable/usage/quickstart.html) | [资源文件与 proj.db](https://proj.org/en/stable/resource_files.html)
+- **工具手册：** [projinfo](https://proj.org/en/stable/apps/projinfo.html) | [cs2cs](https://proj.org/en/stable/apps/cs2cs.html) | [proj](https://proj.org/en/stable/apps/proj.html) | [projsync](https://proj.org/en/stable/apps/projsync.html)
+- **转换原理：** <https://proj.org/en/stable/operations/operations_computation.html>
+- **EPSG 代码查询：** <https://epsg.io/>
+- **源码仓库：** <https://github.com/OSGeo/PROJ>

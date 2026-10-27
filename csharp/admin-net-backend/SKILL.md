@@ -1,6 +1,6 @@
 ---
 name: admin-net-backend
-description: "Use when building .NET admin/backend management systems with Furion framework — user/role/permission management, CRUD code generation, API documentation. Admin.NET: Furion-based enterprise admin backend scaffold."
+description: "Use when building or extending a Furion + SqlSugar admin backend — SysUserService/SysRoleService/SysMenuService RBAC, EntityBase/EntityBaseData/EntityTenant inheritance, Yitter snowflake ids, soft delete, code generator, plugin projects. Also for duplicate-key errors after enabling DB identity on Id, deleted rows still visible, and APIs missing from the Swagger group. Admin.NET: enterprise admin scaffold."
 tags:
   - dotnet
   - webapi
@@ -16,7 +16,7 @@ tags:
 >
 > **后端代码目录：** `Admin.NET/`（.NET 解决方案）
 >
-> **当前版本：** v2.4.x（upstream 分支 `v2` 的 `Web/package.json` 为 2.4.33，仓库最近推送 2026-03-30；后端 TFM `net8.0;net10.0`）
+> **当前版本：** v2.4.x（`Web/package.json` 为 2.4.33；upstream `v2` 分支最后提交 2026-01-30，znlgis 维护 `v2` 分支最后提交 2026-03-26；后端 TFM `net8.0;net10.0`，截至 2026-10 实测）
 >
 > **在线文档：** <https://adminnet.top/>
 >
@@ -99,12 +99,30 @@ Admin.NET/                         # 后端解决方案根目录
 - 数据库（SQLite 默认 / MySQL / SQL Server / PostgreSQL / Oracle / 达梦等）
 - Redis（可选，用于缓存和 SignalR 背板）
 
+### 获取代码
+
+```bash
+# 方式一：克隆维护分支
+git clone --depth 1 https://github.com/znlgis/Admin.NET.git
+git clone --depth 1 https://github.com/zuohuaijun/Admin.NET.git   # 上游镜像
+
+# 方式二：官网/文档站下载源码包，解压后用 VS 2022+ 打开 Admin.NET.sln
+# 方式三：直接用 GitCode / Gitee 镜像（国内网络）
+# git clone --depth 1 https://gitee.com/zuohuaijun/Admin.NET.git
+```
+
 ### 运行后端
 
 ```bash
 cd Admin.NET
 dotnet restore Admin.NET.sln
 dotnet run --project Admin.NET.Web.Entry
+```
+
+```bash
+# 验证：SDK 版本与还原结果
+dotnet --version
+dotnet list package | grep -iE 'furion|sqlsugar'
 ```
 
 启动后默认访问 `https://localhost:5005`，Swagger 文档地址：`https://localhost:5005/api`
