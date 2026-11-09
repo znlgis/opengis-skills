@@ -15,7 +15,7 @@ metadata:
 >
 > **许可证：** Apache-2.0（README 声明个人学习与二次开发免费、商业使用需授权，以仓库为准）
 >
-> **最新版本：** 1.0.0（GitHub Release 与 npm `astral3d` 同为 1.0.0；`@astral3d/engine` 亦为 1.0.0，截至 2026-11，见 [Releases](https://github.com/mlt131220/Astral3D/releases)）
+> **最新版本：** 1.0.0（GitHub Release 与 npm `astral3d` 同为 1.0.0；工作区包 `@astral3d/engine`（`packages/sdk`）源码版本同为 1.0.0，但它未单独发布到 npm —— 查询 `registry.npmjs.org/@astral3d/engine` 返回 404；截至 2026-11，见 [Releases](https://github.com/mlt131220/Astral3D/releases)）
 >
 > **包管理器：** pnpm workspace（`packageManager: pnpm@10.8.1`）；npm 包 `astral3d` 1.0.0 因保留 `catalog:` 依赖**不能**直接 `npm install`
 >

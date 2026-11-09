@@ -29,7 +29,7 @@ metadata:
 
 ## 概述
 
-RobotGo 是 Go 生态中最成熟的桌面自动化库（GitHub 10.8k+ Star），核心能力覆盖 RPA 全链路：
+RobotGo 是 Go 生态中最成熟的桌面自动化库（GitHub 约 11k Star，截至 2026-11），核心能力覆盖 RPA 全链路：
 
 | 能力域 | 主要 API |
 |--------|---------|
@@ -50,7 +50,7 @@ RobotGo 是 Go 生态中最成熟的桌面自动化库（GitHub 10.8k+ Star）�
 
 ### 前置条件
 
-- **Go 1.21+**（推荐 1.24+）
+- **Go 1.26+**（v1.3.7 的 `go.mod` 声明 `go 1.26.0`；v1.0.0 需 1.24+，v2.0.0-beta4 需 1.25+）
 - **GCC 工具链**（Cgo 模式必需）
 
 ### 平台安装
@@ -421,7 +421,7 @@ robotgo.KeySleep = 50                      // 键盘操作后等待 50ms
 | Linux 剪贴板报错 | 未安装 xsel/xclip | `apt install xsel xclip` |
 | Wayland 下无法工作 | Wayland 不支持 X11 协议 | 使用 `-tags wayland`（wlroots）或 `-tags libei`（GNOME/KDE） |
 | `bitmap.Find` 总返回 -1,-1 | 模板与截图环境不一致 | 确保相同分辨率/DPI/缩放/主题下截取模板 |
-| Go 1.10.x 编译报错 | Go #24355 缓存 Bug | 升级 Go 到 1.21+ |
+| Go 版本过低导致编译报错 | 老版本 Go 存在缓存 Bug（Go #24355），且 v1.3.7 的 `go.mod` 要求 `go 1.26.0` | 升级到 Go 1.26+（`go version` 自检） |
 | libei 后端截图失败 | libei 仅处理输入 | libei 后端不支持截图/窗口管理，使用 Cgo 模式 |
 
 ---

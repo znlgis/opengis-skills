@@ -1,6 +1,6 @@
 ---
 name: others
-description: "Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, SSL/TLS certificate automation, Docker Compose multi-container orchestration, FFmpeg audio/video transcoding or HLS slicing, or building a bilingual children's Phaser/Vue game collection. Index of 10 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh, CHAGS, BambooBuddy, FFmpeg, Docker Compose."
+description: "Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, SSL/TLS certificate automation, Docker Compose multi-container orchestration, FFmpeg audio/video transcoding or HLS slicing, or building a bilingual children's Phaser/Vue game collection. Index of 11 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh, CHAGS, BambooBuddy, MathMindForge, FFmpeg, Docker Compose."
 license: MIT
 metadata:
   category: others
@@ -10,11 +10,11 @@ metadata:
 > **仓库地址：** <https://github.com/znlgis/opengis-skills>
 > **许可证：** MIT
 >
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 115 技能总索引
 
 ## 概述
 
-本分类当前涵盖 **10 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 与项目演示（demos）的通用工具、编程语言与独立项目。
+本分类当前涵盖 **11 个其它技能文件**，收录不归属于 GIS、CAD、C#、AI、IoT、3D 与项目演示（demos）的通用工具、编程语言与独立项目。
 
 ### 何时加载此索引？
 
@@ -25,6 +25,7 @@ metadata:
 - 需要 Java 微服务后台管理脚手架（Spring Boot 4 / 3 + Spring Cloud）
 - 需要自动申请 / 部署 / 续期免费 SSL/TLS 证书（Let's Encrypt 等）
 - 需要开发 / 扩展儿童向 H5 游戏合集（Phaser + Vue 3，中英双语）
+- 需要开发数学思维闯关游戏（自动判题、证据链、20 关 6 模板）
 - 需要音视频转码、HLS 切片、抽帧或 RTSP 拉流（FFmpeg）
 - 寻找可替代商业方案的开源自托管工具
 
@@ -44,6 +45,7 @@ metadata:
 | [docker-compose](./docker-compose/SKILL.md) | 声明式多容器 Docker 编排（compose.yaml） | `docker` `containers` `orchestration` `yaml` |
 | [bamboobuddy](./bamboobuddy/SKILL.md) | 儿童日常养成游戏（pnpm workspace + Vue3 + Phaser） | `vue` `phaser` `game` `education` |
 | [ffmpeg](./ffmpeg/SKILL.md) | 音视频转码、切片与帧提取（RTSP/HLS/抽帧） | `video` `transcoding` `hls` `cli` |
+| [mathmindforge](./mathmindforge/SKILL.md) | 数思工坊：数学思维闯关游戏（Vue3 + Phaser，20 关 6 模板） | `vue` `phaser` `game` `education` |
 
 ---
 
@@ -69,6 +71,8 @@ metadata:
 | "扩展 CHAGS：新增一个典故小游戏" | `chags/SKILL.md` |
 | "Phaser 场景 / 契约层 / 存档复习调度" | `chags/SKILL.md` |
 | "儿童养成类小游戏怎么做" | `bamboobuddy/SKILL.md` |
+| "数学思维闯关 / 自动判题关卡怎么做" | `mathmindforge/SKILL.md` |
+| "动作驱动运行时 / 一个玩法包承载多关" | `mathmindforge/SKILL.md` |
 | "视频转码 / 截取帧做贴图 / HLS 切片" | `ffmpeg/SKILL.md` |
 | "从视频/全景图批量抽帧" | `ffmpeg/SKILL.md` |
 

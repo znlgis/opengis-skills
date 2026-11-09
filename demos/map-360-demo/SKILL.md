@@ -13,7 +13,7 @@ metadata:
 >
 > **最新版本：** 1.0.0（仓库 `package.json`）；依赖 Photo Sphere Viewer 5.15.1（core/markers/plan/cubemap 等插件同版本）/ Vue 3.5.42 / Vite 8.2.2 / TypeScript 6.0.3（截至 2026-11，取自 [`package.json`](https://github.com/znlgis/map-360-demo/blob/main/package.json)）
 >
-> **许可证：** 以仓库为准
+> **许可证：** MIT（仓库根 `LICENSE`，截至 2026-11）
 
 ## 概述
 
@@ -53,7 +53,7 @@ npm run build        # 类型检查 + 生产构建，输出 dist/
 npm run preview      # 预览生产构建
 ```
 
-- Node.js 20+（Vite 8 对 Node 版本要求较高，教程建议 20 或更高）
+- Node.js 20.19+ 或 22.12+（Vite 8 的 `engines` 为 `^20.19.0 || >=22.12.0`）
 - 全景图片与地图瓦片均来自公共资源（PSV 官方 CDN / OpenStreetMap），**运行与预览均需联网**
 
 ## 项目结构
@@ -284,7 +284,7 @@ watch(markers, (val) => {
 |------|---------|
 | 全景图或地图瓦片加载失败 | 图片与瓦片来自公共资源（PSV CDN / OpenStreetMap），确认网络可访问外网 |
 | 5173 端口被占用 | 使用 `npm run dev -- --port 8080` 指定其他端口 |
-| 提示 Node 版本过低 | 升级到 Node 20+（Vite 8 要求较高 Node 版本），可用 nvm 切换 |
+| 提示 Node 版本过低 | 升级到 Node 20.19+ 或 22.12+（Vite 8 的 `engines`），可用 nvm 切换 |
 | 地图显示为灰色空面板 | 检查是否误用 `configureLeaflet`；移除该选项，改用 `getLeaflet()` 挂载事件 |
 | 导入 JSON 后标记没有全部出现 | 导入会过滤非法数据、场景不存在及 link 目标缺失的标记，并重新分配 id；用「导出」的 JSON 做对照检查 |
 | 刷新后标记丢失或想还原 | 数据由 `localStorage` 持久化；「恢复默认」深拷贝 `DEFAULT_MARKERS` 一键还原 |
@@ -295,7 +295,7 @@ watch(markers, (val) => {
 
 ## AI 使用建议
 
-- **执行环境**：Node.js 20+（Vite 8 要求）+ npm；全景图片与地图瓦片来自公共 CDN，**运行和预览都需要联网**。
+- **执行环境**：Node.js 20.19+ 或 22.12+（Vite 8 的 `engines`）+ npm；全景图片与地图瓦片来自公共 CDN，**运行和预览都需要联网**。
 - **版本探测**：`node -v` + `npm ls @photo-sphere-viewer/core vite typescript`；PSV 主包与各插件必须同为 5.15.x，混版本会出现插件注册失败。
 - **产物验证**：`npm run typecheck` 与 `npm run build`（后者内含 `vue-tsc -b`）都要过；运行时验证看顶部场景下拉、地图中心/方位角同步、标记点击联动三处。
 - **核心文件**：`src/components/PsvContainer.vue` 是唯一直接操作 PSV 的组件（生命周期与插件注册），联动状态在 `src/composables/useAppState.ts`，场景与默认标记在 `src/data/scenes.ts`。

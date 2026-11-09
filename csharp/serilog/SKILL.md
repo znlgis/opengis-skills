@@ -15,7 +15,7 @@ metadata:
 >
 > **常用配套包：** `Serilog.Sinks.Console` 6.1.1 / `Serilog.Sinks.File` 7.0.0 / `Serilog.Settings.Configuration` 10.0.1 / `Serilog.Formatting.Compact` 3.0.0（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Serilog)）
 >
-> **目标框架：** net8.0 / net9.0 / net10.0 / netstandard2.0 / .NET Framework 4.6.2+
+> **目标框架：** net6.0 / net8.0 / net9.0 / net10.0 / netstandard2.0 / .NET Framework 4.6.2+
 >
 > **许可证：** Apache-2.0
 

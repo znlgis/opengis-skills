@@ -1,6 +1,6 @@
 ---
 name: openlayers-vue3-demo
-description: "Use when building a declarative OpenLayers map in Vue 3 with vue3-openlayers — WMS tile layers, a layer tree loaded from the GeoServer REST API, layer switcher / zoom / scale line / context menu controls, and a Vite dev proxy that injects Basic auth; also for an empty layer tree (401 on /rest/layers.json), blank WMS tiles from a flipped bbox or wrong CRS, and "Failed to resolve component: ol-map". Demo pairs Docker GeoServer + PostGIS + Nginx."
+description: "Use when building a declarative OpenLayers map in Vue 3 with vue3-openlayers — WMS tile layers, a layer tree loaded from the GeoServer REST API, layer switcher / zoom / scale line / context menu controls, and a Vite dev proxy that injects Basic auth; also for an empty layer tree (401 on /rest/layers.json), blank WMS tiles from a flipped bbox or wrong CRS, and \"Failed to resolve component: ol-map\". Demo pairs Docker GeoServer + PostGIS + Nginx."
 license: MIT
 metadata:
   category: demos
@@ -13,7 +13,7 @@ metadata:
 >
 > **最新版本：** 无发布版本（快照工程，`package.json` 为 0.0.0）；依赖 Vue 3.5 / vue3-openlayers 11.2 / Vite 5.4 / axios 1.7（截至 2026-11，取自 [`package.json`](https://github.com/znlgis/openlayers-vue3-demo/blob/main/package.json)）
 >
-> **许可证：** LGPL-2.1（以仓库为准）
+> **许可证：** LGPL-2.1（仓库根 `LICENSE` 为 GNU LGPL v2.1，截至 2026-11）
 
 ## 概述
 
@@ -316,7 +316,7 @@ export default defineConfig({
 ## AI 使用建议
 
 - **执行环境**：Node.js 18+ + npm；要看到图层树必须先起 GeoServer（默认 `http://127.0.0.1:8765/geoserver`），只看地图壳子可跳过。
-- **版本探测**：`node -v` + `npm ls vue3-openlayers vue vite`；本项目用 vue3-openlayers ^11.2 + Vite 5，v12 的组件命名有调整，升级前先对照官方迁移说明。
+- **版本探测**：`node -v` + `npm ls vue3-openlayers vue vite`；本项目用 vue3-openlayers ^11.2 + Vite 5。v12.0.0（2025-08-30）的破坏性变更在 peer 依赖（Node 22+、ol ^10.6、vue 3.5+）与 `ol-swipe-control` 的 `layerList` 拆分为 `layers`/`rightLayers`，升级前先对照官方 release notes。
 - **产物验证**：`npm run build` 通过；浏览器 Network 里 `/geoserver/rest/layers` 返回 200 JSON，勾选图层后出现 WMS 瓦片请求。
 - **两个核心文件**：`src/components/DemoMap.vue`（声明式地图 + 动态图层树 + 控件）与 `src/geoserver/Layers.js`（REST 封装，`GeoServerRestApi.js` 是聚合入口）；`main.js` 只负责 `app.use(OpenLayersMap)`。
 - **改造点**：换 GeoServer 地址/端口改 `vite.config.js` 的代理 `target` 并同步认证头；默认可见图层改 `DemoMap.vue` 的 `visible` 初值（示例是 `ne:countries`）。

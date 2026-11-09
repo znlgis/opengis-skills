@@ -11,7 +11,7 @@ metadata:
 >
 > **Maven GroupId：** `org.geotools`
 >
-> **最新版本：** 35.2（2026-10-16，[OSGeo Maven 仓库](https://repo.osgeo.org/repository/release/)）
+> **最新版本：** 35.2（2026-10-16，截至 2026-11，[OSGeo Maven 仓库](https://repo.osgeo.org/repository/release/)）
 >
 > **许可证：** LGPL 2.1
 >

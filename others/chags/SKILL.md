@@ -15,7 +15,7 @@ metadata:
 >
 > **包管理器：** pnpm 11.22.0（`packageManager` 字段锁版本）+ Node.js 24
 >
-> **版本：** `v0.1.3`（2026-10-28，[GitHub Releases](https://github.com/znlgis/CHAGS/releases)；仓库根 `package.json` 的 version 为 0.1.0）
+> **版本：** `v0.1.3`（2026-10-28，[GitHub Releases](https://github.com/znlgis/CHAGS/releases)；仓库根 `package.json` 的 version 为 0.1.0，截至 2026-11 仍为最新正式 tag）
 >
 > **许可证：** MIT
 
@@ -31,7 +31,7 @@ CHAGS（Chinese Historical Anecdotes Game Series，中国历史典故儿童游�
 | 分组 | `packages/content/src/groups.ts` 的 `GROUPS`：`allusion`（按 `yearApprox` 排）与 `stratagem`（按计策序号排），新增分组只改这张表 |
 | 双栈隔离 | Phaser 绝不进外壳首屏包，只在进入游戏时按需加载 |
 | 契约层 | `packages/game-kit` 定义 GameModule / GameContext / 事件协议，游戏与外壳互不认识 |
-| 玩法模板库 | 24 个模板 id（`packages/content/src/schema.ts` 的 `TEMPLATE_IDS`）：典故组 substitution / tap / place / aim / sort / trace / wait / beacon / mark / split / burrow / butcher；三十六计组 ruse / siege / borrow / stillness / window / show / twoline / read / matchup / probe / lure / chase / swap / chain（外加 story / reward 两个共用） |
+| 玩法模板库 | 26 个模板 id（`packages/content/src/schema.ts` 的 `TEMPLATE_IDS`）：典故组 substitution / tap / place / aim / sort / trace / wait / beacon / mark / split / burrow / butcher（12 个）；三十六计组 ruse / siege / borrow / stillness / window / show / twoline / read / matchup / probe / lure / chase / swap / chain（14 个） |
 | 内容驱动 | 典故 = 一份 JSON（zod schema 构建期校验），换典故不改代码 |
 | 记忆工程 | `keyMoment` 关键抉择 + `misconceptions` + transfer 迁移题 + 1/3/7/21/60 天复习调度 |
 | 质量门禁 | `pnpm verify` 六连跑 + Playwright 真实鼠标操作通关 + 体积守卫 |

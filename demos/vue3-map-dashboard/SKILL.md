@@ -13,7 +13,7 @@ metadata:
 >
 > **最新版本：** 1.0.0（仓库 `package.json`）；依赖 Vue 3.4 / Element Plus 2.5 / Vite 8.2 / pinyin-pro 3.27 / xlsx 0.20.3（截至 2026-11，取自 [`package.json`](https://github.com/znlgis/vue3-map-dashboard/blob/main/package.json)）
 >
-> **许可证：** 以仓库为准
+> **许可证：** LGPL-2.1（仓库根 `LICENSE` 为 GNU LGPL v2.1，截至 2026-11）
 
 ## 概述
 

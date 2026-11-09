@@ -9,7 +9,7 @@ metadata:
 
 > **项目地址：** <https://github.com/BruTile/BruTile>
 >
-> **最新版本：** 6.0.0（2025-10-27 发布，[GitHub Releases](https://github.com/BruTile/BruTile/releases) / NuGet `BruTile`、`BruTile.MbTiles`；目标框架 net8.0 / net9.0）
+> **最新版本：** 6.0.0（2025-10-27 发布，截至 2026-11，[GitHub Releases](https://github.com/BruTile/BruTile/releases) / NuGet `BruTile`、`BruTile.MbTiles`；目标框架 net8.0 / net9.0）
 >
 > **官方文档：** <https://github.com/BruTile/BruTile>
 >

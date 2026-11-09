@@ -1,6 +1,6 @@
 ---
 name: ai-water-front
-description: "Use when building or debugging a Vue 3 + OpenLayers water-utility dashboard wired to a Dify chat assistant — natural-language queries returning GeoJSON highlights, streaming SSE via fetch + ReadableStream, GeoServer REST layer toggling through a Vite dev proxy with Basic auth, resizable panels and localStorage layout; also for CORS/401 on /geoserver/rest and "no features highlighted" from a CRS mismatch. ai-water-front demo stack: Vue 3.3 + Vite 4 + ol 8 + axios."
+description: "Use when building or debugging a Vue 3 + OpenLayers water-utility dashboard wired to a Dify chat assistant — natural-language queries returning GeoJSON highlights, streaming SSE via fetch + ReadableStream, GeoServer REST layer toggling through a Vite dev proxy with Basic auth, resizable panels and localStorage layout; also for CORS/401 on /geoserver/rest and \"no features highlighted\" from a CRS mismatch. ai-water-front demo stack: Vue 3.3 + Vite 4 + ol 8 + axios."
 license: MIT
 metadata:
   category: demos
@@ -13,7 +13,7 @@ metadata:
 >
 > **最新版本：** 无发布版本（快照工程，`package.json` 仍为 0.0.0）；依赖 Vue 3.3 / Vite 4 / ol 8.1 / axios 1.7，未跟随上游升到 ol 10（取自仓库 [`package.json`](https://github.com/znlgis/ai-water-front/blob/main/package.json)，截至 2026-11）
 >
-> **许可证：** LGPL-2.1（以仓库为准）
+> **许可证：** LGPL-2.1（仓库根 `LICENSE` 为 GNU LGPL v2.1，截至 2026-11）
 
 ## 概述
 

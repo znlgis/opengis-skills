@@ -68,7 +68,7 @@ UMD 构建的库名为 `KeplerGl`，AMD 加载时同样以 `KeplerGl` 注册；�
 ```bash
 pip install keplergl==0.4.0
 
-# 或使用 conda
+# 或使用 conda（注意：conda-forge 当前仍停在 0.3.2，需要 0.4.0 请用 pip）
 conda install -c conda-forge keplergl
 ```
 

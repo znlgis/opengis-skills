@@ -13,7 +13,7 @@ metadata:
 >
 > **许可证：** MIT ｜ **语言：** Python（3.11 – 3.14，`requires-python = ">=3.11,<3.15"`）
 >
-> **最新版本：** v0.23.0（2026-11-05 发布，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
+> **最新版本：** v0.23.0（截至 2026-11，2026-11-05 发布，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
 
 ## 概述
 

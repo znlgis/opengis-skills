@@ -21,7 +21,7 @@ jobs:
       - name: Report upstream version drift
         id: drift
         continue-on-error: true
-        run: python scripts/check-upstream.py . --workers 12 --timeout 45 | tee drift.txt
+        run: python scripts/check-upstream.py . --workers 12 --timeout 45 --releases | tee drift.txt
       - name: Upload drift report
         uses: actions/upload-artifact@v4
         with:

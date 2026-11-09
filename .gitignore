@@ -1,5 +1,6 @@
 # 本地工具生成的临时文件
 .freebuff/
+.tmp/
 
 # 操作系统
 .DS_Store

@@ -1,6 +1,6 @@
 ---
 name: ruoyi-cloud
-description: "Use when scaffolding a Java Spring Cloud microservice backend — Nacos discovery and config, Spring Cloud Gateway auth filter, Sentinel rate limiting, Seata distributed transactions, RBAC menus, code generator for CRUD plus Vue pages. RuoYi-Cloud v3.6.8 (Spring Boot 4.0.3, Spring Cloud 2025.1.0, JDK 17). Also for services not registering in Nacos, 401 loops from token TTL drift, Seata rollback not firing on tx-service-group mismatch, and RuoYi UI vs Vue3 repo confusion."
+description: "Use when scaffolding a Java Spring Cloud microservice backend — Nacos discovery and config, Spring Cloud Gateway auth filter, Sentinel rate limiting, Seata distributed transactions, RBAC menus, code generator for CRUD plus Vue pages. RuoYi-Cloud v3.6.8 (master poms: Spring Boot 4.1.0, Spring Cloud 2025.1.2, Nacos 3.x, JDK 17). Also for services not registering in Nacos, 401 loops from token TTL drift, Seata rollback not firing on tx-service-group mismatch, and RuoYi UI vs Vue3 repo confusion."
 license: MIT
 metadata:
   category: others
@@ -19,7 +19,7 @@ metadata:
 >
 > **包管理器：** Maven（后端）+ npm（`ruoyi-ui` 前端）/ Docker Compose（`docker/docker-compose.yml`）
 >
-> **版本：** v3.6.8（发布于 2026-03-29，`master` 上的 `pom.xml` 仍为该版本，截至 2026-11；Spring Boot 4.0.3、Spring Cloud 2025.1.0、Spring Cloud Alibaba 2025.1.0.0、JDK 17）
+> **版本：** v3.6.8（发布于 2026-03-29，截至 2026-11 仍是最新正式 tag；`pom.xml` 的 `<version>` 仍为 3.6.8，但 `master` 的依赖已升到 Spring Boot 4.1.0 / Spring Cloud 2025.1.2 / Spring Cloud Alibaba 2025.1.0.0，JDK 17；`v3.6.8` tag 对应的是 Spring Boot 4.0.3 / Spring Cloud 2025.1.0）
 
 ## 概述
 
@@ -39,15 +39,15 @@ RuoYi-Cloud 主要特性：
 
 | 组件 | 版本 |
 |------|------|
-| RuoYi-Cloud | 3.6.8（最新，2026-03-29） |
-| Spring Boot | 4.0.3（v3.6.8 的 `pom.xml`）/ 3.5.16（`springboot3` 分支） |
-| Spring Cloud | 2025.1.0 |
+| RuoYi-Cloud | 3.6.8（最新 tag，2026-03-29） |
+| Spring Boot | 4.1.0（`master` 的 `pom.xml`；`v3.6.8` tag 为 4.0.3）/ 3.5.16（`springboot3` 分支） |
+| Spring Cloud | 2025.1.2（`master`；`v3.6.8` tag 为 2025.1.0） |
 | Spring Cloud Alibaba | 2025.1.0.0 |
 | JDK | 17（v3.6.8 的 `java.version`；老分支为 8） |
 | Maven | 3.9+ |
 | MySQL | 5.7+ / 8.0 |
 | Redis | 5.0+ |
-| Nacos | 2.x |
+| Nacos | 3.x（`master`；README 与 `docker/docker-compose.yml` 的 `nacos/nacos-server:v3.0.2`），`springboot2` 分支仍为 2.x |
 | Sentinel | 1.8+ |
 | Seata | 1.6+（可选） |
 | Node.js | 18+（`ruoyi-ui` 用 Vue CLI 5，建议 20 LTS） |
@@ -106,7 +106,7 @@ RuoYi-Cloud
 ├── ruoyi-visual
 │   ├── ruoyi-monitor    # Spring Boot Admin
 │   └── ruoyi-visual-name # Nacos / Sentinel UI 入口
-└── ruoyi-ui             # Vue 3 前端
+└── ruoyi-ui             # 自带前端（Vue 2.6 + Element UI 2.15 + Vue CLI）
 ```
 
 ---
@@ -349,7 +349,7 @@ sh deploy.sh web        # 前端
 | Java 微服务后台 | RuoYi-Cloud |
 | .NET 微服务后台 | Admin.NET（单体/插件式） |
 | 简单单体应用 | RuoYi（单体版） |
-| 前端定制 | RuoYi-Cloud 自带 Vue3 前端，也可替换为 React/Angular |
+| 前端定制 | 自带 `ruoyi-ui` 为 Vue 2 + Vue CLI；官方另有 RuoYi-Cloud-Vue3 / Vue3-TypeScript 独立仓库（Vue 3 + Vite + Pinia + Element Plus），也可替换为 React/Angular |
 
 ---
 

@@ -366,25 +366,25 @@ public class TorusGenerator : IGenerator
 
 **步骤 1：建项目、装包**
 
-@@F@@bash
+```bash
 dotnet new console -n MeshPipeline
 cd MeshPipeline
 dotnet add package Ara3D.SDK.Geometry
 dotnet add package Ara3D.IO.PLY
-@@F@@
+```
 
-@@F@@xml
+```xml
 <PropertyGroup>
   <TargetFramework>net8.0-windows</TargetFramework>
   <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 </PropertyGroup>
-@@F@@
+```
 
 缺 `AllowUnsafeBlocks` 时 `Ara3D.F8` 与 `Ara3D.Memory` 在编译期即失败。
 
 **步骤 2：读入并体检**
 
-@@F@@csharp
+```csharp
 using Ara3D.Geometry;
 using Ara3D.IO.PLY;
 
@@ -392,31 +392,31 @@ TriangleMesh3D mesh = PlyImporter.LoadMesh("input/scan.ply");
 
 Console.WriteLine($"points={mesh.Points.Count} faces={mesh.Triangles.Count}");
 Console.WriteLine($"bounds={mesh.Bounds.Min} .. {mesh.Bounds.Max}");
-@@F@@
+```
 
 坐标跑到 `1e6` 量级通常意味着源数据用了工程本地坐标系，需要在下一步平移到原点附近。
 
 **步骤 3：不可变变换**
 
-@@F@@csharp
+```csharp
 // 所有变换都返回新网格，绝不原地修改
 TriangleMesh3D normalized = mesh
     .Translate(new Vector3(-mesh.Bounds.Min.X, -mesh.Bounds.Min.Y, -mesh.Bounds.Min.Z))
     .Scale(0.001);   // 例如毫米 → 米
 
 Console.WriteLine($"after: {normalized.Points.Count} points");
-@@F@@
+```
 
 **步骤 4：写出 PLY 与 GLB**
 
-@@F@@csharp
+```csharp
 using Ara3D.Models;   // Model3D / Material
 
 normalized.WritePly("out/scan-normalized.ply");   // TriangleMesh3D 扩展方法
 
 var model = Model3D.Create(normalized, Material.Default);   // 网格包装成场景模型
 model.WriteGlb("out/scan-normalized.glb");                  // IModel3D 扩展方法
-@@F@@
+```
 
 `Model3D` 有来自 `TriangleMesh3D` 的隐式转换，单网格场景可把网格直接交给需要模型的 API。
 

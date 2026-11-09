@@ -63,8 +63,8 @@ conda-forge 的 `libspatialite` 为 5.1.0，Windows / macOS / Linux 均有构建
 ### 方式四：源码编译
 
 ```bash
-curl -LO https://www.gaia-gis.it/gaia-sins/libspatialite-5.1.0-RC0.tar.gz
-tar xzf libspatialite-5.1.0-RC0.tar.gz
+curl -LO https://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-5.1.0.tar.gz
+tar xzf libspatialite-5.1.0.tar.gz
 cd libspatialite-5.1.0
 ./configure --disable-rttopo      # 按需启用 GEOS/PROJ/RTTOPO 等依赖
 make -j"$(nproc)"

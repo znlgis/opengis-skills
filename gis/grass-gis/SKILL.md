@@ -27,7 +27,7 @@ GRASS GIS（Geographic Resources Analysis and Support System）是 OSGeo 创始�
 - **计算区域独立管理**：栅格模块在 `g.region` 定义的窗口上运算，与地图本身范围解耦。
 - **无头执行**：`grass --exec` / `--tmp-project` / `--tmp-mapset` 支持服务器与 CI 场景。
 - **时空框架**：`t.*` 模块管理 strds / str3ds / stvds 时空数据集。
-- **Python 接口**：`grass.script`（命令封装）、`grass.script.array`（NumPy 读写栅格）、`grass.tools`（8.4+ 面向对象工具调用）、`grass.jupyter`（笔记本集成）。
+- **Python 接口**：`grass.script`（命令封装）、`grass.script.array`（NumPy 读写栅格）、`grass.tools`（8.5+ 面向对象工具调用）、`grass.jupyter`（笔记本集成）。
 
 ## 环境准备
 
@@ -225,7 +225,7 @@ elev_ft.write(mapname="elev_ft", overwrite=True)
 elev3d = garray.array3d(mapname="elev3d")
 ```
 
-8.4+ 提供面向对象的工具调用接口 `grass.tools`（模块名中的点替换为下划线，支持 numpy 输入输出）：
+8.5+ 提供面向对象的工具调用接口 `grass.tools`（模块名中的点替换为下划线，支持 numpy 输入输出）；8.4.x 及更早版本没有该模块，只能用 `grass.script`：
 
 ```python
 from grass.tools import Tools
@@ -307,7 +307,7 @@ grass $HOME/grassdata/ndvi_project/PERMANENT --exec sh -c '
 ## AI 使用建议
 
 - **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）。正文里 `grass ... --exec sh -c '...'` 的多行引用在 PowerShell 下不可靠，改为把模块序列写进 `.py` 脚本（首行 `#!/usr/bin/env python3`），再 `grass --tmp-project EPSG:3857 --exec python3 analysis.py`。
-- **先探测版本**：`grass --version`（应为 8.5.0，LTR 8.4.2）、`grass --tmp-project EPSG:3857 --exec g.region -p`；8.4 之前没有 `grass.tools`，Python 脚本改用 `gs.run_command`。
+- **先探测版本**：`grass --version`（应为 8.5.0，LTR 8.4.2）、`grass --tmp-project EPSG:3857 --exec g.region -p`；`grass.tools` 自 8.5.0 起提供，8.4.x/LTR 上 Python 脚本改用 `gs.run_command`。
 - **验证产物**：`--tmp-project` 内的地图最后必须导出——`r.out.gdal input=slope output=/work/slope.tif format=GTiff`，随后 `gdalinfo -json slope.tif` 核对 CRS 与范围；会话内核对用 `g.region -p format=json`、`g.list type=raster`。
 - **区域语义优先**：栅格模块只处理计算区域内的像元，结果范围不对先看 `g.region -p`；重复运行加 `--overwrite`，否则模块报地图已存在并非零退出。
 - **错误识别**：GRASS 模块的失败以 `ERROR:` 开头并返回非零码（如 `Raster map <x> not found`），据此区分地图名、区域为空还是输出已存在问题，不要只读最后一行日志。

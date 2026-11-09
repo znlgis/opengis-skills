@@ -21,13 +21,13 @@ metadata:
 
 ## 概述
 
-acme.sh 是全球使用最广泛的 ACME 客户端之一（GitHub 47k+ Star），由 neilpang 发起维护，核心特点：
+acme.sh 是全球使用最广泛的 ACME 客户端之一（GitHub 约 48k Star，截至 2026-11），由 neilpang 发起维护，核心特点：
 
 - **零依赖**：纯 POSIX Shell 实现，无需 Python/Node/Java，只要有 `curl`/`wget` 与 `cron`/`crontab` 即可。
 - **跨平台**：Linux 全发行版、macOS、*BSD、Solaris、Windows（WSL/Cygwin/Git Bash）。
 - **多 CA**：默认 ZeroSSL，可切换 Let's Encrypt、BuyPass、Google Trust Services（GTS）、SSL.com 等。
 - **多验证方式**：HTTP-01（webroot / standalone / nginx / apache）、DNS-01（150+ 服务商 API，支持通配符）、TLS-ALPN-01。
-- **自动续期**：安装时自动写入 cron，默认约 30 天（ARI 自动调度）触发续期，无 ARI 时回退为 60 天。
+- **自动续期**：安装时自动写入 cron，默认约 30 天触发续期（3.1.4 起默认值由 60 天改为 30 天，并支持 CA 的 ARI 自动调度建议窗口）。
 - **证书部署**：内置 100+ deploy hook（nginx、ssh、docker、panel、CDN、路由器等）。
 - **证书类型**：单域名、多域名 SAN、通配符 `*.example.com`、ECC（ec-256/384）与 RSA 双证书。
 

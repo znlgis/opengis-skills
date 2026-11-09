@@ -17,7 +17,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install validation dependency
+        run: python -m pip install --disable-pip-version-check pyyaml
       - name: Byte-compile repository scripts
         run: python -m compileall -q scripts
       - name: Validate skill files
         run: python scripts/validate-skills.py .
+      - name: Check external links
+        continue-on-error: true
+        run: python scripts/check-links.py . --timeout 15 --workers 24

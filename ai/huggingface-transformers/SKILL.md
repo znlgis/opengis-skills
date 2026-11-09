@@ -1,6 +1,6 @@
 ---
 name: huggingface-transformers
-description: "Use when running or fine-tuning Hugging Face Transformers models in Python — pipeline() inference, AutoModel/AutoTokenizer from_pretrained, device_map + dtype memory management, Trainer fine-tuning, BGE embeddings for Chinese RAG; also for CUDA out of memory on load, transformers 5.22 requires Python 3.11 or newer, `pipeline("summarization")` removed in v5, and ImportError after upgrading. transformers 5.22.2 + PyTorch."
+description: "Use when running or fine-tuning Hugging Face Transformers models in Python — pipeline() inference, AutoModel/AutoTokenizer from_pretrained, device_map + dtype memory management, Trainer fine-tuning, BGE embeddings for Chinese RAG; also for CUDA out of memory on load, transformers 5.22 requires Python 3.11 or newer, pipeline summarization task removed in v5, and ImportError after upgrading. transformers 5.22.2 + PyTorch."
 license: MIT
 metadata:
   category: ai

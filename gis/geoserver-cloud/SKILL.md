@@ -13,7 +13,7 @@ metadata:
 >
 > **Docker Hub：** <https://hub.docker.com/u/geoservercloud>（镜像标签形如 `3.0.2.1`，尾段为该版本线的补丁号）
 >
-> **最新版本：** 3.0.2.1（2026-11-03，[GitHub Releases](https://github.com/geoserver/geoserver-cloud/releases)）；配套 Helm chart `geoservercloud` 3.0.3
+> **最新版本：** 3.0.2.1（2026-11-03，截至 2026-11，[GitHub Releases](https://github.com/geoserver/geoserver-cloud/releases)）；配套 Helm chart `geoservercloud` 3.0.3
 >
 > **许可证：** GPL-2.0
 

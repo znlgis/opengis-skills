@@ -32,7 +32,7 @@ DeepSeek Harness（命令 `dsh`）是 DeepSeek AI 开源的智能体框架，"�
 ### 方式一：npm 直接跑（最快验证）
 
 ```bash
-# 需要 Node.js；首次会下载依赖
+# 需要 Node.js（npm 包 engines: >=24.9.0）；首次会下载依赖
 npx @deepseek-ai/dsh web
 ```
 

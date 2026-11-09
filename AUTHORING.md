@@ -92,7 +92,7 @@ L3 技能按以下顺序组织（标题措辞可微调，语义必须齐备，�
 
 ## 5. 时效与版本
 
-- 头部必须有可核对的版本信息，推荐写法为 `**最新版本：** X.Y.Z（截至 YYYY-MM，[来源链接]）`；包管理器类技能可写成 `**PyPI：** … / **NuGet：** … / **包管理器：** …（版本，截至 YYYY-MM）`，多工具索引型技能可用「涵盖工具」表格逐项列出。版本以 GitHub Releases/tag、PyPI、npm、NuGet、Maven Central **实测**为准，禁止凭记忆填写。
+- 头部必须有可核对的版本信息，推荐写法为 `**最新版本：** X.Y.Z（截至 YYYY-MM，[来源链接]）`；**「截至 YYYY-MM」是硬性要求**，校验器只扫头部 40 行，缺失即报错；包管理器类技能可写成 `**PyPI：** … / **NuGet：** … / **包管理器：** …（版本，截至 YYYY-MM）`，多工具索引型技能可用「涵盖工具」表格逐项列出。版本以 GitHub Releases/tag、PyPI、npm、NuGet、Maven Central **实测**为准，禁止凭记忆填写。
 - 不要写会过期的相对表述（`目前最新`、`半年内会支持`、`下个版本将删除`）；旧 API 放 `<details><summary>旧写法（已弃用）</summary>` 折叠块，或直接删除。
 - 升级前先跑 `python scripts/check-upstream.py .` 看漂移，再按 `--json` 输出逐项核对。
 - 引用外部链接时给稳定地址（官方文档/仓库），不要给会变的搜索结果页。
@@ -111,7 +111,7 @@ python scripts/check-upstream.py .         # 上游最新版本漂移（需联�
 python scripts/check-links.py .            # 外部链接连通性（可选，需联网）
 ```
 
-校验器覆盖：六字段白名单、name 与目录一致、description 全英文且 ≤500 且唯一、无尖括号、metadata 完整、L2/L3 必备章节、FAQ ≥5 行、无 emoji、代码围栏带语言、≤500 行、reference 目录 TOC/孤儿/一层深、相对链接可达、Windows 反斜杠路径、索引与 README 覆盖及数量一致。
+校验器覆盖：六字段白名单、**frontmatter 严格 YAML 合法**（双引号标量内不得出现未转义 `"`）、name 与目录一致、description 全英文且 ≤500 且唯一、无尖括号、metadata 完整、L2/L3 必备章节（含 `## AI 使用建议`）、头部「截至 YYYY-MM」时效标记、FAQ ≥5 行、无 emoji、代码围栏带语言、无 `@@` 占位符残留、≤500 行、reference 目录 TOC/孤儿/一层深、相对链接可达、Windows 反斜杠路径、根标签索引与 `metadata.tags` 一致、索引与 README 覆盖及数量一致。
 
 ## 8. 变更流程
 

@@ -11,7 +11,7 @@ metadata:
 >
 > **官方文档：** <https://pdal.io/>
 >
-> **最新版本：** 2.10.2（截至 2026-11，[GitHub Release](https://github.com/PDAL/PDAL/releases)；conda-forge `pdal` / `python-pdal` 同版）
+> **最新版本：** 2.10.2（截至 2026-11，[GitHub Release](https://github.com/PDAL/PDAL/releases)；conda-forge `pdal` 同为 2.10.2）
 >
 > **PyPI：** `pdal`（Python 绑定，最新 3.5.5，截至 2026-11；版本号与主库独立）
 >

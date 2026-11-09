@@ -27,7 +27,7 @@ LangChain 是用于构建 LLM 应用的 Python 框架，1.x 起以 LangGraph 为
 - **记忆**：短期会话用 checkpointer + `thread_id`；长期记忆用 store（均来自 LangGraph）
 - **包拆分**：主包 langchain、接口层 langchain-core、社区集成 langchain-community、各 provider 独立包
 
-包家族与版本（2026-10）：
+包家族与版本（2026-11）：
 
 | 包 | 内容 | 当前版本 |
 |------|------|---------|

@@ -1,6 +1,6 @@
 ---
 name: geopipe-agent
-description: "Use when building YAML GIS pipelines with GeoPipeAgent — geopipe-agent validate/run, io.read_vector → vector.buffer → io.write_vector chains, 36 built-in steps (33 analysis + 3 passthrough), qc.geometry_validity/attribute_completeness/topology, native_python|qgis_process|gdal_cli backends, $step.output refs; also for validate "not registered" errors, silent when-condition skips, and resolve/knowledge gaps. 0.1.0, source install only (not on PyPI)."
+description: "Use when building YAML GIS pipelines with GeoPipeAgent — geopipe-agent validate/run, io.read_vector to vector.buffer to io.write_vector chains, 36 built-in steps (33 analysis + 3 passthrough), qc.geometry_validity/attribute_completeness/topology, native_python|qgis_process|gdal_cli backends, $step.output refs; also for validate not-registered errors, silent when-condition skips, and resolve/knowledge gaps. 0.1.0, source install only (not on PyPI)."
 license: MIT
 metadata:
   category: gis

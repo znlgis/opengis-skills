@@ -13,7 +13,7 @@ metadata:
 >
 > **许可证：** MIT
 >
-> **最新版本：** v2.2.6（截至 2026-11，npm `@opencode/cli` latest 与 GitHub `releases/latest` 一致；V1 旧线为 `opencode-ai` 1.19.x）；迭代快，以本机 `opencode --version` 为准
+> **最新版本：** v2.2.6（截至 2026-11，npm `@opencode/cli` latest 与仓库 tag `v2.2.6` 一致；GitHub `releases/latest` 指向的仍是 `v1.19.5`）；迭代快，以本机 `opencode --version` 为准
 
 > **注意：** OpenCode 迭代非常快，命令、配置字段与模型名称请以你当前版本的 `opencode --help`、TUI 内 `/help` 及在线 JSON Schema 为准。
 

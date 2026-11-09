@@ -11,9 +11,11 @@ starts with "Use when", no angle brackets, unique; metadata carries category
 and a 5-10 token comma-separated tags string.
 
 Body: <=500 lines, no emoji in L3, language on every code fence, required
-sections, FAQ table with >=5 rows, resolvable relative links, no Windows
-backslash paths, reference/*.md all linked and >100-line files get a Contents
-section.
+sections (including the tool-agnostic "AI usage" guidance section), FAQ table
+with >=5 rows, resolvable relative links, no Windows backslash paths,
+reference/*.md all linked and >100-line files get a Contents section. L3 skills
+must also carry a freshness marker ("截至 YYYY-MM") in the head region so stale
+version claims are visible.
 
 Indexes: root SKILL.md, category indexes and README.md cover every skill
 exactly once and advertised skill counts match reality.
@@ -32,6 +34,7 @@ MIN_FAQ_ROWS = 5
 MIN_TAGS = 5
 MAX_TAGS = 10
 MAX_REFERENCE_WITHOUT_TOC = 100
+HEAD_REGION_LINES = 40
 
 CATEGORIES = ["3d", "ai", "cad", "csharp", "demos", "gis", "iot", "others"]
 ROOT_SKILL_NAME = "opengis-skills"
@@ -48,6 +51,7 @@ EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F]")
 ANGLE_RE = re.compile(r"[<>]")
 MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)")
 INDEX_ROW_RE = re.compile(r"^\|\s*\[[^\]]+\]\(([^)]+)\)")
+FRESHNESS_RE = re.compile(r"截至\s*(\d{4})-(\d{2})")
 
 REQUIRED_SECTIONS = {
     "overview": ["概述", "简介"],
@@ -55,6 +59,7 @@ REQUIRED_SECTIONS = {
     "workflow": ["工作流", "使用模式", "实战", "常见用法", "典型场景", "使用流程"],
     "FAQ": ["常见问题", "FAQ", "故障排查", "排错"],
     "related": ["相关技能", "相关资源", "参考资源", "参考资料", "延伸阅读"],
+    "ai": ["AI 使用建议", "AI 使用"],
 }
 
 
@@ -261,6 +266,72 @@ def validate_body(relative, text, report, is_skill):
             report.error(relative, "FAQ table has " + str(max(faq_rows - 1, 0)) + " rows, need >= " + str(MIN_FAQ_ROWS))
 
 
+PLACEHOLDER_RE = re.compile(r"@@[A-Za-z0-9_]*@@")
+
+
+def validate_placeholders(relative, text, report):
+    """Catch unresolved template tokens such as @@F@@ that break rendering."""
+    in_code = False
+    for number, line in enumerate(text.splitlines(), 1):
+        if is_fence(line):
+            in_code = not in_code
+            continue
+        match = PLACEHOLDER_RE.search(line)
+        if match and not in_code:
+            report.error(relative, "line " + str(number) + ": unresolved placeholder token " + match.group(0))
+
+
+def validate_frontmatter_yaml(relative, frontmatter_lines, report):
+    """Reject frontmatter that a strict YAML parser cannot read.
+
+    PyYAML is used when it is installed (CI installs it); otherwise a
+    dependency-free check still catches the common failure: an unescaped
+    double quote inside a double-quoted scalar, which makes the value stop
+    early and the whole block unparsable.
+    """
+    for line in frontmatter_lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or ":" not in stripped:
+            continue
+        _, _, raw = stripped.partition(":")
+        value = raw.strip()
+        if len(value) < 2 or not (value.startswith('"') and value.endswith('"')):
+            continue
+        inner = value[1:-1]
+        index = 0
+        while index < len(inner):
+            char = inner[index]
+            if char == "\\":
+                index += 2
+                continue
+            if char == '"':
+                report.error(relative, "frontmatter value contains an unescaped double quote (invalid YAML): " + value[:60] + "...")
+                break
+            index += 1
+    try:
+        import yaml  # noqa: F401
+    except ImportError:
+        return
+    try:
+        yaml.safe_load("\n".join(frontmatter_lines))
+    except Exception as error:  # noqa: BLE001
+        first = str(error).splitlines()[0] if str(error) else error.__class__.__name__
+        report.error(relative, "frontmatter is not valid YAML: " + first)
+
+
+def validate_freshness(relative, text, report):
+    """L3 skills must state when their version claims were last verified."""
+    lines = text.splitlines()
+    if lines and lines[0].strip() == "---":
+        for index in range(1, len(lines)):
+            if lines[index].strip() == "---":
+                lines = lines[index + 1:]
+                break
+    head = "\n".join(lines[:HEAD_REGION_LINES])
+    if not FRESHNESS_RE.search(head):
+        report.error(relative, "missing freshness marker '截至 YYYY-MM' in the head region (state when the version claim was verified)")
+
+
 def validate_links(root, path, text, report):
     in_code = False
     for line in text.splitlines():
@@ -324,6 +395,45 @@ def validate_reference_dir(root, skill_md, text, report):
                 report.error(relative, "reference file longer than " + str(MAX_REFERENCE_WITHOUT_TOC) + " lines needs a '## Contents' section")
 
 
+TAG_CELL_RE = re.compile(r"^\|\s*((?:\x60[^\x60|]+\x60\s*(?:/\s*)?)+)\s*\|\s*([^|]+?)\s*\|\s*$")
+
+
+def validate_tag_index(root, text, skills, report):
+    """Every skill listed under a tag row must really carry one of that row's tags."""
+    tags_by_skill = {}
+    for key, path in skills.items():
+        skill_text = path.read_text(encoding="utf-8")
+        parsed = split_frontmatter(skill_text)
+        if parsed is None:
+            continue
+        meta = parse_frontmatter(parsed[0], Report(), path)
+        raw = meta["metadata"].get("tags", "")
+        tags_by_skill[path.parent.name] = {part.strip() for part in raw.split(",") if part.strip()}
+    in_section = False
+    for line in text.splitlines():
+        if line.startswith("## "):
+            in_section = line[3:].strip().startswith("标签索引")
+            continue
+        if not in_section or not line.startswith("|"):
+            continue
+        cells = TAG_CELL_RE.match(line)
+        if not cells:
+            continue
+        row_tags = [part.strip().strip(chr(96)) for part in cells.group(1).split("/") if part.strip()]
+        if not row_tags:
+            continue
+        for name in [item.strip() for item in cells.group(2).split(",") if item.strip()]:
+            have = tags_by_skill.get(name)
+            if have is None:
+                report.error(Path("SKILL.md"), "tag index lists unknown skill '" + name + "'")
+            elif not (have & set(row_tags)):
+                report.error(
+                    Path("SKILL.md"),
+                    "tag index lists '" + name + "' under " + "/".join(row_tags)
+                    + " but its metadata.tags are: " + ", ".join(sorted(have)),
+                )
+
+
 def index_targets(root, index, text, report):
     targets = {}
     in_code = False
@@ -382,6 +492,7 @@ def main():
             report.error(relative, "missing or malformed frontmatter (must start at line 1 and close with ---)")
             continue
         frontmatter, body = parsed
+        validate_frontmatter_yaml(relative, frontmatter, report)
         meta = parse_frontmatter(frontmatter, report, relative)
         validate_name_and_license(meta, relative, report)
         validate_description(meta, relative, report, descriptions)
@@ -391,6 +502,8 @@ def main():
         parts = relative.parts
         if len(parts) == 3 and parts[0] in CATEGORIES:
             validate_body(relative, body, report, is_skill=True)
+            validate_freshness(relative, body, report)
+            validate_placeholders(relative, body, report)
             validate_reference_dir(root, path, body, report)
             skills[parts[0] + "/" + parts[1]] = path
             category_skills[parts[0]].append(parts[0] + "/" + parts[1])
@@ -414,6 +527,10 @@ def main():
         description = category_descriptions.get(category, "")
         if description:
             validate_count(description, len(category_skills[category]), Path(category + "/SKILL.md"), report)
+
+    root_skill = root / "SKILL.md"
+    if root_skill.is_file():
+        validate_tag_index(root, root_skill.read_text(encoding="utf-8"), skills, report)
 
     root_index = root / "SKILL.md"
     if root_index.is_file():

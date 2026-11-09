@@ -181,7 +181,7 @@ location /qgis {
 
 1. **版本对齐**：QGIS Server 与生成项目的 QGIS Desktop 尽量使用相同主版本；跨大版本打开旧项目可能因图层/表达式不兼容而报错。生产环境优先 LTR。
 2. **优先 `.qgz`**：`.qgz` 是压缩的单文件项目，便于分发并避免路径遗漏；配合 `QGIS_PROJECT_FILE` 固定默认项目。
-3. **日志走 stderr**：使用 `QGIS_SERVER_LOG_STDERR` 交给系统日志收集，`QGIS_SERVER_LOG_FILE` 已废弃并计划在 QGIS 5.0 移除。
+3. **日志走 stderr**：使用 `QGIS_SERVER_LOG_STDERR` 交给系统日志收集，`QGIS_SERVER_LOG_FILE` 已废弃。
 4. **并行渲染与线程**：高并发栅格出图时设置 `QGIS_SERVER_PARALLEL_RENDERING=true`，并用 `QGIS_SERVER_MAX_THREADS` 控制 CPU 占用。
 5. **项目缓存**：多项目场景调大 `QGIS_SERVER_PROJECT_CACHE_SIZE`，减少重复加载开销。
 6. **容错**：允许部分图层缺失时设 `QGIS_SERVER_IGNORE_BAD_LAYERS=true`，避免整份项目不可用。

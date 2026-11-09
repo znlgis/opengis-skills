@@ -54,7 +54,7 @@ pip install slvs          # 与 SolveSpace 同版号（当前 3.3），预编译
 python -c "import slvs; print(slvs.__file__)"   # 验证可导入
 ```
 
-自源码构建要求 CMake ≥ 3.31（见仓库 `CMakeLists.txt`），同时产出 `solvespace`（GUI）与 `solvespace-cli`（无头）：
+自源码构建要求 CMake ≥ 3.18（见仓库 `CMakeLists.txt` 的 `cmake_minimum_required(VERSION 3.18...3.25)`），同时产出 `solvespace`（GUI）与 `solvespace-cli`（无头）：
 
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
