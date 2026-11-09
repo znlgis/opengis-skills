@@ -16,6 +16,18 @@ from pathlib import Path
 
 URL_RE = re.compile(r"https?://[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]+")
 SKIP_HOSTS = {"localhost", "127.0.0.1", "0.0.0.0", "example.com", "www.example.com"}
+PLACEHOLDER_HOSTS = {
+    "server",
+    "your-server",
+    "your-dify",
+    "your-host",
+    "yourdomain.com",
+    "your-domain.com",
+    "my-server",
+    "host",
+    "domain.com",
+}
+RESERVED_SUFFIXES = (".example.com", ".example.org", ".example.net", ".local", ".invalid", ".test")
 
 
 def iter_urls(root: Path):
@@ -24,12 +36,21 @@ def iter_urls(root: Path):
         if ".git" in path.parts:
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
-        for match in URL_RE.finditer(text):
-            url = match.group(0).rstrip(".,;:)")
-            host = urllib.parse.urlsplit(url).hostname or ""
-            if host in SKIP_HOSTS or host.endswith(".local"):
+        in_code = False
+        for line in text.splitlines():
+            if line.strip().startswith("```") or line.strip().startswith("~~~"):
+                in_code = not in_code
                 continue
-            seen.setdefault(url, []).append(path.relative_to(root).as_posix())
+            if in_code:
+                continue
+            for match in URL_RE.finditer(line):
+                url = match.group(0).rstrip(".,;:)]'\">")
+                host = urllib.parse.urlsplit(url).hostname or ""
+                if not host or host in SKIP_HOSTS or host in PLACEHOLDER_HOSTS:
+                    continue
+                if host.endswith(RESERVED_SUFFIXES):
+                    continue
+                seen.setdefault(url, []).append(path.relative_to(root).as_posix())
     return seen
 
 

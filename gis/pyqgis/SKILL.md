@@ -1,15 +1,10 @@
 ---
 name: pyqgis
 description: "Use when scripting QGIS with Python — QgsApplication standalone init, QgsVectorLayer / QgsRasterLayer loading, processing.run after Processing.initialize(), QgsGeometry / QgsExpression, QgsMapSettings rendering and QgsLayoutExporter PDF/PNG export, qgis._3d, or debugging \"import qgis.core\" failures. PyQGIS for QGIS 4.2.3 and LTR 3.44.15 (use the interpreter bundled with QGIS, not system Python)."
-tags:
-  - python
-  - qgis
-  - gis
-  - processing
-  - vector
-  - raster
-  - rendering
-  - plugin
+license: MIT
+metadata:
+  category: gis
+  tags: "python, qgis, gis, processing, vector, raster, rendering, plugin"
 ---
 
 > **项目地址：** <https://github.com/qgis/QGIS>
@@ -18,7 +13,7 @@ tags:
 >
 > **Python API 参考：** <https://qgis.org/pyqgis/4.2/>
 >
-> **最新版本：** QGIS 4.2.3（截至 2026-10，[下载页](https://qgis.org/download/)）；LTR 3.44.15
+> **最新版本：** QGIS 4.2.3（截至 2026-11，[下载页](https://qgis.org/download/)）；LTR 3.44.15
 >
 > **许可证：** GPL-2.0+
 

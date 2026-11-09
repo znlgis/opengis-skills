@@ -1,15 +1,10 @@
 ---
 name: opengis-utils-for-net
 description: "Use when needing common GIS utilities in .NET/C# — OguLayerUtil ReadLayer/WriteLayer/ConvertFormat, GeometryUtil 50+ ops, CrsUtil CGCS2000 transforms, Shapefile/GeoJSON/FileGDB/GeoPackage/KML/PostGIS I/O; also for Unable to load DLL gdal / DllNotFoundException, GBK shapefile mojibake, or ArgumentException from Geojson2Wkt on a whole FeatureCollection. OpenGIS.Utils 1.1.2."
-tags:
-  - dotnet
-  - csharp
-  - gdal
-  - ogr
-  - geometry
-  - vector
-  - crs
-  - cgcs2000
+license: MIT
+metadata:
+  category: gis
+  tags: "dotnet, csharp, gdal, ogr, geometry, vector, crs, cgcs2000"
 ---
 
 > **项目地址：** <https://github.com/znlgis/opengis-utils-for-net>
@@ -18,7 +13,7 @@ tags:
 >
 > **NuGet 包：** `OpenGIS.Utils`
 >
-> **最新版本：** 1.1.2（截至 2026-10，NuGet）
+> **最新版本：** 1.1.2（截至 2026-11，[NuGet `OpenGIS.Utils`](https://www.nuget.org/packages/OpenGIS.Utils)；[GitHub Release v1.1.2](https://github.com/znlgis/opengis-utils-for-net/releases)）
 >
 > **许可证：** LGPL-2.1-or-later
 

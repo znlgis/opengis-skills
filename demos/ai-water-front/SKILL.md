@@ -1,23 +1,17 @@
 ---
 name: ai-water-front
 description: "Use when building or debugging a Vue 3 + OpenLayers water-utility dashboard wired to a Dify chat assistant — natural-language queries returning GeoJSON highlights, streaming SSE via fetch + ReadableStream, GeoServer REST layer toggling through a Vite dev proxy with Basic auth, resizable panels and localStorage layout; also for CORS/401 on /geoserver/rest and "no features highlighted" from a CRS mismatch. ai-water-front demo stack: Vue 3.3 + Vite 4 + ol 8 + axios."
-tags:
-  - vue
-  - javascript
-  - vite
-  - openlayers
-  - webmapping
-  - geojson
-  - geoserver
-  - dify
-  - dashboard
+license: MIT
+metadata:
+  category: demos
+  tags: "vue, javascript, vite, openlayers, webmapping, geojson, geoserver, dify, dashboard"
 ---
 
 > **项目地址：** <https://github.com/znlgis/ai-water-front>
 >
 > **教程：** <https://znlgis.github.io/demos/ai-water-front/>
 >
-> **依赖版本：** Vue 3.3 / Vite 4 / ol 8 / axios 1.7（取自仓库 `package.json`，截至 2026-10；demo 为快照工程，未跟随上游升到 ol 10）
+> **最新版本：** 无发布版本（快照工程，`package.json` 仍为 0.0.0）；依赖 Vue 3.3 / Vite 4 / ol 8.1 / axios 1.7，未跟随上游升到 ol 10（取自仓库 [`package.json`](https://github.com/znlgis/ai-water-front/blob/main/package.json)，截至 2026-11）
 >
 > **许可证：** LGPL-2.1（以仓库为准）
 
@@ -326,7 +320,7 @@ window.clearGeoJsonLayers()                   // 清除高亮图层
 
 ## 常见问题
 
-| 问题 | 解决方案 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|---------|
 | `npm install` 失败或缓慢 | `npm cache clean --force` 后重装，或切换镜像 `npm config set registry http://registry.npmmirror.com` |
 | AI 助手一直提示未配置 | 检查 `.env.local` 是否存在且含 `VITE_DIFY_API_KEY`；改环境变量后需重启 dev server |
@@ -336,15 +330,18 @@ window.clearGeoJsonLayers()                   // 清除高亮图层
 | 面板尺寸不保存 | 检查浏览器是否禁用了 localStorage |
 | 生产环境 GeoServer 返回 401 | Nginx 代理需带上 `Authorization`（Base64 Basic）头，不能只代理路径 |
 | `npm run dev` 端口被占用 | 修改 `vite.config.js` 中的 `server.port` |
+| 浏览器控制台报 `Access to XMLHttpRequest at 'http://localhost:8765/geoserver/rest/layers' ... blocked by CORS policy` | 绕过了代理直连 GeoServer：业务代码只能用相对路径 `/geoserver/...`，由 Vite 代理转发（生产改 Nginx 反代） |
+| 打开页面报 `Failed to resolve import "ol/..."` | `node_modules` 不完整或 ol 未装：`rm -rf node_modules` 后重新 `npm install`（Windows 用 `rd /s /q node_modules`） |
 
 ## AI 使用建议
 
-1. **先读入口文件**：`src/App.vue`（布局装配与面板尺寸持久化）、`src/components/DemoMap.vue`（OpenLayers 地图）、`src/mapInstance.js`（全局地图单例）是理解本项目的三个关键文件；AI 对话与 GeoJSON 渲染分别在 `src/services/difyClient.js` 与 `src/services/geoJsonService.js`。
-2. **常见改造点**：换底图 / 初始视野改 `DemoMap.vue` 中的 OSM 与 View 配置；接入其它 LLM 时保持 `difyClient.js` 的 `onMessage` / `onCompleted` / `onGeoJsonDetected` 回调接口即可；图层数据源改 `src/geoserver/` 下的 REST 封装。
-3. **约定结构不要破坏**：AI 回复须匹配 `{ "data": "[{ \"geom\": \"...\" }]" }` 约定，提取失败返回 `null` 不中断对话；高亮图层靠 `isGeoJsonLayer` 属性识别，清除逻辑依赖它。
-4. **投影别搞反**：数据是 `EPSG:4326`、地图是 `EPSG:3857`（`dataProjection` / `featureProjection`），新增渲染入口时照抄 `geoJsonService.js` 的写法。
-5. **凭据只在配置层**：Dify Key 放 `.env.local`；GeoServer Basic 认证由 `vite.config.js` 代理注入，业务代码始终用相对路径 `/geoserver/...`，生产部署改 Nginx 注入 `Authorization`。
-6. **调试入口**：DEV 模式用控制台 `window.testGeoJson(...)` / `window.clearGeoJsonLayers()` 验证渲染链路，不必依赖真实 AI 回复。
+- **执行环境**：Node.js ≥16 + npm；需要真实 AI 回复时还要能访问 Dify（或自建）与 GeoServer；只验证地图渲染不必起后端。
+- **版本探测**：`node -v` + `npm ls ol vite vue`；本项目锁定 ol 8 / Vite 4，升级到 ol 10 会改动 `Map`/`VectorLayer` 的导入路径，先确认再动。
+- **产物验证**：`npm run build` 必须无报错；DEV 下用 `window.testGeoJson(window.testData.polygon)` 验证渲染链路，用 Network 面板确认 `/geoserver/rest/layers` 返回 200。
+- **入口文件**：`src/App.vue`（布局装配与面板尺寸持久化）、`src/components/DemoMap.vue`（地图）、`src/mapInstance.js`（全局地图单例）；AI 对话在 `src/services/difyClient.js`，GeoJSON 提取渲染在 `src/services/geoJsonService.js`。
+- **改造点**：换底图/初始视野改 `DemoMap.vue` 的 OSM 与 View；换 LLM 供应商时保持 `onMessage`/`onCompleted`/`onGeoJsonDetected` 回调契约；图层数据源改 `src/geoserver/`。
+- **易错点**：约定结构 `{ data: [{ geom }] }` 与 `isGeoJsonLayer` 属性是整条链路的隐式契约，改一处要同步改提取与清除逻辑。
+- **安全与权限**：Dify Key 只放 `.env.local`（不进库）；GeoServer 凭据只出现在 `vite.config.js` 代理层，业务代码坚持相对路径 `/geoserver/...`。
 
 ## 相关技能
 

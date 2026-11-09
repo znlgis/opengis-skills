@@ -1,23 +1,17 @@
 ---
 name: deepseek-harness
-description: "Use when running, scripting, or extending DeepSeek Harness (dsh) 0.2.1 — npx @deepseek-ai/dsh web / dsh --profile, headless one-shot runs, the deepseek-harness-sdk Python DeepSeekHarness client, or Cordis plugins that export apply(ctx) and register tools with defineTool; also when a profile patch fails to load, tools never appear in a session, or DeepSeekHarness raises on startup. dsh: plugin-everything agent harness by DeepSeek AI, powered by Cordis."
-tags:
-  - ai
-  - agent
-  - deepseek
-  - cordis
-  - plugin
-  - typescript
-  - python
-  - harness
-  - cli
+description: "Use when running, scripting, or extending DeepSeek Harness (dsh) 0.2.2 — npx @deepseek-ai/dsh web / dsh --profile, headless one-shot runs, the deepseek-harness-sdk Python DeepSeekHarness client, or Cordis plugins that export apply(ctx) and register tools with defineTool; also when a profile patch fails to load, tools never appear in a session, or DeepSeekHarness raises on startup. dsh: plugin-everything agent harness by DeepSeek AI, powered by Cordis."
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, agent, deepseek, cordis, plugin, typescript, python, harness, cli"
 ---
 
 > **项目地址：** <https://github.com/deepseek-ai/deepseek-harness>
 >
 > **官方文档：** <https://deepseek-harness.github.io/deepseek-harness/>
 >
-> **npm：** `@deepseek-ai/dsh`（0.2.1-rc.2，截至 2026-10）｜ **PyPI：** `deepseek-harness-sdk`
+> **最新版本：** 0.2.2-rc.1（截至 2026-11，npm `@deepseek-ai/dsh` latest 与 GitHub tag `dsh-v0.2.2-rc.1` 一致；developer preview，仍有 rc 后缀）｜ **PyPI：** `deepseek-harness-sdk`（0.2.1rc2）
 >
 > **许可证：** MIT
 
@@ -29,7 +23,7 @@ DeepSeek Harness（命令 `dsh`）是 DeepSeek AI 开源的智能体框架，"�
 - **分层组合**：shipped bundle → profile 的 `cordis.patch.yml` → `$DSH_HOME/cordis.patch.yml` → `--patch` 覆盖层
 - **插件形态**：TypeScript 模块导出 `name` / `inject` / `apply(ctx)`，工具用 `defineTool` 注册
 - **双语言自动化**：`dsh --profile headless` 一条命令出结果；Python 侧有 `deepseek-harness-sdk`
-- **developer preview**：官方明确会有 breaking changes，锁版本使用
+- **developer preview**：官方明确会有 breaking changes，锁版本使用；0.2.2 仍是 rc 线（首个候选版 `0.2.2-rc.1`），升级前先跑自己的插件与脚本
 
 ---
 

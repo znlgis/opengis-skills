@@ -1,5 +1,18 @@
 # JTS Geometry Operations and Index Reference
 
+## Contents
+
+- 空间关系判断
+- 集合运算
+- 几何分析
+- 几何简化
+- 精度模型
+- 格式读写
+- 空间索引
+- PreparedGeometry（加速重复判断）
+- 线性参考
+- 仿射变换
+
 > 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录空间关系、集合运算、几何分析、格式读写与空间索引的完整参考。
 
 ---

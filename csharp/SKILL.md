@@ -1,15 +1,10 @@
 ---
-name: csharp-skills
+name: csharp
 description: "Use when developing with .NET/C# for Web APIs, ORM data access, Excel/Word file I/O, spreadsheet controls, structured logging, resilience policies, background jobs, error tracking, or .NET code protection. Index of 12 skills: Furion, Admin.NET Backend, Admin.NET Frontend, SqlSugar, NPOI, SOD, ReoGrid, Serilog, Polly, Hangfire, DotNet Reactor, Sentry."
-tags:
-  - dotnet
-  - csharp
-  - webapi
-  - orm
-  - office
-  - excel
-  - framework
-  - security
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, csharp, webapi, orm, office, excel, framework, security"
 ---
 
 > **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引

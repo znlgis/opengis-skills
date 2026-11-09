@@ -1,15 +1,10 @@
 ---
-name: acme.sh
+name: acme-sh
 description: "Use when automating SSL/TLS certificate issuance and renewal from Let's Encrypt, ZeroSSL or BuyPass — wildcard certs via DNS-01 for 150+ providers, HTTP-01 webroot, --install-cert with reloadcmd, cron auto-renewal. acme.sh: pure POSIX shell ACME client, zero dependencies. Also for \"Verify error: Invalid response\", \"Create new order error\" rate limits, ZeroSSL EAB registration failures, and cron that never renews."
-tags:
-  - ssl
-  - tls
-  - acme
-  - lets-encrypt
-  - shell
-  - certificate
-  - devops
-  - automation
+license: MIT
+metadata:
+  category: others
+  tags: "ssl, tls, acme, lets-encrypt, shell, certificate, devops, automation"
 ---
 
 > **项目地址：** <https://github.com/acmesh-official/acme.sh>
@@ -20,9 +15,9 @@ tags:
 >
 > **许可证：** GPL-3.0
 >
-> **包管理器：** `curl https://get.acme.sh | sh`（官方安装脚本）/ git clone + `./acme.sh --install`（最新 3.1.6，截至 2026-10）
+> **包管理器：** `curl https://get.acme.sh | sh`（官方安装脚本）/ git clone + `./acme.sh --install`（最新 3.1.6，截至 2026-11）
 >
-> **版本：** 3.1.6（2026-09-20）｜ 默认分支 `master`
+> **版本：** 3.1.6（2026-09-20，截至 2026-11，[GitHub Releases](https://github.com/acmesh-official/acme.sh/releases)）｜ 默认分支 `master`
 
 ## 概述
 

@@ -1,23 +1,17 @@
 ---
 name: open3d
 description: "Use when processing 3D point clouds and meshes in Python — read/write PLY/PCD, voxel downsample, normal estimation, outlier removal, RANSAC + ICP registration, Poisson surface reconstruction, quadric decimation, and headless/offscreen visualization. Open3D is Intel's open-source 3D data processing library with a C++ core and Python API."
-tags:
-  - 3d
-  - point-cloud
-  - mesh
-  - registration
-  - reconstruction
-  - visualization
-  - python
-  - cpp
-  - computer-vision
+license: MIT
+metadata:
+  category: 3d
+  tags: "3d, point-cloud, mesh, registration, reconstruction, visualization, python, cpp, computer-vision"
 ---
 
 > **项目地址：** <https://github.com/isl-org/Open3D>
 >
 > **官方文档：** <https://www.open3d.org/docs/> ｜ **Python API：** <https://www.open3d.org/docs/release/python_api/>
 >
-> **许可证：** MIT ｜ **最新版本：** `v0.20.0`（PyPI `open3d` 与 GitHub Releases 双核实）｜ **默认分支：** `main`
+> **许可证：** MIT ｜ **最新版本：** `v0.20.0`（截至 2026-11，[PyPI `open3d`](https://pypi.org/project/open3d/) 与 [GitHub Releases](https://github.com/isl-org/Open3D/releases) 双核实）｜ **默认分支：** `main`
 
 ## 概述
 

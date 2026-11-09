@@ -1,17 +1,10 @@
 ---
 name: qgis-process
 description: "Use when running QGIS geoprocessing headless via qgis_process — native:buffer / native:reprojectlayer / native:clip, qgis_process list / help --json / run --json, .model3 models and .py scripts, batch CI pipelines, or debugging \"Algorithm ... not found!\"; includes QT_QPA_PLATFORM=offscreen and the qgis/qgis images (stable 4.2, ltr 3.44)."
-tags:
-  - cli
-  - qgis
-  - processing
-  - raster
-  - automation
-  - batch
-  - ci-cd
-  - json
-  - workflow
-  - shell
+license: MIT
+metadata:
+  category: gis
+  tags: "cli, qgis, processing, raster, automation, batch, ci-cd, json, workflow, shell"
 ---
 
 > **项目地址：** <https://github.com/qgis/QGIS>
@@ -20,7 +13,7 @@ tags:
 >
 > **在线文档：** <https://docs.qgis.org/4.2/en/docs/user_manual/processing/standalone.html>
 >
-> **最新版本：** QGIS 4.2.3；3.44 LTR 最新 3.44.15（截至 2026-10，GitHub Releases；`qgis_process` 自 QGIS 3.16 起可用）
+> **最新版本：** QGIS 4.2.3；3.44 LTR 最新 3.44.15（截至 2026-11，[GitHub Releases](https://github.com/qgis/QGIS/releases)、[下载页](https://qgis.org/download/)；`qgis_process` 自 QGIS 3.16 起可用）
 >
 > **许可证：** GPL-2.0+
 

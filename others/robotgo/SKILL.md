@@ -1,17 +1,10 @@
 ---
 name: robotgo
 description: "Use when automating desktop GUI in Go — robotgo.Move/Click/KeyTap, CaptureImg vs CaptureScreen, bitmap.Find template matching, gohook global hotkeys, gcv OpenCV matching, clipboard and window control. RobotGo v1.3.7: cross-platform Go desktop automation for macOS/Windows/Linux. Also for black screenshots or silently ignored input on macOS (missing accessibility/screen-recording grants), \"png.h not found\", clipboard errors without xsel/xclip, and Wayland needing -tags wayland/libei."
-tags:
-  - go
-  - golang
-  - rpa
-  - automation
-  - desktop
-  - screen-capture
-  - mouse
-  - keyboard
-  - clipboard
-  - gui
+license: MIT
+metadata:
+  category: others
+  tags: "go, golang, rpa, automation, desktop, screen-capture, mouse, keyboard, clipboard, gui"
 ---
 
 > **项目地址：** <https://github.com/go-vgo/robotgo>
@@ -20,9 +13,9 @@ tags:
 >
 > **许可证：** Apache-2.0
 >
-> **包管理器：** `go get github.com/go-vgo/robotgo`（最新 v1.3.7，截至 2026-10）
+> **包管理器：** `go get github.com/go-vgo/robotgo`（最新 v1.3.7，截至 2026-11）
 >
-> **版本：** v1.3.7（2026-10-22，稳定线）；v2.0.0-beta4（纯 Go 预发布线）｜ 默认分支 `master`
+> **版本：** v1.3.7（2026-10-22，稳定线，截至 2026-11）；v2.0.0-beta4（纯 Go 预发布线）｜ 默认分支 `master`
 >
 > **生态子库：**
 >

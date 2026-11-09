@@ -1,21 +1,17 @@
 ---
 name: npoi
 description: "Use when reading/writing Excel (.xls/.xlsx) or Word (.doc/.docx) in .NET without Microsoft Office — XSSFWorkbook/HSSFWorkbook/SXSSFWorkbook, WorkbookFactory.Create, ICellStyle reuse, IFormulaEvaluator. Also for dates rendering as numbers, OutOfMemoryException on large files, and 64000 cell-style limits. NPOI: .NET port of Apache POI."
-tags:
-  - dotnet
-  - excel
-  - word
-  - office
-  - npoi
-  - xls
-  - xlsx
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, excel, word, office, npoi, xls, xlsx"
 ---
 
 > **项目地址：** <https://github.com/nissl-lab/npoi>
 >
 > **NuGet：** `NPOI`
 >
-> **最新版本：** 2.8.1（2026-10-07 仓库最后提交；截至 2026-10，NuGet 实测）
+> **最新版本：** 2.8.1（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/NPOI)；包内提供 net472 / netstandard2.0 / netstandard2.1 / net8.0 / net10.0 资产）
 >
 > **官方文档：** <https://github.com/nissl-lab/npoi/wiki>
 >
@@ -35,7 +31,7 @@ NPOI 主要能力：
 - **PowerPoint `.ppt`/`.pptx`**
 - **跨平台**：.NET Framework / .NET 6+ / Linux / macOS
 
-> 大文件写入推荐 SXSSF（流式），可处理百万行 Excel；大文件读取推荐 EventModel（XSSF SAX）。
+> 大文件写入推荐 SXSSF（流式），可处理百万行 Excel；大文件读取用 SAX 事件模型（`NPOI.XSSF.EventUserModel` 的 `XSSFReader` + `XSSFSheetXMLHandler`）。
 
 ---
 
@@ -199,7 +195,8 @@ ev.EvaluateAll();
 ```csharp
 using NPOI.XSSF.Streaming;
 
-using SXSSFWorkbook wb = new SXSSFWorkbook(rowAccessWindowSize: 1000);
+// using 声明在作用域结束时自动 Dispose，SXSSF 靠 Dispose 清理磁盘临时文件
+using var wb = new SXSSFWorkbook(rowAccessWindowSize: 1000);
 ISheet sh = wb.CreateSheet("big");
 for (int r = 0; r < 1_000_000; r++) {
     var row = sh.CreateRow(r);
@@ -209,8 +206,7 @@ for (int r = 0; r < 1_000_000; r++) {
 using (var fs = File.Create("big.xlsx"))
 {
     wb.Write(fs);
-}
-wb.Dispose();   // SXSSF 必须 Dispose 才会清理磁盘临时文件
+}   // 到这里 wb 被释放，临时文件自动清理
 ```
 
 ---
@@ -272,7 +268,7 @@ doc.Write(fs);
 1. **百万级写**用 SXSSF，注意 `Dispose()` 清理 tmp 文件
 2. **样式数量受 64000 限制**：复用 `ICellStyle` 实例
 3. **日期单元格** 必须设置 DataFormat，否则显示数字
-4. **大文件读**用 `XSSFEventModel`（SAX）以减少内存
+4. **大文件读**用 SAX 事件模型（`NPOI.XSSF.EventUserModel` 命名空间下的 `XSSFReader` + `XSSFSheetXMLHandler`）以减少内存
 5. **xls 行数上限 65536**，xlsx 上限 1048576
 6. **避免在循环内 `wb.CreateCellStyle()`**
 
@@ -298,18 +294,20 @@ doc.Write(fs);
 
 1. 写用 `new SXSSFWorkbook(rowAccessWindowSize: 1000)` 流式滚动，只保留窗口内的行在内存
 2. 用完后 `Dispose()` 清理临时文件
-3. 读大文件改用 `XSSFEventModel`（SAX）遍历
+3. 读大文件改用 SAX 事件模型（`NPOI.XSSF.EventUserModel` 的 `XSSFReader` + `XSSFSheetXMLHandler`）遍历
 
 ---
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
 | 中文乱码 | 文本本身是 UTF-8，`.xlsx` 不会乱码；`.xls`（HSSF）在 Excel 里按本地代码页显示，建议中文场景统一用 xlsx |
 | 日期变数字（显示 45000 之类） | 单元格要套带日期 `DataFormat` 的 `ICellStyle`，只 `SetCellValue(DateTime)` 不够 |
 | Office 报「此工作簿包含无法读取的内容」 | 多为样式数超 64000 或公式非法：把 `CreateCellStyle()` 提到循环外复用，并检查 `SetCellFormula` 的表达式 |
-| 大文件 `OutOfMemoryException` | 写用 `SXSSFWorkbook`（记得 `Dispose()` 清临时文件），读用 XSSF EventModel（SAX） |
+| 大文件 `OutOfMemoryException` | 写用 `SXSSFWorkbook`（`using` 或显式 `Dispose()` 清临时文件），读用 SAX 事件模型（`NPOI.XSSF.EventUserModel` 的 `XSSFReader`） |
+| `Invalid row number (65536) outside allowable range (0..65535)` | 往 .xls（HSSF）写第 65537 行；改用 xlsx（XSSF/SXSSF），xlsx 上限 1048576 行 |
+| 读公式单元格拿到 0 或空 | 未求值就读了缓存值：建 `IFormulaEvaluator`，用 `Evaluate(cell)` 取值，或写出前 `EvaluateAll()` |
 | 打开提示文件损坏 | `wb.Write(fs)` 要写在 `FileStream` 作用域内，且不要把 `leaveOpen` 误设为 true 后又提前 dispose 流 |
 | `AutoSizeColumn` 抛异常或列宽为 0 | xlsx 下自动列宽依赖字体度量，Linux/容器里常失败；改成显式 `SetColumnWidth(col, width*256)` |
 
@@ -323,7 +321,7 @@ doc.Write(fs);
 2. **读文件**：`FileStream` → `WorkbookFactory.Create()` → `GetSheetAt(0)` → 遍历 Row/Cell → 根据 `CellType` 取值
 3. **写文件**：`new XSSFWorkbook()` → `CreateSheet()` → `CreateRow()` → `CreateCell()` → `SetCellValue()` → `FileStream` 写出
 4. **样式后设**：先写数据，再设样式（复用 `ICellStyle` 实例，避免 64000 限制）
-5. **大文件处理**：写用 SXSSFWorkbook（流式），读用 EventModel（SAX 事件驱动）
+5. **大文件处理**：写用 SXSSFWorkbook（流式），读用 `NPOI.XSSF.EventUserModel` 的 SAX 事件模型（`XSSFReader` + `XSSFSheetXMLHandler`）
 
 ### 关键模式与常见陷阱
 
@@ -340,7 +338,7 @@ doc.Write(fs);
 |------|---------|
 | 简单导入导出（< 10 万行） | NPOI XSSFWorkbook |
 | 百万级写入 | NPOI SXSSFWorkbook |
-| 百万级读取 | NPOI EventModel（SAX） |
+| 百万级读取 | NPOI SAX 事件模型（`XSSFReader`） |
 | WinForms/WPF 内嵌表格 | ReoGrid（底层用 NPOI 读写文件） |
 | 纯数据交换（无格式） | MiniExcel / CsvHelper |
 

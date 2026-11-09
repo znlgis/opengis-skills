@@ -1,24 +1,17 @@
 ---
 name: deck-gl
-description: "Use when visualizing large geospatial datasets in the browser with deck.gl 9.4.0 — ScatterplotLayer/GeoJsonLayer, HexagonLayer/ScreenGridLayer aggregation, MVTLayer/TileLayer, @deck.gl/mapbox MapboxOverlay over MapLibre, or debugging blank canvases, stale data props and mismatched @deck.gl/* subpackage versions."
-tags:
-  - javascript
-  - web
-  - webgl
-  - webgpu
-  - data-visualization
-  - geospatial
-  - map-layers
-  - aggregation
-  - maplibre
-  - mapbox
+description: "Use when visualizing large geospatial datasets in the browser with deck.gl 9.4.1 — ScatterplotLayer/GeoJsonLayer, HexagonLayer/ScreenGridLayer aggregation, MVTLayer/TileLayer, @deck.gl/mapbox MapboxOverlay over MapLibre, or debugging blank canvases, stale data props and mismatched @deck.gl/* subpackage versions."
+license: MIT
+metadata:
+  category: gis
+  tags: "javascript, web, webgl, webgpu, data-visualization, geospatial, map-layers, aggregation, maplibre, mapbox"
 ---
 
 > **项目地址：** <https://github.com/visgl/deck.gl>
 >
 > **官方文档：** <https://deck.gl/>
 >
-> **最新版本：** 9.4.0（截至 2026-10，npm `deck.gl` 与 GitHub Release 一致）
+> **最新版本：** 9.4.1（截至 2026-11，npm `deck.gl` dist-tag `latest`）
 >
 > **许可证：** MIT
 
@@ -58,7 +51,7 @@ npm install @deck.gl/mapbox maplibre-gl     # 与 MapLibre / Mapbox 底图集成
 ### CDN 快速试用
 
 ```html
-<script src="https://unpkg.com/deck.gl@9.4.0/dist.min.js"></script>
+<script src="https://unpkg.com/deck.gl@9.4.1/dist.min.js"></script>
 ```
 
 ### 验证
@@ -425,7 +418,7 @@ map.addControl(overlay);
 ## AI 使用建议
 
 - **执行环境**：`npm install`、`npm run build` 在终端中执行；子包多、安装输出长，重定向到文件再分段读。
-- **先探测版本**：`npm ls deck.gl @deck.gl/core @deck.gl/layers @deck.gl/geo-layers`；所有 `@deck.gl/*` 必须是同一版本 9.4.0，混版会报 `Cannot read properties of undefined`。本技能按 9.4.0 编写。
+- **先探测版本**：`npm ls deck.gl @deck.gl/core @deck.gl/layers @deck.gl/geo-layers`；所有 `@deck.gl/*` 必须是同一版本 9.4.1，混版会报 `Cannot read properties of undefined`。本技能按 9.4.1 编写。
 - **验证产物**：`npm run build` 后 `npx serve dist`，`curl.exe -I http://localhost:5173/` 确认入口；WebGL 是否真出图只能由浏览器确认，AI 助手通常看不到浏览器画面，请用户看画面和控制台，环境支持读图时用截图核对。
 - **无 GPU 环境**：无头/CI 环境无法验证 WebGL，构建通过不等于渲染正确，不要据此报告“已渲染”。
 - **数据与坐标**：位置一律 `[经度, 纬度]`；保持 `data` 引用稳定，不要在渲染路径里 `filter`/`map` 生成新数组，否则 GPU 缓冲反复重建。

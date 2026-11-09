@@ -1,14 +1,10 @@
 ---
 name: serilog
 description: "Use when adding structured logging to .NET apps — Serilog.AspNetCore UseSerilogRequestLogging, LoggerConfiguration WriteTo.Console/File, appsettings.json ReadFrom.Configuration, DI via builder.Services.AddSerilog(), or diagnosing missing log output, duplicate ASP.NET Core request logs, and JSON log formatting. Serilog: structured diagnostic logging for .NET with message templates and sinks."
-tags:
-  - dotnet
-  - csharp
-  - logging
-  - serilog
-  - structured-logging
-  - aspnet-core
-  - observability
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, csharp, logging, serilog, structured-logging, aspnet-core, observability"
 ---
 
 > **项目地址：** <https://github.com/serilog/serilog>
@@ -17,7 +13,7 @@ tags:
 >
 > **NuGet：** `Serilog`（核心，4.4.0）；`Serilog.AspNetCore`（10.0.0，版本跟随 Microsoft.Extensions.Hosting）
 >
-> **常用配套包：** `Serilog.Sinks.Console` 6.1.1 / `Serilog.Sinks.File` 7.0.0 / `Serilog.Settings.Configuration` 10.0.1 / `Serilog.Formatting.Compact` 3.0.0（截至 2026-10，NuGet）
+> **常用配套包：** `Serilog.Sinks.Console` 6.1.1 / `Serilog.Sinks.File` 7.0.0 / `Serilog.Settings.Configuration` 10.0.1 / `Serilog.Formatting.Compact` 3.0.0（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Serilog)）
 >
 > **目标框架：** net8.0 / net9.0 / net10.0 / netstandard2.0 / .NET Framework 4.6.2+
 >
@@ -356,7 +352,7 @@ tail -n 3 logs/app-*.log
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
 | 加包后没有日志输出 | `Log.Logger` 未赋值，或只装了 `Serilog` 却没装 sink 包；检查 `WriteTo.*` 是否被调用 |
 | 控制台重复输出两份 | `AddSerilog()` 之后仍保留默认 `Logging` 配置；删除 `appsettings.json` 的 `Logging` 节，或只保留一套 provider |
@@ -391,7 +387,7 @@ tail -n 3 logs/app-*.log
 
 ---
 
-## 相关资源
+## 参考资源
 
 - 官网与文档：<https://serilog.net/>
 - GitHub 仓库：<https://github.com/serilog/serilog>

@@ -1,17 +1,10 @@
 ---
-name: demos-skills
+name: demos
 description: "Use when building or studying Vue 3 frontend map/panorama demo projects — 360° panorama to Leaflet map linkage, Tianditu dashboards, OpenLayers + Dify smart-water frontend, and vue3-openlayers + GeoServer layer trees. Index of 4 skills: map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo."
-tags:
-  - vue
-  - javascript
-  - typescript
-  - vite
-  - openlayers
-  - leaflet
-  - panorama
-  - dashboard
-  - webgis
-  - demo
+license: MIT
+metadata:
+  category: demos
+  tags: "vue, javascript, typescript, vite, openlayers, leaflet, panorama, dashboard, webgis, demo"
 ---
 
 > **仓库地址：** <https://github.com/znlgis/opengis-skills>

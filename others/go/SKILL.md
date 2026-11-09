@@ -1,16 +1,10 @@
 ---
 name: go
 description: "Use when writing or debugging Go (go1.27.3) — goroutines/channels and context cancellation, net/http and ServeMux patterns, database/sql with MySQL/Postgres drivers, generics, go mod tidy / go work, table-driven tests and -race. Also for \"all goroutines are asleep - deadlock!\", data races on map writes, \"missing go.sum entry\", and slice aliasing surprises."
-tags:
-  - go
-  - golang
-  - backend
-  - concurrency
-  - cloud-native
-  - compiled
-  - static-typed
-  - server
-  - cli
+license: MIT
+metadata:
+  category: others
+  tags: "go, golang, backend, concurrency, cloud-native, compiled, static-typed, server, cli"
 ---
 
 > **官网：** <https://go.dev/>
@@ -25,9 +19,9 @@ tags:
 >
 > **许可证：** BSD-3-Clause
 >
-> **包管理器：** 官方二进制 tar.gz / `brew install go` / `winget install Golang.go`（最新 go1.27.3，截至 2026-10）
+> **包管理器：** 官方二进制 tar.gz / `brew install go` / `winget install Golang.go`（最新 go1.27.3，截至 2026-11）
 >
-> **版本：** go1.27.3（见 [go.dev/dl](https://go.dev/dl/)）
+> **版本：** go1.27.3（截至 2026-11，以 [go.dev/dl](https://go.dev/dl/) 的 `?mode=json` 返回为准）
 
 ## 概述
 
@@ -205,6 +199,11 @@ go run ./cmd/api
 | defer 在循环中 | 大量 defer 堆积不执行 | 提取为函数或立即调用 |
 | map 并发写 panic | 多 goroutine 同时写同一 map | 用 `sync.Map` 或加锁 |
 | 浮点数比较 | `0.1 + 0.2 != 0.3` | 使用 tolerance 比较 |
+| `fatal error: all goroutines are asleep - deadlock!` | 所有 goroutine 都在等 channel/锁，无人推进 | 检查 unbuffered channel 的收发是否成对、`WaitGroup` 是否漏 `Done()`；用 `go test -timeout 10s` 快速暴露 |
+| `fatal error: concurrent map writes` | 多个 goroutine 同时写同一 map，运行时检测到即崩溃 | 用 `sync.Mutex`/`sync.RWMutex` 保护，或改用 `sync.Map`；`go test -race` / `go run -race` 能提前定位 |
+| `missing go.sum entry for module ...; to add it: go mod download` | 新增依赖后没同步校验和，或 `go.sum` 被清理 | 执行 `go mod tidy`（会补齐 `go.sum`）；CI 里加 `go mod tidy -diff` 防止漏提交 |
+| `undefined: errors.Join` / `undefined: slices.Sort` 等标准库符号 | 工具链版本低于该 API 引入的版本，或 `go` 指令行写了旧版本 | `go version` 对齐 go1.27.3；把 `go.mod` 的 `go 1.27` 指令改成实际工具链支持的最低版本 |
+| `build constraints exclude all Go files` | 目标文件全被 `//go:build` 标签排除（平台/架构不符） | 用 `GOOS`/`GOARCH` 匹配标签，或检查文件名后缀（如 `_windows.go`）；`go list -f '{{.GoFiles}}'` 看实际纳入的文件 |
 
 ---
 
@@ -227,7 +226,7 @@ go run ./cmd/api
 - **robotgo** — 用 Go 做桌面自动化（键鼠/屏幕/窗口控制）：[../robotgo/SKILL.md](../robotgo/SKILL.md)
 - **robotgo-flow** — 基于 RobotGo 的 YAML 工作流自动化（Go CLI + 原生壳）：[../robotgo-flow/SKILL.md](../robotgo-flow/SKILL.md)
 - **docker-compose** — Docker Compose 本身即 Go 实现，可作为读 Go 大型 CLI 工程的样例：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
-- **acme.sh** — 纯 Shell 的 ACME 客户端；Go 服务常与它配合做证书自动续期：[../acme.sh/SKILL.md](../acme.sh/SKILL.md)
+- **acme.sh** — 纯 Shell 的 ACME 客户端；Go 服务常与它配合做证书自动续期：[../acme-sh/SKILL.md](../acme-sh/SKILL.md)
 
 ---
 

@@ -1,17 +1,10 @@
 ---
 name: proj
 description: "Use when transforming coordinates or inspecting CRS definitions from the command line — cs2cs, projinfo -s/-t, proj projection math, cct, EPSG lookup, datum shift with grid files, WKT/PROJJSON export, or debugging \"Cannot find proj.db\" and latitude-first axis order. PROJ 9.9.0: the OSGeo engine behind GDAL/QGIS, with the proj.db SQLite database."
-tags:
-  - proj
-  - crs
-  - coordinate-transformation
-  - reprojection
-  - epsg
-  - projinfo
-  - cs2cs
-  - geodesy
-  - wkt
-  - gis
+license: MIT
+metadata:
+  category: gis
+  tags: "proj, crs, coordinate-transformation, reprojection, epsg, projinfo, cs2cs, geodesy, wkt, gis"
 ---
 
 > **项目地址：** <https://github.com/OSGeo/PROJ>
@@ -20,7 +13,7 @@ tags:
 >
 > **命令行文档：** <https://proj.org/en/stable/apps/index.html>
 >
-> **最新版本：** 9.9.0（截至 2026-10）
+> **最新版本：** 9.9.0（截至 2026-11，[GitHub Release](https://github.com/OSGeo/PROJ/releases)）
 >
 > **许可证：** MIT
 

@@ -1,22 +1,17 @@
 ---
 name: opencsg-net
 description: "Use when doing constructive solid geometry (CSG) modeling in .NET — cube/sphere/cylinder primitives, union/subtract/intersect boolean operations, mesh transformations, STL export. OpenCSG.NET: zero-dependency C# CSG library ported from OpenJsCad's csg.js with merged improvements from praeclarum/Csg and hypar-io/Csg."
-tags:
-  - dotnet
-  - csharp
-  - csg
-  - 3d
-  - geometry
-  - stl
-  - modeling
-  - mesh
+license: MIT
+metadata:
+  category: 3d
+  tags: "dotnet, csharp, csg, 3d, geometry, stl, modeling, mesh"
 ---
 
 > **项目地址：** <https://github.com/znlgis/OpenCSG.NET>
 >
 > **NuGet：** <https://www.nuget.org/packages/OpenCSG.NET>
 >
-> **许可证：** MIT ｜ **最新版本：** `1.4.0`（GitHub tag `v1.4.0` 与 NuGet 一致；csproj 里 `<Version>0.0.0</Version>` 只是占位，版本由 CI 在打包时注入）
+> **许可证：** MIT ｜ **最新版本：** `1.4.0`（截至 2026-11，[GitHub tag `v1.4.0`](https://github.com/znlgis/OpenCSG.NET/tags) 与 [NuGet OpenCSG.NET](https://www.nuget.org/packages/OpenCSG.NET) 一致；csproj 里 `<Version>0.0.0</Version>` 只是占位，版本由 CI 在打包时注入）
 
 ## 概述
 

@@ -1,5 +1,11 @@
 # PyQGIS Vector and Raster Layer Operations Reference
 
+## Contents
+
+- 矢量图层操作
+- 栅格图层操作
+- 几何操作
+
 > 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录矢量/栅格图层操作的完整 API 与示例。
 
 ---

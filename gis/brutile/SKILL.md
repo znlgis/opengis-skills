@@ -1,21 +1,15 @@
 ---
 name: brutile
 description: "Use when fetching or enumerating map tiles in .NET with BruTile 6.0.0 — HttpTileSource over HttpClient, KnownTileSources.Create, ITileSchema.GetTileInfos for a viewport and resolution, MbTilesTileSource for offline MBTiles, or wiring tiles into Mapsui/SharpMap. Also for missing 'BruTile.Desktop' packages, CS0246 on KnownTileSources, MBTiles SQLite native load failures, and 404s from inverted TMS/OSM y-axis."
-tags:
-  - dotnet
-  - csharp
-  - tiles
-  - tms
-  - wmts
-  - mbtiles
-  - openstreetmap
-  - webmapping
-  - http
+license: MIT
+metadata:
+  category: gis
+  tags: "dotnet, csharp, tiles, tms, wmts, mbtiles, openstreetmap, webmapping, http"
 ---
 
 > **项目地址：** <https://github.com/BruTile/BruTile>
 >
-> **NuGet：** `BruTile` 6.0.0 / `BruTile.MbTiles` 6.0.0（net8.0 / net9.0，截至 2026-10）
+> **最新版本：** 6.0.0（2025-10-27 发布，[GitHub Releases](https://github.com/BruTile/BruTile/releases) / NuGet `BruTile`、`BruTile.MbTiles`；目标框架 net8.0 / net9.0）
 >
 > **官方文档：** <https://github.com/BruTile/BruTile>
 >
@@ -239,7 +233,7 @@ Console.WriteLine($"cache={fromCache} web={fromWeb}");
 ## 最佳实践
 
 1. **复用 HttpClient 与 TileSource**：瓦片源与 HttpClient 都是无状态可复用的对象，放在字段或 DI 单例里
-2. **明确 y 轴约定**：OSM 原点在左上、TMS 在左下；瓦片行列错位错位一整屏，先把 `YAxis` 对齐再排查网络
+2. **明确 y 轴约定**：OSM 原点在左上、TMS 在左下；瓦片行列整体错位一整屏，先把 `YAxis` 对齐再排查网络
 3. **缓存分两层**：内存缓存应对快速平移缩放，MBTiles 或文件系统缓存应对离线与省钱；构造 `HttpTileSource` 时传 `persistentCache`
 4. **限制缩放级别**：`GlobalSphericalMercator(min, max)` 与服务实际级别一致，超出范围只会拿到 404
 5. **尊重版权与速率限制**：OSM 等公共服务有使用政策，生产环境用商业或自建瓦片服务，`Attribution` 要显示出来

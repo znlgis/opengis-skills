@@ -1,15 +1,10 @@
 ---
-name: cad-skills
+name: cad
 description: "Use when doing parametric 3D modeling, 2D drafting, geometric kernel development, BIM/IFC processing, PCB design, or AutoCAD .NET development. Index of 21 skills: FreeCAD, OpenSCAD, OCCT, CadQuery, Blender, KiCad, SolveSpace, QCAD, xBIM, Clipper2, TongWen and more."
-tags:
-  - cad
-  - 3d-modeling
-  - 2d-drafting
-  - parametric
-  - geometry
-  - bim
-  - pcb
-  - opensource
+license: MIT
+metadata:
+  category: cad
+  tags: "cad, 3d-modeling, 2d-drafting, parametric, geometry, bim, pcb, opensource"
 ---
 
 > **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引
@@ -18,7 +13,7 @@ tags:
 
 本分类涵盖 **21 个 CAD 项目**的技能文件，从底层几何内核到用户界面覆盖 CAD 全栈：
 
-```
+```text
 几何内核 → 参数化建模 → CAD 应用 → 数据交换 → 可视化
   (OCCT)    (FreeCAD)   (QCAD)    (LibreDWG) (Chili3D)
 ```
@@ -59,7 +54,7 @@ tags:
 | [qcad](./qcad/SKILL.md) | 开源 2D CAD（DXF 编辑器） | `dxf` `2d` `cad` `dwg` |
 | [librecad](./librecad/SKILL.md) | 开源 2D CAD（C++/Qt） | `dxf` `2d` `qt` |
 | [lightcad](./lightcad/SKILL.md) | 国产开源 C# 平台（2D/3D/BIM 设计，可作二次开发底座） | `2d` `csharp` `dotnet` `cad` |
-| [fy_layout](./fy_layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） | `construction` `dotnet` `2d` `3d` |
+| [fy-layout](./fy-layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） | `construction` `dotnet` `2d` `3d` |
 | [design-drawing-svg-md](./design-drawing-svg-md/SKILL.md) | 设计图 SVG+MD 双载体记录（钢结构施工图→可复现图纸描述） | `svg` `markdown` `pdf` `steel-structure` `llm` |
 
 ### 🔌 PCB/EDA 设计

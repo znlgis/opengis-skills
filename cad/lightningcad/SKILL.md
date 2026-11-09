@@ -1,17 +1,10 @@
 ---
 name: lightningcad
 description: "Use when doing prefabricated facade/envelope panel layout and detailing inside AutoCAD, ZWCAD or GstarCAD with LightningCAD — FsInitBuilding / FsPanelLayout, FsCreateNodeLine node lines, FsShouBian trim and BOM export, LTJianChaTuZhi drawing checks; also when the plugin fails to load (TRUSTEDPATHS, .NET Framework 4.8), custom AecPanel entities render as proxies, or collision checking runs single-threaded under 50 panels. Commercial plugin, no public SDK."
-tags:
-  - autocad
-  - zwcad
-  - cad
-  - dotnet
-  - wpf
-  - panel-layout
-  - bim
-  - envelope
-  - commercial
-  - plugin
+license: MIT
+metadata:
+  category: cad
+  tags: "autocad, zwcad, cad, dotnet, wpf, panel-layout, bim, envelope, commercial, plugin"
 ---
 
 > **产品定位：** 商业软件（非开源），面向装配式建筑围护结构深化设计的 CAD 插件，支持 AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）等平台
@@ -24,7 +17,7 @@ tags:
 >
 > **运行时：** .NET Framework 4.8 ｜ **CAD 平台：** AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）
 >
-> **版本：** 商业闭源，不发布公开版本号；安装包与更新由桌面客户端下发（AutoUpdater.NET + 阿里云 OSS），以官网 <https://shandianweihu.com/> 与客户端显示为准（截至 2026-10）
+> **最新版本：** 商业闭源，不发布公开版本号；安装包与更新由桌面客户端下发（AutoUpdater.NET + 阿里云 OSS），以官网 <https://shandianweihu.com/> 与客户端显示为准（截至 2026-11）
 
 ## 概述
 
@@ -213,18 +206,16 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 
 ## 常见问题
 
-| 问题 | 解决方案 |
-|------|---------|
-| 插件加载失败 | 检查 CAD 信任路径配置（TRUSTEDPATHS）、.NET Framework 4.8 是否安装 |
-| 自定义实体无法显示 | 确保 ObjectARX .NET 包装器已正确注册 |
-| 板材碰撞检查过慢 | 板材数 >50 时确认多线程已启用 |
-| 客户端无法登录 | 检查网络连接、SM2 加密组件是否正常 |
-| 收边 BOM 导出 Excel 失败 | 确认 ReoGrid/NPOI 组件依赖完整 |
-| 心跳检测失败 | 授权过期或网络中断，重新登录 |
-| 命令行输入 FsInitBuilding 提示未知命令 | 插件未随当前图纸加载：确认客户端已注册该 CAD 版本、`TRUSTEDPATHS` 含插件 DLL 目录，并在新图纸中重试 |
-| 客户端更新后 CAD 启动报插件版本不匹配 | 客户端与插件须同版本；从客户端执行"修复/更新"，不要手工替换 DLL |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 插件加载失败 | CAD 信任路径未包含插件目录，或未装 .NET Framework 4.8 | 在 `TRUSTEDPATHS` 中加入插件目录；安装 .NET Framework 4.8 |
+| 自定义实体无法显示 | ObjectARX .NET 包装器未正确注册 | 按版本重装/修复客户端，确保包装器注册成功 |
+| 板材碰撞检查过慢 | 板材数 >50 时多线程未启用 | 确认多线程已启用 |
+| 客户端无法登录 | 网络不通，或 SM2 国密加密组件异常 | 检查网络与 SM2 组件，必要时重装客户端 |
+| 收边 BOM 导出 Excel 失败 | ReoGrid/NPOI 组件依赖缺失或版本不匹配 | 修复安装补齐依赖 |
+| 心跳检测失败 | 授权过期或网络中断 | 重新登录；仍失败检查授权与网络 |
+| 命令行输入 `FsInitBuilding` 提示未知命令 | 插件未随当前图纸加载 | 确认客户端已注册该 CAD 版本，`TRUSTEDPATHS` 含插件 DLL 目录，并在新图纸中重试 |
+| 客户端更新后 CAD 启动报插件版本不匹配 | 客户端与插件版本不一致 | 从客户端执行"修复/更新"，不要手工替换 DLL |
 
 ## AI 使用建议
 
@@ -238,7 +229,7 @@ JSON 配置文件存储在 `.cfg/Configs/` 目录，支持方案级配置、团�
 ## 相关技能
 
 - **ifoxcad** — AutoCAD .NET 二次开发框架（共享 ObjectARX/.NET 插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
-- **fy_layout** — 飞扬 LightCAD 场布插件示例（另一 CAD 二次开发参考）：[../fy_layout/SKILL.md](../fy_layout/SKILL.md)
+- **fy-layout** — 飞扬 LightCAD 场布插件示例（另一 CAD 二次开发参考）：[../fy-layout/SKILL.md](../fy-layout/SKILL.md)
 - **tongwen** — 同文图纸翻译套件（同为 AutoCAD 2019–2026 商业插件，插件形态可对照）：[../tongwen/SKILL.md](../tongwen/SKILL.md)
 - **libredwg** — DWG/DXF 读写库（图纸预处理/格式转换）：[../libredwg/SKILL.md](../libredwg/SKILL.md)
 

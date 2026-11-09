@@ -1,14 +1,10 @@
 ---
 name: admin-net-frontend
 description: "Use when building Vue 3 admin dashboards with dynamic routing and permission-based menus — getAPI(XxxApi) generated clients, v-auth button permissions, Pinia user store, api_build regeneration, Nginx try_files + /hubs WebSocket proxy. Also for blank pages from wrong component paths, API types out of date after backend changes, and SignalR notifications not arriving. Admin.NET Frontend: Vue 3 + Vite + TS admin UI."
-tags:
-  - vue
-  - vue3
-  - typescript
-  - element-plus
-  - vite
-  - admin
-  - frontend
+license: MIT
+metadata:
+  category: csharp
+  tags: "vue, vue3, typescript, element-plus, vite, admin, frontend"
 ---
 
 > **项目地址（上游）：** <https://github.com/zuohuaijun/Admin.NET>
@@ -17,7 +13,7 @@ tags:
 >
 > **前端代码目录：** `Web/`（Vue3 应用）
 >
-> **当前版本：** v2.4.x（`Web/package.json` 为 2.4.33；upstream `v2` 分支最后提交 2026-01-30，znlgis 维护 `v2` 分支最后提交 2026-03-26，后者已升到 Vite 8 / vue-router 5.0.3；截至 2026-10 实测）
+> **最新版本：** v2.4.x（`Web/package.json` 为 2.4.33：upstream `v2` 用 Vite 7 + vue-router 5.0.0，[znlgis 维护分支](https://github.com/znlgis/Admin.NET)用 Vite 8 + vue-router 5.0.3；截至 2026-11 实测）
 >
 > **在线文档：** <https://adminnet.top/>
 >
@@ -29,7 +25,7 @@ tags:
 
 Admin.NET 前端基于 **vue-next-admin** 模板二次开发，采用 **Vue 3 Composition API** + **TypeScript** + **Element Plus** + **Vite 7** 技术栈。项目提供完整的企业级中后台管理界面，包括登录认证、动态菜单/路由、RBAC 权限控制、多语言、主题切换、SignalR 实时通讯等能力。
 
-**核心技术栈（版本对齐 upstream `v2`/`master` 的 `Web/package.json`，截至 2026-10 实测）：**
+**核心技术栈（版本对齐 upstream `v2`/`master` 的 `Web/package.json`，截至 2026-11 实测）：**
 - **框架：** Vue 3.5+（Composition API + `<script setup>`）
 - **语言：** TypeScript 5.9
 - **构建：** Vite 7+（znlgis 维护分支已升到 Vite 8）/ pnpm 10
@@ -215,7 +211,7 @@ server {
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
 | npm / yarn 装依赖失败 | 项目用 `pnpm-workspace.yaml`，必须用 pnpm（推荐 10.x） |
 | `import.meta.env` 读不到自定义变量 | Vite 只暴露 `VITE_` 前缀的变量，改名后重启 dev server |
@@ -223,6 +219,9 @@ server {
 | 按钮该隐藏却没隐藏 | `v-auth` 的标识与后端按钮权限标识必须完全一致 |
 | 接口类型过期、字段对不上 | 后端接口改过后重新运行 `api_build` 生成 API 客户端 |
 | 站内通知/实时消息不来 | Nginx 未代理 WebSocket：给 `/hubs` 加 `Upgrade`/`Connection: upgrade` 配置 |
+| `pnpm install` 报 `ERR_PNPM_UNSUPPORTED_ENGINE` / 构建报引擎不满足 | Node 版本低于 Vite 要求；升到 `^20.19.0 || >=22.12.0`（`node -v` 确认）后重装 |
+| 路由跳转报 `Failed to fetch dynamically imported module` | 菜单里的组件路径大小写或目录与 `src/views/` 下实际文件不一致；按实际路径逐段核对（Linux 构建区分大小写） |
+| 跑完 `api_build` 后 `TS2307: Cannot find module` | 生成脚本未完成后端 Swagger 拉取（后端没启动或地址错）；确认 `/swagger/*/swagger.json` 可访问后重新生成 |
 
 ---
 
@@ -244,6 +243,8 @@ server {
 - **权限标识一致性**：前端 `v-auth` 指令中的标识必须与后端菜单配置中的按钮权限标识完全一致
 - **API 自动生成**：修改后端接口后务必重新运行 `api_build` 脚本，否则类型定义过期
 - **SignalR 代理**：Nginx 需配置 WebSocket 代理（`/hubs` 路径），否则实时通知不工作
+- **登录密码传输**：密码经 `sm-crypto-v2` 做 SM2 加密后再提交，改登录逻辑时不要绕过
+- **Node 版本**：Vite 7/8 官方要求 `^20.19.0 || >=22.12.0`；包内 `engines` 仍写 `>=18.0.0`，以 Vite 要求为准
 
 ### 如何选择正确方案
 
@@ -253,19 +254,6 @@ server {
 | 独立 Vue3 后台项目 | 直接用 vue-next-admin 模板 + Element Plus |
 | 仅需简单管理界面 | vue-pure-admin / naive-ui-admin |
 | 移动端/小程序 | uni-app / Taro |
-
----
-
-## 注意事项
-
-1. **包管理器**：务必使用 `pnpm`，项目使用 `pnpm-workspace.yaml` 管理
-2. **API 自动生成**：修改后端接口后需重新运行 `api_build` 脚本更新前端 API 类型定义
-3. **权限标识**：前端 `v-auth` 指令中使用的权限标识需与后端菜单配置中的按钮权限一致
-4. **路由组件路径**：后端菜单配置的组件路径对应 `src/views/` 下的文件路径（不含后缀）
-5. **环境变量前缀**：Vite 项目中自定义环境变量必须以 `VITE_` 开头
-6. **国密加密**：登录密码等敏感数据前端使用 `sm-crypto-v2` 做 SM2 加密后传输
-7. **SignalR 连接**：需正确配置 Nginx 代理 WebSocket（`/hubs` 路径）
-8. **Node 版本**：要求 Node.js ^20.19.0 || >=22.12.0（Vite 7 官方要求）
 
 ---
 

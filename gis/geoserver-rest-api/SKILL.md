@@ -1,17 +1,10 @@
 ---
 name: geoserver-rest-api
 description: "Use when automating GeoServer 3.0.2 over REST — POST /rest/workspaces, datastores, featuretypes, PUT Shapefile ZIP to file.shp, GeoTIFF to coveragestores, upload SLD as application/vnd.ogc.sld+xml, ?recurse=true deletes. curl -u admin:geoserver, single-key JSON like {\"workspace\":{...}}, 401 on POST but 200 on GET, GWC cache masking style changes."
-tags:
-  - rest
-  - api
-  - http
-  - server
-  - wms
-  - wfs
-  - automation
-  - curl
-  - geoserver
-  - json
+license: MIT
+metadata:
+  category: gis
+  tags: "rest, api, http, server, wms, wfs, automation, curl, geoserver, json"
 ---
 
 > **项目地址：** <https://github.com/geoserver/geoserver>
@@ -20,7 +13,7 @@ tags:
 >
 > **API 参考：** <https://docs.geoserver.org/stable/en/user/rest/api/index.html>
 >
-> **最新版本：** GeoServer 3.0.2（2026-10-17 发布，安全修复版；[官方下载](https://geoserver.org/release/stable/)）
+> **最新版本：** GeoServer 3.0.2（2026-10-19 发布，安全修复版；截至 2026-11，[官方下载](https://geoserver.org/release/stable/)）
 >
 > **许可证：** GPL-2.0
 

@@ -1,16 +1,10 @@
 ---
 name: grass-gis
 description: "Use when doing GIS geoprocessing with GRASS GIS headlessly — grass --exec and --tmp-project for servers and CI, g.region computational region management, r.* raster, v.* vector, r3.* 3D raster and t.* temporal modules, r.import/v.import data import, or Python scripting with grass.script, grass.script.array and grass.tools."
-tags:
-  - gis
-  - raster
-  - vector
-  - python
-  - cli
-  - headless
-  - temporal
-  - automation
-  - qgis
+license: MIT
+metadata:
+  category: gis
+  tags: "gis, raster, vector, python, cli, headless, temporal, automation, qgis"
 ---
 
 > **项目地址：** <https://github.com/OSGeo/grass>
@@ -19,7 +13,7 @@ tags:
 >
 > **手册入口：** <https://grass.osgeo.org/grass-stable/manuals/>
 >
-> **最新版本：** 8.5.0（截至 2026-10，GitHub Releases；8.4 系列最新补丁 8.4.2）
+> **最新版本：** 8.5.0（截至 2026-11，GitHub Releases；8.4 系列最新补丁 8.4.2）
 >
 > **许可证：** GPL-2.0
 

@@ -1,15 +1,10 @@
 ---
 name: solvespace
 description: "Use when doing lightweight parametric 2D/3D CAD in SolveSpace 3.3 — constraint sketching, linkage/mechanism checks, section and 2D views, STL for printing, or driving the solver from solvespace-cli / the PyPI slvs package in CI; also when sketch lines turn red (over-constrained) or blue (under-constrained), a constraint value change does not refresh (press Space), an exported STL has holes (Ctrl+Shift+N naked edges), or someone expects STEP import (STEP is export-only)."
-tags:
-  - 3d
-  - 2d
-  - parametric
-  - cad
-  - constraint-solver
-  - step
-  - dxf
-  - python
+license: MIT
+metadata:
+  category: cad
+  tags: "3d, 2d, parametric, cad, constraint-solver, step, dxf, python"
 ---
 
 > **项目地址：** <https://github.com/solvespace/solvespace>
@@ -20,7 +15,7 @@ tags:
 >
 > **许可证：** GPL-3.0+
 >
-> **最新稳定版：** 3.3（2026-10-21 发布，截至 2026-10，见 [GitHub Releases](https://github.com/solvespace/solvespace/releases)）；主线变化是 NURBS 曲面/边的修复与求解器改进（大尺寸值、此前不收敛的合法约束），以及 3.2 那处"解不出的约束被删除"的回归修复
+> **最新版本：** 3.3（2026-10-21 发布，截至 2026-11，见 [GitHub Releases](https://github.com/solvespace/solvespace/releases)）；主线变化是 NURBS 曲面/边的修复与求解器改进（大尺寸值、此前不收敛的合法约束），以及 3.2 那处"解不出的约束被删除"的回归修复
 >
 > **参考手册：** <https://solvespace.com/ref.pl> ・ **教程：** <https://solvespace.com/tutorial.pl> ・ **网页版：** <https://solvespace.com/>（同一版本线的 Emscripten 构建）
 
@@ -288,20 +283,18 @@ API 面（见 `python/slvs/solvespace.pyi`）：
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 草图线条变红 | 过约束：删除冗余约束；若曾在 3.2 遇到过"求解不出的约束被直接删掉"，那是 3.2 的回归，3.3 起不再删除，用 3.3+ 或手工加回 |
-| 草图线条蓝色 | 欠约束：补距离/角度/水平垂直；`Ctrl+Shift+F` 高亮所有欠约束点 |
-| 改完约束值不刷新 | 按 `Space`（Regenerate All）；仍不对就 `Ctrl+Shift+D` 逐步维度检查 |
-| 导出 STL 残缺 | 实体未闭合，`Ctrl+Shift+N` 查裸边，确认拉伸 Group 生成的是 Solid 而非 Shell |
-| 升级到 3.3 后曲面显示变干净但旧文件几何有细微变化 | 3.3 是 NURBS 几何内核修复，平面/边、曲面与相切处都有改动，导出前用 `Ctrl+Shift+N` 与体积/面积核对关键尺寸 |
-| 大尺寸模型（米级跨度）求解不收敛 | 3.3 改善了大数值约束的求解；仍在旧版时先升级，或把单位改为 mm 并统一量级 |
-| 圆弧标注变成了直径 | 3.2 起圆/弧尺寸默认**半径**，在 Property Browser 取消 `use radius` 可切回直径 |
-| 拉伸的图片/文字出现在 3D 里 | 3.2 起 Image 元素默认不复制到 3D Group，需要时对该 Image 执行 Toggle Construction |
-| 中文乱码 | 内置矢量字体不含 CJK；TrueType 文字需系统字体，或导出 SVG 后用其它工具补文字 |
-| 装配运动不顺 | 缺少同轴/距离约束导致多余自由度，逐个 `d`/`o`/`l` 补齐 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 草图线条变红 | 过约束：约束互相冲突或冗余 | 删除冗余约束；若曾在 3.2 遇到"求解不出的约束被直接删掉"，那是 3.2 的回归，3.3 起不再删除，用 3.3+ 或手工加回 |
+| 草图线条蓝色 | 欠约束：自由度数 > 0 | 补距离/角度/水平垂直约束；`Ctrl+Shift+F` 高亮所有欠约束点 |
+| 改完约束值不刷新 | 求解器未重算 | 按 `Space`（Regenerate All）；仍不对就 `Ctrl+Shift+D` 逐步维度检查 |
+| 导出 STL 残缺 | 实体未闭合（是 Shell 而非 Solid） | `Ctrl+Shift+N` 查裸边，确认拉伸 Group 生成的是 Solid |
+| 升级到 3.3 后曲面显示变干净但旧文件几何有细微变化 | 3.3 是 NURBS 几何内核修复，平面/边、曲面与相切处都有改动 | 导出前用 `Ctrl+Shift+N` 与体积/面积核对关键尺寸 |
+| 大尺寸模型（米级跨度）求解不收敛 | 旧版求解器在大数值约束下不收敛 | 升级到 3.3；或把单位改为 mm 并统一量级 |
+| 圆弧标注变成了直径 | 3.2 起圆/弧尺寸默认**半径** | 在 Property Browser 取消 `use radius` 可切回直径 |
+| 拉伸的图片/文字出现在 3D 里 | 3.2 起 Image 元素默认不复制到 3D Group | 需要时对该 Image 执行 Toggle Construction |
+| 中文乱码 | 内置矢量字体不含 CJK | TrueType 文字需系统字体，或导出 SVG 后用其它工具补文字 |
+| 装配运动不顺 | 缺少同轴/距离约束，多余自由度导致 | 逐个补齐 `d`/`o`/`l` 约束 |
 
 ## 适用 / 不适用场景
 

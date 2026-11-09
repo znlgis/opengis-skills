@@ -1,26 +1,21 @@
 ---
 name: polly
 description: "Use when adding retry, timeout, circuit-breaker, rate-limit or fallback resilience to .NET HTTP/database calls — ResiliencePipelineBuilder AddRetry/AddTimeout/AddCircuitBreaker, Polly 8 ResiliencePipeline, Microsoft.Extensions.Http.Resilience AddStandardResilienceHandler, or fixing TimeoutRejectedException, retries multiplying load, and 'The circuit is now open'. Polly: .NET resilience and transient-fault-handling library."
-tags:
-  - dotnet
-  - csharp
-  - resilience
-  - polly
-  - retry
-  - circuit-breaker
-  - httpclient
-  - reliability
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, csharp, resilience, polly, retry, circuit-breaker, httpclient, reliability"
 ---
 
 > **项目地址：** <https://github.com/App-vNext/Polly>
 >
 > **官方文档：** <https://www.pollydocs.org/>
 >
-> **NuGet：** `Polly.Core` 8.8.1（v8 管道与策略）、`Polly.Extensions` 8.8.1（DI 注册 + 遥测）、`Polly.RateLimiting` 8.8.1（限流策略）、`Polly` 8.8.1（仅承载 v7 旧 API）
+> **最新版本：** `Polly.Core` / `Polly.Extensions` / `Polly.RateLimiting` / `Polly` 同为 8.9.1（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Polly.Core)；8.9.0 起提供 net10.0 目标）
 >
 > **配套：** `Microsoft.Extensions.Http.Resilience` 10.11.0（`IHttpClientFactory` 标准弹性 handler，版本跟随 Microsoft.Extensions.*）
 >
-> **目标框架：** net8.0 / net6.0 / netstandard2.0 / .NET Framework 4.6.2+
+> **目标框架：** net10.0 / net8.0 / net6.0 / netstandard2.0 / .NET Framework 4.6.2+（以包内 `lib/` 实测）
 >
 > **许可证：** BSD-3-Clause
 
@@ -71,8 +66,8 @@ dotnet add package Microsoft.Extensions.Http.Resilience
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Polly.Core" Version="8.8.1" />
-  <PackageReference Include="Polly.Extensions" Version="8.8.1" />
+  <PackageReference Include="Polly.Core" Version="8.9.1" />
+  <PackageReference Include="Polly.Extensions" Version="8.9.1" />
   <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.11.0" />
 </ItemGroup>
 ```
@@ -213,7 +208,10 @@ var pipeline = new ResiliencePipelineBuilder()
 
 ### 在 DI 中注册命名管道
 
+异常型重试用非泛型 builder；**结果型重试（按 HTTP 状态码判断）必须用泛型 builder**，取管道时也要带泛型，否则编译不过。
+
 ```csharp
+// 1) 异常型管道：非泛型 builder
 builder.Services.AddResiliencePipeline("orders-api", (pipelineBuilder, context) =>
 {
     pipelineBuilder
@@ -227,6 +225,31 @@ public class OrderClient(ResiliencePipelineProvider<string> pipelines)
     {
         var pipeline = pipelines.GetPipeline("orders-api");
         return pipeline.ExecuteAsync(async token => await Fetch(token), ct).AsTask();
+    }
+}
+
+// 2) 结果型管道：泛型注册 + 泛型取回
+builder.Services.AddResiliencePipeline<string, HttpResponseMessage>("inventory-api",
+    pipelineBuilder =>
+    {
+        pipelineBuilder.AddRetry(new RetryStrategyOptions<HttpResponseMessage>
+        {
+            ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
+                .HandleResult(r => (int)r.StatusCode >= 500),
+            MaxRetryAttempts = 2,
+            Delay = TimeSpan.FromMilliseconds(300)
+        });
+    });
+
+public class InventoryClient(
+    HttpClient http,
+    ResiliencePipelineProvider<string> pipelines)
+{
+    public Task<HttpResponseMessage> GetAsync(CancellationToken ct)
+    {
+        var pipeline = pipelines.GetPipeline<HttpResponseMessage>("inventory-api");
+        return pipeline.ExecuteAsync(
+            async token => await http.GetAsync("/inventory", token), ct).AsTask();
     }
 }
 ```
@@ -274,28 +297,30 @@ dotnet add package Polly.Extensions
 顺序很关键：`AddRetry(...).AddCircuitBreaker(...)` 表示熔断包住重试，即"重试耗尽仍失败 = 熔断器记一次失败"；反过来会让每次重试都独立参与熔断统计。
 
 ```csharp
-builder.Services.AddResiliencePipeline("pay-gateway", pipelineBuilder =>
-{
-    pipelineBuilder
-        .AddRetry(new RetryStrategyOptions
-        {
-            ShouldHandle = new PredicateBuilder()
-                .Handle<HttpRequestException>()
-                .HandleResult<HttpResponseMessage>(r => (int)r.StatusCode >= 500),
-            MaxRetryAttempts = 3,
-            BackoffType = DelayBackoffType.Exponential,
-            UseJitter = true,
-            Delay = TimeSpan.FromMilliseconds(200)
-        })
-        .AddCircuitBreaker(new CircuitBreakerStrategyOptions
-        {
-            FailureRatio = 0.5,
-            MinimumThroughput = 8,
-            SamplingDuration = TimeSpan.FromSeconds(30),
-            BreakDuration = TimeSpan.FromSeconds(20)
-        })
-        .AddTimeout(TimeSpan.FromSeconds(15));
-});
+// 要按 HTTP 状态码判定失败，管道必须是泛型管道（ResiliencePipeline<HttpResponseMessage>）
+builder.Services.AddResiliencePipeline<string, HttpResponseMessage>("pay-gateway",
+    pipelineBuilder =>
+    {
+        pipelineBuilder
+            .AddRetry(new RetryStrategyOptions<HttpResponseMessage>
+            {
+                ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
+                    .Handle<HttpRequestException>()
+                    .HandleResult(r => (int)r.StatusCode >= 500),
+                MaxRetryAttempts = 3,
+                BackoffType = DelayBackoffType.Exponential,
+                UseJitter = true,
+                Delay = TimeSpan.FromMilliseconds(200)
+            })
+            .AddCircuitBreaker(new CircuitBreakerStrategyOptions<HttpResponseMessage>
+            {
+                FailureRatio = 0.5,
+                MinimumThroughput = 8,
+                SamplingDuration = TimeSpan.FromSeconds(30),
+                BreakDuration = TimeSpan.FromSeconds(20)
+            })
+            .AddTimeout(TimeSpan.FromSeconds(15));
+    });
 ```
 
 **3. 业务侧经管道调用**
@@ -308,7 +333,8 @@ public class PayGatewayClient(
 {
     public async Task<string> ChargeAsync(string payload, CancellationToken ct)
     {
-        var pipeline = pipelines.GetPipeline("pay-gateway");
+        // 泛型注册的管道要泛型取回，非泛型的 GetPipeline("pay-gateway") 会解析失败
+        var pipeline = pipelines.GetPipeline<HttpResponseMessage>("pay-gateway");
         try
         {
             var response = await pipeline.ExecuteAsync(
@@ -328,11 +354,17 @@ public class PayGatewayClient(
 **4. 打开遥测确认策略命中**
 
 ```csharp
-builder.Services.AddResiliencePipeline("pay-gateway", (pipelineBuilder, context) =>
-{
-    pipelineBuilder.AddRetry(new RetryStrategyOptions { MaxRetryAttempts = 3 });
-    pipelineBuilder.ConfigureTelemetry(context.ServiceProvider.GetRequiredService<ILoggerFactory>());
-});
+// ConfigureTelemetry 是泛型扩展，泛型管道同样可用
+builder.Services.AddResiliencePipeline<string, HttpResponseMessage>("pay-gateway",
+    (pipelineBuilder, context) =>
+    {
+        pipelineBuilder.AddRetry(new RetryStrategyOptions<HttpResponseMessage>
+        {
+            MaxRetryAttempts = 3
+        });
+        pipelineBuilder.ConfigureTelemetry(
+            context.ServiceProvider.GetRequiredService<ILoggerFactory>());
+    });
 ```
 
 Telemetry 会输出 `Resilience event occurred. EventName: 'OnRetry'` 这类结构化日志，可直接被 Serilog / OpenTelemetry 采集。
@@ -367,7 +399,7 @@ for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://localhos
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
 | 重试次数比预期多一次 | `MaxRetryAttempts` 是"额外重试次数"，总调用数 = 1 + 该值 |
 | 超时设置后请求仍不中断 | 委托没有接收/使用 `CancellationToken`，或底层 API 不支持取消；超时策略只能协作式取消 |
@@ -377,7 +409,8 @@ for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://localhos
 | 升级到 v8 后编译报找不到 `Policy` | 只装了 `Polly.Core`；v7 旧 API 在 `Polly` 包里，要么换新 API，要么补装 `Polly` |
 | `AddResiliencePipeline` 找不到 | 缺 `Polly.Extensions` 包，命名管道与 DI 集成不在 `Polly.Core` 中 |
 | `ValueTask` 不能直接 await 两次 | v8 的 `ExecuteAsync` 返回 `ValueTask<T>`，需要 await 两次时先 `.AsTask()` |
-| 重试对象是 `HttpResponseMessage` 但没触发 | 用了 `RetryStrategyOptions` 而非 `RetryStrategyOptions<HttpResponseMessage>`，结果判定必须带泛型 |
+| 按状态码重试完全不触发 `OnRetry` | 用了非泛型管道：结果判定要 `ResiliencePipelineBuilder<HttpResponseMessage>` + `RetryStrategyOptions<HttpResponseMessage>` + `PredicateBuilder<HttpResponseMessage>.HandleResult(...)`，三步缺一不可 |
+| 泛型管道注册后 `GetPipeline("name")` 报找不到管道 | 注册用了 `AddResiliencePipeline<TKey,TResult>`，取回也必须泛型：`GetPipeline<HttpResponseMessage>("name")` |
 | `Microsoft.Extensions.Http.Resilience` 版本冲突 | 该包版本跟随 `Microsoft.Extensions.*`（.NET 10 用 10.x），与项目 TFM 对齐 |
 | 管道里超时和重试谁耗时更长 | 顺序决定语义：`AddTimeout` 在外层就是"总时长上限"，在内层就是"单次尝试上限" |
 
@@ -386,7 +419,7 @@ for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://localhos
 ## AI 使用建议
 
 - **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`dotnet add package` 需访问 NuGet。
-- **先探测版本**：`dotnet list package` 确认 `Polly.Core` / `Polly.Extensions` / `Polly.RateLimiting` 同为 8.8.1；v8 的入口是 `ResiliencePipelineBuilder`，v7 的 `Policy` API 只在旧包 `Polly` 里，混用会编译失败。
+- **先探测版本**：`dotnet list package` 确认 `Polly.Core` / `Polly.Extensions` / `Polly.RateLimiting` 同为 8.9.1；v8 的入口是 `ResiliencePipelineBuilder`，v7 的 `Policy` API 只在旧包 `Polly` 里，混用会编译失败。
 - **验证产物**：写一个必然失败三次再成功的委托，断言 `AddRetry` 的实际尝试次数与退避间隔；断路器用 `CircuitState` 断言 Closed→Open→HalfOpen 的转换，而不是只看异常类型。
 - **常见误操**：重试包住整条 HttpClient 调用链时，若外层还有 HTTP 层的重试会成倍放大请求；`AddTimeout` 的超时要短于 HttpClient 的 `Timeout`，否则永远等不到自己的超时。
 - **安全与权限**：重试会放大对故障服务的压力，生产环境配指数退避与抖动；限流/熔断阈值改动前先与用户确认容量预期。
@@ -403,7 +436,7 @@ for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://localhos
 
 ---
 
-## 相关资源
+## 参考资源
 
 - 官方文档：<https://www.pollydocs.org/>
 - GitHub 仓库：<https://github.com/App-vNext/Polly>

@@ -1,13 +1,10 @@
 ---
 name: kicad
 description: "Use when doing schematic capture or PCB layout in KiCad (10.0.x) — Eeschema symbols and hierarchical sheets, Pcbnew board setup, net classes, zones, DRC/ERC, and scripting via kicad-cli (sch export pdf/netlist, pcb export gerbers/drill/pos/step) or the pcbnew Python module. Also for pcbnew wxPoint-to-VECTOR2I mismatches across versions, Gerber sets rejected by fabricators like JLC, and footprint assignment lost when syncing schematic to board."
-tags:
-  - eda
-  - pcb
-  - electronics
-  - schematic
-  - gerber
-  - python
+license: MIT
+metadata:
+  category: cad
+  tags: "eda, pcb, electronics, schematic, gerber, python"
 ---
 
 > **项目地址：** <https://gitlab.com/kicad/code/kicad>
@@ -20,9 +17,9 @@ tags:
 >
 > **许可证：** GPL-3.0+
 >
-> **包管理器：** `kicad`（Ubuntu PPA `ppa:kicad/kicad-10.0-releases` / `brew install --cask kicad` / Windows 安装包，最新 10.0.7 截至 2026-10）
+> **最新版本：** 10.0.8（2026-10-30 发布，截至 2026-11，见 [KiCad 10.0.8 Release](https://www.kicad.org/blog/) 与 [kicad-source-mirror Releases](https://github.com/KiCad/kicad-source-mirror/releases)）
 >
-> **版本：** 10.0.7（GitHub 镜像 Release `10.0.7`，2026-10-16；版本号 `10.99.0` 是下一大版本 11.0 的开发版）
+> **包管理器：** `kicad`（Ubuntu PPA `ppa:kicad/kicad-10.0-releases` / `brew install --cask kicad` / Windows 安装包；`10.99.0` 是下一大版本 11.0 的开发版）
 
 ## 概述
 
@@ -40,7 +37,7 @@ KiCad 主要程序：
 | BOM 工具 | 物料清单 |
 | CLI（KiCad 7+） | 自动化（`kicad-cli`） |
 
-当前稳定线为 **10.0.x**（最新 10.0.7，见文首版本行）。现代版本相对 5.x 的关键变化：
+当前稳定线为 **10.0.x**（最新 10.0.8，见文首版本行）。现代版本相对 5.x 的关键变化：
 
 - 文件格式改为 S-expression（`.kicad_sch` / `.kicad_pcb` / `.kicad_pro`），旧 `.lib` / `.mod` 需导入
 - 官方 CLI `kicad-cli`（7.0 起）替代旧 `pcbnew_do` 脚本，可无头导出制造文件
@@ -224,18 +221,16 @@ pcbnew.SaveBoard("out.kicad_pcb", board)
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 元件找不到 footprint | 在 Symbol 属性中绑定 footprint，或用 CvPcb 重新分配 |
-| 中文丝印 | 选支持中文的 TTF（KiCad 6+ 起支持 TTF/OTF）；更早版本仅 stroke 字体 |
-| Gerber 不全 | 板厂常需要 `F.Mask/B.Mask/F.Silk/B.Silk/Edge.Cuts/F.Cu/B.Cu` + 钻孔 |
-| 覆铜失效 | 重新 Refill；检查热焊盘连接 |
-| 嘉立创不识别 | 输出格式选 X2；勾选 `Plot pad on silk` 关闭 |
-| `kicad-cli: command not found` | CLI 自 7.0 起随主程序安装；Windows 在 `C:\Program Files\KiCad\<ver>\bin`，macOS 在 `/Applications/KiCad/KiCad.app/Contents/MacOS`，加入 PATH 后 `kicad-cli version` 验证 |
-| 脚本里 `import pcbnew` 失败 | 用 KiCad 自带 Python，不要 `pip install pcbnew`（该模块无 PyPI 发布）；Linux 装发行版的 `kicad` 包后 `python3 -c "import pcbnew"` 验证 |
-| 从原理图更新后 PCB 元件消失 | 网表同步（Update PCB from Schematic）会按 reference 匹配；改过 reference/删过封装需先重新注释（Annotate）再同步 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 元件找不到 footprint | 符号属性里没绑定 footprint，或封装库未加载 | 在 Symbol 属性中绑定 footprint，或用 CvPcb 重新分配 |
+| 中文丝印显示为方块 | 选中的字体不含 CJK | 选支持中文的 TTF/OTF（KiCad 6+ 支持）；更早版本仅 stroke 字体 |
+| Gerber 打包被板厂退回 | 层栈不全，缺少阻焊/丝印/边框或钻孔 | 至少包含 `F.Mask/B.Mask/F.Silk/B.Silk/Edge.Cuts/F.Cu/B.Cu` + 钻孔文件 |
+| 覆铜失效/不显示 | 未重新 Refill，或热焊盘连接方式错误 | 重新 Refill 区域；检查热焊盘（thermal relief）连接 |
+| 嘉立创不识别 Gerber | 输出格式为旧版 RS-274X 变体 | 输出格式选 X2；勾选 `Plot pad on silk` 关闭相关选项 |
+| `kicad-cli: command not found` | CLI 自 7.0 起随主程序安装，但不在 PATH | Windows 在 `C:\Program Files\KiCad\<ver>\bin`，macOS 在 `/Applications/KiCad/KiCad.app/Contents/MacOS`；加入 PATH 后 `kicad-cli version` 验证 |
+| 脚本里 `import pcbnew` 失败 | `pcbnew` 只能由 KiCad 自带 Python 导入，PyPI 无此包 | 用 KiCad 自带 Python；Linux 装发行版 `kicad` 包后 `python3 -c "import pcbnew"` 验证 |
+| 从原理图更新后 PCB 元件消失 | 网表按 reference 匹配，reference 被改过或封装被删 | 先重新注释（Annotate），再 Update PCB from Schematic |
 
 ## AI 使用建议
 

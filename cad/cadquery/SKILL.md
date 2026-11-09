@@ -1,15 +1,10 @@
 ---
 name: cadquery
-description: "Use when scripting parametric 3D CAD parts in Python with CadQuery — Workplane fluent API, Selector expressions like \">Z\" and \"|Z\", extrude/loft/sweep, fillet and shell, Sketch API, Assembly constraints, STEP/STL/glTF export. Covers conda-forge vs pip install of cadquery 2.8.0 with cadquery-ocp; also for selectors matching nothing, fillet failing on edge sets, and OCCT failures from degenerate geometry."
-tags:
-  - python
-  - 3d
-  - parametric
-  - brep
-  - step
-  - stl
-  - occt
-  - cad
+description: "Use when scripting parametric 3D CAD parts in Python with CadQuery — Workplane fluent API, Selector expressions for above/below/intersecting axis selectors, extrude/loft/sweep, fillet and shell, Sketch API, Assembly constraints, STEP/STL/glTF export. Covers conda-forge vs pip install of cadquery 2.8.0 with cadquery-ocp; also for selectors matching nothing, fillet failing on edge sets, and OCCT failures from degenerate geometry."
+license: MIT
+metadata:
+  category: cad
+  tags: "python, 3d, parametric, brep, step, stl, occt, cad"
 ---
 
 > **项目地址：** <https://github.com/CadQuery/cadquery>
@@ -18,7 +13,9 @@ tags:
 >
 > **GUI：** CQ-editor（<https://github.com/CadQuery/CQ-editor>）
 >
-> **包管理器：** `cadquery`（最新 2.8.0，截至 2026-10；PyPI 与 conda-forge 同步，要求 Python ≥ 3.11，几何依赖 `cadquery-ocp` 7.9.x）
+> **最新版本：** 2.8.0（截至 2026-11，PyPI 与 conda-forge 同步，见 [PyPI](https://pypi.org/project/cadquery/)；要求 Python ≥ 3.11，几何依赖 `cadquery-ocp` 7.9.x）
+>
+> **包管理器：** `pip install cadquery` / `conda install -c conda-forge cadquery`
 >
 > **许可证：** Apache-2.0
 
@@ -268,16 +265,14 @@ cq.exporters.export(result, "out.svg")
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| `ImportError: cannot import name 'OCP'` / `cadquery-ocp` 装不上 | pip 下没有对应平台的 `cadquery-ocp` wheel：改用 `conda install -c conda-forge cadquery`（conda-forge 同步发布），并确认 Python ≥ 3.11 |
-| Selector 选不到（`.faces(">Z")` 结果为空） | 先用 `result.faces().vals()` 或 `result.edges().vals()` 列出全部候选，核对方向/类型过滤条件后再加修饰；复合表达式在 `Val()` 上逐段验证 |
-| 圆角/倒角抛 `OCCT` 异常 | 半径超过相邻边长、或边集合不连续都会失败；减小半径或拆成单条边逐一 `fillet`/`chamfer` |
-| 布尔运算后几何异常/体积为 0 | 运算前确认两个实体都是闭合 Solid（`shape.isValid()`），退化几何先 `.clean()` |
-| `cq.Assembly` 求解失败或不收敛 | 约束过多/冲突：减少约束、给定初始 `Location`，用 `asm.solve()` 的返回状态判断是否收敛 |
-| 导出 STEP 体积巨大或丢失颜色 | STEP 以 BREP 精确保存，体积随面数增长；颜色需在 `Assembly.add(..., color=...)` 上给，`exporters.export` 对单实体不写颜色 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| `ImportError: cannot import name 'OCP'` / `cadquery-ocp` 装不上 | pip 下没有对应平台的 `cadquery-ocp` wheel | 改用 `conda install -c conda-forge cadquery`，并确认 Python ≥ 3.11 |
+| Selector 选不到（`.faces(">Z")` 结果为空） | 方向/类型过滤条件与实际几何不符，或复合表达式某段失配 | 先用 `result.faces().vals()` 列出全部候选，再逐段验证复合表达式 |
+| 圆角/倒角抛 OCCT 异常 | 半径超过相邻边长，或边集合不连续 | 减小半径，或拆成单条边逐一 `fillet`/`chamfer` |
+| 布尔运算后几何异常/体积为 0 | 输入不是闭合 Solid，或含退化几何 | 运算前确认 `shape.isValid()`，退化几何先 `.clean()` |
+| `cq.Assembly` 求解失败或不收敛 | 约束过多/互相冲突，或缺少初始位置 | 减少约束、给定初始 `Location`，用 `asm.solve()` 的返回状态判断是否收敛 |
+| 导出 STEP 体积巨大或丢失颜色 | STEP 以 BREP 精确保存，体积随面数增长；单实体导出不写颜色 | 颜色在 `Assembly.add(..., color=...)` 上给；控制面数后导出 |
 
 ## AI 使用建议
 

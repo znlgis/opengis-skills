@@ -1,24 +1,17 @@
 ---
 name: jts
 description: "Use when doing precise 2D computational geometry in Java with org.locationtech.jts:jts-core 1.20.0 — GeometryFactory construction, contains/intersects predicates, overlay via OverlayNGRobust, buffer, STRtree and PreparedGeometry speedups, WKT/WKB/GeoJSON I/O, and fixing TopologyException or unclosed rings."
-
-tags:
-  - java
-  - geometry
-  - topology
-  - spatial
-  - de9im
-  - wkt
-  - wkb
-  - geojson
-  - gis
+license: MIT
+metadata:
+  category: gis
+  tags: "java, geometry, topology, spatial, de9im, wkt, wkb, geojson, gis"
 ---
 
 > **项目地址：** <https://github.com/locationtech/jts>
 >
 > **Maven Central：** `org.locationtech.jts:jts-core`
 >
-> **最新版本：** 1.20.0（截至 2026-10，[Maven Central](https://central.sonatype.com/artifact/org.locationtech.jts/jts-core)）
+> **最新版本：** 1.20.0（截至 2026-11，[Maven Central](https://central.sonatype.com/artifact/org.locationtech.jts/jts-core)）
 >
 > **许可证：** Eclipse Public License 2.0 / Eclipse Distribution License 1.0（BSD 风格）
 >

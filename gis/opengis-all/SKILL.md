@@ -1,28 +1,22 @@
 ---
 name: opengis-all
 description: "Use when navigating end-to-end GIS workflows — GDAL CLI/API (ogr2ogr, gdalwarp, gdal_calc.py), qgis_process and PyQGIS analysis, GeoServer REST publishing, and OpenLayers/CesiumJS visualization. One-stop index covering the complete open-source GIS data pipeline."
-
-tags:
-  - gis
-  - entrypoint
-  - workflow
-  - fullstack
-  - gdal
-  - qgis
-  - geoserver
-  - pyqgis
-  - tutorial
+license: MIT
+metadata:
+  category: gis
+  tags: "gis, entrypoint, workflow, fullstack, gdal, qgis, geoserver, pyqgis, tutorial"
 ---
 
 > **涵盖工具与项目：**
 >
-> | 工具/接口 | 项目地址 | 文档 | 许可证 |
-> |-----------|----------|------|--------|
-> | GDAL 命令行 | <https://github.com/OSGeo/gdal> | <https://gdal.org/en/latest/programs/> | MIT |
-> | GDAL API (C++/Python/Java/C#) | <https://github.com/OSGeo/gdal> | <https://gdal.org/en/stable/api/index.html> | MIT |
-> | qgis_process | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.44/en/docs/user_manual/processing/standalone.html> | GPL-2.0+ |
-> | PyQGIS | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/> | GPL-2.0+ |
-> | GeoServer REST API | <https://github.com/geoserver/geoserver> | <https://docs.geoserver.org/latest/en/user/rest/index.html> | GPL-2.0+ |
+> | 工具/接口 | 最新版本（截至 2026-11） | 项目地址 | 文档 | 许可证 |
+> |-----------|------------------------|----------|------|--------|
+> | GDAL 命令行 | 3.13.3 | <https://github.com/OSGeo/gdal> | <https://gdal.org/en/latest/programs/> | MIT |
+> | GDAL API (C++/Python/Java/C#) | 3.13.3 | <https://github.com/OSGeo/gdal> | <https://gdal.org/en/stable/api/index.html> | MIT |
+> | QGIS / qgis_process | 4.2.3（LTR 3.44.15） | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.44/en/docs/user_manual/processing/standalone.html> | GPL-2.0+ |
+> | PyQGIS | 4.2.3（LTR 3.44.15） | <https://github.com/qgis/QGIS> | <https://docs.qgis.org/3.44/en/docs/pyqgis_developer_cookbook/> | GPL-2.0+ |
+> | GeoServer REST API | 3.0.2 | <https://github.com/geoserver/geoserver> | <https://docs.geoserver.org/latest/en/user/rest/index.html> | GPL-2.0+ |
+> | OpenLayers / CesiumJS（前端） | ol 10.11.0 / Cesium 1.147.0 | <https://github.com/openlayers/openlayers> | <https://openlayers.org/doc/> | BSD-2-Clause / Apache-2.0 |
 
 ## 概述
 
@@ -76,7 +70,7 @@ python3 -c "from osgeo import gdal; print(gdal.VersionInfo())"
 ### QGIS（qgis_process + PyQGIS）
 
 ```bash
-# 安装 QGIS 3.44 LTR 或 4.x（qgis_process 从 3.16 开始可用）
+# 安装 QGIS 4.2.3 或 3.44 LTR（qgis_process 从 3.16 开始可用）
 # Ubuntu
 apt-get install qgis qgis-plugin-grass
 

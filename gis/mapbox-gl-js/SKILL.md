@@ -1,16 +1,10 @@
 ---
 name: mapbox-gl-js
-description: "Use when building vector web maps with mapbox-gl 3.33.0 — WebGL rendering, Style Spec layers, data-driven expressions, setTerrain raster-dem, fill-extrusion, or debugging 401 'A valid Mapbox access token is required', 'Style is not done loading', and pk./sk. token handling. Note: v2+ is proprietary under Mapbox TOS and requires a token; MapLibre GL JS is the open-source fork."
-tags:
-  - javascript
-  - web
-  - map
-  - vector-tiles
-  - webgl
-  - 3d-terrain
-  - data-driven-styling
-  - style-spec
-  - access-token
+description: "Use when building vector web maps with mapbox-gl 3.34.2 — WebGL rendering, Style Spec layers, data-driven expressions, setTerrain raster-dem, fill-extrusion, or debugging 401 'A valid Mapbox access token is required', 'Style is not done loading', and pk./sk. token handling. Note: v2+ is proprietary under Mapbox TOS and requires a token; MapLibre GL JS is the open-source fork."
+license: MIT
+metadata:
+  category: gis
+  tags: "javascript, web, map, vector-tiles, webgl, 3d-terrain, data-driven-styling, style-spec, access-token"
 ---
 
 > **项目地址：** <https://github.com/mapbox/mapbox-gl-js>
@@ -19,7 +13,7 @@ tags:
 >
 > **API 参考：** <https://docs.mapbox.com/mapbox-gl-js/api/>
 >
-> **最新版本：** 3.33.0（截至 2026-10，npm `mapbox-gl` 与 GitHub Release 一致）
+> **最新版本：** 3.34.2（截至 2026-11，npm `mapbox-gl` 与 GitHub Release 一致；[CHANGELOG](https://github.com/mapbox/mapbox-gl-js/blob/main/CHANGELOG.md)）
 >
 > **许可证：** v2+ 为 Mapbox 专有许可（v1.x 为 BSD-3-Clause；需 Mapbox 账号 access token）
 
@@ -67,8 +61,8 @@ v3 提供更小的 ESM 入口：`import * as mapboxgl from 'mapbox-gl/esm'`。
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.34.2/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.34.2/mapbox-gl.js"></script>
   <style>
     /* 容器必须显式设置高度，否则地图不可见 */
     #map { height: 400px; }
@@ -382,7 +376,7 @@ map.on('load', () => {
 1. **token 安全**：前端只用 `pk.` public token，配置 URL restrictions；`sk.` secret token 仅限服务端
 2. **许可与费用**：v2+ 受 Mapbox TOS 约束，免费层每月 50,000 次地图加载（map loads），超出按量计费，额度与价格以 <https://www.mapbox.com/pricing> 为准；开源或零成本场景评估 MapLibre GL JS
 3. **等待样式加载**：`addSource` / `addLayer` / `setTerrain` 必须在 `load` 事件之后调用
-4. **固定版本**：CDN 引用固定版本号（如 `v3.33.0`），JS 与 CSS 版本保持一致
+4. **固定版本**：CDN 引用固定版本号（如 `v3.34.2`），JS 与 CSS 版本保持一致
 5. **坐标顺序**：Mapbox GL JS 使用 `[经度, 纬度]`，与 GeoJSON 一致，与 Leaflet 的 `[lat, lng]` 相反
 6. **大数据量**：优先矢量瓦片而非大量 GeoJSON；GeoJSON 点数据开启 `cluster` 聚合
 7. **资源清理**：SPA 卸载组件时调用 `map.remove()`，注销自定义事件监听
@@ -409,7 +403,7 @@ map.on('load', () => {
 ## AI 使用建议
 
 - **执行环境**：`npm install`、`npm run build` 在终端中执行；Windows 下用 `npm.cmd`，长构建放后台运行。
-- **先探测版本**：`npm ls mapbox-gl`（未装则 `npm view mapbox-gl version`）；本技能按 3.33.0 编写，CDN 的 JS 与 CSS 必须同为 `v3.33.0`，联网时 `curl.exe -I https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.js` 应为 200。
+- **先探测版本**：`npm ls mapbox-gl`（未装则 `npm view mapbox-gl version`）；本技能按 3.34.2 编写，CDN 的 JS 与 CSS 必须同为 `v3.34.2`，联网时 `curl.exe -I https://api.mapbox.com/mapbox-gl-js/v3.34.2/mapbox-gl.js` 应为 200。
 - **验证产物**：`npm run build` 后 `npx serve dist`，`curl.exe -I http://localhost:5173/` 确认入口；地图是否真加载、有没有 401 只能看浏览器 Network（`api.mapbox.com`），AI 助手通常看不到浏览器画面，请用户确认或提供截图后再判断。
 - **token 安全**：前端只允许 `pk.` 公开 token，`sk.` 绝不能进构建产物；用 `VITE_MAPBOX_TOKEN` 等环境变量注入，提交前用 agent 的 `grep` 搜 `sk.` 与硬编码 `pk.`，回答和日志里不要回显 token。
 - **许可提醒**：v2+ 是 Mapbox 专有许可并受配额计费约束；用户要求开源或免 token 时改写为 MapLibre（`maplibregl` 替代 `mapboxgl`，`mapbox://` 样式换成自建瓦片）。

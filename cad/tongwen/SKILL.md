@@ -1,17 +1,10 @@
 ---
 name: tongwen
 description: "Use when translating engineering DWG drawings with Tongwen — TW_EXTRACT_ALL / TW_TRANSLATE / TW_WRITEBACK_FILE in AutoCAD 2019/2021/2025/2026, glossary CSV with CM/TM precedence, placeholder QA blocking write-back, or headless Tongwen.Runner.BatchCli -i -o -c -m runs; also when extraction fails with a Named Pipe connection error, a configured glossary is never applied, or write-back makes the original text disappear. Local-first CAD/BIM translation suite."
-tags:
-  - autocad
-  - cad
-  - dwg
-  - translation
-  - bim
-  - i18n
-  - dotnet
-  - terminology
-  - commercial
-  - plugin
+license: MIT
+metadata:
+  category: cad
+  tags: "autocad, cad, dwg, translation, bim, i18n, dotnet, terminology, commercial, plugin"
 ---
 
 > **产品定位：** 商业软件（非开源），面向工程图纸的本地优先 CAD/BIM 无损翻译套件
@@ -26,7 +19,7 @@ tags:
 >
 > **CAD 平台：** AutoCAD 2019 / 2021 / 2025 / 2026（四档独立插件包，AutoCAD LT 不支持）
 >
-> **版本：** 商业闭源，不发布公开版本号；安装包为 `Tongwen_Setup_vX.X.X.msi`，以官网 <https://shandianweihu.com/> 下载页显示为准（截至 2026-10）
+> **最新版本：** 商业闭源，不发布公开版本号；安装包为 `Tongwen_Setup_vX.X.X.msi`，以官网 <https://shandianweihu.com/> 下载页显示为准（截至 2026-11）
 
 ## 概述
 
@@ -261,19 +254,17 @@ QA 由三种验证器组成，发现按**四级风险**分级（阻断 / 高风�
 
 ## 常见问题
 
-| 问题 | 解决方案 |
-|------|---------|
-| 启动 AutoCAD 提示插件加载失败、`NETLOAD` 报错 | 多为插件版本与 CAD 版本不匹配（把 .NET 8 插件装到 2019）或运行时缺失；按版本—运行时对照表核对，必要时以管理员身份运行安装包选"修复" |
-| Studio 检测不到 AutoCAD 版本 | 确认装的是受支持版本（2019/2021/2025/2026，非 LT），`ABOUT` 命令可看具体版本 |
-| 提取报"Named Pipe 连接失败" | Sidecar/Pipe 服务未随 Studio 启动；重启 Studio 与 Pipe 服务，检查安全软件是否拦截管道通信、管道名是否被占用 |
-| 提取不完整（部分文字没进项目） | 图纸含代理实体/自定义对象时须装对应 Object Enabler；图框内文字有单独的提取规则，必要时改框选范围 |
-| 术语表配了却不生效 | 检查条目是否保存、是否关联到当前项目、全半角与大小写是否与图纸文字一致、是否被更高优先级术语或全局/项目同名词条覆盖 |
-| 回写后原文消失 | 选到了"原位替换（override）"，这是设计行为不是 Bug；保留原文请用 `newLayer` 或合并图层，并养成回写前备份原图的习惯 |
-| 回写后字体/样式异常、MTEXT 乱码 | 目标语言字体须系统已装；检查 MTEXT 格式码是否在翻译中被破坏，必要时对该条重新提取再译 |
-| 批量处理某张失败拖垮整批 | 加 `--fail-on-error false`；大目录用 `-m` 提并发，但要留意机器与引擎配额 |
-| 杀毒软件拦截 DLL | 把安装目录加入白名单后再"修复"安装 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 启动 AutoCAD 提示插件加载失败、`NETLOAD` 报错 | 插件版本与 CAD 版本不匹配（如把 .NET 8 插件装到 2019），或运行时缺失 | 按版本—运行时对照表核对；必要时以管理员身份运行安装包选"修复" |
+| Studio 检测不到 AutoCAD 版本 | 装的是不受支持版本（非 2019/2021/2025/2026，或 LT 版） | 装受支持版本；`ABOUT` 命令可看具体版本 |
+| 提取报"Named Pipe 连接失败" | Sidecar/Pipe 服务未随 Studio 启动，或被安全软件拦截 | 重启 Studio 与 Pipe 服务；检查管道是否被占用 |
+| 提取不完整（部分文字没进项目） | 图纸含代理实体/自定义对象，或缺对应 Object Enabler；图框内文字有单独提取规则 | 装对应 Object Enabler；必要时改框选范围 |
+| 术语表配了却不生效 | 条目未保存、未关联当前项目、全半角/大小写与图纸不一致，或被更高优先级术语覆盖 | 逐项检查保存状态、项目关联、字符一致性与优先级 |
+| 回写后原文消失 | 回写策略选了"原位替换（override）" | 这是设计行为；保留原文请用 `newLayer` 或合并图层，回写前先备份原图 |
+| 回写后字体/样式异常、MTEXT 乱码 | 目标语言字体未安装，或 MTEXT 格式码在翻译中被破坏 | 安装目标字体；对该条重新提取再译 |
+| 批量处理某张失败拖垮整批 | 默认遇错即停 | 加 `--fail-on-error false`；大目录用 `-m` 提并发，注意机器与引擎配额 |
+| 杀毒软件拦截 DLL | 安装目录不在白名单 | 把安装目录加入白名单后再"修复"安装 |
 
 ## AI 使用建议
 
@@ -288,7 +279,7 @@ QA 由三种验证器组成，发现按**四级风险**分级（阻断 / 高风�
 
 - **ifoxcad** — AutoCAD .NET 二次开发框架：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 - **lightningcad** — 建筑围护深化设计插件（同为 AutoCAD 商业插件）：[../lightningcad/SKILL.md](../lightningcad/SKILL.md)
-- **fy_layout** — 飞扬平台 LightCAD 场布插件：[../fy_layout/SKILL.md](../fy_layout/SKILL.md)
+- **fy-layout** — 飞扬平台 LightCAD 场布插件：[../fy-layout/SKILL.md](../fy-layout/SKILL.md)
 - **libredwg** — DWG 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
 
 ---

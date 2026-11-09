@@ -1,14 +1,10 @@
 ---
 name: ffmpeg
 description: "Use when converting, cutting, stitching or streaming video/audio from the command line — ffmpeg -i / -ss / -t, fps and scale filters, CRF and preset for H.264/H.265, -hwaccel decoding, hls muxer with hls_time and hls_segment_filename, RTSP/UDP ingestion, frame extraction for textures. FFmpeg 9.0.2. Also for \"moov atom not found\", non-monotonic DTS warnings, colour shifts from missing -pix_fmt/-color_range, and ffprobe checks before batch jobs."
-tags:
-  - ffmpeg
-  - video
-  - transcode
-  - hls
-  - rtsp
-  - gis
-  - cli
+license: MIT
+metadata:
+  category: others
+  tags: "ffmpeg, video, transcode, hls, rtsp, gis, cli"
 ---
 
 > **官网：** <https://ffmpeg.org/>
@@ -17,9 +13,9 @@ tags:
 >
 > **下载：** <https://ffmpeg.org/download.html>（源码与各平台静态构建）
 >
-> **包管理器：** `apt install ffmpeg` / `brew install ffmpeg` / `winget install Gyan.FFmpeg` / 官方静态包（最新 9.0.2，截至 2026-10）
+> **包管理器：** `apt install ffmpeg` / `brew install ffmpeg` / `winget install Gyan.FFmpeg` / 官方静态包（最新 9.0.2，截至 2026-11）
 >
-> **版本：** 9.0.2（`release/9.0` 分支的最新补丁版）；上一分支 8.1.3，更早 7.1.x | 上游无 GitHub Release tag，版本以 <https://ffmpeg.org/releases/> 与 RELEASE_NOTES 为准
+> **版本：** 9.0.2（`release/9.0` 分支的最新补丁版，截至 2026-11）；上一分支 8.1.3，更早 7.1.x | 上游无 GitHub Release tag，版本以 <https://ffmpeg.org/releases/> 与 `git ls-remote --tags` 的 `n9.0.x` 为准
 >
 > **许可证：** LGPL-2.1-or-later（默认）；若构建启用了 `--enable-gpl` 且实际用到 GPL 部分（如 libx264/libx265），整个 FFmpeg 转为 GPL-2.0-or-later——多数发行版与「full build」静态包属于后者，商用集成前先看 `ffmpeg -version` 的构建配置
 

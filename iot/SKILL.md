@@ -1,14 +1,10 @@
 ---
-name: iot-skills
+name: iot
 description: "Use when developing IoT solutions — Raspberry Pi Pico (RP2040) GPIO/I2C/Wi-Fi/MQTT/sensors in MicroPython, building low-code data flows with Node-RED, running a local-first home automation platform with Home Assistant, or compiling ESP32/ESP8266 firmware from YAML with ESPHome. Index of 4 skills: KE3036 Keyes Pico kit, Node-RED, Home Assistant and ESPHome."
-tags:
-  - iot
-  - embedded
-  - micropython
-  - rp2040
-  - raspberry-pi
-  - sensor
-  - mqtt
+license: MIT
+metadata:
+  category: iot
+  tags: "iot, embedded, micropython, rp2040, raspberry-pi, sensor, mqtt"
 ---
 
 > **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引

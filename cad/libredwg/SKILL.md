@@ -1,14 +1,10 @@
 ---
 name: libredwg
 description: "Use when reading or writing AutoCAD DWG files programmatically with LibreDWG 0.14 — entity extraction, DWG to DXF/JSON/GeoJSON conversion, or dwg2dxf / dxf2dwg / dwgread batch pipelines; also when dwg2dxf blocks on an overwrite prompt (add -y), a R2021+ DWG will not load, or the CLI is missing on Linux because distro repos ship no libredwg package. C library (dwg_read_file, dwg_get_block_header, dwg_add_LINE) plus SWIG bindings."
-tags:
-  - dwg
-  - dxf
-  - cad
-  - c
-  - python
-  - conversion
-  - cli
+license: MIT
+metadata:
+  category: cad
+  tags: "dwg, dxf, cad, c, python, conversion, cli"
 ---
 
 > **项目地址：** <https://github.com/LibreDWG/libredwg>
@@ -19,7 +15,7 @@ tags:
 >
 > **许可证：** GPL-3.0+
 >
-> **最新稳定版：** 0.14（2026-06-27 发布，截至 2026-10，见 [GitHub Releases](https://github.com/LibreDWG/libredwg/releases)）
+> **最新版本：** 0.14（截至 2026-11，见 [GitHub Releases](https://github.com/LibreDWG/libredwg/releases)；`0.14.8xxx` 为每次提交后的滚动构建标签，不是新版本号）
 
 ## 概述
 
@@ -31,7 +27,7 @@ LibreDWG 解决 DWG 二进制格式的开源读写：
 - **命令行工具**：`dwgread`、`dwgwrite`、`dwg2dxf`、`dxf2dwg`、`dwg2SVG`、`dwgrewrite`
 - **绑定**：C API、Python（`LibreDWG` 模块，SWIG 生成）、Common Lisp、Perl
 
-> 与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。当前稳定版 **0.14**（2026-06-27），详见 [GitHub Releases](https://github.com/LibreDWG/libredwg/releases)。
+> 与 ODA / Teigha 的差异：LibreDWG 完全开源（GPL），但版本兼容范围比商业库窄、高版本写入支持仍在完善。当前稳定版 **0.14**，详见 [GitHub Releases](https://github.com/LibreDWG/libredwg/releases)。
 
 ---
 
@@ -242,19 +238,17 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 高版本 DWG 无法读 | 当前支持到 R2018 的**读**；更高版本先用 ODA File Converter 转 R2010/R2018 |
-| `dwgrewrite --as r2018` 报错或没有产出，或 `dwg2dxf -b` 出来的东西别的软件不认 | `r2007`–`r2018` 写入仍是 Planned，只能写到 `r2004` 及以下；`-b` 是 DXB 不是二进制 DXF |
-| 写入失真 | 确认编译时未加 `--disable-write`（DWG 写入默认启用）；优先使用 DXF 出口 |
-| 中文文字乱码 | 编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI_936）；优先用 `dwgread -O JSON` 输出 UTF-8，或对 DXF 输出用 iconv 转码 |
-| 引用块缺失 | 解析 `INSERT` 时跟随 `BLOCK_HEADER` 引用 |
-| 脚本里 `dwg2dxf` 卡在"覆盖已存在文件"确认 | 加 `-y` 免确认（`dwg2dxf -y`、`dxf2dwg -y`），CI 里必带 |
-| Linux 上找不到 `dwgread` | Debian/Fedora 官方仓库不提供 LibreDWG 包；须从源码 `make install`，CLI 工具（`dwgread`/`dwg2dxf` 等）随源码一并安装 |
-| 写出的 DWG 其它软件打不开 | DWG 写入器（`dxf2dwg`/`dwgwrite`，写入默认启用，除非 configure 加了 `--disable-write`）覆盖面仍不完整；稳妥做法是停在 DXF：`dwg2dxf` 读出 → 编辑 DXF → 交 AutoCAD/ODA 侧另存 DWG |
-| GeoJSON 里线型丢失或几何不闭合 | GeoJSON 只导出可平面化的几何；需要保形状先 `dwg2SVG` 或 `dwg2dxf`，在 DXF 层面做处理再回转 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 高版本 DWG 无法读 | 当前支持到 R2018 的**读** | 更高版本先用 ODA File Converter 转 R2010/R2018 |
+| `dwgrewrite --as r2018` 报错或没有产出，或 `dwg2dxf -b` 出来的东西别的软件不认 | `r2007`–`r2018` 写入仍是 Planned；`-b` 是 DXB 不是二进制 DXF | 只能写到 `r2004` 及以下；要 DWG 二进制请走 `dxf2dwg` |
+| 写入失真 | 编译时可能加了 `--disable-write`，或写入了不支持的目标版本 | 确认未加 `--disable-write`；优先使用 DXF 出口 |
+| 中文文字乱码 | 编码由 DWG 头 `$DWGCODEPAGE` 决定（简体中文常见 ANSI_936） | 优先用 `dwgread -O JSON` 输出 UTF-8，或对 DXF 输出用 iconv 转码 |
+| 引用块缺失 | 解析 `INSERT` 时未跟随 `BLOCK_HEADER` 引用 | 解析 `INSERT` 时跟随 `BLOCK_HEADER` 取块定义 |
+| 脚本里 `dwg2dxf` 卡在"覆盖已存在文件"确认 | 默认交互式询问是否覆盖 | 加 `-y` 免确认（`dwg2dxf -y`、`dxf2dwg -y`），CI 里必带 |
+| Linux 上找不到 `dwgread` | Debian/Fedora 官方仓库不提供 LibreDWG 包 | 从源码 `make install`，CLI 工具随源码一并安装 |
+| 写出的 DWG 其它软件打不开 | DWG 写入器覆盖面仍不完整 | 稳妥做法停在 DXF：`dwg2dxf` 读出 → 编辑 DXF → 交 AutoCAD/ODA 侧另存 DWG |
+| GeoJSON 里线型丢失或几何不闭合 | GeoJSON 只导出可平面化的几何 | 需要保形状先 `dwg2SVG` 或 `dwg2dxf`，在 DXF 层面处理再回转 |
 
 ## AI 使用建议
 

@@ -1,5 +1,15 @@
 # OpenGIS Utils for .NET 工具类参考
 
+## Contents
+
+- 数据读写 — OguLayerUtil（推荐入口）
+- 几何运算 — GeometryUtil
+- 坐标参考系 — CrsUtil
+- Shapefile 工具 — ShpUtil
+- PostGIS 工具 — PostgisUtil
+- 国土调查 TXT 格式 — GtTxtUtil
+- GDAL 配置
+
 从 SKILL.md 拆出的 OguLayerUtil、GeometryUtil、CrsUtil、ShpUtil、PostgisUtil、GtTxtUtil 与 GDAL 配置参考，按 OpenGIS.Utils 1.1.2 编写。
 
 ---

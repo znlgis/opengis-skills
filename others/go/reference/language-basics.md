@@ -1,5 +1,13 @@
 # Go Language Basics Reference
 
+## Contents
+
+- 基础语法
+- 方法与接口
+- 并发
+- 错误处理
+- 泛型（Go 1.18+）
+
 Go syntax, methods, interfaces, concurrency, error handling and generics split from SKILL.md.
 
 ---

@@ -1,15 +1,10 @@
 ---
 name: langchain
-description: "Use when building LLM apps in Python with LangChain 1.4.7 — LCEL chains (prompt | model | parser), create_agent with @tool and checkpointer+thread_id memory, RAG (loaders, splitters, PGVector, retriever), init_chat_model across providers; also for `ModuleNotFoundError: langchain.memory`, agent forgetting earlier turns, tools never called, and langchain-core version mismatch."
-tags:
-  - llm
-  - agent
-  - rag
-  - lcel
-  - tool-calling
-  - langgraph
-  - python
-  - framework
+description: "Use when building LLM apps in Python with LangChain 1.4.9 — LCEL chains (prompt | model | parser), create_agent with @tool and checkpointer+thread_id memory, RAG (loaders, splitters, PGVector, retriever), init_chat_model across providers; also for `ModuleNotFoundError: langchain.memory`, agent forgetting earlier turns, tools never called, and langchain-core version mismatch."
+license: MIT
+metadata:
+  category: ai
+  tags: "llm, agent, rag, lcel, tool-calling, langgraph, python, framework"
 ---
 
 > **项目地址：** <https://github.com/langchain-ai/langchain>
@@ -18,7 +13,7 @@ tags:
 >
 > **许可证：** MIT
 >
-> **最新版本：** langchain 1.4.7、langchain-core 1.7.0（PyPI 实测，截至 2026-10；GitHub 最新 Release 标签即 `langchain-core==1.7.0`，LangChain 已按包独立发版）
+> **最新版本：** langchain 1.4.9、langchain-core 1.7.6（截至 2026-11，PyPI 实测；LangChain 已按包独立发版，GitHub Release 标签跟随最新发布包）
 
 ## 概述
 
@@ -36,11 +31,11 @@ LangChain 是用于构建 LLM 应用的 Python 框架，1.x 起以 LangGraph 为
 
 | 包 | 内容 | 当前版本 |
 |------|------|---------|
-| langchain | 主包：agents、chat_models、tools | 1.4.7 |
-| langchain-core | Runnable/LCEL、消息、提示词、解析器、向量库接口 | 1.7.0 |
-| langgraph | 运行时：checkpointer、store | 1.2.18 |
+| langchain | 主包：agents、chat_models、tools | 1.4.9 |
+| langchain-core | Runnable/LCEL、消息、提示词、解析器、向量库接口 | 1.7.6 |
+| langgraph | 运行时：checkpointer、store | 1.2.20 |
 | langchain-community | 社区集成：文档加载器、向量库 | 0.4.2 |
-| langchain-openai | OpenAI / Azure 集成 | 1.7.3 |
+| langchain-openai | OpenAI / Azure 集成 | 1.7.4 |
 | langchain-text-splitters | 文本切分器 | 1.1.3 |
 | langchain-classic | 旧版链与 memory（兼容维护） | 1.0.8 |
 

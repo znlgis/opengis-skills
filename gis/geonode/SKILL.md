@@ -1,17 +1,10 @@
 ---
 name: geonode
 description: "Use when deploying or automating GeoNode 5.1.1 — docker compose with create-envfile.py, geonode/geonode:5.1.1 image, django4geonode logs, /api/v2/resources and /api/v2/uploads/upload (action=upload|replace|upsert|create), OGC WMS/WFS links from resource.links[], geonode-project customization; also for 502 after compose up, 'GeoNode has no attribute' after upgrade, and upload 401/403 with Basic vs Bearer auth."
-tags:
-  - geonode
-  - gis
-  - django
-  - python
-  - docker
-  - postgis
-  - geoserver
-  - rest-api
-  - metadata
-  - webgis
+license: MIT
+metadata:
+  category: gis
+  tags: "geonode, gis, django, python, docker, postgis, geoserver, rest-api, metadata, webgis"
 ---
 
 > **项目地址：** <https://github.com/GeoNode/geonode>
@@ -20,7 +13,7 @@ tags:
 >
 > **演示站：** <https://development.demo.geonode.org>
 >
-> **最新版本：** 5.1.1（GitHub Release 与 PyPI 均为 5.1.1，截至 2026-10）；官方镜像 `geonode/geonode:5.1.1`
+> **最新版本：** 5.1.1（GitHub Release 与 PyPI 均为 5.1.1，截至 2026-11）；官方镜像 `geonode/geonode:5.1.1`
 >
 > **运行环境：** Python >= 3.10（PyPI 元数据），依赖 Django 5.2.18、psycopg2 2.9.13、Celery 5.6.3
 >

@@ -1,14 +1,10 @@
 ---
 name: sentry
 description: "Use when adding error tracking, performance monitoring or release health to .NET apps — builder.WebHost.UseSentry, SetBeforeSend, SentrySdk.CaptureException, TracesSampleRate, StartTransaction/StartChild spans, Source Context, symbol upload. Also for events not arriving because Dsn is empty (the SDK stays silent), tracing producing no transactions, PII leaking into events, and StartChildSpan no longer existing in 6.x. Sentry .NET SDK."
-tags:
-  - dotnet
-  - csharp
-  - error-tracking
-  - monitoring
-  - performance
-  - aspnet-core
-  - observability
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, csharp, error-tracking, monitoring, performance, aspnet-core, observability"
 ---
 
 > **项目地址：** <https://github.com/getsentry/sentry-dotnet>
@@ -17,7 +13,7 @@ tags:
 >
 > **NuGet：** <https://www.nuget.org/packages/Sentry>
 >
-> **最新版本：** Sentry / Sentry.AspNetCore 6.12.1（截至 2026-10，NuGet 实测）
+> **最新版本：** Sentry / Sentry.AspNetCore 6.12.1（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Sentry)；GitHub 上已有 7.0.0-rc 预发布线，稳定版仍为 6.x）
 >
 > **许可证：** MIT
 
@@ -238,13 +234,16 @@ cd self-hosted
 
 ## 常见问题
 
-| 问题 | 解决方案 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|---------|
-| DSN 在哪里获取？ | Sentry Dashboard → Settings → Projects → Client Keys |
-| 如何过滤敏感数据？ | 使用 `BeforeSend` 回调或 `BeforeSendTransaction` |
-| ASP.NET Core 中性能追踪不生效？ | 确保 `TracesSampleRate > 0`（新版 SDK 自动创建请求 Transaction，无需额外中间件） |
-| 如何与 OpenTelemetry 共存？ | 安装 `Sentry.OpenTelemetry`，通过 OTel 桥接 |
-| EF Core 查询没有追踪？ | 确认 ADO.NET/DiagnosticSource 集成未被禁用；`Sentry.EntityFramework` 仅用于 EF6 |
+| 程序跑起来一条事件都没上报，控制台也不报错 | `Dsn` 为空时 SDK 完全静默：DSN 是必填项，从 Dashboard → Settings → Projects → Client Keys 取，经 `SENTRY_DSN` 环境变量注入后再启动 |
+| 启动即抛 `ArgumentException`，提示 DSN 无效 | 把 DSN 拆成了 host/key 两个变量，或混入了项目 ID；DSN 是完整 URI（含 public key、host 与 project id），整串传入 |
+| 编译报 `StartChildSpan` 不存在（或已过时） | 该 API 属于旧版本；6.x 用 `ISpan.StartChild(operation)` 与 `SpanExtensions.StartChild(span, operation, description)`，事务入口用 `SentrySdk.StartTransaction(name, operation)` |
+| 堆栈全是 `<unknown>` / 行号缺失 | Release 与 Debug Files（PDB）没上传：`Release` 要与打包版本一致，并在 CI 里用 `sentry-cli` 上传 PDB |
+| 性能页一直没有 Transaction | `TracesSampleRate` 为 0 或未设置；设成 0.1（生产）/ 1.0（联调）后重启（ASP.NET Core 由 SDK 自动插桩，无需再调 `UseSentryTracing()`） |
+| 事件里出现了不该上报的隐私字段 | 默认 `SendDefaultPii = false`，但手动 `SetExtra`/`SetTag` 的值照样上报；统一在 `BeforeSend` / `BeforeSendTransaction` 里脱敏 |
+| 想和 OpenTelemetry 共用一条链路 | 装 `Sentry.OpenTelemetry`，由它桥接 OTel 的 TraceId/SpanId，不要两套 SDK 各自导出 |
+| EF Core 查询没有 Span | 先确认 ADO.NET/DiagnosticSource 集成没被关掉；`Sentry.EntityFramework` 只用于 EF6，EF Core 无需该包 |
 
 ---
 

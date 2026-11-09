@@ -1,5 +1,13 @@
 # Go Standard Library, Web and Database Reference
 
+## Contents
+
+- 包管理与工程化
+- 标准库速查
+- Web 开发
+- 数据库
+- 测试
+
 Go package management, standard library, web development, databases and testing split from SKILL.md.
 
 ---
@@ -19,7 +27,7 @@ go work init ./module-a ./module-b     # workspace 模式
 
 ### 项目结构（推荐）
 
-```
+```text
 project/
 ├── cmd/
 │   └── app/main.go        # 入口

@@ -1,23 +1,17 @@
 ---
 name: geometry-api-net
 description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in .NET/C# — GeometryEngine, NuGet OpenGIS.Esri.Geometry.Core 1.0.9, WKT/EWKT, WKB, GeoJSON and Esri JSON I/O, System.Text.Json converters, geodesic distance; also for unclosed polygon rings, Geometry base-class casts after overlay, or the retired Esri/geometry-api-net repo. Esri Geometry API for .NET."
-tags:
-  - dotnet
-  - geometry
-  - esri
-  - spatial
-  - wkt
-  - wkb
-  - geojson
-  - geodesic
-  - csharp
+license: MIT
+metadata:
+  category: gis
+  tags: "dotnet, geometry, esri, spatial, wkt, wkb, geojson, geodesic, csharp"
 ---
 
 > **项目地址：** <https://github.com/znlgis/geometry-api-net>
 >
 > **官方文档：** <https://github.com/znlgis/geometry-api-net/wiki>
 >
-> **NuGet：** `OpenGIS.Esri.Geometry.Core`（最新 1.0.9，截至 2026-10）
+> **最新版本：** 1.0.9（2026-09-21 发布，[NuGet](https://www.nuget.org/packages/OpenGIS.Esri.Geometry.Core)；截至 2026-11）
 >
 > **许可证：** LGPL-2.1
 >

@@ -1,15 +1,10 @@
 ---
-name: ai-skills
+name: ai
 description: "Use when building LLM applications, RAG knowledge bases, AI agents, multi-agent crews, high-throughput model serving, PDF/document parsing into Markdown, terminal coding agents, multi-model orchestration, plugin-based agent harnesses, or file translation. Index of 17 skills: Dify, LangChain, LlamaIndex, Ollama, Transformers, vLLM, CrewAI, MinerU, Hermes Agent, OpenClaw, OpenCode, Pi, DocuTranslate, DeepSeek Harness and more."
-tags:
-  - ai
-  - llm
-  - agent
-  - rag
-  - workflow
-  - prompt
-  - chatbot
-  - opensource
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, llm, agent, rag, workflow, prompt, chatbot, opensource"
 ---
 
 > **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引

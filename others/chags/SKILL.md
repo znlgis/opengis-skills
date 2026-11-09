@@ -1,22 +1,23 @@
 ---
 name: chags
 description: "Use when building or extending CHAGS (Chinese Historical Anecdotes Game Series): each Chinese historical anecdote is one small kids game built with Phaser 4.2 inside a Vue 3.5 + Pinia shell (TypeScript 5.9.3, Vite 8, pnpm workspace, zh/en bilingual). Covers the GameModule/GameContext contract, gameplay template library, JSON + zod content model, IndexedDB saves with spaced-review scheduling, Vitest/Playwright quality gates, and Tauri/Capacitor packaging."
-tags:
-  - vue
-  - typescript
-  - phaser
-  - game
-  - education
-  - i18n
-  - vite
-  - pnpm
+license: MIT
+metadata:
+  category: others
+  tags: "vue, typescript, phaser, game, education, i18n, vite, pnpm"
 ---
 
 > **项目地址：** <https://github.com/znlgis/CHAGS>
 >
+> **在线试玩：** <https://znlgis.github.io/chags/>
+>
+> **官方文档：** <https://znlgis.github.io/others/CHAGS/>
+>
 > **包管理器：** pnpm 11.22.0（`packageManager` 字段锁版本）+ Node.js 24
 >
-> **版本：** `v0.1.2`（GitHub Release，2026-10-20；仓库根 `package.json` 的 version 为 0.1.0）
+> **版本：** `v0.1.3`（2026-10-28，[GitHub Releases](https://github.com/znlgis/CHAGS/releases)；仓库根 `package.json` 的 version 为 0.1.0）
+>
+> **许可证：** MIT
 
 ## 概述
 
@@ -363,7 +364,7 @@ pnpm audit:i18n # 文案 / 版面有改动时，人工看一眼两种语言下�
 - **新增内容要三处对账**：内容 JSON / `entries/index.ts` / `registry.ts`（+ apps/site 依赖），`registration.test.ts` 会兜底；`manifest.id` 与内容 `id` 不一致时挂载即抛错。
 - **屏幕文字按英文长度设限**（`story.text ≤ 90 字符`），长内容放进 `narration` 交给 TTS；英文长句是排版问题的高发区。
 - **零失败与宽松星级**：放错弹回不惩罚；星星门槛宽（错 ≤ 1 次三星），对小朋友永远正向。
-- **游戏内禁止直接 `localStorage` / `fetch`**：一律走 `GameContext.services`，这是将来上小游戏 / 云存档的唯一低成本出口。
+- **游戏内禁止直接 `localStorage` / `fetch`**：一律走 `GameContext.services`，这是日后接小游戏 / 云存档的唯一低成本出口（当前未启用）。
 
 ---
 

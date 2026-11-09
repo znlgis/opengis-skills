@@ -1,17 +1,10 @@
 ---
 name: duckdb-spatial
 description: "Use when doing spatial analysis inside a DuckDB database or SQL pipeline — INSTALL spatial / LOAD spatial, ST_Read over Shapefile/GeoPackage/GeoJSON, ST_Point/ST_GeomFromText, ST_Intersects/ST_Contains/ST_Buffer joins, ST_Area_Spheroid, ST_AsMVT tiles, DuckDB-WASM in the browser; also for 'Extension spatial is not installed' or spatial function does not exist, GEOMETRY vs WKB_BLOB friction, and exporting query results to GeoParquet. DuckDB 2.0 built-in spatial extension."
-tags:
-  - duckdb
-  - sql
-  - python
-  - spatial
-  - geospatial
-  - extension
-  - vector
-  - geoparquet
-  - analysis
-  - cli
+license: MIT
+metadata:
+  category: gis
+  tags: "duckdb, sql, python, spatial, geospatial, extension, vector, geoparquet, analysis, cli"
 ---
 
 > **项目地址：** <https://github.com/duckdb/duckdb-spatial>
@@ -20,7 +13,7 @@ tags:
 >
 > **函数参考：** <https://duckdb.org/docs/stable/core_extensions/spatial/functions>
 >
-> **DuckDB 包（PyPI）：** 2.0.0（截至 2026-10）
+> **最新版本：** DuckDB 2.0.0（截至 2026-11，[PyPI](https://pypi.org/project/duckdb/) / [GitHub Releases](https://github.com/duckdb/duckdb/releases)）
 >
 > **扩展分发：** 随 DuckDB 版本自动匹配，INSTALL spatial 从 extensions.duckdb.org 拉取（无独立版本号）
 >

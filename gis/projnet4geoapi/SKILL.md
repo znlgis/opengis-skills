@@ -1,21 +1,15 @@
 ---
 name: projnet4geoapi
 description: "Use when transforming coordinates or reading CRS definitions in .NET with ProjNet 2.1.0 (NuGet ProjNet, repo ProjNet4GeoAPI) — CoordinateSystemFactory.CreateFromWkt, CoordinateTransformationFactory.CreateFromCoordinateSystems, MathTransform.Transform, CoordinateSystemServices SRID registration. Also for 'no suitable transformation' / null from GetCoordinateSystem, EPSG codes beyond 4326 and 3857 returning null, and SharpMap projects needing the legacy ProjNet4GeoAPI 1.4.1 GeoAPI build."
-tags:
-  - dotnet
-  - csharp
-  - coordinate-systems
-  - projection
-  - epsg
-  - wkt
-  - geospatial
-  - netstandard
-  - sharpmap
+license: MIT
+metadata:
+  category: gis
+  tags: "dotnet, csharp, coordinate-systems, projection, epsg, wkt, geospatial, netstandard, sharpmap"
 ---
 
 > **项目地址：** <https://github.com/NetTopologySuite/ProjNet4GeoAPI>
 >
-> **NuGet（2.x）：** `ProjNet` 2.1.0（netstandard2.0 / netstandard2.1，截至 2026-10）
+> **最新版本：** 2.1.0（截至 2026-11，[NuGet `ProjNet`](https://www.nuget.org/packages/ProjNet)，netstandard2.0 / netstandard2.1）
 >
 > **NuGet（1.x，旧版）：** `ProjNet4GeoAPI` 1.4.1（面向 GeoAPI 接口的项目，如 SharpMap 1.2）
 >

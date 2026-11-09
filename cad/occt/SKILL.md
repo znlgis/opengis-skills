@@ -1,16 +1,10 @@
 ---
 name: occt
 description: "Use when building CAD/CAM/CAE features on OCCT 8.0.1 — TopoDS_Shape B-Rep modeling, BRepAlgoAPI/BOPAlgo booleans, BRepFilletAPI fillets, STEPControl_Reader/Writer, IGES exchange, BRepMesh_IncrementalMesh, or PythonOCC/opencascade.js; also when a boolean/fillet returns an empty shape, TopoDS_Shape copies land in the wrong place (reference semantics, use BRepBuilderAPI_Copy), or STEP loses non-ASCII attributes. OCCT: LGPL geometry kernel behind FreeCAD and KiCad."
-tags:
-  - 3d
-  - geometry
-  - brep
-  - kernel
-  - cpp
-  - step
-  - iges
-  - mesh
-  - pythonocc
+license: MIT
+metadata:
+  category: cad
+  tags: "3d, geometry, brep, kernel, cpp, step, iges, mesh, pythonocc"
 ---
 
 > **项目地址：** <https://github.com/Open-Cascade-SAS/OCCT>
@@ -23,7 +17,7 @@ tags:
 >
 > **许可证：** LGPL-2.1（带例外条款）
 >
-> **最新稳定版：** 8.0.1（2026-07-30 发布，截至 2026-10，见 [OCCT Releases](https://github.com/Open-Cascade-SAS/OCCT/releases)）
+> **最新版本：** 8.0.1（2026-07-30 发布，截至 2026-11，见 [OCCT Releases](https://github.com/Open-Cascade-SAS/OCCT/releases)）
 
 ## 概述
 
@@ -255,17 +249,15 @@ opencascade.js 的类名带 `_N` 后缀表示重载变体（如 `BRepPrimAPI_Mak
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 布尔运算失败 | `ShapeFix_Shape` 修复输入；调整容差 |
-| STEP 里的中文文字/属性丢失 | STEP 的非 ASCII 文本走转义序列与字符集声明，读写两端口径不一致就丢字。先用 `Interface_Static::Names()` 列出当前版本可用的 STEP/XCAF 参数再按名设置，不要凭记忆写参数名；模型侧要保证文字实体带可用的字体子集，否则改由 XCAF 属性层携带文本 |
-| 拷贝 Shape 后位置错乱 | 注意 `TopoDS_Shape` 是引用，深拷贝用 `BRepBuilderAPI_Copy` |
-| 显示无图 | AIS 上下文未启动 OpenGL；检查 `OCC.Display.SimpleGui` |
-| 圆角/倒角偶发失败或结果吞掉相邻面 | 半径超过局部几何可承受范围；先用 `BRepOffsetAPI_MakeOffset`/分析边长，再分批改半径，并保证相交的圆角顺序稳定 |
-| 大装配加载慢、内存高 | 用 `XCAFDoc` 装配结构 + 按需 `TransferRoots`，避免 `OneShape()` 合并成单一 Shape；配合 `BRepTools::Clean` 与三角网缓存 |
-| PythonOCC 与 C++ 行为不一致 | 版本口径不同：PythonOCC 的发行版（社区构建/OCC 官方 pip 包）滞后于 OCCT C++ 版本；先打印 `OCCT.Version_SimpleVersion()` 再决定 API 分支 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 布尔运算失败/结果为空 | 输入形状本身无效（自交、重复面、容差过大） | 先用 `ShapeFix_Shape` 修复输入；调整容差 |
+| STEP 里的中文文字/属性丢失 | STEP 的非 ASCII 文本走转义序列与字符集声明，读写两端口径不一致 | 先用 `Interface_Static::Names()` 列出当前版本可用的 STEP/XCAF 参数再按名设置，不要凭记忆写参数名；模型侧保证文字实体带可用字体子集，否则改由 XCAF 属性层携带文本 |
+| 拷贝 Shape 后位置错乱 | `TopoDS_Shape` 是引用语义，赋值不复制几何 | 深拷贝用 `BRepBuilderAPI_Copy` |
+| 显示无图 | AIS 上下文未启动 OpenGL | 检查 `OCC.Display.SimpleGui` 初始化流程 |
+| 圆角/倒角偶发失败或结果吞掉相邻面 | 半径超过局部几何可承受范围 | 先用 `BRepOffsetAPI_MakeOffset`/边长分析，再分批改半径，并保证相交圆角顺序稳定 |
+| 大装配加载慢、内存高 | `OneShape()` 把装配合并成单一 Shape，失去按需加载能力 | 用 `XCAFDoc` 装配结构 + 按需 `TransferRoots`，配合 `BRepTools::Clean` 与三角网缓存 |
+| PythonOCC 与 C++ 行为不一致 | PythonOCC 发行版滞后于 OCCT C++ 版本 | 先打印 `OCCT.Version_SimpleVersion()` 再决定 API 分支 |
 
 ## AI 使用建议
 

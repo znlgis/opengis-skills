@@ -1,24 +1,21 @@
 ---
 name: my-opencode-deepseek-config
 description: "Use when deploying or tuning the znlgis OpenCode v2 × DeepSeek Flash config — orchestrator routing, 12 agents, thinking tiers via model variants (#low/#high), prompt-cache prefix discipline, limit.input compaction, permission baseline, 23 skills; also when a change has no effect because OpenCode fell back to v1 key names (providers/permissions/media.image), background delegation errors without OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS, or ~/.config/opencode needs sync-config.ps1."
-tags:
-  - opencode
-  - deepseek
-  - agent-config
-  - prompt-cache
-  - model-routing
-  - permissions
-  - agent
-  - ai
+license: MIT
+metadata:
+  category: ai
+  tags: "opencode, deepseek, agent-config, prompt-cache, model-routing, permissions, agent, ai"
 ---
 
 > **项目地址：** <https://github.com/znlgis/my-opencode-deepseek-config>
 >
-> **许可证：** MIT（最新 tag：v5.0.0）
+> **最新版本：** v5.0.0（仓库最新 tag，截至 2026-11，[Releases](https://github.com/znlgis/my-opencode-deepseek-config/releases)）
+>
+> **许可证：** MIT
 >
 > **文档：** <https://github.com/znlgis/my-opencode-deepseek-config/blob/main/README.md>（中英双语）
 >
-> **前置条件：** OpenCode **v2**（桌面版自带 CLI 实测 2.2.0，截至 2026-10；1.18.x 及更早不再支持）、DeepSeek API Key（<https://platform.deepseek.com/api_keys>）
+> **前置条件：** OpenCode **v2**（桌面版自带 CLI 实测 2.2.6，截至 2026-11；1.18.x 及更早不再支持）、DeepSeek API Key（<https://platform.deepseek.com/api_keys>）
 
 ## 概述
 
@@ -29,7 +26,7 @@ tags:
 - 12 个 Agent、23 个技能、18 个 slash 命令；`experimental.subagent_depth: 2`；`share: "disabled"`
 - 权限基线：`read` 放行、`shell` 默认 `ask`、`.env` 类 `deny`、外部目录 `ask`
 - 上下文压缩只用内置 compaction：`limit.input` 显式声明工作窗口，触发点 = `limit.input − compaction.buffer`
-- 唯一插件 superpowers（git URL 固定 tag `#v7.0.1`），纯 skill 注入，不提供模型映射
+- 唯一插件 superpowers（git URL 固定 tag `#v7.0.2`），纯 skill 注入，不提供模型映射
 
 ---
 
@@ -203,7 +200,7 @@ node scripts/estimate-cost.js     # 按实际 token 数估算
 
 - **字节稳定前缀**：agent 提示词、`AGENTS.md`、规则顺序保持字节稳定；时间戳/随机 ID/动态文件列表放 payload **尾部**
 - **冻结工具集**：不在会话中途重排 tool schema 或注入规则
-- **插件固定版本**（superpowers `#v7.0.1`）防自动更新导致前缀漂移
+- **插件固定版本**（superpowers `#v7.0.2`）防自动更新导致前缀漂移
 - **压缩窗口按模型声明**：`limit.input` 显式写出（`131072−16000=115,072`），保留尾部 `keep.tokens: 12000`
 
 ---

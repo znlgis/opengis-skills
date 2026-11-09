@@ -1,5 +1,12 @@
 # OpenGIS Data Pipeline Stages Reference
 
+## Contents
+
+- 阶段一：数据获取与信息查询
+- 阶段二：数据处理与转换
+- 阶段三：空间分析
+- 阶段四：发布 GIS 地图服务（GeoServer REST API）
+
 Stage 1 (data acquisition/query), stage 2 (processing/conversion), stage 3 (spatial analysis) and stage 4 (GeoServer publishing) split from SKILL.md.
 
 ---

@@ -1,15 +1,10 @@
 ---
 name: shapely
 description: "Use when doing computational geometry in Python — shapely.intersection/union/buffer/convex_hull/simplify, STRtree queries, from_wkt/to_wkt/to_geojson, make_valid, GEOS-gated ops (coverage_clean, split); also for TopologyException on self-intersecting polygons or OOP vs function buffer quad_segs mismatch. Shapely 2.2.0 binds GEOS."
-tags:
-  - python
-  - geometry
-  - geos
-  - wkt
-  - wkb
-  - geojson
-  - spatial
-  - numpy
+license: MIT
+metadata:
+  category: gis
+  tags: "python, geometry, geos, wkt, wkb, geojson, spatial, numpy"
 ---
 
 > **项目地址：** <https://github.com/shapely/shapely>
@@ -18,7 +13,7 @@ tags:
 >
 > **PyPI：** <https://pypi.org/project/shapely/>
 >
-> **包管理器：** `shapely`（最新 2.2.0，截至 2026-10，PyPI）
+> **最新版本：** 2.2.0（截至 2026-11，[PyPI](https://pypi.org/project/shapely/)；[GitHub Release](https://github.com/shapely/shapely/releases)）
 >
 > **许可证：** BSD-3-Clause
 

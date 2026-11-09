@@ -1,16 +1,10 @@
 ---
 name: lightcad
 description: "Use when extending the FeiYang LightCAD platform (C#/.NET 8) — implementing ILcPlugin, registering ElementType / ElementActions, [CommandClass] + [CommandMethod] commands, plugins.json loading, DwgReader.Import / SaveDwg workflows; also when a plugin DLL is not loaded, dispatching to a command does nothing, or a build fails on ThreeJs4Net.dll / OpenTK.dll or does not support targeting .NET 8. Source is not publicly released; API facts here track the platform SDK used by znlgis/FY_Layout."
-tags:
-  - csharp
-  - dotnet
-  - cad
-  - bim
-  - 2d
-  - 3d
-  - dwg
-  - plugin
-  - architecture
+license: MIT
+metadata:
+  category: cad
+  tags: "csharp, dotnet, cad, bim, 2d, 3d, dwg, plugin, architecture"
 ---
 
 > **项目地址：** 原公开仓库 `github.com/znlgis/lightcad1` 已不可用（HTTP 404），源码暂未公开发布；项目信息见启道软件官网（www.qidaosoft.com/Feiyang.html，仅 HTTP）
@@ -21,7 +15,7 @@ tags:
 >
 > **中文教程：** <https://znlgis.github.io/cad/LightCAD/>（20 章，从架构到插件实战，当前唯一可访问的权威来源）
 >
-> **版本：** 无公开 Release/Tag；API 以配套插件仓库 [znlgis/FY_Layout](https://github.com/znlgis/FY_Layout) 引用的 SDK 为准（截至 2026-10）
+> **最新版本：** 无公开 Release/Tag，不发布版本号；API 以配套插件仓库 [znlgis/FY_Layout](https://github.com/znlgis/FY_Layout) 引用的 SDK 为准（截至 2026-11）
 
 ## 概述
 
@@ -211,17 +205,15 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 编译报「找不到 ThreeJs4Net.dll / OpenTK.dll」 | 确认仓库 `src/Libs/` 下 DLL 完整（部分二进制依赖未随 Git 提供时需从发布包获取） |
-| `The current .NET SDK does not support targeting .NET 8` | 安装 .NET 8 SDK（平台全部工程为 `net8.0` / `net8.0-windows` 目标） |
-| WinForms 项目在非 Windows 上编译失败 | `net8.0-windows` 项目仅支持 Windows 编译与运行 |
-| NuGet 还原失败（NU1301） | 检查网络或配置国内 NuGet 镜像源 |
-| 插件不加载 | 检查 `plugins.json` 的 `folders` 配置、DLL 是否位于扫描目录、是否实现 `ILcPlugin` |
-| 命令行输入命令无响应 | 确认平台已启动文档（文档未初始化时命令框架不执行） |
-| DWG 打开异常 | 确认目标版本受 ODA 支持；必要时先用 ODA File Converter 转存 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 编译报「找不到 ThreeJs4Net.dll / OpenTK.dll」 | 仓库 `src/Libs/` 下二进制依赖不全（部分未随 Git 提供） | 从发布包获取缺失 DLL，保持 `Libs/` 目录完整 |
+| `The current .NET SDK does not support targeting .NET 8` | 本机未装 .NET 8 SDK | 安装 .NET 8 SDK（平台全部工程为 `net8.0` / `net8.0-windows` 目标） |
+| WinForms 项目在非 Windows 上编译失败 | `net8.0-windows` 项目仅支持 Windows 编译与运行 | 在 Windows 上编译运行 |
+| NuGet 还原失败（NU1301） | 网络不可达或源配置错误 | 检查网络，或配置国内 NuGet 镜像源 |
+| 插件不加载 | `plugins.json` 的 `folders` 配置错误、DLL 不在扫描目录，或未实现 `ILcPlugin` | 逐项检查配置与接口实现 |
+| 命令行输入命令无响应 | 平台尚未初始化文档，命令框架不执行 | 先新建/打开文档再输入命令 |
+| DWG 打开异常 | 目标 DWG 版本不受 ODA 支持 | 确认目标版本受 ODA 支持，必要时先用 ODA File Converter 转存 |
 
 ## AI 使用建议
 
@@ -235,7 +227,7 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 
 ## 相关技能
 
-- **fy_layout** — 飞扬平台场地布置插件示例（完整的插件工程结构与 SDK 用法）：[../fy_layout/SKILL.md](../fy_layout/SKILL.md)
+- **fy-layout** — 飞扬平台场地布置插件示例（完整的插件工程结构与 SDK 用法）：[../fy-layout/SKILL.md](../fy-layout/SKILL.md)
 - **ifoxcad** — AutoCAD .NET 二次开发框架（对照参考另一种 .NET CAD 插件模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 - **xbim** — .NET BIM/IFC 工具包（BIM 数据交换互补）：[../xbim/SKILL.md](../xbim/SKILL.md)
 - **libredwg** — DWG/DXF 读写库（文件格式侧互补）：[../libredwg/SKILL.md](../libredwg/SKILL.md)

@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
-"""Validate opengis-skills metadata, structure, links and index consistency.
+"""Validate opengis-skills structure, metadata and indexes.
 
-Checks:
-  * frontmatter: name / description / tags present, description is English "Use when ..."
-  * name matches directory name (L3) or "<category>-skills" (L2)
-  * no emoji in L3 skills, no unlabeled code fences, <=500 lines
-  * L3 sections: 概述 + 安装/环境准备 + 工作流/使用模式 + FAQ/常见问题 + 相关技能/相关资源
-  * FAQ table has >=5 rows
-  * relative links resolve inside the repo
-  * root/category indexes list every skill exactly once, and link targets exist
-  * README lists every skill directory
+Single source of truth for the repository's SKILL.md conventions. Enforces the
+Agent Skills open standard (https://agentskills.io/specification) plus this
+repository's stricter house rules documented in AUTHORING.md.
+
+Frontmatter: only name / description / license / compatibility / metadata /
+allowed-tools; name matches the parent directory; description is English,
+starts with "Use when", no angle brackets, unique; metadata carries category
+and a 5-10 token comma-separated tags string.
+
+Body: <=500 lines, no emoji in L3, language on every code fence, required
+sections, FAQ table with >=5 rows, resolvable relative links, no Windows
+backslash paths, reference/*.md all linked and >100-line files get a Contents
+section.
+
+Indexes: root SKILL.md, category indexes and README.md cover every skill
+exactly once and advertised skill counts match reality.
 """
 
 from __future__ import annotations
@@ -20,268 +27,477 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 MAX_SKILL_LINES = 500
-DESCRIPTION_LIMIT = 500
+MAX_DESCRIPTION_CHARS = 500
 MIN_FAQ_ROWS = 5
-
-MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)")
-INDEX_ROW_RE = re.compile(r"^\|\s*\[[^\]]+\]\(([^)]+)\)")
-EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F]")
-CJK_RE = re.compile("[\u4e00-\u9fff]")
+MIN_TAGS = 5
+MAX_TAGS = 10
+MAX_REFERENCE_WITHOUT_TOC = 100
 
 CATEGORIES = ["3d", "ai", "cad", "csharp", "demos", "gis", "iot", "others"]
+ROOT_SKILL_NAME = "opengis-skills"
 
-# Section keywords: any one of each group satisfies the requirement.
+ALLOWED_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
+ALLOWED_METADATA_KEYS = {"category", "tags"}
+
+FENCE = chr(96) * 3
+FENCE_RE = re.compile(r"^\s*(?:" + FENCE + r"|~~~)(.*)$")
+NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+TAG_RE = re.compile(r"^[a-z0-9][a-z0-9.-]*$")
+CJK_RE = re.compile("[\u4e00-\u9fff]")
+EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F]")
+ANGLE_RE = re.compile(r"[<>]")
+MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)")
+INDEX_ROW_RE = re.compile(r"^\|\s*\[[^\]]+\]\(([^)]+)\)")
+
 REQUIRED_SECTIONS = {
-    "概述": ["概述", "简介"],
-    "安装": ["环境准备", "安装", "快速开始", "环境搭建", "部署"],
-    "工作流": ["工作流", "使用模式", "实战", "常见用法", "典型场景", "使用流程"],
+    "overview": ["概述", "简介"],
+    "install": ["环境准备", "安装", "快速开始", "环境搭建", "部署"],
+    "workflow": ["工作流", "使用模式", "实战", "常见用法", "典型场景", "使用流程"],
     "FAQ": ["常见问题", "FAQ", "故障排查", "排错"],
-    "相关": ["相关技能", "相关资源", "参考资源", "参考资料", "延伸阅读"],
+    "related": ["相关技能", "相关资源", "参考资源", "参考资料", "延伸阅读"],
 }
 
 
-def report(errors: list[str], path: Path | str, message: str) -> None:
-    errors.append(f"{str(path).replace(chr(92), '/')}: {message}")
+class Report:
+    def __init__(self) -> None:
+        self.errors = []
+        self.warnings = []
+
+    def error(self, path, message):
+        self.errors.append(str(path).replace(chr(92), "/") + ": " + message)
+
+    def warn(self, path, message):
+        self.warnings.append(str(path).replace(chr(92), "/") + ": " + message)
 
 
-def parse_frontmatter(path: Path, text: str, errors: list[str]) -> dict:
+def split_frontmatter(text):
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
-        report(errors, path, "missing frontmatter opening delimiter")
-        return {}
-    try:
-        end = lines.index("---", 1)
-    except ValueError:
-        report(errors, path, "missing frontmatter closing delimiter")
-        return {}
-
-    meta = lines[1:end]
-    keys = [line.split(":", 1)[0].strip() for line in meta if re.match(r"^[A-Za-z_-]+:", line)]
-    for key in keys:
-        if key not in {"name", "description", "tags"}:
-            report(errors, path, f"unexpected frontmatter field '{key}'")
-
-    name = next((line.split(":", 1)[1].strip().strip('"') for line in meta if line.startswith("name:")), "")
-    description = next(
-        (line.split(":", 1)[1].strip().strip('"') for line in meta if line.startswith("description:")),
-        "",
-    )
-    tags_start = next((i for i, line in enumerate(meta) if line.strip() == "tags:"), None)
-    tags: list[str] = []
-    if tags_start is not None:
-        for line in meta[tags_start + 1 :]:
-            stripped = line.strip()
-            if stripped.startswith("- "):
-                tags.append(stripped[2:].strip())
-            elif stripped and not line.startswith(" "):
-                break
-
-    if not name:
-        report(errors, path, "frontmatter name is missing")
-    if not description:
-        report(errors, path, "frontmatter description is missing")
-    else:
-        if not description.startswith("Use when"):
-            report(errors, path, "description must start with 'Use when'")
-        if len(description) > DESCRIPTION_LIMIT:
-            report(errors, path, f"description exceeds {DESCRIPTION_LIMIT} characters ({len(description)})")
-        if CJK_RE.search(description):
-            report(errors, path, "description must be English (CJK characters found)")
-    if tags_start is None or not tags:
-        report(errors, path, "tags must be a non-empty multiline list")
-    elif len(tags) < 5:
-        report(errors, path, f"too few tags ({len(tags)}), keep 5-10")
-    for tag in tags:
-        if not re.fullmatch(r"[a-z0-9][a-z0-9.\-]*", tag):
-            report(errors, path, f"invalid tag '{tag}' (lowercase, digits, dot, hyphen only)")
-
-    return {"name": name, "description": description, "tags": tags, "keys": keys}
+        return None
+    for index in range(1, len(lines)):
+        if lines[index].strip() == "---":
+            return lines[1:index], "\n".join(lines[index + 1:])
+    return None
 
 
-def validate_links(root: Path, path: Path, text: str, errors: list[str]) -> None:
-    for match in MARKDOWN_LINK_RE.finditer(text):
-        href = match.group(1).strip().strip('<>"')
-        parsed = urlsplit(href)
-        if not href or parsed.scheme or parsed.netloc:
-            continue
-        target = unquote(parsed.path)
-        if not target:
-            continue
-        resolved = (path.parent / target).resolve()
-        try:
-            resolved.relative_to(root.resolve())
-        except ValueError:
-            report(errors, path, f"link escapes repository: {href}")
-            continue
-        if not resolved.is_file():
-            report(errors, path, f"broken relative link: {href}")
+def parse_scalar(raw):
+    value = raw.strip()
+    if not value:
+        return ""
+    if value[0] == '"':
+        if len(value) < 2 or value[-1] != '"':
+            return value
+        return value[1:-1].replace('\\"', '"').replace("\\\\", "\\")
+    if value[0] == "'":
+        if len(value) < 2 or value[-1] != "'":
+            return value
+        return value[1:-1].replace("''", "'")
+    return value
 
 
-def validate_body(root: Path, path: Path, text: str, errors: list[str]) -> None:
-    lines = text.splitlines()
-    relative = path.relative_to(root)
-
-    if EMOJI_RE.search(text):
-        hits = sorted({match.group(0) for match in EMOJI_RE.finditer(text)})
-        report(errors, relative, f"emoji not allowed in L3 skill: {' '.join(hits)}")
-
-    in_block = False
-    for number, line in enumerate(lines, 1):
-        stripped = line.strip()
-        if stripped.startswith("```"):
-            if not in_block:
-                in_block = True
-                if stripped == "```":
-                    report(errors, relative, f"line {number}: code fence without language")
-            else:
-                in_block = False
-
-    headings = [line.strip().lower() for line in lines if line.startswith("## ")]
-    joined = "\n".join(headings)
-    for label, keywords in REQUIRED_SECTIONS.items():
-        if not any(keyword.lower() in joined for keyword in keywords):
-            report(errors, relative, f"missing required section: {label}")
-
-    # FAQ table rows
-    faq_counts = 0
-    in_faq = False
+def parse_frontmatter(lines, report, path):
+    fields = {}
+    metadata = {}
+    in_metadata = False
+    metadata_indent = 0
     for line in lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        indent = len(line) - len(line.lstrip())
+        match = re.match(r"^([A-Za-z][A-Za-z0-9_-]*):(.*)$", stripped)
+        if in_metadata and indent > metadata_indent:
+            if match:
+                key, raw = match.group(1), match.group(2)
+                if key not in ALLOWED_METADATA_KEYS:
+                    report.error(path, "unexpected metadata key '" + key + "' (allowed: category, tags)")
+                metadata[key] = parse_scalar(raw)
+                continue
+            report.error(path, "unparsable metadata line: " + repr(line))
+            continue
+        if not match:
+            report.error(path, "unparsable frontmatter line: " + repr(line))
+            continue
+        key, raw = match.group(1), match.group(2)
+        if key not in ALLOWED_FIELDS:
+            report.error(path, "unexpected frontmatter field '" + key + "' (allowed: " + ", ".join(sorted(ALLOWED_FIELDS)) + ")")
+        if key == "metadata":
+            in_metadata = True
+            metadata_indent = indent
+            if raw.strip():
+                report.error(path, "metadata must be a nested map of string keys")
+            continue
+        in_metadata = False
+        fields[key] = parse_scalar(raw)
+    return {"fields": fields, "metadata": metadata}
+
+
+def validate_name_and_license(meta, relative, report):
+    fields = meta["fields"]
+    name = fields.get("name", "")
+    license_name = fields.get("license", "")
+    if not name:
+        report.error(relative, "frontmatter name is missing")
+    else:
+        if len(name) > 64:
+            report.error(relative, "name exceeds 64 characters (" + str(len(name)) + ")")
+        if not NAME_RE.fullmatch(name):
+            report.error(relative, "invalid name '" + name + "' (lowercase letters, digits and single hyphens only)")
+        expected = relative.parent.name if len(relative.parts) > 1 else ROOT_SKILL_NAME
+        if name != expected:
+            report.error(relative, "name must match parent directory '" + expected + "' (found '" + name + "')")
+    if not license_name:
+        report.error(relative, "frontmatter license is missing")
+    elif license_name != "MIT":
+        report.error(relative, "license must be 'MIT' for repository skills (found '" + license_name + "')")
+
+
+def validate_description(meta, relative, report, seen):
+    description = meta["fields"].get("description", "")
+    if not description:
+        report.error(relative, "frontmatter description is missing")
+        return
+    if not description.startswith("Use when"):
+        report.error(relative, "description must start with 'Use when'")
+    if len(description) > MAX_DESCRIPTION_CHARS:
+        report.error(relative, "description exceeds " + str(MAX_DESCRIPTION_CHARS) + " characters (" + str(len(description)) + ")")
+    if CJK_RE.search(description):
+        report.error(relative, "description must be English (CJK characters found)")
+    if ANGLE_RE.search(description):
+        report.error(relative, "description must not contain angle brackets")
+    key = " ".join(description.lower().split())
+    if key in seen:
+        report.error(relative, "description duplicates " + seen[key])
+    else:
+        seen[key] = relative.as_posix()
+
+
+def validate_metadata(meta, relative, report):
+    metadata = meta["metadata"]
+    category = metadata.get("category", "")
+    tags_raw = metadata.get("tags", "")
+    parts = relative.parts
+    if len(parts) in (2, 3):
+        expected_category = parts[0]
+        if not category:
+            report.error(relative, "metadata.category is required for category and project skills")
+        elif category != expected_category:
+            report.error(relative, "metadata.category must be '" + expected_category + "' (found '" + category + "')")
+    elif category:
+        report.warn(relative, "root skill does not need metadata.category")
+    if not tags_raw:
+        report.error(relative, "metadata.tags is required")
+        return
+    tags = [part.strip() for part in tags_raw.split(",") if part.strip()]
+    if not (MIN_TAGS <= len(tags) <= MAX_TAGS):
+        report.error(relative, "metadata.tags must contain " + str(MIN_TAGS) + "-" + str(MAX_TAGS) + " comma-separated tags (" + str(len(tags)) + " found)")
+    seen = set()
+    for tag in tags:
+        if tag in seen:
+            report.error(relative, "duplicate tag '" + tag + "'")
+        seen.add(tag)
+        if not TAG_RE.fullmatch(tag):
+            report.error(relative, "invalid tag '" + tag + "' (lowercase, digits, dot, hyphen only)")
+
+
+def is_fence(line):
+    return FENCE_RE.match(line) is not None
+
+
+def validate_body(relative, text, report, is_skill):
+    lines = text.splitlines()
+    if len(lines) > MAX_SKILL_LINES:
+        report.error(relative, str(len(lines)) + " lines exceeds limit " + str(MAX_SKILL_LINES))
+    if is_skill and EMOJI_RE.search(text):
+        hits = sorted({match.group(0) for match in EMOJI_RE.finditer(text)})
+        report.error(relative, "emoji not allowed in L3 skill: " + " ".join(hits))
+
+    in_code = False
+    for number, line in enumerate(lines, 1):
+        if is_fence(line):
+            if not in_code:
+                in_code = True
+                marker = line.strip()[:3]
+                if line.strip() == marker:
+                    report.error(relative, "line " + str(number) + ": code fence without language")
+            else:
+                in_code = False
+
+    headings = []
+    in_code = False
+    for line in lines:
+        if is_fence(line):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        if line.startswith("## "):
+            headings.append(line[3:].strip())
+    joined = "\n".join(headings).lower()
+    if is_skill:
+        for label, keywords in REQUIRED_SECTIONS.items():
+            if not any(keyword.lower() in joined for keyword in keywords):
+                report.error(relative, "missing required section: " + label)
+
+    in_faq = False
+    faq_rows = 0
+    in_code = False
+    for line in lines:
+        if is_fence(line):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
         stripped = line.strip()
         if stripped.startswith("## "):
             in_faq = any(keyword.lower() in stripped.lower() for keyword in REQUIRED_SECTIONS["FAQ"])
             continue
         if in_faq and stripped.startswith("|") and not re.match(r"^\|[\s:|-]+\|$", stripped):
-            faq_counts += 1
-    if faq_counts and faq_counts - 1 < MIN_FAQ_ROWS:
-        report(errors, relative, f"FAQ table has {max(faq_counts - 1, 0)} rows, need >={MIN_FAQ_ROWS}")
-    elif faq_counts == 0:
-        report(errors, relative, "FAQ section must contain a markdown table")
+            faq_rows += 1
+    if is_skill:
+        if faq_rows == 0:
+            report.error(relative, "FAQ section must contain a markdown table")
+        elif faq_rows - 1 < MIN_FAQ_ROWS:
+            report.error(relative, "FAQ table has " + str(max(faq_rows - 1, 0)) + " rows, need >= " + str(MIN_FAQ_ROWS))
 
 
-def validate_index_duplicates(root: Path, path: Path, text: str, errors: list[str]) -> dict:
-    targets: dict[Path, int] = {}
-    for line_number, line in enumerate(text.splitlines(), 1):
+def validate_links(root, path, text, report):
+    in_code = False
+    for line in text.splitlines():
+        if is_fence(line):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        for match in MARKDOWN_LINK_RE.finditer(line):
+            href = match.group(1).strip().strip('<>"').strip("'")
+            if "\\" in href:
+                report.error(path.relative_to(root), "Windows-style path in link: " + href)
+                continue
+            parsed = urlsplit(href)
+            if not href or parsed.scheme or parsed.netloc or href.startswith("#"):
+                continue
+            target = unquote(parsed.path)
+            if not target:
+                continue
+            resolved = (path.parent / target).resolve()
+            try:
+                resolved.relative_to(root.resolve())
+            except ValueError:
+                report.error(path.relative_to(root), "link escapes repository: " + href)
+                continue
+            if not resolved.is_file():
+                report.error(path.relative_to(root), "broken relative link: " + href)
+
+
+def validate_reference_dir(root, skill_md, text, report):
+    reference_dir = skill_md.parent / "reference"
+    if not reference_dir.is_dir():
+        return
+    links = set()
+    in_code = False
+    for line in text.splitlines():
+        if is_fence(line):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        for match in MARKDOWN_LINK_RE.finditer(line):
+            href = match.group(1).strip().strip('<>"').strip("'")
+            parsed = urlsplit(href)
+            if parsed.scheme or parsed.netloc or href.startswith("#"):
+                continue
+            target = (skill_md.parent / unquote(parsed.path)).resolve()
+            try:
+                rel = target.relative_to(reference_dir.resolve())
+            except ValueError:
+                continue
+            links.add(rel.as_posix())
+    for reference in sorted(reference_dir.rglob("*.md")):
+        rel = reference.relative_to(reference_dir).as_posix()
+        relative = reference.relative_to(root)
+        if rel not in links:
+            report.error(relative, "reference file is not linked from SKILL.md (orphan): reference/" + rel)
+        ref_text = reference.read_text(encoding="utf-8")
+        if len(ref_text.splitlines()) > MAX_REFERENCE_WITHOUT_TOC:
+            if not re.search(r"(?im)^##\s*(contents|目录)", ref_text):
+                report.error(relative, "reference file longer than " + str(MAX_REFERENCE_WITHOUT_TOC) + " lines needs a '## Contents' section")
+
+
+def index_targets(root, index, text, report):
+    targets = {}
+    in_code = False
+    for number, line in enumerate(text.splitlines(), 1):
+        if is_fence(line):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
         match = INDEX_ROW_RE.match(line)
         if not match:
             continue
         href = match.group(1).split("#", 1)[0].strip()
-        if not href or urlsplit(href).scheme or urlsplit(href).netloc:
+        parsed = urlsplit(href)
+        if not href or parsed.scheme or parsed.netloc:
             continue
-        target = (path.parent / unquote(href)).resolve()
+        target = (index.parent / unquote(href)).resolve()
         if target in targets:
-            report(
-                errors,
-                path.relative_to(root),
-                f"duplicate index target {href} (lines {targets[target]} and {line_number})",
-            )
+            report.error(index.relative_to(root), "duplicate index target " + href + " (lines " + str(targets[target]) + " and " + str(number) + ")")
         else:
-            targets[target] = line_number
+            targets[target] = number
     return targets
 
 
-def main() -> int:
+def validate_count(description, expected, relative, report):
+    for pattern in [r"Index of (\d+) skills", r"(\d+) 个技能"]:
+        for match in re.finditer(pattern, description):
+            if int(match.group(1)) != expected:
+                report.error(relative, "description advertises " + match.group(1) + " skills but repository has " + str(expected))
+
+
+def main():
     root = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
-    errors: list[str] = []
+    report = Report()
     skill_files = sorted(root.rglob("SKILL.md"))
+    skill_files = [path for path in skill_files if ".git" not in path.parts]
     if not skill_files:
         print("No SKILL.md files found", file=sys.stderr)
         return 1
 
-    skills: dict[str, Path] = {}
+    skills = {}
+    category_skills = {category: [] for category in CATEGORIES}
+    descriptions = {}
+    root_description = ""
+    category_descriptions = {}
+
     for path in skill_files:
+        relative = path.relative_to(root)
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError as error:
-            report(errors, path.relative_to(root), f"not valid UTF-8: {error}")
+            report.error(relative, "not valid UTF-8: " + str(error))
             continue
-
-        relative = path.relative_to(root)
-        line_count = len(text.splitlines())
-        if line_count > MAX_SKILL_LINES:
-            report(errors, relative, f"{line_count} lines exceeds limit {MAX_SKILL_LINES}")
-
-        meta = parse_frontmatter(path, text, errors)
-        validate_links(root, path, text, errors)
+        parsed = split_frontmatter(text)
+        if parsed is None:
+            report.error(relative, "missing or malformed frontmatter (must start at line 1 and close with ---)")
+            continue
+        frontmatter, body = parsed
+        meta = parse_frontmatter(frontmatter, report, relative)
+        validate_name_and_license(meta, relative, report)
+        validate_description(meta, relative, report, descriptions)
+        validate_metadata(meta, relative, report)
+        validate_links(root, path, body, report)
 
         parts = relative.parts
-        if len(parts) == 2 and parts[0] in CATEGORIES:
-            # L2 category index
-            expected = f"{parts[0]}-skills"
-            if meta.get("name") and meta["name"] != expected:
-                report(errors, relative, f"category index name must be '{expected}' (found '{meta['name']}')")
-        elif len(parts) == 3:
-            # L3 project skill
-            expected = parts[1]
-            if meta.get("name") and meta["name"] != expected:
-                report(errors, relative, f"name must match directory '{expected}' (found '{meta['name']}')")
-            skills[f"{parts[0]}/{parts[1]}"] = path
-            if len(meta.get("tags", [])) > 10:
-                report(errors, relative, f"too many tags ({len(meta['tags'])}), keep 5-10")
-            validate_body(root, path, text, errors)
+        if len(parts) == 3 and parts[0] in CATEGORIES:
+            validate_body(relative, body, report, is_skill=True)
+            validate_reference_dir(root, path, body, report)
+            skills[parts[0] + "/" + parts[1]] = path
+            category_skills[parts[0]].append(parts[0] + "/" + parts[1])
+        elif len(parts) == 2 and parts[0] in CATEGORIES:
+            validate_body(relative, body, report, is_skill=False)
+            category_descriptions[parts[0]] = meta["fields"].get("description", "")
         elif len(parts) == 1:
-            if meta.get("name") != "opengis-skills":
-                report(errors, relative, "root skill name must be 'opengis-skills'")
+            root_description = meta["fields"].get("description", "")
+        else:
+            report.error(relative, "SKILL.md must live at <root>/, <category>/ or <category>/<skill>/")
 
-    # index coverage
+    total = len(skills)
+    if root_description:
+        validate_count(root_description, total, Path("SKILL.md"), report)
+        for category in CATEGORIES:
+            match = re.search(category + r"\s*\((\d+)\)", root_description)
+            if match and int(match.group(1)) != len(category_skills[category]):
+                report.error(Path("SKILL.md"), "description advertises " + match.group(1) + " " + category + " skills but there are " + str(len(category_skills[category])))
+
+    for category in CATEGORIES:
+        description = category_descriptions.get(category, "")
+        if description:
+            validate_count(description, len(category_skills[category]), Path(category + "/SKILL.md"), report)
+
     root_index = root / "SKILL.md"
     if root_index.is_file():
-        root_text = root_index.read_text(encoding="utf-8")
-        root_targets = validate_index_duplicates(root, root_index, root_text, errors)
-        listed = {
-            target.relative_to(root).parent.as_posix()
-            for target in root_targets
-            if target.name == "SKILL.md" and "SKILL.md" in str(target)
-        }
-        missing = sorted(set(skills) - listed)
-        extra = sorted(listed - set(skills))
+        listed = index_targets(root, root_index, root_index.read_text(encoding="utf-8"), report)
+        linked = set()
+        for target in listed:
+            if target.name == "SKILL.md":
+                try:
+                    parts = target.relative_to(root).parts
+                except ValueError:
+                    continue
+                if len(parts) == 3:
+                    linked.add(parts[0] + "/" + parts[1])
+        missing = sorted(set(skills) - linked)
+        extra = sorted(linked - set(skills))
         if missing:
-            report(errors, Path("SKILL.md"), f"{len(missing)} skills missing from root index: {', '.join(missing[:8])}")
+            report.error(Path("SKILL.md"), str(len(missing)) + " skills missing from root index: " + ", ".join(missing[:8]))
         if extra:
-            report(errors, Path("SKILL.md"), f"root index lists unknown skills: {', '.join(extra[:8])}")
+            report.error(Path("SKILL.md"), "root index lists unknown skills: " + ", ".join(extra[:8]))
 
     for category in CATEGORIES:
         index = root / category / "SKILL.md"
         if not index.is_file():
-            report(errors, Path(category), "missing category index SKILL.md")
+            report.error(Path(category), "missing category index SKILL.md")
             continue
-        text = index.read_text(encoding="utf-8")
-        targets = validate_index_duplicates(root, index, text, errors)
-        listed = {
-            target.relative_to(root).parent.as_posix()
-            for target in targets
-            if target.name == "SKILL.md"
-        }
-        expected = {name for name in skills if name.startswith(category + "/")}
-        missing = sorted(expected - listed)
-        extra = sorted(listed - expected)
+        targets = index_targets(root, index, index.read_text(encoding="utf-8"), report)
+        linked = set()
+        for target in targets:
+            if target.name == "SKILL.md":
+                try:
+                    parts = target.relative_to(root).parts
+                except ValueError:
+                    continue
+                if len(parts) == 3:
+                    linked.add(parts[0] + "/" + parts[1])
+        expected = set(category_skills[category])
+        missing = sorted(expected - linked)
+        extra = sorted(linked - expected)
         if missing:
-            report(errors, index.relative_to(root), f"skills missing from category index: {', '.join(missing[:8])}")
+            report.error(index.relative_to(root), "skills missing from category index: " + ", ".join(missing[:8]))
         if extra:
-            report(errors, index.relative_to(root), f"category index lists unknown skills: {', '.join(extra[:8])}")
+            report.error(index.relative_to(root), "category index lists unknown skills: " + ", ".join(extra[:8]))
 
-    # README coverage
+    for doc in [root / "README.md", root / "AUTHORING.md"]:
+        if not doc.is_file():
+            report.error(doc.relative_to(root), "required repository document is missing")
+            continue
+        validate_links(root, doc, doc.read_text(encoding="utf-8"), report)
+
     readme = root / "README.md"
     if readme.is_file():
-        readme_text = readme.read_text(encoding="utf-8")
         linked = set()
-        for match in MARKDOWN_LINK_RE.finditer(readme_text):
-            href = match.group(1).strip()
-            parsed = urlsplit(href)
-            if parsed.scheme or parsed.netloc:
+        in_code = False
+        for line in readme.read_text(encoding="utf-8").splitlines():
+            if is_fence(line):
+                in_code = not in_code
                 continue
-            target = (readme.parent / unquote(parsed.path)).resolve()
-            if target.name == "SKILL.md":
-                linked.add(target.relative_to(root).parent.as_posix())
+            if in_code:
+                continue
+            for match in MARKDOWN_LINK_RE.finditer(line):
+                href = match.group(1).strip().strip('<>"').strip("'")
+                parsed = urlsplit(href)
+                if parsed.scheme or parsed.netloc:
+                    continue
+                target = (readme.parent / unquote(parsed.path)).resolve()
+                if target.name == "SKILL.md" and target.is_file():
+                    try:
+                        parts = target.relative_to(root).parts
+                    except ValueError:
+                        continue
+                    if len(parts) == 3:
+                        linked.add(parts[0] + "/" + parts[1])
         missing = sorted(set(skills) - linked)
         if missing:
-            report(errors, Path("README.md"), f"{len(missing)} skills missing from README: {', '.join(missing[:8])}")
+            report.error(Path("README.md"), str(len(missing)) + " skills missing from README: " + ", ".join(missing[:8]))
 
-    if errors:
+    for warning in report.warnings:
+        print("warning: " + warning)
+    if report.errors:
         print("Skill validation failed:")
-        print("\n".join(f"- {error}" for error in errors))
+        print("\n".join("- " + error for error in report.errors))
         return 1
 
-    print(f"Skill validation passed: {len(skill_files)} SKILL.md files, {len(skills)} project skills")
+    print("Skill validation passed: " + str(len(skill_files)) + " SKILL.md files, " + str(total) + " project skills across " + str(len(CATEGORIES)) + " categories")
     return 0
 
 

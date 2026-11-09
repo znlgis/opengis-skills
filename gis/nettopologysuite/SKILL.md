@@ -1,21 +1,15 @@
 ---
 name: nettopologysuite
 description: "Use when doing 2D computational geometry in .NET with NuGet NetTopologySuite 2.6.0 — GeometryFactory with SRID, Contains/Intersects predicates, Intersection/Union/Buffer overlays, STRtree, GeometryFixer, WKT/WKB/GeoJSON I/O, Shapefile via IO.Esri, and EF Core spatial queries on SQL Server/Npgsql."
-tags:
-  - dotnet
-  - csharp
-  - geometry
-  - spatial
-  - wkt
-  - wkb
-  - geojson
-  - ef-core
-  - npgsql
+license: MIT
+metadata:
+  category: gis
+  tags: "dotnet, csharp, geometry, spatial, wkt, wkb, geojson, ef-core, npgsql"
 ---
 
 > **项目地址：** <https://github.com/NetTopologySuite/NetTopologySuite>
 >
-> **NuGet：** `NetTopologySuite`（最新稳定版 2.6.0，截至 2026-10，NuGet）
+> **最新版本：** 2.6.0（截至 2026-11，[NuGet](https://www.nuget.org/packages/NetTopologySuite) 稳定版；[GitHub Release](https://github.com/NetTopologySuite/NetTopologySuite/releases)）
 >
 > **官方文档：** <https://nettopologysuite.github.io/NetTopologySuite/>
 >

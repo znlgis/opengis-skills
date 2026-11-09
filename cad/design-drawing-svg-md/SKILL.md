@@ -1,15 +1,10 @@
 ---
 name: design-drawing-svg-md
 description: "Use when a vector PDF engineering drawing has no text layer and an AI/agent must still read it — dimension digits are only glyph outlines, so it renders but cannot be questioned. Builds a dual carrier (semantic Markdown reading thread + layered SVG geometry archive) joined by view/dim/balloon IDs and a crosswalk, via an 11-stage pipeline with hard gates. Also for steel-structure A0 shop drawings, R00→R01 revision diffs, token-budget chunking, and QA acceptance."
-tags:
-  - cad
-  - svg
-  - markdown
-  - pdf
-  - steel-structure
-  - drawing
-  - llm
-  - workflow
+license: MIT
+metadata:
+  category: cad
+  tags: "cad, svg, markdown, pdf, steel-structure, drawing, llm, workflow"
 ---
 
 > **技能定位：** 设计图 SVG+MD 双载体记录方法论——把"会画不懂"的矢量 PDF 工程图，转化为大模型能准确理解、指认与复刻的交付物。
@@ -22,7 +17,9 @@ tags:
 >
 > **适用输入：** 矢量线画 + 无文字层的 PDF 工程图（彩色分层或单色均可）。
 >
-> **包管理器：** `pip install pymupdf numpy scipy pillow`（PyMuPDF 2.0、2026-10-19；脚本已按新包名 `import pymupdf`，不再使用旧的 `import fitz` 别名，截至 2026-10）
+> **最新版本：** PyMuPDF 2.1（2026-11-02，[PyPI](https://pypi.org/project/PyMuPDF/)；脚本已按新包名 `import pymupdf`，不再使用旧的 `import fitz` 别名，截至 2026-11）
+>
+> **包管理器：** `pip install pymupdf numpy scipy pillow`
 >
 > **依赖版本：** Python 3.10+（脚本使用 `str | None` 等 3.10 语法）＋ PyMuPDF ＋ NumPy ＋ SciPy ＋ Pillow；实际运行版本由 `07_validate.py` 在测量当时写入 `validate.json`，报告读回而非另行探测，保证与交付物同源。
 >
@@ -310,18 +307,16 @@ X_L = x·s + tx          Y_L = −y·s + ty
 
 ## 常见问题
 
-| 问题 | 原因与处置 |
-|---|---|
-| 脚本报"找不到配置" | 未传 `--config` 且脚本同目录无 `config.json`；复制 `config.example.json` 为 `config.json` 或显式传路径 |
-| 分层只有五层 | title-block 没独立成层：确认 OCG 名单里能命中 `PDM_Title`，否则按 `layering.ocg_*` 补企业模板的图层名 |
-| 字典全零标签 | 执行顺序错。`03b` 必须在 `03c`/`03d` 之后（它读 `glyph_labels.json`），且 `03` 要跑 `--contact-sheets` 才能更新 `templates.json` |
-| 竖排文字坐标整体错位 | 竖排归一化式写成了 `(y, 1−x)`；正确为 `(x,y)→(1−y,x)`，并用逐视图 `self_check` 双界断言拦截 |
-| 严格 IoU 只有 0.1 上下 | 发丝线抗锯齿导致的假性偏低；叠合改用 2px 膨胀的 recall/precision/F1，门禁只看 recall≥0.99 |
-| 中文字体缺字 | `fonts.cjk` 还是 Windows 路径；改为本机字体（`03d` 加载失败会回退位图字体，不致命但行格图标签可能缺字） |
-| SVG 里细线消失 | 渲染器吞掉 `shape-rendering=crispEdges` 的细线；交付 SVG 不带该属性，并剔除无描边的纯白背景矩形 |
-| 计数链对不上 | `drawings→bg→kept→SVG path→MD prim_ids` 五个口径要逐项对账，差异常来自整页白底矩形与 path 合并 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 脚本报"找不到配置" | 未传 `--config` 且脚本同目录无 `config.json` | 复制 `config.example.json` 为 `config.json`，或显式传 `--config` |
+| 分层只有五层 | title-block 没独立成层：OCG 名单里没命中 `PDM_Title` | 按 `layering.ocg_*` 补企业模板的图层名 |
+| 字典全零标签 | 执行顺序错：`03b` 必须在 `03c`/`03d` 之后（它读 `glyph_labels.json`） | 按流水线顺序重跑；`03` 要带 `--contact-sheets` 才会更新 `templates.json` |
+| 竖排文字坐标整体错位 | 竖排归一化式写成了 `(y, 1−x)` | 正确式为 `(x,y)→(1−y,x)`；用逐视图 `self_check` 双界断言拦截 |
+| 严格 IoU 只有 0.1 上下 | 发丝线抗锯齿导致假性偏低 | 叠合改用 2px 膨胀的 recall/precision/F1，门禁只看 recall≥0.99 |
+| 中文字体缺字 | `fonts.cjk` 还是 Windows 路径，本机不存在 | 改为本机字体路径（`03d` 加载失败会回退位图字体，不致命但行格图标签可能缺字） |
+| SVG 里细线消失 | 渲染器吞掉 `shape-rendering=crispEdges` 的细线 | 交付 SVG 不带该属性，并剔除无描边的纯白背景矩形 |
+| 计数链对不上 | `drawings→bg→kept→SVG path→MD prim_ids` 五个口径未逐项对账，差异常来自整页白底矩形与 path 合并 | 逐口径对账，先确认白底矩形与 path 合并的处理 |
 
 ## AI 使用建议
 

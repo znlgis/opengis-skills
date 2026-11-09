@@ -1,24 +1,19 @@
 ---
 name: clipper1
-description: "Use when maintaining legacy code on the Clipper 1.x API — IntPoint integer paths with a scale factor, Clipper.AddPath/Execute for ctUnion/ctIntersection/ctDifference/ctXor, ClipperOffset for jtRound/jtMiter buffering, PolyTree hole hierarchy, and the pyclipper (1.4.0) / js-clipper bindings. Clipper1 V6 (6.4.2) is frozen; new projects should use Clipper2. Also for lost hole structure in flat List<List<IntPoint>> results, self-intersections after offsetting, and scale overflow."
-tags:
-  - 2d
-  - geometry
-  - boolean
-  - offset
-  - polygon
-  - csharp
-  - python
-  - cpp
+description: "Use when maintaining legacy code on the Clipper 1.x API — IntPoint integer paths with a scale factor, Clipper.AddPath/Execute for ctUnion/ctIntersection/ctDifference/ctXor, ClipperOffset for jtRound/jtMiter buffering, PolyTree hole hierarchy, and the pyclipper (1.4.0) / js-clipper bindings. Clipper1 V6 (6.4.2) is frozen; new projects should use Clipper2. Also for lost hole structure in flat nested integer-point lists, self-intersections after offsetting, and scale overflow."
+license: MIT
+metadata:
+  category: cad
+  tags: "2d, geometry, boolean, offset, polygon, csharp, python, cpp"
 ---
 
 > **项目地址（V6 官方主页）：** <https://sourceforge.net/p/polyclipping/>
 >
 > **官方文档：** <https://sourceforge.net/p/polyclipping/wiki/Home/>
 >
-> **版本：** V6 末版 **6.4.2**（pyclipper 1.4.0 内嵌的即为该版）。原 GitHub 仓库 `github.com/AngusJohnson/Clipper` 已重定向到 Clipper2，V6 不再新增功能
+> **最新版本：** V6 末版 **6.4.2**（冻结，不再新增功能；pyclipper 1.4.0 内嵌的即为该版，截至 2026-11，见 [SourceForge](https://sourceforge.net/p/polyclipping/)）。原 GitHub 仓库 `github.com/AngusJohnson/Clipper` 已重定向到 Clipper2
 >
-> **包管理器：** NuGet `Clipper` 6.4.0（Angus Johnson 发布）｜ PyPI `pyclipper` 1.4.0（封装 Clipper 6.4.2）｜ npm `js-clipper` 1.0.1（截至 2026-10）
+> **包管理器：** NuGet `Clipper` 6.4.0（Angus Johnson 发布）｜ PyPI `pyclipper` 1.4.0（封装 Clipper 6.4.2）｜ npm `js-clipper` 1.0.1
 >
 > **许可证：** Boost Software License 1.0
 
@@ -223,16 +218,16 @@ c.Execute(ctUnion, solution, pftNonZero, pftNonZero);
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 浮点 → 整数舍入失真 | 增大 `scale` |
-| 偏移产生自相交 | 偏移前 `SimplifyPolygon` |
-| 闭合 path 多余首尾点 | Clipper 不需要重复首点 |
-| Mac/Linux 编译失败 | 启用 `use_int32`/`use_xyz` 对应宏 |
-| 布尔结果丢了孔洞层级 | `Execute` 的出参换成 `PolyTree`（顶层 `Childs` 为外环、其子节点为孔），不要用扁平的 `List<List<IntPoint>>` |
-| 外扩后尖角被削平或出现毛刺 | 按形状选 `JoinType`：尖角用 `jtMiter`（配合 `MiterLimit`）、圆弧用 `jtRound`、平角用 `jtSquare`；内缩毛刺先 `CleanPolygon` |
-| 开放线偏移结果不是预期条带 | `EndType` 必须是 `etOpenButt`/`etOpenSquare`/`etOpenRound`，误用 `etClosedPolygon` 会把线首尾闭合 |
-| 面积正负号看不懂 | `Clipper.Area` 的符号就是朝向：正为外环、负为孔；需要翻转用 `ReversePath`，判断用 `Orientation` |
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 坐标整体偏移或舍入失真 | Clipper1 用 `IntPoint` 整数坐标，浮点输入必须定标 | 按坐标范围加大 `scale`（如 `1e6` 级），运算后再除回 |
+| 偏移结果出现自相交/碎片 | 输入多边形本身存在自交或极窄边 | 偏移前先 `SimplifyPolygon`/`CleanPolygon` |
+| 输出 path 首尾点重复 | 调用方按旧习惯手动闭合了轮廓 | Clipper 自己闭环，去掉重复首点 |
+| Mac/Linux 编译失败 | 平台与默认整数位宽的宏不一致 | 按目标平台启用 `use_int32` / `use_xyz` |
+| 布尔结果丢了孔洞层级 | 出参是扁平 `List<List<IntPoint>>`，只保留外环与孔的顺序信息 | 改用 `PolyTree`（顶层 `Childs` 为外环、其子节点为孔） |
+| 外扩后尖角被削平或出现毛刺 | 默认 `JoinType` 与目标形状不匹配 | 尖角用 `jtMiter`（配合 `MiterLimit`）、圆弧用 `jtRound`、平角用 `jtSquare`；内缩毛刺先 `CleanPolygon` |
+| 开放线偏移结果变成闭合条带 | `EndType` 误用 `etClosedPolygon` | 改 `etOpenButt`/`etOpenSquare`/`etOpenRound` |
+| 面积正负号看不懂 | `Clipper.Area` 的符号表示朝向 | 正为外环、负为孔；需要翻转用 `ReversePath`，判断用 `Orientation` |
 
 ---
 

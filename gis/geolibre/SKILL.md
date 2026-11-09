@@ -1,17 +1,10 @@
 ---
 name: geolibre
-description: "Use when scripting or self-hosting the GeoLibre GIS app — geolibre Python anywidget (Map/add_geojson/add_cog/save_project), geolibre-mcp stdio server for AI agents, ghcr.io/opengeos/geolibre Docker image, DuckDB-WASM SQL workspace, ?data= and ?url= deep links; also for a blank window on Linux WebKitGTK, sidecar path not allowed from GEOLIBRE_CONVERSION_ROOTS, and Jupyter relay not connected. GeoLibre 3.5.1."
-tags:
-  - geolibre
-  - gis
-  - python
-  - jupyter
-  - mcp
-  - duckdb
-  - docker
-  - webgis
-  - tauri
-  - geospatial
+description: "Use when scripting or self-hosting the GeoLibre GIS app — geolibre Python anywidget (Map/add_geojson/add_cog/save_project), geolibre-mcp stdio server for AI agents, ghcr.io/opengeos/geolibre Docker image, DuckDB-WASM SQL workspace, ?data= and ?url= deep links; also for a blank window on Linux WebKitGTK, sidecar path not allowed from GEOLIBRE_CONVERSION_ROOTS, and Jupyter relay not connected. GeoLibre 3.7.0."
+license: MIT
+metadata:
+  category: gis
+  tags: "geolibre, gis, python, jupyter, mcp, duckdb, docker, webgis, tauri, geospatial"
 ---
 
 > **项目地址：** <https://github.com/opengeos/GeoLibre>
@@ -20,7 +13,7 @@ tags:
 >
 > **在线版：** <https://web.geolibre.app>
 >
-> **PyPI：** geolibre 3.5.1（要求 Python >= 3.11，截至 2026-10）；conda-forge 渠道为 3.5.0
+> **最新版本：** 3.7.0（截至 2026-11，[PyPI](https://pypi.org/project/geolibre/) / [GitHub Releases](https://github.com/opengeos/GeoLibre/releases)）；要求 Python >= 3.11，conda-forge 同步为 3.7.0
 >
 > **许可证：** MIT
 
@@ -55,12 +48,12 @@ GeoLibre 是一个云原生 GIS 应用，同一份代码可运行在浏览器、
 | Flatpak | `flatpak install flatpark app.geolibre.GeoLibre` |
 | Debian / Ubuntu | `sudo apt install ./GeoLibre.Desktop_<version>_amd64.deb` |
 
-验证：启动后 **Help → About** 核对版本为 3.5.1，**Help → Diagnostics** 应无红色错误项。
+验证：启动后 **Help → About** 核对版本为 3.7.x，**Help → Diagnostics** 应无红色错误项。
 
 ### 路径三：Python 包（Notebook / 脚本）
 
 ```bash
-pip install geolibre==3.5.1
+pip install geolibre==3.7.0
 
 # 或 conda-forge
 conda install -c conda-forge geolibre
@@ -342,8 +335,8 @@ python -c "import json;d=json.load(open('beijing.geolibre.json'));print(len(d.ge
 
 ## AI 使用建议
 
-- **先确认版本与入口**：pip show geolibre 看版本，geolibre-mcp --help 看参数；桌面版看 Help → About。教程可能对应 3.4，遇到差异以 3.5.1 的实际行为为准。
-- **装包前确认 Python 版本**：PyPI 的 geolibre 3.5.1 要求 Python >= 3.11；低版本解释器会直接安装失败，不要误判为网络问题。
+- **先确认版本与入口**：pip show geolibre 看版本，geolibre-mcp --help 看参数；桌面版看 Help → About。教程可能对应 3.4/3.5，遇到差异以 3.7.0 的实际行为为准。
+- **装包前确认 Python 版本**：PyPI 的 geolibre 3.7.0 要求 Python >= 3.11；低版本解释器会直接安装失败，不要误判为网络问题。
 - **MCP 路径要显式**：Windows 上 JSON 里写正向斜杠（C:/Users/you/maps），反斜杠需成对转义，容易出错。
 - **验证产物**：写完工程先 json.load 检查图层数与 mapView，再用浏览器打开导出的 HTML 看渲染；不要只看工具返回的成功。
 - **写操作确认**：export_html、save_project 与 MCP 的覆盖写会改写磁盘文件；覆盖前确认目标，或先写新文件名。

@@ -1,23 +1,17 @@
 ---
 name: map-360-demo
 description: "Use when wiring a 360° panorama viewer to a plan map — Photo Sphere Viewer v5 markers with data.plan positions, two-way link between panorama yaw/pitch and Leaflet coordinates, virtual-tour arrows, marker CRUD with search and JSON import/export, cubemap vs equirectangular adapters, localStorage persistence; also for a black canvas from a missing CubemapAdapter, marker drift after yaw-to-GPS conversion, and PlanPlugin bounds that do not match the image. Vue 3 + Vite + TypeScript."
-tags:
-  - vue
-  - typescript
-  - vite
-  - photo-sphere-viewer
-  - panorama
-  - leaflet
-  - virtual-tour
-  - webgis
-  - demo
+license: MIT
+metadata:
+  category: demos
+  tags: "vue, typescript, vite, photo-sphere-viewer, panorama, leaflet, virtual-tour, webgis, demo"
 ---
 
 > **项目地址：** <https://github.com/znlgis/map-360-demo>
 >
 > **教程：** <https://znlgis.github.io/demos/map-360-demo/>
 >
-> **依赖版本：** Photo Sphere Viewer 5.15.1（core/markers/plan/cubemap 等插件同版本，取自仓库 `package.json`，截至 2026-10）
+> **最新版本：** 1.0.0（仓库 `package.json`）；依赖 Photo Sphere Viewer 5.15.1（core/markers/plan/cubemap 等插件同版本）/ Vue 3.5.42 / Vite 8.2.2 / TypeScript 6.0.3（截至 2026-11，取自 [`package.json`](https://github.com/znlgis/map-360-demo/blob/main/package.json)）
 >
 > **许可证：** 以仓库为准
 
@@ -286,7 +280,7 @@ watch(markers, (val) => {
 
 ## 常见问题
 
-| 问题 | 解决方案 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|---------|
 | 全景图或地图瓦片加载失败 | 图片与瓦片来自公共资源（PSV CDN / OpenStreetMap），确认网络可访问外网 |
 | 5173 端口被占用 | 使用 `npm run dev -- --port 8080` 指定其他端口 |
@@ -296,15 +290,18 @@ watch(markers, (val) => {
 | 刷新后标记丢失或想还原 | 数据由 `localStorage` 持久化；「恢复默认」深拷贝 `DEFAULT_MARKERS` 一键还原 |
 | 陀螺仪开关无效 | 仅移动设备浏览器支持且需用户授权，不可用时会触发 gyroscope-error 提示 |
 | 场景切换后地图未同步 | 检查新场景的 `coordinates`/`bearing`/`defaultZoom` 配置是否有效 |
+| 立方体贴图场景整块黑屏 / 控制台报 `Error: Canvas is empty` | 只给了六面图却没用 `CubemapAdapter`：`adapter: CubemapAdapter` 必须显式传入，且六面 key 用 three.js 命名（px/nx/py/ny/pz/nz） |
+| 全景标记飘在地图热点之外 | `data.plan.coordinates` 与全景 `position` 未成对维护：新增标记时两处一起写，导入时按同一 id 关联校验 |
 
 ## AI 使用建议
 
-1. **核心文件**：`src/components/PsvContainer.vue` 是唯一直接操作 Photo Sphere Viewer 的组件（创建 / 销毁 viewer、注册全部插件），联动状态在 `src/composables/useAppState.ts`，场景与默认标记数据在 `src/data/scenes.ts`。
-2. **常见改造点**：换全景内容改 `src/data/scenes.ts`（新场景放入 `public/`，等距圆柱场景补 `links` 接入虚拟导览）；坐标换算算法集中在 `src/utils/geo.ts`；类型定义在 `src/types/index.ts`。
-3. **联动约定**：标记的 `position`（yaw/pitch）与 `data.plan.coordinates` 通过同一 id 关联全景与地图；全景 / 地图点击统一 emit `marker-click` 由 `App.vue` 分发（info 旋转视角、link 切换场景）。
-4. **不要用 `configureLeaflet`**：会导致默认 OSM 底图不加载（灰色空面板）；地图点击监听用 `planPlugin.getLeaflet().on('click', ...)`。
-5. **持久化与导入**：标记存 localStorage（key `map-360-demo:markers:v1`），改标记结构时同步更新 `isValidMarker` 校验与「恢复默认」逻辑；导入会过滤非法数据并重新分配 id。
-6. **插件细节参考**：PSV 插件（markers / plan / virtual-tour 等）的配置与 API 见同批 `3d/photo-sphere-viewer` 技能。
+- **执行环境**：Node.js 20+（Vite 8 要求）+ npm；全景图片与地图瓦片来自公共 CDN，**运行和预览都需要联网**。
+- **版本探测**：`node -v` + `npm ls @photo-sphere-viewer/core vite typescript`；PSV 主包与各插件必须同为 5.15.x，混版本会出现插件注册失败。
+- **产物验证**：`npm run typecheck` 与 `npm run build`（后者内含 `vue-tsc -b`）都要过；运行时验证看顶部场景下拉、地图中心/方位角同步、标记点击联动三处。
+- **核心文件**：`src/components/PsvContainer.vue` 是唯一直接操作 PSV 的组件（生命周期与插件注册），联动状态在 `src/composables/useAppState.ts`，场景与默认标记在 `src/data/scenes.ts`。
+- **改造点**：换全景内容改 `src/data/scenes.ts`（资源放 `public/`，立方体贴图要设 `adapter: 'cubemap'`）；坐标换算集中在 `src/utils/geo.ts`；类型在 `src/types/index.ts`。
+- **易错点**：联动契约是「同一 marker id 上的 `position` + `data.plan.coordinates`」，新增标记必须两处成对写；`configureLeaflet` 会顶掉默认 OSM 底图。
+- **持久化**：标记存 localStorage（key `map-360-demo:markers:v1`），改结构要同步 `isValidMarker` 校验与「恢复默认」逻辑。
 
 ## 相关技能
 

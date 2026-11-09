@@ -1,5 +1,11 @@
 # Photo Sphere Viewer Plugins Reference
 
+## Contents
+
+- 插件系统
+- MarkersPlugin 详解
+- 虚拟导览（VirtualTourPlugin）
+
 Plugin system, MarkersPlugin and VirtualTourPlugin details split from SKILL.md.
 
 ---

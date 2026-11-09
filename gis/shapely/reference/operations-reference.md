@@ -1,5 +1,17 @@
 # Shapely Operations API Reference
 
+## Contents
+
+- Constructive Operations
+- Spatial Predicates
+- Set-Theoretic Operations
+- Measurements
+- STRtree Spatial Index
+- Geometry Accessors
+- Affine Transforms
+- Coordinate Transforms
+- Linear Referencing
+
 Constructive operations, predicates, set operations, measurements, indexing and coordinate operations split from SKILL.md.
 
 ---

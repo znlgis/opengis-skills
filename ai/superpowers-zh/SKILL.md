@@ -1,22 +1,17 @@
 ---
 name: superpowers-zh
-description: "Use when constraining AI coding with Chinese TDD methodology, systematic debugging, code review, and verification workflows. Superpowers-zh: Chinese adaptation of the Superpowers AI-assisted programming skills and methodologies."
-tags:
-  - ai
-  - skill
-  - methodology
-  - chinese
-  - tdd
-  - code-review
-  - prompt
-  - claude-code
+description: "Use when constraining AI coding with Chinese TDD methodology, systematic debugging, code review, and pre-completion verification — npx superpowers-zh, --tool/--global install targets (.claude/skills, .cursor/skills, .agents/skills, ~/.hermes/skills), the using-superpowers entry skill, and the 4 Chinese-original skills (chinese-code-review, chinese-git-workflow, chinese-documentation, chinese-commit-conventions); also when the skill pack installs but never triggers."
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, skill, methodology, chinese, tdd, code-review, prompt, claude-code"
 ---
 
 > **项目地址：** <https://github.com/jnMetaCode/superpowers-zh>
 >
 > **英文上游：** <https://github.com/obra/superpowers>
 >
-> **最新版本：** npm 包 1.8.0（截至 2026-10，`npx superpowers-zh` 拉的就是它）；仓库 git tag 与 npm 版本号不同步，以 npm 为准
+> **最新版本：** npm 包 1.8.0（截至 2026-11，npm registry 实测仍为 1.8.0，`npx superpowers-zh` 拉的就是它）；仓库 git tag 与 npm 版本号不同步，以 npm 为准
 >
 > **许可证：** MIT ｜ **npm 包：** 参见 [npm](https://www.npmjs.com/package/superpowers-zh)｜ **运行要求：** Node.js ≥ 20
 

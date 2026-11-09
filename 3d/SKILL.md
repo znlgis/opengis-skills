@@ -1,17 +1,10 @@
 ---
-name: 3d-skills
+name: 3d
 description: "Use when working with 3D Gaussian Splatting (3DGS), .ply model cleanup/compression/publishing, interactive 360-degree panorama visualization and virtual tours, AEC/BIM 3D data processing, CSG solid modeling, or point cloud/mesh processing with Open3D. Index of 6 skills: SuperSplat, Photo-Sphere-Viewer, Ara3D-SDK, Elements, OpenCSG.NET, and Open3D."
-tags:
-  - 3d
-  - gaussian-splatting
-  - 3dgs
-  - webgl
-  - webgpu
-  - visualization
-  - bim
-  - aec
-  - dotnet
-  - opensource
+license: MIT
+metadata:
+  category: 3d
+  tags: "3d, gaussian-splatting, 3dgs, webgl, webgpu, visualization, bim, aec, dotnet, opensource"
 ---
 
 > **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引

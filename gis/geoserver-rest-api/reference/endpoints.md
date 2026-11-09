@@ -1,5 +1,21 @@
 # GeoServer REST API 端点清单
 
+## Contents
+
+- 系统管理
+- 工作空间 (Workspaces)
+- 命名空间 (Namespaces)
+- 数据存储 (Data Stores) — 矢量数据
+- 要素类型 (Feature Types) — 矢量图层资源
+- 覆盖存储 (Coverage Stores) — 栅格数据
+- 覆盖 (Coverages) — 栅格图层资源
+- 图层 (Layers)
+- 图层组 (Layer Groups)
+- 样式 (Styles)
+- OGC 服务设置
+- 安全管理 (Security)
+- GeoWebCache 集成
+
 > 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录 GeoServer REST API 全部端点分组清单（系统管理、工作空间、命名空间、数据存储、要素类型、覆盖存储、覆盖、图层、图层组、样式、OGC 服务设置、安全、GeoWebCache）。
 
 **基础 URL：** `http://{host}:{port}/geoserver/rest`

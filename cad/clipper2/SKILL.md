@@ -1,24 +1,19 @@
 ---
 name: clipper2
 description: "Use when doing 2D polygon boolean ops (Union/Intersect/Difference/Xor) or offsetting (InflatePaths) with Clipper2 — PathD/PathsD floating mode and Path64/Paths64 integer mode, ClipperD precision, PolyTreeD hole hierarchy, FillRule and JoinType tuning. Available via NuGet Clipper2 (2.0.0), vcpkg, npm clipper2-js, and C++/Delphi sources; also for empty output sets, self-intersections after inflate, and missing Centroid/GetAllPaths helpers."
-tags:
-  - 2d
-  - geometry
-  - boolean
-  - offset
-  - polygon
-  - csharp
-  - cpp
-  - delphi
+license: MIT
+metadata:
+  category: cad
+  tags: "2d, geometry, boolean, offset, polygon, csharp, cpp, delphi"
 ---
 
 > **项目地址：** <https://github.com/AngusJohnson/Clipper2>
 >
 > **官方文档：** <http://www.angusj.com/clipper2/Docs/Overview.htm>
 >
-> **包管理器：** NuGet `Clipper2` 2.0.0 ｜ vcpkg `clipper2` ｜ npm `clipper2-js` 1.2.4 ｜ 源码 tag `Clipper2_2.0.1`（2025-12-19，截至 2026-10）
+> **最新版本：** 2.0.1（源码 tag `Clipper2_2.0.1`，2025-12-19；NuGet 稳定包为 2.0.0，二者 API 相同，装包时以 NuGet 版本为准，截至 2026-11，见 [Releases](https://github.com/AngusJohnson/Clipper2/releases)）
 >
-> **版本：** 上游 tag `Clipper2_2.0.1`；NuGet 稳定包仍为 `2.0.0`，二者 API 相同，装包时以 NuGet 版本为准
+> **包管理器：** NuGet `Clipper2` 2.0.0 ｜ vcpkg `clipper2` ｜ npm `clipper2-js` 1.2.4
 >
 > **许可证：** Boost Software License 1.0
 
@@ -249,17 +244,15 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 输出空集 | 检查 FillRule、方向（逆时针 vs 顺时针）、闭合性 |
-| 偏移变形 | 调整 `JoinType` 与 `MiterLimit` |
-| 浮点精度异常 | 改用 `Path64` 或 `ClipperD(precision)` |
-| 与 Clipper1 不兼容 | API 已变化，参考迁移指南 |
-| 找不到 `Centroid` / `GetAllPaths` | C# 绑定没有这两个函数：形心自行按 `Area` 加权计算，PolyTree 压平用 `Clipper.PolyTreeToPathsD(tree)` |
-| 想用 Python 调 Clipper2 | 官方没有发布 PyPI 包（`pip install clipper2` 不可用）；Python 侧要么装 Clipper1 系的 `pyclipper`，要么用 `shapely`（底层 GEOS）替代，或自己编译 C++ 版写绑定 |
-| C++ 编译报 `clipper2/clipper.h: No such file` | include 目录要指向 `CPP/Clipper2Lib/include`；CMake 里 `add_subdirectory(CPP/Clipper2Lib)` 后链接 `Clipper2Lib` 目标，不要只拷 `clipper.h` 漏掉 `clipper.core.h`/`clipper.engine.h` |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 布尔输出空集 | `FillRule` 与多边形方向、闭合性不匹配 | 检查外环/孔的方向约定，确认轮廓闭合，必要时用 `Clipper.PolyTreeToPathsD` 观察层级 |
+| 偏移结果变形 | `JoinType` 与 `MiterLimit` 不适合目标轮廓 | 按轮廓角型选 `JoinType`，圆角用 `JoinType.Round` 并给 `ArcTolerance` |
+| 浮点精度异常 | `PathD` 走浮点算法，极端坐标下误差放大 | 改用 `Path64` 整数模式，或用 `ClipperD(precision)` 显式给精度位数 |
+| 与 Clipper1 混用编译不过 | Clipper2 的 API 是重写版，类型名与函数签名都已变化 | 按官方迁移指南改写，不要照搬 Clipper1 调用 |
+| 找不到 `Centroid` / `GetAllPaths` | C# 绑定没有这两个辅助函数 | 形心按 `Area` 加权自行计算；PolyTree 用 `Clipper.PolyTreeToPathsD(tree)` 压平 |
+| Python 里 `pip install clipper2` 不可用 | 官方没有发布 PyPI 包 | 装 Clipper1 系的 `pyclipper`，或用 `shapely`（GEOS）替代，或自行编译绑定 |
+| C++ 编译报 `clipper2/clipper.h: No such file` | include 路径没指向库的头目录，或只拷了 `clipper.h` | include 指向 `CPP/Clipper2Lib/include`；CMake 用 `add_subdirectory(CPP/Clipper2Lib)` 并链接 `Clipper2Lib` |
 
 ## AI 使用建议
 

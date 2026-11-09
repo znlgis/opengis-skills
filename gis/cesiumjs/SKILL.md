@@ -1,16 +1,10 @@
 ---
 name: cesiumjs
-description: "Use when building browser-based 3D globes, 3D Tiles, CZML/time-dynamic data, or glTF models with npm cesium 1.146.0 — Viewer, Cesium3DTileset, Ion token (Cesium.Ion.defaultAccessToken), CESIUM_BASE_URL for Workers/Assets/Widgets, GCJ-02 tile offset, or debugging a black screen after a Vite/Webpack build."
-tags:
-  - javascript
-  - webgl
-  - 3d
-  - 3d-tiles
-  - gltf
-  - earth
-  - map
-  - web
-  - visualization
+description: "Use when building browser-based 3D globes, 3D Tiles, CZML/time-dynamic data, or glTF models with npm cesium 1.147.0 — Viewer, Cesium3DTileset, Ion token (Cesium.Ion.defaultAccessToken), CESIUM_BASE_URL for Workers/Assets/Widgets, GCJ-02 tile offset, or debugging a black screen after a Vite/Webpack build."
+license: MIT
+metadata:
+  category: gis
+  tags: "javascript, webgl, 3d, 3d-tiles, gltf, earth, map, web, visualization"
 ---
 
 > **项目地址：** <https://github.com/CesiumGS/cesium>
@@ -21,7 +15,7 @@ tags:
 >
 > **Sandcastle：** <https://sandcastle.cesium.com/>
 >
-> **最新版本：** 1.146.0（截至 2026-10，npm `cesium`）
+> **最新版本：** 1.147.0（截至 2026-11，npm `cesium`；1.146 起新增 `@cesium/core` 包）
 >
 > **许可证：** Apache-2.0
 
@@ -44,7 +38,7 @@ CesiumJS 提供：
 
 ```bash
 npm install cesium
-npm ls cesium            # 验证：应显示 cesium@1.146.0
+npm ls cesium            # 验证：应显示 cesium@1.147.0
 ```
 
 ```js
@@ -57,13 +51,13 @@ export default defineConfig({ plugins: [cesium()] });
 ### 方式二：CDN
 
 ```html
-<link href="https://cdn.jsdelivr.net/npm/cesium@1.146.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/cesium@1.146.0/Build/Cesium/Cesium.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.147.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.147.0/Build/Cesium/Cesium.js"></script>
 ```
 
 ```bash
 # 验证 CDN 版本可达
-curl.exe -I https://cdn.jsdelivr.net/npm/cesium@1.146.0/Build/Cesium/Cesium.js   # 期望 200
+curl.exe -I https://cdn.jsdelivr.net/npm/cesium@1.147.0/Build/Cesium/Cesium.js   # 期望 200
 ```
 
 ### 打包器接入
@@ -71,7 +65,9 @@ curl.exe -I https://cdn.jsdelivr.net/npm/cesium@1.146.0/Build/Cesium/Cesium.js  
 - **Vite**：用 `vite-plugin-cesium`，按上面的 `vite.config.js` 注册，插件负责拷贝静态资源
 - **Webpack**：将 `node_modules/cesium/Build/Cesium/{Workers,Assets,Widgets}` 拷到输出目录，并在入口最早处设置 `window.CESIUM_BASE_URL`
 
-> **1.146 变更：** 数学/几何/时间/工具类被拆分为新包 `@cesium/core`（`cesium@1.146.0` 依赖 `@cesium/core@^0.1.0`）。从 `cesium` 主包导入的代码不受影响；直接按子路径引用 `@cesium/engine` 的代码需改从 `@cesium/core` 导入（旧导出计划在后续版本移除，1.146 仍可用）。
+> **1.146 起的包拆分（1.147 仍适用）：** 数学/几何/时间/工具类已拆到 `@cesium/core`（1.147 的 `cesium` 依赖 `@cesium/core@^0.1.1`）。从 `cesium` 主包导入的代码不受影响；从 `@cesium/engine` 导入这些类的代码需改从 `@cesium/core` 导入。`@cesium/engine` 的旧导出已弃用，官方计划在 1.150 移除。
+>
+> **1.147 变更（2026-11-02）：** 主要修复 `Cesium3DTileset` 在 `cacheBytes` 边界反复加载同一瓦片、椭球面附近模型动态环境光等问题；新增 glTF `KHR_materials_emissive_strength` 扩展支持与实验性 `IonAssetElementService`。无破坏性 API 变更。
 
 ---
 
@@ -317,7 +313,7 @@ handler.setInputAction((e) => {
 ## AI 使用建议
 
 - **执行环境**：`npm install`、`npm run build` 在终端中执行；Windows 下 `npm` 实为 `npm.cmd`，脚本里写 `cmd /c npm run build` 更稳；装包和大构建放后台运行，输出重定向到文件再分段读。
-- **先探测版本**：`npm ls cesium`（未安装时 `npm view cesium version`）。本技能按 1.146.0 编写：该版本依赖 `@cesium/core@^0.1.0`，数学/几何/时间/工具类已拆到 `@cesium/core`，低于 1.146 的工程不要照搬这条迁移建议。
+- **先探测版本**：`npm ls cesium`（未安装时 `npm view cesium version`）。本技能按 1.147.0 编写：1.146 起依赖 `@cesium/core@^0.1.x`，数学/几何/时间/工具类已拆到 `@cesium/core`，低于 1.146 的工程不要照搬这条迁移建议；旧 `@cesium/engine` 导出计划在 1.150 移除。
 - **验证产物**：`npm run build` 通过后用 `npx serve dist` 或 `python -m http.server 5173 -d dist` 起静态服务，用 `curl.exe -I` 检查 `http://localhost:5173/Cesium.js` 与 `.../Cesium/Widgets/widgets.css` 返回 200（404 或 text/html 说明资源没拷贝）；AI 助手通常看不到浏览器画面，把 URL 和预期画面交给用户，环境支持读图时用截图核对。
 - **Ion 与部署**：`Cesium.Ion.defaultAccessToken` 从环境变量注入（Vite 用 `import.meta.env.VITE_CESIUM_ION_TOKEN`），不要写进源码或提交；黑屏先查 `window.CESIUM_BASE_URL` 与 `Workers/Assets/Widgets` 是否随构建产物发布。
 - **坐标与性能**：定位一律 `Cesium.Cartesian3.fromDegrees(lon, lat, height)`；大量静态要素用 Primitive，少量动态要素才用 Entity；`clampToGround` 只在需要贴地时开启。

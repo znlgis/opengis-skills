@@ -1,16 +1,10 @@
 ---
 name: huggingface-transformers
-description: "Use when running or fine-tuning Hugging Face Transformers models in Python — pipeline() inference, AutoModel/AutoTokenizer from_pretrained, device_map + dtype memory management, Trainer fine-tuning, BGE embeddings for Chinese RAG; also for CUDA out of memory on load, transformers 5.21 `Requires-Python >=3.11`, `pipeline("summarization")` removed in v5, and ImportError after upgrading. transformers 5.21.0 + PyTorch."
-tags:
-  - transformers
-  - huggingface
-  - pytorch
-  - llm
-  - nlp
-  - fine-tuning
-  - inference
-  - embeddings
-  - model-hub
+description: "Use when running or fine-tuning Hugging Face Transformers models in Python — pipeline() inference, AutoModel/AutoTokenizer from_pretrained, device_map + dtype memory management, Trainer fine-tuning, BGE embeddings for Chinese RAG; also for CUDA out of memory on load, transformers 5.22 requires Python 3.11 or newer, `pipeline("summarization")` removed in v5, and ImportError after upgrading. transformers 5.22.2 + PyTorch."
+license: MIT
+metadata:
+  category: ai
+  tags: "transformers, huggingface, pytorch, llm, nlp, fine-tuning, inference, embeddings, model-hub"
 ---
 
 > **项目地址：** <https://github.com/huggingface/transformers>
@@ -19,7 +13,7 @@ tags:
 >
 > **许可证：** Apache-2.0
 >
-> **最新版本：** v5.21.0（PyPI 与 `releases/latest` 双核实，截至 2026-10；5.21.0 上传于 2026-10-26）
+> **最新版本：** v5.22.2（截至 2026-11，PyPI 与 `releases/latest` 双核实；5.22.2 上传于 2026-11-06，为 Jinja 沙箱加固与分布式修复的补丁版）
 
 ## 概述
 
@@ -37,7 +31,7 @@ Transformers 是库（进程内推理/训练），与 Ollama 这类独立推理�
 
 ## 环境准备
 
-要求 Python **>= 3.11**（5.21.0 起，实测 `requires_python`；5.19–5.20 仍为 >= 3.10）。
+要求 Python **>= 3.11**（5.21.0 起实测 `requires_python`，5.22.x 仍为 `>=3.11.0`；5.19–5.20 为 >= 3.10）。
 
 ```bash
 # 核心：Transformers 与 PyTorch
@@ -307,7 +301,7 @@ print((q_vector @ doc_vectors.T).softmax(dim=-1))
 | 问题 | 排查与解决 |
 |------|-----------|
 | `ImportError: cannot import name ...` | 版本不匹配，先 `pip install -U transformers`；5.21+ 需 Python >= 3.11 |
-| `pip install transformers` 报 `Requires-Python >=3.11` | 5.21.0 起最低 Python 3.11；要么升级解释器，要么钉 `transformers==5.20.x`（仍支持 3.10） |
+| `pip install transformers` 报 `Requires-Python >=3.11` | 5.21.0 起最低 Python 3.11（5.22.2 实测同为 `>=3.11.0`）；要么升级解释器，要么钉 `transformers==5.20.x`（仍支持 3.10） |
 | 从 4.x 升到 5.x 后 TF/JAX 代码报错 | v5 移除 TensorFlow 与 JAX 后端，只保留 PyTorch；相关代码需迁移到 torch 或留在 4.x |
 | 模型下载慢或超时 | 设镜像端点 `export HF_ENDPOINT=https://hf-mirror.com`，或 `hf auth login` 后用官方源；检查 `HF_HOME` 磁盘空间 |
 | CUDA out of memory | 用 `device_map="auto"` + `dtype="auto"`；降 `batch_size`；开 `BitsAndBytesConfig` 量化；`torch.cuda.empty_cache()` |

@@ -1,17 +1,10 @@
 ---
 name: freecad
 description: "Use when scripting FreeCAD 1.1.4 in Python or driving it headless — Part/PartDesign BREP modeling, Sketcher constraints, Arch/BIM and IFC, TechDraw, CAM, FEM, freecadcmd batch runs, Import.export to STEP. Also for ModuleNotFoundError when importing Part from system Python, Toponaming breakage after changing a sketch dimension, and character-encoding problems on Chinese file paths."
-tags:
-  - 3d
-  - parametric
-  - cad
-  - python
-  - brep
-  - step
-  - cam
-  - bim
-  - ifc
-  - freecad
+license: MIT
+metadata:
+  category: cad
+  tags: "3d, parametric, cad, python, brep, step, cam, bim, ifc, freecad"
 ---
 
 > **项目地址：** <https://github.com/FreeCAD/FreeCAD>
@@ -24,9 +17,9 @@ tags:
 >
 > **许可证：** LGPL-2.1-or-later
 >
-> **包管理器：** `freecad`（conda-forge）/ 各发行版仓库 / 官网安装包与 AppImage（最新 1.1.4，截至 2026-10）
+> **最新版本：** 1.1.4（2026-09-28，1.1.x 系列最后一个维护版本；26.3 系列仍为 RC，截至 2026-11，见 [GitHub Releases](https://github.com/FreeCAD/FreeCAD/releases)）
 >
-> **版本：** 1.1.4（2026-09-28，1.1.x 系列最后一个维护版本，见 [GitHub Releases](https://github.com/FreeCAD/FreeCAD/releases)）
+> **包管理器：** `freecad`（conda-forge）/ 各发行版仓库 / 官网安装包与 AppImage
 
 ## 概述
 
@@ -242,18 +235,16 @@ with open("parts.csv", newline="", encoding="utf-8") as f:
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 改参数后后续特征丢失/报错（Toponaming） | 1.0 起引入 ElementMap 缓解，但仍非完全解决：尽量用 `PartDesign::Body` 内的草图基准与 Datum 定位，避免跨对象引用面/边编号；升级到 1.1.4 可拿到后续修复 |
-| 中文文件名编码 | 使用 UTF-8；Windows 下避免 GBK 路径 |
-| 导出 STEP 缺少颜色 | 用 STEP AP242 或在 ImportSettings 启用颜色 |
-| Sketcher 求解失败 | 删除冗余约束、检查 DoF |
-| Mesh 转 Solid 不闭合 | 用 Part → Convert to solid 前先 Mesh Repair |
-| `freecadcmd: command not found` | 发行版可能只装了 GUI 入口；用 `which freecad` 反查安装前缀并在同目录找 `freecadcmd`，或改用 AppImage（解包后取同名入口），也可 `conda install -c conda-forge freecad` 拿到完整命令行 |
-| 脚本里 `import Part` 报 `ModuleNotFoundError` | `Part` 等模块只存在于 FreeCAD 自带解释器：必须在 `freecadcmd` / 宏 / GUI 控制台里跑。系统 Python 想用类型检查可装 `freecad-stubs`（PyPI），但它只有 `.pyi` 存根、不能运行几何代码 |
-| `Part.export` 导出的 STEP 下游读不出 | 优先 `Import.export([obj], "out.step")`（FreeCAD 自带导入导出模块，走偏好设置）；导出前 `doc.recompute()` 并确认 `Shape.isValid()` |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 改参数后后续特征丢失/报错（Toponaming） | 跨对象引用历史面/边编号，重建后编号漂移 | 尽量用 `PartDesign::Body` 内的草图基准与 Datum 定位，避免跨对象引用面/边；升级到 1.1.4 可拿到后续修复 |
+| 中文文件名编码错误 | 路径编码不是 UTF-8 | 统一用 UTF-8；Windows 下避免 GBK 路径 |
+| 导出 STEP 缺少颜色 | 默认 STEP 导出不带颜色属性 | 用 STEP AP242，或在 ImportSettings 启用颜色 |
+| Sketcher 求解失败 | 存在冗余/冲突约束，或自由度（DoF）未定义 | 删除冗余约束、逐个检查 DoF |
+| Mesh 转 Solid 不闭合 | 原始网格有洞或非流形边 | 先用 Mesh Repair 修复，再 Part → Convert to solid |
+| `freecadcmd: command not found` | 发行版可能只装了 GUI 入口 | 用 `which freecad` 反查安装前缀并在同目录找 `freecadcmd`，或用 AppImage，或 `conda install -c conda-forge freecad` |
+| 脚本里 `import Part` 报 `ModuleNotFoundError` | `Part` 等模块只存在于 FreeCAD 自带解释器 | 在 `freecadcmd` / 宏 / GUI 控制台里跑；系统 Python 只可装 `freecad-stubs` 做类型检查（不能运行几何代码） |
+| `Part.export` 导出的 STEP 下游读不出 | 导出前未重算，或形状无效 | 优先 `Import.export([obj], "out.step")`；导出前 `doc.recompute()` 并确认 `Shape.isValid()` |
 
 ## AI 使用建议
 

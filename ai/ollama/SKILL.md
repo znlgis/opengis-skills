@@ -1,16 +1,10 @@
 ---
 name: ollama
-description: "Use when running local LLMs — ollama pull/run/ps, Modelfile templates, /api/generate|chat|embed NDJSON streaming, OpenAI-compatible /v1/chat/completions and /v1/responses, tuning num_ctx/num_gpu/keep_alive and OLLAMA_* env vars; also for `connection refused` on 127.0.0.1:11434, OOM on a model that does not fit VRAM, CPU-only inference despite a GPU, and pull timeouts behind a proxy. Ollama v0.40.11."
-tags:
-  - llm
-  - local-inference
-  - model-serving
-  - rest-api
-  - openai-compatible
-  - modelfile
-  - gguf
-  - gpu
-  - embeddings
+description: "Use when running local LLMs — ollama pull/run/ps, Modelfile templates, /api/generate|chat|embed NDJSON streaming, OpenAI-compatible /v1/chat/completions and /v1/responses, tuning num_ctx/num_gpu/keep_alive and OLLAMA_* env vars; also for `connection refused` on 127.0.0.1:11434, OOM on a model that does not fit VRAM, CPU-only inference despite a GPU, and pull timeouts behind a proxy. Ollama v0.40.15."
+license: MIT
+metadata:
+  category: ai
+  tags: "llm, local-inference, model-serving, rest-api, openai-compatible, modelfile, gguf, gpu, embeddings"
 ---
 
 > **项目地址：** <https://github.com/ollama/ollama>
@@ -21,7 +15,7 @@ tags:
 >
 > **许可证：** MIT
 >
-> **最新版本：** v0.40.11（截至 2026-10，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/ollama/ollama/releases)）
+> **最新版本：** v0.40.15（截至 2026-11，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/ollama/ollama/releases)）
 >
 > **npm SDK：** `ollama`（0.6.4，实测 npm registry）
 
@@ -376,7 +370,7 @@ curl http://localhost:11434/api/embed -d '{
 1. **先确认 GPU 生效**：安装后执行 `ollama ps`，PROCESSOR 列应为 `100% GPU`；若为 `100% CPU`，先排查驱动版本与显存是否满足
 2. **上下文按需设置**：默认 4096 tokens，长文档场景再调大 `num_ctx` / `OLLAMA_CONTEXT_LENGTH`，避免无谓显存占用
 3. **显存换算**：并发需求约为 `OLLAMA_NUM_PARALLEL × num_ctx`；显存紧张时先降并发再降上下文
-4. **KV 缓存量化**：显存不足时可设 `OLLAMA_KV_CACHE_TYPE=q8_0`（目前为全局选项）
+4. **KV 缓存量化**：显存不足时可设 `OLLAMA_KV_CACHE_TYPE=q8_0`（服务级环境变量，需重启服务生效）
 5. **keep_alive 分级**：交互场景设 `30m` 以上避免反复加载；批处理收尾设 `0` 立即释放显存
 6. **流式优先**：应用侧按 NDJSON 逐行解析，首 token 延迟显著优于等待完整响应
 7. **结构化输出**：需要严格 JSON 时用 `format: "json"` 或传 JSON Schema，不要只靠提示词约束
@@ -408,7 +402,7 @@ curl http://localhost:11434/api/embed -d '{
 2. **模型先拉后用**：任何 API / SDK 调用前先 `ollama pull <model>`，避免运行时才暴露模型缺失
 3. **调试用 CLI，集成交付用 API**：交互调试用 `ollama run`，代码集成用 `/api/chat` 或 OpenAI 兼容层
 4. **参数改动小步走**：每次只调一个参数（num_ctx / num_gpu / keep_alive），用 `eval_count` 与 `eval_duration` 量化对比
-5. **版本敏感**：Ollama 迭代快（当前 v0.40.11），API 字段与 CLI 命令以当前版本的 `--help` 与官方文档为准
+5. **版本敏感**：Ollama 迭代快（当前 v0.40.15），API 字段与 CLI 命令以当前版本的 `--help` 与官方文档为准
 
 ### 关键模式与常见陷阱
 

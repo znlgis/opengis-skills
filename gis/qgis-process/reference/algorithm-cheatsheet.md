@@ -1,5 +1,11 @@
 # QGIS Process Algorithm Cheatsheet Reference
 
+## Contents
+
+- 常用内置算法速查
+- 参数类型参考
+- 典型工作流示例
+
 Built-in algorithm cheatsheet, parameter types and typical workflow examples split from SKILL.md.
 
 ---

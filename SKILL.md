@@ -1,25 +1,9 @@
 ---
 name: opengis-skills
 description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise. Index of 114 skills across 8 categories: gis (40), cad (21), csharp (12), ai (17), iot (4), 3d (6), demos (4), others (10). Tag-based search and on-demand loading for GDAL, GeoServer, MapServer, Leaflet, PROJ, PostGIS, DuckDB Spatial, GeoLibre, JTS, CesiumJS, FreeCAD, Blender, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Serilog, Dify, Ollama, LangChain, vLLM, MinerU, SuperSplat, Home Assistant, CHAGS and more."
-tags:
-  - gis
-  - cad
-  - csharp
-  - ai
-  - iot
-  - opensource
-  - skills
-  - geospatial
-  - spatial-analysis
-  - mapping
-  - 3d-modeling
-  - dotnet
-  - python
-  - java
-  - javascript
-  - go
-  - typescript
-  - cpp
+license: MIT
+metadata:
+  tags: "gis, cad, csharp, ai, iot, 3d, geospatial, spatial-analysis, dotnet, opensource"
 ---
 
 > **仓库地址：** <https://github.com/znlgis/opengis-skills>
@@ -112,7 +96,7 @@ tags:
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
 | [ifoxcad](./cad/ifoxcad/SKILL.md) | AutoCAD .NET 二次开发框架 | `autocad` `dotnet` `plugin` |
-| [fy_layout](./cad/fy_layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） | `lightcad` `construction` `dotnet` |
+| [fy-layout](./cad/fy-layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） | `lightcad` `construction` `dotnet` |
 | [clipper2](./cad/clipper2/SKILL.md) | 高性能 2D 多边形布尔运算与偏移 | `geometry` `polygon` `clipping` |
 | [clipper1](./cad/clipper1/SKILL.md) | Clipper 1.x（旧版本，仍广泛使用） | `geometry` `legacy` `polygon` |
 | [chili3d](./cad/chili3d/SKILL.md) | 纯 Web 3D CAD（基于 OCCT.js） | `web` `typescript` `wasm` `3d` |
@@ -207,7 +191,7 @@ tags:
 |------|------|---------|
 | [billionmail](./others/billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `selfhosted` `marketing` |
 | [ruoyi-cloud](./others/ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `springcloud` `scaffold` |
-| [acme.sh](./others/acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
+| [acme-sh](./others/acme-sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
 | [go](./others/go/SKILL.md) | Go 语言核心语法与工程实践 | `go` `golang` `backend` `concurrency` |
 | [robotgo](./others/robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 | `go` `rpa` `automation` `desktop` |
 | [robotgo-flow](./others/robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 | `go` `rpa` `yaml` `windows` |
@@ -228,11 +212,11 @@ tags:
 |------|---------|
 | `python` | gdal-api, pyqgis, geopandas, shapely, cadquery, clipper1, freecad, kicad, libredwg, grass-gis, blender, open3d, geopipe-agent, langchain, llamaindex, deepseek-harness, docutranslate, hermes-agent, geolibre, mineru, vllm, crewai, whitebox-tools, kepler-gl |
 | `java` | gdal-api, geotools, jts, geometry-api-java, opengis-utils-for-java, geoserver, geoserver-cloud, ruoyi-cloud |
- | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, lightcad, sharpmap, mapsui, opengis-utils-for-net, opengis-daf, fy_layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
+ | `dotnet` / `csharp` | gdal-api, nettopologysuite, geometry-api-net, lightcad, sharpmap, mapsui, opengis-utils-for-net, opengis-daf, fy-layout, ifoxcad, lightningcad, tongwen, xbim, clipper1, clipper2, furion, sod, npoi, reogrid, sqlsugar, dotnet-reactor, admin-net-backend, ara3d-sdk, sentry, elements, opencsg-net |
 | `javascript` / `typescript` | cesiumjs, openlayers, leaflet, mapbox-gl-js, deck-gl, qcad, chili3d, node-red, admin-net-frontend, deepseek-harness, openclaw, pi, photo-sphere-viewer, supersplat, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
 | `cpp` / `c` | gdal-api, mapserver, occt, open3d, clipper1, clipper2, librecad, libredwg |
 | `go` | go, robotgo, robotgo-flow |
-| `shell` | qgis-process, acme.sh |
+| `shell` | qgis-process, acme-sh |
 | `vue` | admin-net-frontend, chags, map-360-demo, vue3-map-dashboard, ai-water-front, openlayers-vue3-demo |
 | `micropython` | ke3036-keyes-pico |
 | `crs` / `reprojection` | proj, projnet4geoapi |
@@ -245,12 +229,12 @@ tags:
 | `raster` | gdal, gdal-api, grass-gis, qgis-process, geopipe-agent, geotools, postgis, pyqgis, whitebox-tools |
 | `vector` | gdal, gdal-api, geopandas, grass-gis, geopipe-agent, geotools, opengis-utils-for-java, opengis-utils-for-net, opengis-daf, postgis, pyqgis, spatialite, duckdb-spatial |
 | `server` / `wms` / `wfs` | geoserver, geoserver-cloud, geoserver-rest-api, mapserver, qgis-server, geotools, mapsui, openlayers, sharpmap, geonode |
-| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, blender, open3d, fy_layout, photo-sphere-viewer, supersplat, ara3d-sdk, elements, opencsg-net |
-| `2d` | openlayers, leaflet, qcad, librecad, sharpmap, lightcad, clipper1, clipper2, fy_layout, solvespace |
+| `3d` | cesiumjs, chili3d, freecad, occt, openscad, cadquery, solvespace, astral3d, blender, open3d, fy-layout, photo-sphere-viewer, supersplat, ara3d-sdk, elements, opencsg-net |
+| `2d` | openlayers, leaflet, qcad, librecad, sharpmap, lightcad, clipper1, clipper2, fy-layout, solvespace |
 | `orm` / `database` | sod, sqlsugar, postgis, spatialite, duckdb-spatial |
 | `agent` / `llm` | dify, langchain, llamaindex, ollama, huggingface-transformers, vllm, crewai, mineru, hermes-agent, openclaw, opencode, pi, oh-my-openagent, geopipe-agent, docutranslate, deepseek-harness, my-opencode-deepseek-config |
 | `pipeline` / `workflow` | dify, opengis-all, pdal, llamaindex, geopipe-agent, opengis-daf, qgis-process, robotgo-flow |
-| `automation` / `rpa` | geoserver-rest-api, qgis-process, grass-gis, node-red, acme.sh, robotgo, robotgo-flow, whitebox-tools, home-assistant |
+| `automation` / `rpa` | geoserver-rest-api, qgis-process, grass-gis, node-red, acme-sh, robotgo, robotgo-flow, whitebox-tools, home-assistant |
 | `lidar` / `point-cloud` | pdal, open3d, whitebox-tools |
 | `vector-tiles` / `webgl` | cesiumjs, supersplat, photo-sphere-viewer, mapbox-gl-js, deck-gl |
 | `docker` / `containers` | geoserver-cloud, docker-compose, geolibre, vllm, home-assistant |
@@ -321,17 +305,15 @@ tags:
 
 ## Skill 编写规范
 
-每个技能文件遵循统一规范：
+完整规范见 **[AUTHORING.md](./AUTHORING.md)**（唯一权威，含示例与检查清单），摘要如下：
 
-1. **YAML frontmatter** — `name`、`description`（英文 Use when... 格式）、`tags`（多行 YAML 数组格式，用于搜索）
-2. **引用块** — 项目地址、官方文档、许可证
-3. **概述** — 定位与特性矩阵
-4. **环境准备/安装**
-5. **核心 API/命令** — 含代码示例
-6. **典型工作流** — 端到端操作步骤
-7. **AI 使用建议** — 工具无关的协作指导：执行环境、版本探测、产物验证、常见误操、安全与权限
-8. **常见问题（FAQ）**
-9. **参考资源**
+1. **目录与命名** — `<category>/<project>/SKILL.md`；目录名 kebab-case（`^[a-z0-9]+(-[a-z0-9]+)*$`）且与 frontmatter `name` 完全一致；详细资料放 `reference/*.md`（一层深、从 SKILL.md 链接）
+2. **YAML frontmatter** — 只用 Agent Skills 规范允许的六个字段：`name`、`description`、`license`（本仓统一 `MIT`）、`compatibility`、`metadata`、`allowed-tools`；标签放 `metadata.tags`（逗号分隔字符串，5–10 个）
+3. **description** — 英文、`Use when` 开头、第三人称、≤500 字符、不含尖括号；写「何时使用」并嵌入 API/命令/报错原文等触发词
+4. **头部引用块** — 项目地址、官方文档、**最新版本（含「截至 YYYY-MM」与来源链接）**、许可证
+5. **正文章节** — 概述 → 环境准备/安装 → 核心 API/命令 → 典型工作流 → 常见问题（表格 ≥5 行）→ AI 使用建议（工具无关）→ 相关技能 → 参考资源
+6. **渐进披露** — 主文件 ≤500 行；`reference/` 文件 >100 行须有 `## Contents`；无孤儿文件
+7. **质量** — 版本与 API 以官方来源实测为准，禁止编造；无 emoji、代码围栏必须带语言、文件链接用正斜杠
 
 参考样板：`gis/gdal/SKILL.md`、`gis/jts/SKILL.md`
 
@@ -340,10 +322,15 @@ tags:
 ## 贡献指南
 
 1. 每个 Skill 以独立目录组织：`<category>/<project>/SKILL.md`
-2. 如需引用数据或大型文件，放在 `reference/` 子目录
-3. 基于上游官方文档编写，避免编造 API
+2. 新增/删除技能时同步更新 4 处：根 `SKILL.md`、所属分类索引、`README.md`、标签表
+3. 基于上游官方文档编写，避免编造 API；版本号与「最新版本」行必须给出实测来源
 4. 保持中文为主，代码、命令、API 使用原文格式
-5. 提交 PR 时确保 YAML frontmatter 格式正确（`tags` 必须使用多行 `- tag` 格式，而非内联 `[tag1, tag2]` 格式）
+5. 提交 PR 前在仓库根目录运行：
+   ```bash
+   python scripts/validate-skills.py .     # 结构/frontmatter/索引/链接（CI 同款）
+   python scripts/check-upstream.py .      # 上游版本漂移（需联网，可选）
+   ```
+6. 提交 PR 时确保 frontmatter 符合 AUTHORING.md（`metadata.tags` 用逗号分隔字符串，不再使用顶层 `tags` 数组）
 
 ---
 

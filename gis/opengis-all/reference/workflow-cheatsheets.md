@@ -1,5 +1,12 @@
 # OpenGIS Workflow Examples and Cheatsheets
 
+## Contents
+
+- 端到端工作流示例
+- 常用内置算法速查（qgis_process / PyQGIS）
+- GDAL 命令行工具速查
+- 数据格式支持
+
 End-to-end workflow examples, built-in algorithm cheatsheet, GDAL CLI cheatsheet, data formats and env vars split from SKILL.md.
 
 ---

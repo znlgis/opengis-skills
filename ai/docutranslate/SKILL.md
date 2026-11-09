@@ -1,16 +1,10 @@
 ---
 name: docutranslate
-description: "Use when translating PDF/Word/Excel/Markdown/EPUB/SRT documents locally with an LLM while keeping layout — docutranslate -i on port 8010, docutranslate.sdk Client(translate/save), docutranslate --mcp for stdio/SSE MCP, MinerU token for PDF parsing; also for missing DOCUTRANSLATE_API_KEY, PDF layout loss after md conversion, MinerU token errors, and [mcp] extra not installed. DocuTranslate, PyPI 1.7.9."
-tags:
-  - ai
-  - llm
-  - translation
-  - document
-  - pdf
-  - mineru
-  - mcp
-  - python
-  - cli
+description: "Use when translating PDF/Word/Excel/Markdown/EPUB/SRT documents locally with an LLM while keeping layout — docutranslate -i on port 8010, docutranslate.sdk Client(translate/save), docutranslate --mcp for stdio/SSE MCP, MinerU token for PDF parsing; also for missing DOCUTRANSLATE_API_KEY, PDF layout loss after md conversion, MinerU token errors, and [mcp] extra not installed. DocuTranslate, PyPI 1.7.11."
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, llm, translation, document, pdf, mineru, mcp, python, cli"
 ---
 
 > **项目地址：** <https://github.com/xunbu/docutranslate>
@@ -21,7 +15,7 @@ tags:
 >
 > **许可证：** MPL-2.0（Mozilla Public License 2.0）
 >
-> **版本：** GitHub Release v1.7.10 ／ PyPI 1.7.9（截至 2026-10，实测两边不同步：PyPI 最新上传 1.7.9 为 2026-09-11）
+> **最新版本：** v1.7.11（截至 2026-11，PyPI 与 GitHub Release 同号；见 [Releases](https://github.com/xunbu/docutranslate/releases)）
 
 ## 概述
 

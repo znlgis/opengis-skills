@@ -77,6 +77,8 @@ AI 根据 SKILL.md 中的 API/命令示例生成代码
 ```
 opengis-skills/
 ├── SKILL.md         # 🌐 根入口：全局索引 + 标签搜索 + 使用指南
+├── AUTHORING.md     # 📐 技能书写规范（唯一权威，CI 校验依据）
+├── scripts/         # 校验与版本漂移脚本
 ├── gis/             # GIS 类（40 个）
 │   └── SKILL.md     # GIS 分类索引
 ├── cad/             # CAD 类（21 个）
@@ -172,7 +174,7 @@ opengis-skills/
 | SKILL | 简介 |
 |-------|------|
 | [ifoxcad](./cad/ifoxcad/SKILL.md) | AutoCAD .NET 二次开发框架 |
-| [fy_layout](./cad/fy_layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） |
+| [fy-layout](./cad/fy-layout/SKILL.md) | 施工场地布置插件（LightCAD 二次开发示例） |
 | [clipper2](./cad/clipper2/SKILL.md) | 高性能 2D 多边形布尔运算与偏移 |
 | [clipper1](./cad/clipper1/SKILL.md) | Clipper 1.x（旧版本，仍广泛使用） |
 | [chili3d](./cad/chili3d/SKILL.md) | 纯 Web 3D CAD（基于 OCCT.js） |
@@ -275,7 +277,7 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 |-------|------|
 | [billionmail](./others/billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 |
 | [ruoyi-cloud](./others/ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 |
-| [acme.sh](./others/acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 |
+| [acme-sh](./others/acme-sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 |
 | [go](./others/go/SKILL.md) | Go 语言核心语法与工程实践 |
 | [robotgo](./others/robotgo/SKILL.md) | Go 跨平台桌面自动化（RPA）库 |
 | [robotgo-flow](./others/robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 |
@@ -286,42 +288,29 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 
 ## 📝 SKILL 编写规范
 
-每个 `<category>/<project>/SKILL.md` 遵循统一规范，便于 AI 工具与人类阅读：
+完整规范见 **[AUTHORING.md](./AUTHORING.md)**（唯一权威，含正反例与自检清单）。要点：
 
-1. **YAML frontmatter**（必填字段）：
+1. **frontmatter 只用 Agent Skills 规范允许的六个字段**（`name`、`description`、`license`、`compatibility`、`metadata`、`allowed-tools`），标签写进 `metadata.tags`（逗号分隔字符串，5–10 个）：
 
    ```yaml
    ---
-   name: 项目英文名
-   description: Use when <触发条件>. <项目定位>. Covers <关键特性>.   # 英文 "Use when..." 格式，≤500 字符
-   tags:                 # 用于 AI 工具按标签搜索技能
-     - <语言/平台>
-     - <功能领域>
-     - <...>
+   name: gdal                       # 必须与父目录名完全一致，小写字母/数字/连字符
+   description: "Use when processing geospatial raster/vector data via GDAL/OGR CLI — ..."
+   license: MIT
+   metadata:
+     category: gis
+     tags: "gdal, ogr, cli, raster, vector, conversion, reprojection, gis"
    ---
    ```
 
-   > **`description` 规范：** 采用英文 `Use when...` 格式，描述**何时使用**该技能（而非描述项目本身），遵循 [Anthropic Skill 最佳实践](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills)。分类索引用 `Use when... Index of N skills: ...` 格式。所有 description 均以 `Use when` 开头、第三人称、≤500 字符。
-   >
-   > **`tags` 字段说明：** 每个 SKILL.md 的 frontmatter 中必须包含 `tags` 数组（**必须使用多行 `- tag` 格式**，不使用内联 `[tag1, tag2]` 格式），列出该技能的关键标签（如 `python`、`geometry`、`cli`、`3d` 等）。这些标签被根 `SKILL.md` 的标签索引系统使用，让 AI 工具可以通过标签快速定位相关技能，无需扫描全部文件。
+   > **为什么不用顶层 `tags`？** [Agent Skills 开放规范](https://agentskills.io/specification)只允许上述六个字段；claude.ai 上传与 Skills API 打包遇到未知字段会硬报错（`Unexpected key(s)`）。标签检索改由 `metadata.tags` 承载，脚本与索引均按此解析。
 
-2. **头部引用块**：项目地址、官方文档、许可证
-
-3. **正文章节**（按需取用，顺序保持稳定）：
-   - **概述**：定位、特性矩阵
-   - **环境准备 / 安装**
-   - **核心 API / 命令**
-   - **典型工作流**
-   - **最佳实践 / 性能优化**
-   - **常见问题（FAQ 表，≥5 行）**
-   - **AI 使用建议**（工具无关：执行环境、版本探测、产物验证、常见误操、安全与权限）
-   - **相关技能**
-   - **参考资源**
-
-4. **风格**：中文为主，配合代码示例；命令、API、字段使用代码格式
-5. **大小**：主文件建议 ≤500 行；超过时将详细参数/示例拆分到 `reference/*.md`（参见 GDAL 拆分示例：[主文件](./gis/gdal/SKILL.md) 500 行 + [矢量工具参考](./gis/gdal/reference/vector-tools.md) + [栅格工具参考](./gis/gdal/reference/raster-tools.md)），主文件与 reference 合计通常 300–1500 行
-6. **示例**：基于上游官方文档实地核对，避免编造 API；版本号需以 `npm view` / PyPI JSON / NuGet flatcontainer / GitHub `releases/latest` 实测，并在头块注明「截至 YYYY-MM」
-7. **无 emoji、代码块必须带语言标识、正文中文而 API/命令保留英文原文**
+2. **`description`**：英文、`Use when` 开头、第三人称、≤500 字符、不含 `<>` 尖括号；写**何时使用**并嵌入 API/命令/报错原文等触发词（分类索引用 `Use when ... Index of N skills: ...`）
+3. **头部引用块**：项目地址、官方文档、**最新版本（含「截至 YYYY-MM」与来源链接）**、许可证
+4. **正文章节**：概述 → 环境准备/安装 → 核心 API/命令 → 典型工作流 → 常见问题（FAQ 表 ≥5 行）→ AI 使用建议（工具无关）→ 相关技能 → 参考资源
+5. **渐进披露**：主文件 ≤500 行；详细内容拆到 `reference/*.md`（一层深、从 SKILL.md 链接、>100 行加 `## Contents`）
+6. **示例与版本**：基于上游官方文档/发布页实测核对，禁止编造 API；版本以 GitHub Releases、PyPI、npm、NuGet、Maven Central 为准
+7. **风格**：中文为主，代码/命令/API 保留英文原文；无 emoji、代码围栏必须带语言、文件链接一律正斜杠
 
 参考样板：[`gis/gdal/SKILL.md`](./gis/gdal/SKILL.md)、[`gis/jts/SKILL.md`](./gis/jts/SKILL.md)。
 
@@ -330,14 +319,17 @@ LLM 应用、智能体、个人 AI 助手与 AI 编程方法论。
 提交前在仓库根目录执行：
 
 ```bash
-# 结构 + frontmatter + 相对链接 + 索引一致性（CI 同款）
+# 结构 + frontmatter + 相对链接 + 索引一致性（CI 同款，无需第三方依赖）
 python scripts/validate-skills.py .
+
+# 上游版本漂移：逐个技能比对 GitHub 最新稳定 tag 与文中"最新版本"
+python scripts/check-upstream.py . --workers 16
 
 # 外部链接连通性（可选，需联网；403/SSL 抖动属正常，重点看 404）
 python scripts/check-links.py . --workers 32 --timeout 12
 ```
 
-`validate-skills.py` 会检查：frontmatter 三字段、`name` 与目录名一致、`description` 以 `Use when` 开头且 ≤500 字符全英文、tags 5-10 个且格式合法、L3 必备章节（概述/安装/工作流/FAQ/相关）、FAQ 表格 ≥5 行、无 emoji、代码围栏带语言、单文件 ≤500 行、相对链接可达，以及根 `SKILL.md`、8 个分类索引与 `README.md` 是否覆盖全部技能。
+`validate-skills.py` 检查：六字段白名单、`name` 与目录名一致、`description` 英文 `Use when` ≤500 且全仓唯一、`metadata.category`/`tags` 完整、L3 必备章节、FAQ ≥5 行、无 emoji、代码围栏带语言、≤500 行、reference TOC/孤儿引用、相对链接可达、无 Windows 反斜杠路径，以及根 `SKILL.md`、8 个分类索引与 `README.md` 的覆盖与技能数一致性。CI 在每次 push/PR 时运行该校验。
 
 ---
 

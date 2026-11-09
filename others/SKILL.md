@@ -1,21 +1,10 @@
 ---
-name: others-skills
+name: others
 description: "Use when needing Go language development, desktop RPA automation, self-hosted email marketing, Java Spring Cloud scaffolding, SSL/TLS certificate automation, Docker Compose multi-container orchestration, FFmpeg audio/video transcoding or HLS slicing, or building a bilingual children's Phaser/Vue game collection. Index of 10 skills: Go, RobotGo, RobotGo-Flow, BillionMail, RuoYi-Cloud, acme.sh, CHAGS, BambooBuddy, FFmpeg, Docker Compose."
-tags:
-  - email
-  - self-hosted
-  - newsletter
-  - java
-  - spring-cloud
-  - microservices
-  - scaffold
-  - ssl
-  - acme
-  - go
-  - golang
-  - rpa
-  - automation
-  - yaml
+license: MIT
+metadata:
+  category: others
+  tags: "go, golang, rpa, automation, email, self-hosted, java, ssl, docker, ffmpeg"
 ---
 
 > **仓库地址：** <https://github.com/znlgis/opengis-skills>
@@ -50,7 +39,7 @@ tags:
 | [robotgo-flow](./robotgo-flow/SKILL.md) | 基于 robotgo 的 YAML 驱动 Windows RPA 框架 | `go` `rpa` `yaml` `windows` |
 | [billionmail](./billionmail/SKILL.md) | 自托管邮件营销与事务邮件平台 | `email` `marketing` `smtp` `self-hosted` |
 | [ruoyi-cloud](./ruoyi-cloud/SKILL.md) | 若依微服务版 Java 后台脚手架 | `java` `spring-cloud` `microservices` `rbac` |
-| [acme.sh](./acme.sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
+| [acme-sh](./acme-sh/SKILL.md) | 纯 Shell 的 ACME 客户端，自动签发/续期 SSL 证书 | `ssl` `acme` `lets-encrypt` `shell` |
 | [chags](./chags/SKILL.md) | 中国历史典故儿童游戏合集（Vue3 + Phaser，中英双语） | `vue` `phaser` `game` |
 | [docker-compose](./docker-compose/SKILL.md) | 声明式多容器 Docker 编排（compose.yaml） | `docker` `containers` `orchestration` `yaml` |
 | [bamboobuddy](./bamboobuddy/SKILL.md) | 儿童日常养成游戏（pnpm workspace + Vue3 + Phaser） | `vue` `phaser` `game` `education` |
@@ -75,8 +64,8 @@ tags:
 | "配置 SMTP 中转与送达率分析" | `billionmail/SKILL.md` |
 | "搭建 Spring Cloud 微服务后台" | `ruoyi-cloud/SKILL.md` |
 | "Nacos/Sentinel/Seata 微服务脚手架" | `ruoyi-cloud/SKILL.md` |
-| "自动申请 Let's Encrypt SSL 证书" | `acme.sh/SKILL.md` |
-| "通配符证书 / Nginx 自动续期 HTTPS" | `acme.sh/SKILL.md` |
+| "自动申请 Let's Encrypt SSL 证书" | `acme-sh/SKILL.md` |
+| "通配符证书 / Nginx 自动续期 HTTPS" | `acme-sh/SKILL.md` |
 | "扩展 CHAGS：新增一个典故小游戏" | `chags/SKILL.md` |
 | "Phaser 场景 / 契约层 / 存档复习调度" | `chags/SKILL.md` |
 | "儿童养成类小游戏怎么做" | `bamboobuddy/SKILL.md` |

@@ -1,22 +1,17 @@
 ---
 name: vue3-map-dashboard
 description: "Use when running, studying or extending a Vue 3 enterprise data-wall demo — Element Plus layout, Tianditu JS API v4 dark basemap, realtime personnel tracking, QWeather integration, pinyin search, XLSX loading from public/data, composable architecture plus cache and leveled logging; also for a blank Tianditu map from a missing tk key, \"T is not defined\" script loading order, and pinyin filtering that breaks on polyphonic names."
-tags:
-  - vue
-  - javascript
-  - vite
-  - element-plus
-  - dashboard
-  - tianditu
-  - visualization
-  - demo
+license: MIT
+metadata:
+  category: demos
+  tags: "vue, javascript, vite, element-plus, dashboard, tianditu, visualization, demo"
 ---
 
 > **项目地址：** <https://github.com/znlgis/vue3-map-dashboard>
 >
 > **教程：** <https://znlgis.github.io/demos/vue3-map-dashboard/>
 >
-> **依赖版本：** Vue 3.4 / Element Plus 2.5 / Vite 6 / pinyin-pro 3.27 / xlsx 0.20.3（取自仓库 `package.json`，截至 2026-10）
+> **最新版本：** 1.0.0（仓库 `package.json`）；依赖 Vue 3.4 / Element Plus 2.5 / Vite 8.2 / pinyin-pro 3.27 / xlsx 0.20.3（截至 2026-11，取自 [`package.json`](https://github.com/znlgis/vue3-map-dashboard/blob/main/package.json)）
 >
 > **许可证：** 以仓库为准
 
@@ -255,7 +250,7 @@ Dashboard.vue
 
 ## 常见问题
 
-| 问题 | 解决方案 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|---------|
 | 地图不显示 | 检查 `.env` 中 `VITE_TIANDITU_KEY` 是否配置且 key 已激活；控制台确认天地图 script 是否加载报错 |
 | 天气信息不显示 | 检查 `WEATHER_CONFIG.key` 与 `baseUrl`（免费订阅用 `https://devapi.qweather.com/v7`），确认免费额度未用尽 |
@@ -266,15 +261,18 @@ Dashboard.vue
 | 需要 ECharts 图表 | 当前仓库未内置 echarts，需自行 `npm install echarts`，并把图表组件放进 `ChartCard` 的插槽 |
 | 智能搜索查不到结果 | 确认 `public/data/excel/` 数据文件存在且能被 `loadData()` 读取；拼音/首字母匹配依赖 pinyin-pro 转换 |
 | 关闭控制台日志 | 在 `dashboard.config.js` 设置 `logging.enableConsoleLog: false`，或交由环境配置自动切换 |
+| 控制台报 `Uncaught ReferenceError: T is not defined` | 天地图脚本没加载成功：`index.html` 里 `%VITE_TIANDITU_KEY%` 未被替换（`.env` 缺失）或 key 未激活；脚本必须早于应用入口加载 |
+| 控制台报 `Invalid Key` / 地图瓦片 403 | 申请的是「服务端」key 却用在浏览器端；换「浏览器端」key，并核对 key 绑定的域名白名单 |
 
 ## AI 使用建议
 
-1. **架构入口**：先读 `src/views/Dashboard.vue`（编排与 `Promise.all` 并行初始化）和三个 composable（`usePersonnel` / `useWeather` / `useRealtimeData`），组件集中在 `src/components/`。
-2. **常见改造点**：地图中心 / 缩放 / 深色样式改 `src/config/map.config.js`；配色改 `src/config/theme.config.js`；更新间隔、重试次数、日志开关改 `src/config/dashboard.config.js`，不要散落魔法数字。
-3. **密钥管理**：天地图 key 经 `.env`（`VITE_TIANDITU_KEY`）注入 `index.html` script 标签；和风天气 key 在 `map.config.js`；两者都不要提交仓库。
-4. **工具复用**：日志 / 计时用 `src/utils/logger.js`，缓存用 `src/utils/cache.js`（过期 + 容量上限），拼音搜索用 `src/utils/search.js`；新增数据模块参考「新增一个可复用的数据模块」工作流。
-5. **遵守既有约定**：composable 在 `onUnmounted` 清理定时器；回调式 API（如 `T.Geocoder`）保留超时兜底模式；免费额度下依赖缓存与控制刷新间隔。
-6. **注意文档滞后**：README / 教程提到的 Vite 5 与 echarts 分包与当前仓库不符（实际 Vite 8 + Rolldown codeSplitting、未内置 echarts），以 `package.json` 与源码为准；要图表需自行安装 echarts 并放入 `ChartCard` 插槽。
+- **执行环境**：Node.js ≥22.12（Vite 8 要求）+ npm；需要外网访问天地图与和风天气，离线时地图与天气都会空。
+- **版本探测**：`node -v` + `npm ls vue element-plus vite xlsx`；注意 `xlsx` 来自 SheetJS CDN 的 tgz 地址而非 npm 包。
+- **产物验证**：`npm run lint` + `npm run build` 通过，再 `npm run preview` 看生产构建是否白屏；运行时确认深色底图、人员点位、天气三个模块都有数据。
+- **架构入口**：先读 `src/views/Dashboard.vue`（`Promise.all` 并行初始化）和三个 composable（`usePersonnel` / `useWeather` / `useRealtimeData`），组件在 `src/components/`。
+- **改造点**：地图中心/缩放/深色样式改 `src/config/map.config.js`；配色改 `src/config/theme.config.js`；更新间隔、重试次数、日志开关改 `src/config/dashboard.config.js`，不要散落魔法数字。
+- **易错点**：天地图脚本必须由 `index.html` 先于应用加载（组件里直接用全局 `T`）；回调式 API（`T.Geocoder`）保留超时兜底；composable 在 `onUnmounted` 清理定时器。
+- **安全与权限**：天地图 key 走 `.env`（`VITE_TIANDITU_KEY`），和风天气 key 在 `map.config.js`；两者都不进仓库，申请时按「浏览器端」类型并绑定域名白名单。
 
 ## 相关技能
 

@@ -1,24 +1,17 @@
 ---
 name: postgis
-description: "Use when extending PostgreSQL with PostGIS 3.6.4 — geometry/geography/raster types, GiST and KNN <-> indexes, ST_Intersects/ST_Buffer/ST_Transform/ST_AsMVT, shp2pgsql -I and raster2pgsql import, and fixing \"Operation on mixed SRID\", slow spatial joins, and invalid polygons with ST_MakeValid."
-tags:
-  - postgresql
-  - database
-  - sql
-  - spatial
-  - geometry
-  - geography
-  - raster
-  - vector
-  - wkt
-  - wkb
+description: "Use when extending PostgreSQL with PostGIS 3.7.0 — geometry/geography/raster types, GiST and KNN distance-operator indexes, ST_Intersects/ST_Buffer/ST_Transform/ST_AsMVT, shp2pgsql -I and raster2pgsql import, and fixing \"Operation on mixed SRID\", slow spatial joins, and invalid polygons with ST_MakeValid."
+license: MIT
+metadata:
+  category: gis
+  tags: "postgresql, database, sql, spatial, geometry, geography, raster, vector, wkt, wkb"
 ---
 
 > **项目地址：** <https://github.com/postgis/postgis>
 >
 > **官方文档：** <https://postgis.net/docs/>
 >
-> **最新版本：** 3.6.4（截至 2026-10，[Releases](https://github.com/postgis/postgis/releases)）；3.7 系列已到 3.7.0rc3，尚未正式发布
+> **最新版本：** 3.7.0（2026-10-30 发布，截至 2026-11；[发布公告](https://postgis.net/2026/10/PostGIS-3.7.0/)、[3.7 手册](https://postgis.net/docs/manual-3.7/en/)）
 >
 > **许可证：** GPL-2.0+
 
@@ -32,7 +25,7 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 - **坐标参考系**：内置 6000+ EPSG 投影，自动 ST_Transform
 - **数据导入导出**：与 GDAL/ogr2ogr/shp2pgsql 无缝集成
 
-**版本要求：** PostgreSQL 12–18 配合 PostGIS 3.x（最新稳定版 3.6.4；3.7 仍处 RC 阶段，候选版为 3.7.0rc3，截至 2026-10）；GEOS ≥ 3.8（部分新算子需 GEOS ≥ 3.14）
+**版本要求：** PostGIS 3.7 要求 PostgreSQL 14–19、GEOS ≥ 3.10、PROJ ≥ 6.1、libgmp（要启用全部扩展需 GEOS ≥ 3.15、SFCGAL ≥ 2.3）；PostGIS 3.6 及更早版本仍可配 PostgreSQL 12+，升级前先确认 GEOS/PROJ 满足新下限
 
 ---
 
@@ -44,14 +37,14 @@ PostGIS 是基于 PostgreSQL 的开源空间数据库扩展，遵循 OGC Simple 
 # Debian/Ubuntu
 sudo apt install postgresql-17-postgis-3 postgresql-17-postgis-3-scripts
 
-# CentOS/RHEL
-sudo yum install postgis36_17
+# CentOS/RHEL（PGDG 仓库；包名格式 postgis<PostGIS 主版本>_<PG 主版本>）
+sudo yum install postgis37_17
 
 # macOS
 brew install postgis
 
 # Docker（推荐，标签格式 <PG 主版本>-<PostGIS 主版本>）
-docker run --name pg -e POSTGRES_PASSWORD=pg -p 5432:5432 -d postgis/postgis:17-3.6
+docker run --name pg -e POSTGRES_PASSWORD=pg -p 5432:5432 -d postgis/postgis:17-3.7
 ```
 
 ### 启用扩展
@@ -268,21 +261,23 @@ SELECT count(*) FROM poi AS p JOIN districts AS d
 
 ## 常见问题
 
-| 问题 | 解决方案 |
-|------|---------|
-| 查询慢 | 建索引 + `ANALYZE` + 检查 `EXPLAIN` |
-| `Operation on mixed SRID` | 统一 SRID：`ST_SetSRID/ST_Transform` |
-| 距离单位不对 | 投影下是度，需转 `geography` 或投到米制 |
-| 跨经线 180° 异常 | 改用 `geography` |
-| 多边形无效 | `ST_MakeValid` 修复，`ST_IsValidReason` 诊断 |
-| `CREATE EXTENSION postgis` 报错（找不到扩展文件） | 安装对应 PostgreSQL 版本的 `postgis-<pgver>` 软件包后重试 |
+| 报错 / 现象 | 原因 | 处置 |
+|------|------|------|
+| 报错 `ERROR: Operation on mixed SRID geometries` | 运算两侧几何的 SRID 不一致（`geometry` 类型下 PostGIS 不做隐式转换） | 先统一 SRID：`ST_Transform(geom, 4326)`（换坐标系）或 `ST_SetSRID(geom, 4326)`（只标注不改坐标）；用 `ST_SRID(geom)` 逐列核对 |
+| 报错 `ERROR: Boundary geometry is invalid` / `Input Geometry contains invalid coordinates`（GEOS 触发的自相交多边形） | 多边形自相交、重复点或环未闭合，GEOS 精确算子在无效几何上会直接报错 | 用 `ST_IsValidReason(geom)` 定位、`ST_MakeValid(geom)` 修复后入库；长期方案是入库前校验 |
+| 输出几何报 `transform: Failed to transform` 或 `couldn't project point` | `ST_Transform` 找不到目标 SRID，或 PROJ 缺少所需网格/参数 | 确认 `spatial_ref_sys` 中存在目标 SRID，且 PROJ 数据完整（`projinfo EPSG:<code>` 能解析）；缺网格时安装 proj-data |
+| 报错 `ERROR: type "geometry" does not exist` | 扩展没装，或装在别的 schema/数据库 | 在当前库执行 `CREATE EXTENSION postgis;`；确认 `search_path` 包含扩展所在 schema |
+| 报错 `ERROR: could not open extension control file .../postgis.control` | PostgreSQL 版本与 PostGIS 软件包主版本不匹配 | 安装与 PostgreSQL 主版本对应的包（如 `postgis37_17` 对应 PG 17），必要时 `ALTER EXTENSION postgis UPDATE;` |
+| 查询慢（全表扫描） | 缺 GiST 索引、几何经过函数包裹导致索引失效，或统计信息过期 | `CREATE INDEX ... USING GIST (geom)`；用 `geom && ST_MakeEnvelope(...)` 先走索引再精筛；大批量导入后 `VACUUM ANALYZE`；用 `EXPLAIN (ANALYZE, BUFFERS)` 验证 |
+| 距离 / 面积数值明显偏大或偏小 | 在经纬度（4326）上直接 `ST_Distance`/`ST_Area`，单位是「度」 | 改用 `geography`（`geom::geography`，单位米）或先投影到米制 CRS 再计算 |
+| 跨 180° 经线附近结果异常 | 平面几何在 ±180° 处被切开 | 用 `geography`，或先 `ST_ShiftLongitude` 把范围调整到 0–360° |
 
 ---
 
 ## AI 使用建议
 
 - **执行环境**：命令在终端 / shell 中执行（Windows 用 `psql.exe`，或 `docker exec -i pg psql -U postgres`）；psql 元命令（`\d`、`\c`）用 `psql -c "\d poi"` 单条传入，别依赖交互式会话。
-- **先探测版本**：`psql -c "SELECT version(), PostGIS_Full_Version();"` 核对 PostgreSQL、PostGIS 3.6.4 与 GEOS/PROJ；扩展缺失时先看 `SELECT * FROM pg_available_extensions WHERE name LIKE 'postgis%';`。
+- **先探测版本**：`psql -c "SELECT version(), PostGIS_Full_Version();"` 核对 PostgreSQL、PostGIS 3.7.0 与 GEOS/PROJ；扩展缺失时先看 `SELECT * FROM pg_available_extensions WHERE name LIKE 'postgis%';`。
 - **验证产物**：导入后别只看 `INSERT 0 n`，跑 `SELECT count(*), ST_SRID(geom), ST_IsValid(geom) FROM t GROUP BY 2,3;` 核对要素数、SRID 与无效几何；性能结论必须用 `EXPLAIN (ANALYZE, BUFFERS)` 证明索引被使用。
 - **写操作回读**：`CREATE/ALTER`、`UpdateGeometrySRID` 或批量 `UPDATE` 后回读 `\d+ t` 与 `geometry_columns`，确认列类型与 SRID 真的落库。
 - **安全与权限**：密码不要写进命令行或报告（用 `PGPASSWORD`/`.pgpass`/连接串环境变量）；`DROP TABLE/SCHEMA`、整表改写 geom、`VACUUM FULL`、重启 PostgreSQL 前必须先向用户确认并备份。

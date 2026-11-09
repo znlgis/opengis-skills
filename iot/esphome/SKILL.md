@@ -1,24 +1,17 @@
 ---
 name: esphome
 description: "Use when flashing or automating ESP32/ESP8266 firmware with ESPHome 2026.10 — YAML configuration with esphome/esp32/api/ota/wifi blocks, esphome run/compile/logs/upload CLI, OTA updates, native API encryption, substitutions and packages; also for 'Component not found', OTA upload failures, boot loops after flashing, and missing sensor entities in Home Assistant. YAML-driven ESP firmware framework."
-tags:
-  - esphome
-  - iot
-  - esp32
-  - esp8266
-  - yaml
-  - firmware
-  - home-assistant
-  - ota
-  - mqtt
-  - microcontrollers
+license: MIT
+metadata:
+  category: iot
+  tags: "esphome, iot, esp32, esp8266, yaml, firmware, home-assistant, ota, mqtt, microcontrollers"
 ---
 
 > **项目地址：** <https://github.com/esphome/esphome>
 >
 > **官方文档：** <https://esphome.io/>
 >
-> **PyPI：** `esphome` 2026.10.0（GitHub Releases 同日发布，截至 2026-10）
+> **PyPI：** `esphome` 2026.10.2（截至 2026-11，[PyPI](https://pypi.org/project/esphome/) 与 [GitHub Releases](https://github.com/esphome/esphome/releases) 一致；2026.11.0 仍处于 beta）
 >
 > **许可证：** MIT（部分组件依赖的第三方库另有许可）
 
@@ -43,12 +36,12 @@ ESPHome 是一个「用 YAML 生成 ESP 固件」的框架。你描述设备**�
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install esphome==2026.10.0
+pip install esphome==2026.10.2
 
 esphome version
 ```
 
-`esphome version` 应打印 `Version: 2026.10.0`。CLI 会自行下载 PlatformIO 与工具链（首次编译较慢）。
+`esphome version` 应打印 `Version: 2026.10.2`。CLI 会自行下载 PlatformIO 与工具链（首次编译较慢）。
 
 ### 方式二：Docker
 
@@ -57,7 +50,7 @@ docker run --rm -it \
   -v "$PWD":/config \
   -v esphome-cache:/cache \
   --network host \
-  ghcr.io/esphome/esphome:2026.10.0 version
+  ghcr.io/esphome/esphome:2026.10.2 version
 ```
 
 把 `/config` 指向存放 YAML 的目录；串口烧写需要额外 `--device /dev/ttyUSB0` 直通。
@@ -293,7 +286,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ## AI 使用建议
 
-- **先探版本**：`esphome version` 确认与文档一致（2026.10.0）；CLI 选项随版本改名，旧教程里的参数可能已失效。
+- **先探版本**：`esphome version` 确认与文档一致（2026.10.2）；CLI 选项随版本改名，旧教程里的参数可能已失效。
 - **不碰硬件也能验证**：改完先 `esphome config --error-format line`，过了校验再谈烧写，能省大量插拔。
 - **写盘前确认设备目标**：`run` / `upload` 会覆盖设备固件，`--device` 指错可能刷到别的设备；执行前向用户确认端口或 IP。
 - **验证产物**：烧写后用 `esphome logs` 看启动日志与读数，并用 `config-hash` 与设备上报值比对，确认刷进去的是这次构建。
@@ -306,7 +299,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 - **ke3036-keyes-pico** — MicroPython 路线的对照（RP2040 学习套件）：[../ke3036-keyes-pico/SKILL.md](../ke3036-keyes-pico/SKILL.md)
 - **ollama** — 本地大模型，可与 HA 语音助手组合：[../../ai/ollama/SKILL.md](../../ai/ollama/SKILL.md)
 
-## 相关资源
+## 参考资源
 
 - 官方文档：<https://esphome.io/>
 - CLI 参考：<https://esphome.io/guides/cli/>

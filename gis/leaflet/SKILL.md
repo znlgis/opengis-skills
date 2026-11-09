@@ -1,17 +1,10 @@
 ---
 name: leaflet
 description: "Use when adding lightweight 2D tile maps to web pages with leaflet 1.9.4 — L.map/L.tileLayer, markers, popups, GeoJSON overlays, layer control, [lat, lng] ordering, or debugging blank maps, broken default marker icons after bundling, and sizing fixed by invalidateSize()."
-tags:
-  - javascript
-  - web
-  - 2d
-  - map
-  - geojson
-  - tile-layer
-  - markers
-  - plugins
-  - vue
-  - react
+license: MIT
+metadata:
+  category: gis
+  tags: "javascript, web, 2d, map, geojson, tile-layer, markers, plugins, vue, react"
 ---
 
 > **项目地址：** <https://github.com/Leaflet/Leaflet>
@@ -22,7 +15,7 @@ tags:
 >
 > **示例：** <https://leafletjs.com/examples.html>
 >
-> **最新版本：** 1.9.4（截至 2026-10，npm `leaflet`）
+> **最新版本：** 1.9.4（截至 2026-11，[npm `leaflet`](https://www.npmjs.com/package/leaflet) 与 [GitHub Release](https://github.com/Leaflet/Leaflet/releases) 一致；1.9.4 发布于 2023-05，仍是当前稳定版）
 >
 > **许可证：** BSD-2-Clause
 
@@ -337,16 +330,19 @@ export default function MapView() {
 
 ## 常见问题
 
-| 问题 | 原因与解决 |
-|------|------------|
-| 地图区域空白 / 不显示 | 容器缺少高度：为 `#map` 设置 `height`（如 `400px`），或地图初始化后调用 `map.invalidateSize()` |
-| 标记图标 404 / 显示为破图 | npm + 打包器下 `leaflet.css` 引用的默认图标路径失效，需手动设置 `L.Icon.Default` 的 `iconUrl`/`iconRetinaUrl`/`shadowUrl` 或改用 CDN 引入 CSS |
-| 地图在弹窗/隐藏容器中显示错乱 | 容器尺寸变化后调用 `map.invalidateSize()` 重算 |
-| `L is not defined` | CDN 脚本未加载或引入顺序错误：先加载 `leaflet.js` 再执行代码；npm 下确认 `import L from 'leaflet'` |
-| 经纬度颠倒导致点跑到别处 | 参数顺序为 `[lat, lng]`；GeoJSON 坐标是 `[lng, lat]`，必要时用 `coordsToLatLng` 转换 |
-| 组件切换后内存持续增长 | 卸载时未调用 `map.remove()`，或事件监听器未 `off` 解绑 |
-| 瓦片加载失败 / 跨域 | 检查瓦片服务 URL 模板与 CORS 头；WMS 需确认服务端允许跨域 |
-| 与 Vue/React 响应式冲突 | 不要把 `L.map` 实例放进 `reactive`/`useState`（会代理内部对象），用普通变量或 `useRef` 持有 |
+| 报错 / 现象 | 原因 | 处置 |
+|------|------|------|
+| 报错 `Uncaught Error: Map container is already initialized.` | 同一个 DOM 容器被 `L.map()` 初始化两次（React StrictMode 双调用、热更新、路由复用组件最常见） | 复用前先 `map.remove()` 并把引用置空；React 在 `useEffect` 的 cleanup 里 `remove()`，初始化前判断容器是否已带 `_leaflet_id` |
+| 报错 `Uncaught Error: Map container not found.` | `L.map(id)` 执行时容器 DOM 尚未挂载，或 id 与模板不一致 | 等 DOM 就绪再初始化（React `useEffect`、Vue `onMounted`），并核对传入的 id/元素 |
+| 报错 `Uncaught Error: Map container is being reused by another instance` | 容器仍被一个未销毁的 `Map` 实例占用 | 先 `remove()` 旧实例再初始化；同一容器不要并存两个地图 |
+| 报错 `Uncaught ReferenceError: L is not defined` | CDN 脚本未加载、加载失败，或自定义代码先于 `leaflet.js` 执行 | 先引 `leaflet.js` 再执行业务代码；npm 下确认 `import L from 'leaflet'` 且打包产物真的包含它 |
+| 地图区域空白 / 不显示 | 容器没有显式高度（Leaflet 不自带尺寸），或初始化后容器尺寸才变化 | 给 `#map` 设 `height`（如 `400px`）；尺寸变化后调用 `map.invalidateSize()` |
+| 默认标记图标 404 / 显示为破图 | npm + 打包器下 `leaflet.css` 里相对的默认图标路径失效 | 显式设置 `L.Icon.Default` 的 `iconUrl`/`iconRetinaUrl`/`shadowUrl`，或改用 CDN 引入 CSS 与图片 |
+| 地图在弹窗 / 隐藏容器中显示错乱 | 容器尺寸在初始化时已知为零，或标签页切回后尺寸变化 | 容器可见后再初始化，并在可见性变化后调用 `map.invalidateSize()` |
+| 点跑到别的位置 / 坐标颠倒 | 参数顺序是 `[lat, lng]`，而 GeoJSON 是 `[lng, lat]` | 统一在入口处用 `L.latLng(lat, lng)` 或 `coordsToLatLng` 转换，不要混用两种顺序 |
+| 组件切换后内存持续增长 | 卸载时未调用 `map.remove()`，或自定义事件未 `off` 解绑 | cleanup 中 `map.remove()`；自定义监听器用具名函数并 `map.off(type, handler)` |
+| 瓦片加载失败 / 跨域报错 | 瓦片 URL 模板错误，或瓦片服务未返回 CORS 头 | 核对 `{z}/{x}/{y}` 模板与该服务实际路径；WMS 需服务端放行跨域，前端 `crossOrigin` 选项按需设置 |
+| 地图与 Vue/React 响应式冲突 | 把 `L.map` 实例放进 `reactive`/`useState`，代理了 Leaflet 内部对象 | 用普通变量或 `useRef` 持有实例，不要放进响应式容器 |
 
 ---
 

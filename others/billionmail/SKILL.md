@@ -1,15 +1,10 @@
 ---
 name: billionmail
 description: "Use when self-hosting bulk email or transactional mail — Postfix + Dovecot, newsletter campaigns with rate limiting, DKIM/MX/PTR setup, bounce and unsubscribe handling, delivery analytics, webmail. BillionMail 4.9: docker compose / install.sh deployed mail platform by the aaPanel team. Also for Gmail spam placement, \"port 25 blocked\" by cloud vendors, SPF/DKIM/DMARC failures scored by mail-tester, and invalid unsubscribe links."
-tags:
-  - email
-  - smtp
-  - self-hosted
-  - newsletter
-  - marketing
-  - postfix
-  - docker
-  - devops
+license: MIT
+metadata:
+  category: others
+  tags: "email, smtp, self-hosted, newsletter, marketing, postfix, docker, devops"
 ---
 
 > **项目地址：** <https://github.com/Billionmail/BillionMail>
@@ -20,9 +15,9 @@ tags:
 >
 > **许可证：** AGPL-3.0（社区版）
 >
-> **包管理器：** Docker Compose（`docker compose up -d`）/ 一键脚本 `bash install.sh`（最新 v4.9，截至 2026-10）
+> **包管理器：** Docker Compose（`docker compose up -d`）/ 一键脚本 `bash install.sh`（最新 v4.9，截至 2026-11）
 >
-> **版本：** v4.9（2025-12-11）
+> **版本：** v4.9（2025-12-11，截至 2026-11 仍为最新稳定 tag，[GitHub Releases](https://github.com/Billionmail/BillionMail/releases)）
 
 ## 概述
 
@@ -278,7 +273,7 @@ curl -X POST https://mail.example.com/api/v1/mail/send \
 | 问题 | 解决 |
 |------|------|
 | Gmail 进垃圾箱 | 修复 SPF/DKIM/DMARC；预热 IP；降低发送量 |
-| 25 端口被封 | 联系云厂商 / 用 587 + Relay |
+| `port 25 blocked`（25 端口被封） | 多数云厂商默认封锁出站 25 端口：联系厂商解封，或改为 587 提交 + 中继/专业发信服务 |
 | 退订链接无效 | 检查 `UNSUBSCRIBE_BASE_URL`；TLS 证书 |
 | WebMail 无法登录 | 检查 Dovecot 与账号密码；查看容器日志 |
 | 大文件附件失败 | 调整 `message_size_limit` |
@@ -319,7 +314,7 @@ curl -X POST https://mail.example.com/api/v1/mail/send \
 
 ## 相关技能
 
-- **acme.sh** — 给邮件域的 Web 控制台/WebMail 申请与自动续期 TLS 证书：[../acme.sh/SKILL.md](../acme.sh/SKILL.md)
+- **acme.sh** — 给邮件域的 Web 控制台/WebMail 申请与自动续期 TLS 证书：[../acme-sh/SKILL.md](../acme-sh/SKILL.md)
 - **docker-compose** — BillionMail 的部署方式本身就是 Compose（`docker compose up -d`）：[../docker-compose/SKILL.md](../docker-compose/SKILL.md)
 - **go** — 写发信/退信回调服务时的常用后端语言（SMTP 客户端、Webhook 服务）：[../go/SKILL.md](../go/SKILL.md)
 

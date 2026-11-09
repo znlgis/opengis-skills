@@ -1,5 +1,9 @@
 # Admin.NET Frontend Core Modules Reference
 
+## Contents
+
+- 核心模块
+
 Frontend core module details split from SKILL.md.
 
 ---
@@ -146,7 +150,7 @@ if (userStore.userInfo.authBtnList.includes('sysUser:add')) {
 
 ### 国际化（i18n）
 
-```
+```text
 Web/lang/
 ├── zh-cn.ts    # 简体中文
 ├── en.ts       # 英语

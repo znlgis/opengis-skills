@@ -1,14 +1,10 @@
 ---
 name: openscad
 description: "Use when generating 3D models from code with OpenSCAD — CSG scripts for parametric parts, 3D-printable fixtures, or CI batch export; also when renders are painfully slow and you need --backend Manifold, an exported STL is not manifold / slice software rejects it, or import() of an STL or SVG is the bottleneck. Covers cube/sphere/cylinder, difference/union/intersection, linear_extrude/rotate_extrude, hull/minkowski, Customizer annotations, and openscad -o out.stl -D var=value automation."
-tags:
-  - 3d
-  - parametric
-  - csg
-  - scripting
-  - stl
-  - openscad
-  - cli
+license: MIT
+metadata:
+  category: cad
+  tags: "3d, parametric, csg, scripting, stl, openscad, cli"
 ---
 
 > **项目地址：** <https://github.com/openscad/openscad>
@@ -21,7 +17,7 @@ tags:
 >
 > **许可证：** GPL-2.0+
 >
-> **最新稳定版：** 2021.01（GitHub 最后一个正式 Release，截至 2026-10 未变）。日常实操普遍用**快照/测试版**：仓库最新标签为 `openscad-2026.10-TEST4`（2026-10-15），官网 Snapshots 提供各平台每日构建；Manifold 后端与新增函数（如 `offset` 的 3D 模式、`polyline()` 等）只在快照里可用，见 [tags](https://github.com/openscad/openscad/tags) 与 [downloads](https://openscad.org/downloads.html)
+> **最新版本：** 正式版 2021.01；预发布 `2026.11-RC0`（2026-11-07）。日常实操普遍用**预发布/快照版**：仓库最新标签为 `openscad-2026.11-RC0`，官网 Snapshots 提供各平台每日构建；Manifold 后端与新增函数（如 `offset` 的 3D 模式、`polyline()` 等）只在其中可用，见 [Releases](https://github.com/openscad/openscad/releases)、[tags](https://github.com/openscad/openscad/tags) 与 [downloads](https://openscad.org/downloads.html)（截至 2026-11）
 
 ## 概述
 
@@ -304,19 +300,17 @@ openscad -o out.csg part.scad
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 渲染极慢（几分钟以上） | 换 `--backend Manifold`；降低 `$fn`；减少布尔嵌套层数 |
-| 导出 STL 不闭合 / 切片报非流形 | 布尔输入必须是流形实体；`linear_extrude` 的 2D 轮廓要闭合，避免零厚度壁与自相交 |
-| 中文显示为方块或乱码 | 用系统已安装的 CJK 字体：`font = "Noto Sans CJK SC"`（Linux/Windows 字体名不同，先 `fc-list` 查） |
-| `import("a.stl")` 很慢 | STL 三角面太多；先减面或转 OFF，并把导入结果缓存成模块只算一次 |
-| 线性挤出后表面有杂线/失真 | 提高 `convexity`（`linear_extrude(height=10, convexity=10)`），减少渲染器误判 |
-| `--backend Manifold` 报未知参数 | 该构建未编入 Manifold（发行版仓库版常见）；用官网 Snapshots 构建，`--info` 可确认 |
-| 导出的 STL 比预期大很多 | 缺省是 ASCII STL；加 `--export-format binstl` |
-| `-D` 传带引号或空格的值被 shell 吃掉 | 整体包在单引号里、内部用双引号：`-D 'quality="production"'`（Windows cmd 用双引号包裹并转义） |
-| `-O` 设置报错 | 该键在当前构建不存在；先 `--help-export` 看可用键 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 渲染极慢（几分钟以上） | CGAL 后端开销大，`$fn` 过高，布尔嵌套层数多 | 换 `--backend Manifold`；降低 `$fn`；减少布尔嵌套层数 |
+| 导出 STL 不闭合 / 切片报非流形 | 布尔输入不是流形实体，或 2D 轮廓未闭合 | 布尔输入必须是流形实体；`linear_extrude` 的 2D 轮廓要闭合，避免零厚度壁与自相交 |
+| 中文显示为方块或乱码 | 字体名不存在，或字体不含 CJK | 用系统已安装的 CJK 字体：`font = "Noto Sans CJK SC"`（Linux/Windows 字体名不同，先 `fc-list` 查） |
+| `import("a.stl")` 很慢 | STL 三角面太多 | 先减面或转 OFF，并把导入结果缓存成模块只算一次 |
+| 线性挤出后表面有杂线/失真 | `convexity` 不足，渲染器误判遮挡 | 提高 `convexity`（`linear_extrude(height=10, convexity=10)`） |
+| `--backend Manifold` 报未知参数 | 该构建未编入 Manifold（发行版仓库版常见） | 用官网 Snapshots 构建，`--info` 可确认 |
+| 导出的 STL 比预期大很多 | 缺省是 ASCII STL | 加 `--export-format binstl` |
+| `-D` 传带引号或空格的值被 shell 吃掉 | shell 分词与引号层级冲突 | 整体包在单引号里、内部用双引号：`-D 'quality="production"'`（Windows cmd 用双引号包裹并转义） |
+| `-O` 设置报错 | 该键在当前构建不存在 | 先 `--help-export` 看可用键 |
 
 ## AI 使用建议
 

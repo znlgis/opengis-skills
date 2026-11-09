@@ -1,14 +1,10 @@
 ---
 name: ifoxcad
 description: "Use when writing AutoCAD / ZWCAD / GstarCAD plugins in C# with IFoxCAD (NuGet IFox.CAD.ACAD 0.9.12) — DBTrans transaction wrapper, CurrentSpace.AddEntity, LayerTable.AddOrChange, block attributes, SSGet, EditorEx prompts, multi-CAD GlobalUsings aliases. Also for \"eNotInDatabase\" on an entity Id, entities vanishing when DBTrans is disposed without Commit, and acdbmgd reference errors fixed by AutoCAD.NET + ExcludeAssets=runtime."
-tags:
-  - autocad
-  - dotnet
-  - csharp
-  - cad
-  - dxf
-  - dwg
-  - plugin
+license: MIT
+metadata:
+  category: cad
+  tags: "autocad, dotnet, csharp, cad, dxf, dwg, plugin"
 ---
 
 > **项目地址：** <https://gitee.com/inspirefunction/ifoxcad>
@@ -19,9 +15,11 @@ tags:
 >
 > **许可证：** MIT
 >
-> **包管理器：** NuGet `IFox.CAD.ACAD` / `IFox.CAD.ZCAD` / `IFox.CAD.GCAD`（最新稳定 0.9.12，另见预览 0.9.13-beta1，截至 2026-10）
+> **最新版本：** 0.9.12（NuGet 稳定线；另有预览 0.9.13-beta1，截至 2026-11，见 [NuGet](https://www.nuget.org/packages/IFox.CAD.ACAD)）
 >
-> **版本：** 0.9.12（NuGet 稳定线）。仓库默认分支为 `v0.9`（`src/Directory.Build.props` 里 `<Version>0.9.9.1</Version>`），旧包 `IFoxCAD.Cad` 停在 0.4.0、GitHub tag 只到 `v0.7.3-beta8`——**tag 不是 v0.9 线的发布信号，以默认分支与 NuGet 版本为准**
+> **包管理器：** NuGet `IFox.CAD.ACAD` / `IFox.CAD.ZCAD` / `IFox.CAD.GCAD`
+>
+> **版本线说明：** 仓库默认分支为 `v0.9`（`src/Directory.Build.props` 里 `<Version>0.9.9.1</Version>`），旧包 `IFoxCAD.Cad` 停在 0.4.0、GitHub tag 只到 `v0.7.3-beta8`——**tag 不是 v0.9 线的发布信号，以默认分支与 NuGet 版本为准**
 
 ## 概述
 
@@ -322,18 +320,16 @@ v0.9 线把平台差异拆到各自工程里（`src/IFoxCAD.AutoCad`、`src/IFox
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| `eNotInDatabase` | 实体未加入 BlockTableRecord 即访问 Id |
-| 修改后界面不刷新 | `ent.RecordGraphicsModified(true)` 或 `Editor.Regen()` |
-| 引用 `acdbmgd` 报错 | 改用 `AutoCAD.NET` NuGet 包并设 `ExcludeAssets="runtime"`（等价 Copy Local=false） |
-| 想在 CAD 外做单元测试 | 仓库的测试工程（`tests/TestAcad2025`、`TestGcad2025`、`TestZcad2025`）都是引用真机 `AutoCAD.NET` 包、在 CAD 进程内跑；纯脱离 CAD 的 Mock 方案官方没有提供 |
-| 命令执行完实体却不存在 | `DBTrans` 走的是事务：没有 `tr.Commit()` 就 Dispose，等于回滚。`using var tr = new DBTrans();` 后务必显式提交 |
-| `new DBTrans()` 直接抛异常 | 事务需要已激活的文档上下文——只能在 `[CommandMethod]` 体内或已初始化的 `IExtensionApplication` 之后使用 |
-| 用户按 Esc 后读到了默认值 | 交互结果先判 `Status == PromptStatus.OK` 再取 `Value`；`GetDouble/GetInteger` 的 defaultValue 只在用户直接回车时生效 |
-| 同一套代码要兼容中望/浩辰 | 按「多 CAD 兼容」章：每平台一个工程 + 一份 `GlobalUsings.cs` 做命名空间别名，别把 `Autodesk` 与国产 CAD 的 DLL 混在同一 `csproj` 引用里 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| `eNotInDatabase` | 实体未加入 `BlockTableRecord` 就访问其 Id | 先加入块表记录（`CurrentSpace.AddEntity` 等）再取 Id |
+| 修改后界面不刷新 | 图元变更未标记，或未触发重生成 | `ent.RecordGraphicsModified(true)` 或 `Editor.Regen()` |
+| 引用 `acdbmgd` 报错 | 直接引用本地 DLL 会与运行时冲突 | 改用 `AutoCAD.NET` NuGet 包并设 `ExcludeAssets="runtime"`（等价 Copy Local=false） |
+| 想在 CAD 外做单元测试 | 测试工程引用真机 `AutoCAD.NET`，依赖 CAD 进程 | 官方未提供脱离 CAD 的 Mock 方案；测试只能跑在 CAD 进程内 |
+| 命令执行完实体却不存在 | `DBTrans` 未 `Commit` 就 `Dispose`，等于回滚 | `using var tr = new DBTrans();` 后务必显式提交 |
+| `new DBTrans()` 直接抛异常 | 事务需要已激活的文档上下文 | 只能在 `[CommandMethod]` 体内或已初始化的 `IExtensionApplication` 之后使用 |
+| 用户按 Esc 后读到了默认值 | 未先判断 `PromptStatus` 就取值 | 先判 `Status == PromptStatus.OK` 再取 `Value`；`defaultValue` 只在用户直接回车时生效 |
+| 同一套代码要兼容中望/浩辰 | 各平台 DLL 的命名空间与类型不一致 | 每平台一个工程 + 一份 `GlobalUsings.cs` 做别名，别把 `Autodesk` 与国产 CAD 的 DLL 混在同一 `csproj` |
 
 ## AI 使用建议
 

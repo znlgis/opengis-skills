@@ -1,17 +1,10 @@
 ---
 name: gdal
 description: "Use when processing geospatial raster/vector data via GDAL/OGR CLI — ogr2ogr format conversion (Shapefile/GeoPackage/GeoJSON), gdalwarp reprojection, gdal_translate, gdal_calc.py NDVI, COG, mosaicking, DEM contours, gdalinfo -json checks — or diagnosing \"not recognized as a supported file format\"; also covers the 3.11+ unified gdal raster / gdal vector CLI."
-
-tags:
-  - gdal
-  - ogr
-  - cli
-  - raster
-  - vector
-  - conversion
-  - reprojection
-  - gis
-  - geospatial
+license: MIT
+metadata:
+  category: gis
+  tags: "gdal, ogr, cli, raster, vector, conversion, reprojection, gis, geospatial"
 ---
 
 > **项目地址：** <https://github.com/OSGeo/gdal>
@@ -20,7 +13,7 @@ tags:
 >
 > **源码命令文档：** <https://gdal.org/en/latest/programs/>
 >
-> **最新版本：** 3.13.3（截至 2026-10，[下载页](https://gdal.org/download.html)）
+> **最新版本：** 3.13.3（截至 2026-11，[下载页](https://gdal.org/download.html)）
 >
 > **许可证：** MIT
 

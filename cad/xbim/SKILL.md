@@ -1,14 +1,10 @@
 ---
 name: xbim
-description: "Use when working with IFC models in .NET/C# via xBIM 6.1 — IfcStore.Open/Create, Instances.OfType<IIfcWall>(), BeginTransaction edits, Xbim3DModelContext geometry to .wexbim, COBie export, or IFC4x3_ADD2 input; also when Xbim.Geometry.Engine.Interop.dll fails to load (x64 + VC++ runtime), geometry is empty because CreateContext was never called, or ToCobieLiteUkAsync is missing since Xbim.Essentials does not ship COBie. xBIM: IFC toolkit with an OCCT-based geometry engine."
-tags:
-  - bim
-  - ifc
-  - dotnet
-  - csharp
-  - geometry
-  - occ
-  - cobie
+description: "Use when working with IFC models in .NET/C# via xBIM 6.1 — IfcStore.Open/Create, Instances.OfType for IIfcWall, BeginTransaction edits, Xbim3DModelContext geometry to .wexbim, COBie export, or IFC4x3_ADD2 input; also when Xbim.Geometry.Engine.Interop.dll fails to load (x64 + VC++ runtime), geometry is empty because CreateContext was never called, or ToCobieLiteUkAsync is missing since Xbim.Essentials does not ship COBie. xBIM: IFC toolkit with an OCCT-based geometry engine."
+license: MIT
+metadata:
+  category: cad
+  tags: "bim, ifc, dotnet, csharp, geometry, occ, cobie"
 ---
 
 > **项目地址：** <https://github.com/xBimTeam/XbimEssentials>
@@ -21,7 +17,7 @@ tags:
 >
 > **许可证：** CDDL-1.0
 >
-> **最新稳定版：** Xbim.Essentials 6.1.605（NuGet 当前稳定版，截至 2026-10）；Xbim.Geometry 6.x 只有带 `-netcore` 后缀的包（如 6.3.891-netcore），不加版本时 `dotnet add package` 会装稳定通道最高版 5.1.820
+> **最新版本：** Xbim.Essentials 6.1.605（NuGet 当前稳定版，截至 2026-11，见 [NuGet](https://www.nuget.org/packages/Xbim.Essentials)）；Xbim.Geometry 6.x 只有带 `-netcore` 后缀的包（如 6.3.891-netcore），不加版本时 `dotnet add package` 会装稳定通道最高版 5.1.820
 
 ## 概述
 
@@ -287,22 +283,20 @@ facility.WriteXls("out.xlsx", out _);     // Excel 格式（COBie 标准）
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| `Xbim.Geometry.Engine.Interop.dll` 加载失败 | 缺 VC++ 运行时；目标平台必须是 x64 |
-| 几何精度异常 | 设置 `ModelFactors`；用 OCCT `ShapeFix` |
-| Linux 上要几何 | `Xbim.Geometry` 只有 Windows x64 原生库；Linux/macOS 只能做模型解析，或改走 Web 侧 `XbimWebUI` |
-| 模型大于 2GB | 切换为 Esent 后端，分批处理 |
-| `.wexbim` 里看不到构件 | 几何要先构建：`new Xbim3DModelContext(model).CreateContext()`，再 `Write`；几何引擎仅 Windows x64 可用 |
-| 调不到 `ToCobieLiteUkAsync()` | COBie 支持在 `Xbim.CobieLiteUk` 包里，`Xbim.Essentials` 不含，需单独安装 |
-| 打开 IFC4x3 文件不识别 | 用 6.x 的 `Xbim.Ifc4x3`（6.x 已支持 IFC4x3_ADD2），5.x 及更早不支持 |
-| 另存的 IFC 缺少应用与作者信息 | `IfcStore.Create` / `Open` 时传 `XbimEditorCredentials`（应用名、标识、作者） |
-| `dotnet add package Xbim.Geometry` 装到 5.1.820，与 Essentials 6.1 不匹配 | 6.x 线只有 `-netcore` 后缀版本，必须 `--version 6.3.891-netcore` 显式指定 |
-| 用 IFC4 接口读 IFC4x3 模型报类型不匹配 | 引用 `Xbim.Ifc4x3` 并用对应命名空间的接口；不要混用 `Xbim.Ifc4.Interfaces` |
-| `Instances.New<T>()` 抛异常或实体落不到正确 owner | 新建后要把实体挂到正确的聚合关系（如 `IfcRelContainedInSpatialStructure`），光 `New<T>()` 不会自动建立空间归属 |
-| 几何构建后内存持续增长 | `Xbim3DModelContext` 与 `IfcStore` 都要 `Dispose`/`using`；批量处理时逐个模型释放，别在循环里累积 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| `Xbim.Geometry.Engine.Interop.dll` 加载失败 | 缺 VC++ 运行时，或平台不是 x64 | 安装 VC++ 运行时；目标平台必须是 x64 |
+| 几何精度异常 | `ModelFactors` 未按模型单位设置 | 设置 `ModelFactors`；必要时用 OCCT `ShapeFix` |
+| Linux 上要几何 | `Xbim.Geometry` 只有 Windows x64 原生库 | Linux/macOS 只能做模型解析，或改走 Web 侧 `XbimWebUI` |
+| 模型大于 2GB | 默认后端不适合超大模型 | 切换为 Esent 后端，分批处理 |
+| `.wexbim` 里看不到构件 | 几何尚未构建 | `new Xbim3DModelContext(model).CreateContext()` 后再 `Write`；几何引擎仅 Windows x64 可用 |
+| 调不到 `ToCobieLiteUkAsync()` | COBie 支持在 `Xbim.CobieLiteUk` 包里 | 单独安装 `Xbim.CobieLiteUk`（`Xbim.Essentials` 不含） |
+| 打开 IFC4x3 文件不识别 | 5.x 及更早不支持 IFC4x3 | 用 6.x 的 `Xbim.Ifc4x3`（6.x 已支持 IFC4x3_ADD2） |
+| 另存的 IFC 缺少应用与作者信息 | `IfcStore.Create`/`Open` 未传编辑者凭证 | 传 `XbimEditorCredentials`（应用名、标识、作者） |
+| `dotnet add package Xbim.Geometry` 装到 5.1.820，与 Essentials 6.1 不匹配 | 6.x 线只有 `-netcore` 后缀版本，默认装稳定通道最高版 | 必须 `--version 6.3.891-netcore` 显式指定 |
+| 用 IFC4 接口读 IFC4x3 模型报类型不匹配 | 引用了 `Xbim.Ifc4.Interfaces` 命名空间 | 引用 `Xbim.Ifc4x3` 并用对应命名空间的接口，不要混用 |
+| `Instances.New<T>()` 抛异常或实体落不到正确 owner | 新建实体未挂到聚合关系 | 新建后挂到正确的聚合关系（如 `IfcRelContainedInSpatialStructure`） |
+| 几何构建后内存持续增长 | `Xbim3DModelContext` 与 `IfcStore` 未释放 | 用 `using`/`Dispose` 释放；批量处理时逐个模型释放 |
 
 ## AI 使用建议
 

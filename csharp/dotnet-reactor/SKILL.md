@@ -1,14 +1,10 @@
 ---
 name: dotnet-reactor
 description: "Use when protecting .NET assemblies from reverse engineering or adding license enforcement — Necrobit IL encryption, obfuscation, string encryption, control-flow obfuscation, anti-debug/anti-tamper, License Manager serials, dotNET_Reactor.Console CI runs, merge assemblies. Also for Type.GetType failures after obfuscation, broken XAML bindings and JSON deserialization, and antivirus false positives. .NET Reactor: commercial .NET protection."
-tags:
-  - dotnet
-  - obfuscation
-  - protection
-  - licensing
-  - security
-  - eziriz
-  - code-protection
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, obfuscation, protection, licensing, security, eziriz, code-protection"
 ---
 
 > **产品定位：** 商业闭源 .NET 代码保护与授权工具（Eziriz 出品；非开源项目，无公开仓库）
@@ -19,7 +15,7 @@ tags:
 >
 > **下载：** <https://www.eziriz.com/downloads.htm>
 >
-> **版本：** 7.5.0.0（官网下载页标注，Release date 2025-11-12；商业闭源，不在 NuGet 分发，截至 2026-10 实测）
+> **最新版本：** 7.5.0.0（Release date 2025-11-12；商业闭源、不在 NuGet 分发；截至 2026-11 实测，[官网下载页](https://www.eziriz.com/downloads.htm)）
 >
 > **许可证：** 商业（提供个人/企业/全球许可证）
 
@@ -36,7 +32,7 @@ tags:
 - **反调试 / 反篡改 / Anti-ILdasm**
 - **许可证系统**：序列号 / 硬件绑定 / 试用期 / 黑名单
 - **合并程序集**：将依赖 dll 合并入主可执行文件
-- **支持目标**：.NET Framework 2.0 – 4.8、.NET Core / .NET 5-10、Mono、Xamarin、Unity
+- **支持目标**：.NET Framework、.NET Core / .NET 5.0-10.0、ASP.NET Core，以及 Xamarin、Unity、Blazor 程序集（以官网支持列表为准）
 
 ---
 
@@ -60,7 +56,7 @@ tags:
 "<安装目录>/dotNET_Reactor.Console.exe"
 ```
 
-> Linux 构建机无法跑 GUI，只能通过 Wine 或 Windows 构建 agent 执行 `dotNET_Reactor.Console`；跨平台流水线请把保护步骤放到 Windows runner 上。
+> Linux 构建机无法跑 GUI：官方 Control 控制台只随 Windows 安装包分发，跨平台流水线请把保护步骤放到 Windows runner 上（或在 Linux 上通过 Wine 运行，但不属于官方支持路径）。
 
 也支持命令行 `dotNET_Reactor.Console.exe` 与 MSBuild 集成（CI 友好）。
 
@@ -141,23 +137,18 @@ public class PublicApi
 
 ### 1. 在主程序加入许可校验
 
-下载 `License Generator + License Library`（Eziriz 提供），在代码中：
+在 GUI 的 `License Manager` 页生成 `License Generator + License Library`：生成器会按你的设置产出一个校验类（**类名、命名空间与文件都由生成器决定**，每个项目不同）。把生成的源文件加入项目，在入口调用它的校验方法，失败则显示注册窗口或退出：
 
 ```csharp
-using DNR.LicenseManager;
-
-if (!License.IsValid()) {
+// 伪代码：类型与方法名以 License Generator 生成的源码为准，不要照抄下面两个名字
+if (!GeneratedLicenseClass.IsValid())   // ← 替换为生成类的实际校验入口
+{
     // 显示注册窗体或退出
     Application.Exit();
 }
 ```
 
-将类标记为不可重命名：
-
-```csharp
-[Obfuscation(Exclude = true, ApplyToMembers = true)]
-public static class License { ... }
-```
+生成过程中会同时给出该类的排除建议；若类名与属性被重命名，授权校验会在保护后失效，务必按生成器说明把校验类整体排除重命名（`[Obfuscation(Exclude = true, ApplyToMembers = true)]` 或 `.nrproj` 的 Exclude 表）。
 
 ### 2. 在 GUI 启用 License Manager
 
@@ -208,7 +199,7 @@ GUI → Advanced：
 ## .NET Core / .NET 5+ 注意事项
 
 - 选择对应运行时（CoreCLR）
-- AOT 程序（NativeAOT）目前**不支持**保护，必须使用 JIT 模式
+- NativeAOT 产物是原生机器码、没有可加密的 IL，Necrobit 无从生效：受保护程序按 JIT/CoreCLR 模式发布；必须 AOT 时改用代码签名 + 服务端授权校验
 - `dotnet publish -c Release` 后再保护，对 self-contained 多文件目录可批量保护
 - 单文件发布：先生成单文件，再保护其外层 EXE 可能受限；建议保护 framework-dependent dll
 
@@ -246,14 +237,15 @@ GUI → Advanced：
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
 | 反射 `Type.GetType("...")` 失败 | 排除被反射的类型/方法 |
 | 序列化字段丢失 | JSON 用 `[JsonProperty]` 显式映射；或排除字段 |
 | WPF XAML 绑定失败 | 排除被 XAML 引用的类型与属性 |
 | 启动慢 | Necrobit 解密成本；可关闭部分保护项 |
 | 被 AV 误报 | 联系杀软厂商加白；选择「Anti Debug = Mild」 |
-| Linux 运行报错 | Necrobit 对 Linux / .NET Core 的支持依赖较新版本，需升级后实测验证 |
+| Linux / macOS 上运行保护后的程序报错 | 官方宣称 Necrobit 覆盖 Windows / Linux / OS X，但仍与目标 .NET 运行时版本相关：先用 Demo 版对同一构建产物复现，确认失败再退回 Windows 构建 agent 或调整保护项 |
+| AOT 发布后再保护，程序行为异常 | 原生 AOT 产物没有 IL 可加密，保护器会跳过或破坏启动；受保护版本改用 `dotnet publish` 的 JIT 模式 |
 
 ---
 

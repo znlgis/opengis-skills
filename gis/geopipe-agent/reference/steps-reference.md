@@ -1,5 +1,17 @@
 # GeoPipeAgent Steps Reference
 
+## Contents
+
+- analysis
+- gdal
+- http
+- io
+- network
+- qc
+- qgis
+- raster
+- vector
+
 Auto-generated reference of all available pipeline steps.
 
 ## analysis

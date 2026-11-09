@@ -1,17 +1,10 @@
 ---
 name: elements
 description: "Use when generating building information models (BIM) programmatically in C#/.NET — wall, beam, column, floor creation, geometry kernel (BREP/CSG), glTF/IFC/JSON serialization, MEP systems, spatial grids. Hypar Elements: the smallest useful BIM — a cross-platform C# library for creating building elements without Revit/Rhino dependencies."
-tags:
-  - dotnet
-  - csharp
-  - 3d
-  - bim
-  - aec
-  - geometry
-  - ifc
-  - gltf
-  - building-elements
-  - parametric
+license: MIT
+metadata:
+  category: 3d
+  tags: "dotnet, csharp, 3d, bim, aec, geometry, ifc, gltf, building-elements, parametric"
 ---
 
 > **项目地址：** <https://github.com/hypar-io/Elements>
@@ -20,7 +13,7 @@ tags:
 >
 > **NuGet：** <https://www.nuget.org/packages/Hypar.Elements>
 >
-> **许可证：** MIT ｜ **最新版本：** `2.3.0`（NuGet 最高非预发布版；2.4.0 系列尚为 alpha 预发布）
+> **许可证：** MIT ｜ **最新版本：** `2.3.0`（截至 2026-11，[NuGet Hypar.Elements](https://www.nuget.org/packages/Hypar.Elements) 最高非预发布版；2.4.0 系列仍为 `-alpha.*` 预发布）
 
 ## 概述
 
@@ -209,13 +202,14 @@ model.ToGlTF("room.glb");
 
 ## 常见问题
 
-| 问题 | 解决方案 |
-|------|---------|
-| 如何在 Linux 微服务中运行？ | Elements 是 netstandard2.0，完全支持 Linux Docker 部署 |
-| 如何导出到 Revit？ | 通过 IFC 格式中转：Elements → IFC → Revit |
-| 几何操作在不同平台结果不一致？ | 使用 `IsAlmostEqualTo()` 等精度辅助方法，避免直接 `==` 比较 |
-| 如何创建自定义建筑元素？ | 继承 `Element` 类，用 JSON Schema 定义属性，用 CodeGeneration 生成代码 |
-| NuGet 该装哪个版本？ | 稳定线是 2.3.0；2.4.0 系列还都是 `-alpha.*` 预发布，生产项目留在 2.3.0 |
+| 问题 / 报错 | 原因 | 处置 |
+|------|------|------|
+| `NU1102: Unable to find package Hypar.Elements with version (>= 2.4.0)` | 2.4.x 只有 `-alpha.*` 预发布版，默认还原不拉预发布 | 生产项目锁 `2.3.0`；确需尝鲜加 `--prerelease` 或显式写 `2.4.0-alpha.*` |
+| 跨平台几何比较结果不一致 | 浮点累计误差，且不同 CPU/运行时 FMA 行为不同 | 用 `Vector3.Epsilon` 与 `IsAlmostEqualTo()`，不要用 `==` 比坐标 |
+| 导出的 glTF 在 Revit/其他工具里没有构件 | 只导出了几何，或导出前没把元素 `Add` 进 `Model` | 先 `model.AddElement(...)` 再 `model.ToGlTF()`；要进 Revit 走 IFC 中转，并装 `Hypar.Elements.Serialization.IFC` |
+| Linux 容器里加载失败 / 找不到原生库 | 用了依赖 Windows 原生库的包路径 | 核心库是 `netstandard2.0`，可跑 Linux Docker；避免引入 Windows-only 依赖 |
+| 自定义元素反序列化后属性丢失 | JSON Schema 与 C# 属性名不一致，或没生成对应 code | 检查 Schema 的属性名与类型定义，再跑 CodeGeneration 重新生成 |
+| 升级后 `Wall` / `Floor` 等 API 编译不过 | 跨大版本 API 签名有调整 | 对照 [CHANGELOG](https://github.com/hypar-io/Elements/blob/master/CHANGELOG.md) 改调用；不确定时先锁回上一稳定版 |
 
 ---
 

@@ -1,24 +1,17 @@
 ---
 name: geopipe-agent
 description: "Use when building YAML GIS pipelines with GeoPipeAgent — geopipe-agent validate/run, io.read_vector → vector.buffer → io.write_vector chains, 36 built-in steps (33 analysis + 3 passthrough), qc.geometry_validity/attribute_completeness/topology, native_python|qgis_process|gdal_cli backends, $step.output refs; also for validate "not registered" errors, silent when-condition skips, and resolve/knowledge gaps. 0.1.0, source install only (not on PyPI)."
-tags:
-  - gis
-  - agent
-  - pipeline
-  - yaml
-  - qc
-  - spatial-analysis
-  - vector
-  - raster
-  - geoprocessing
-  - python
+license: MIT
+metadata:
+  category: gis
+  tags: "gis, agent, pipeline, yaml, qc, spatial-analysis, vector, raster, geoprocessing, python"
 ---
 
 > **项目地址：** <https://github.com/znlgis/GeoPipeAgent>
 >
 > **文档：** <https://github.com/znlgis/GeoPipeAgent#readme>（README + `cookbook/` 示例 + `docs/`）
 >
-> **版本：** 0.1.0（截至 2026-10，实测 `pyproject.toml`；`geopipe-agent` 未发布到 PyPI，只能源码安装）
+> **最新版本：** 0.1.0（截至 2026-11，实测仓库 `pyproject.toml`；`geopipe-agent` 未发布到 PyPI，只能源码安装）
 >
 > **许可证：** MIT
 
@@ -277,7 +270,7 @@ QC 步骤遵循 **「检查即透传」** 模式：输入数据原样通过为 `
 
 ## AI 使用建议
 
-- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/backends.md`、`reference/knowledge.md`、`reference/pipeline-schema.md`、`reference/self-extension.md`、`reference/steps-reference.md`、`reference/workflows.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
+- **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 [reference/backends.md](reference/backends.md)、[reference/knowledge.md](reference/knowledge.md)、[reference/pipeline-schema.md](reference/pipeline-schema.md)、[reference/self-extension.md](reference/self-extension.md)、[reference/steps-reference.md](reference/steps-reference.md)、[reference/workflows.md](reference/workflows.md)，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
 - **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`python` 可能指向 QGIS/GDAL 自带解释器，建议在工作区建独立 venv 后 `pip install -e .`，避免污染系统环境。
 - **源码安装（未上 PyPI）**：`git clone https://github.com/znlgis/GeoPipeAgent.git && pip install -e ".[analysis,network]"`；验证 `geopipe-agent --help`、`geopipe-agent list-steps --category qc`、`pip show geopipe-agent | Select-String Version`。不要写 `pip install geopipe-agent`——PyPI 上还没有这个包。
 - **先探测能力**：`geopipe-agent backends` 看当前环境可用后端（默认 `native_python`），`geopipe-agent list-steps --format json` 拿真实步骤 ID；`validate` 报 `not registered` 时先用 `geopipe-agent resolve "<需求>"` 与 `knowledge search`，不要猜参数。

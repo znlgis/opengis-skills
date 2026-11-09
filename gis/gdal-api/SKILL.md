@@ -1,18 +1,10 @@
 ---
 name: gdal-api
 description: "Use when programming against GDAL/OGR in C, C++, Python, Java, or .NET — raster/vector I/O, gdal.UseExceptions, OGRSpatialReference transforms, gdal.Translate / gdal.Warp, VRT/COG, or fixing \"no driver registered\" and UnsatisfiedLinkError; C++ gdal-config, Maven org.gdal:gdal 3.13.0, NuGet MaxRev.Gdal.Core."
-
-tags:
-  - gdal
-  - api
-  - python
-  - cpp
-  - dotnet
-  - java
-  - raster
-  - vector
-  - gis
-  - geospatial
+license: MIT
+metadata:
+  category: gis
+  tags: "gdal, api, python, cpp, dotnet, java, raster, vector, gis, geospatial"
 ---
 
 > **项目地址：** <https://github.com/OSGeo/gdal>
@@ -27,7 +19,7 @@ tags:
 >
 > **C# API 参考：** <https://gdal.org/en/stable/api/csharp/index.html>
 >
-> **最新版本：** 3.13.3（截至 2026-10，[下载页](https://gdal.org/download.html)）；Java 绑定（Maven Central）3.13.0
+> **最新版本：** 3.13.3（截至 2026-11，[下载页](https://gdal.org/download.html)）；Java 绑定（Maven Central）3.13.0
 >
 > **许可证：** MIT
 
@@ -102,7 +94,7 @@ dotnet add package MaxRev.Gdal.LinuxRuntime.Minimal   # Linux
 dotnet add package MaxRev.Gdal.WindowsRuntime.Minimal  # Windows
 ```
 
-**注意：** 官方 SWIG 绑定命名空间为 `OSGeo.GDAL`、`OSGeo.OGR`、`OSGeo.OSR`。NuGet 包 `MaxRev.Gdal.Core` 是社区维护的跨平台封装，2026-10 的最新版为 `3.13.3.583`（对应 GDAL 3.13.3），运行时包需与 `MaxRev.Gdal.Core` 主版本一致。
+**注意：** 官方 SWIG 绑定命名空间为 `OSGeo.GDAL`、`OSGeo.OGR`、`OSGeo.OSR`。NuGet 包 `MaxRev.Gdal.Core` 是社区维护的跨平台封装，2026-11 的最新版为 `3.13.3.611`（对应 GDAL 3.13.3），运行时包需与 `MaxRev.Gdal.Core` 主版本一致。
 
 ---
 

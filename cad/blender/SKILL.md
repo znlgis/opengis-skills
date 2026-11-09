@@ -1,17 +1,10 @@
 ---
 name: blender
 description: "Use when scripting Blender's bpy API or batch-processing scenes headless — bpy.data mesh/object creation, Geometry Nodes groups via interface.new_socket, glTF/OBJ/STL export (export_scene.gltf, wm.obj_export, wm.stl_export), GIS footprints to building massing, add-on/extension development; also for \"context is incorrect\" from bpy.ops under blender -b, --python-exit-code CI gating, and ModuleNotFoundError for system packages."
-tags:
-  - 3d
-  - blender
-  - python
-  - bpy
-  - geometry-nodes
-  - gltf
-  - headless
-  - addon
-  - gis
-  - procedural
+license: MIT
+metadata:
+  category: cad
+  tags: "3d, blender, python, bpy, geometry-nodes, gltf, headless, addon, gis, procedural"
 ---
 
 > **项目地址：** <https://github.com/blender/blender>
@@ -22,9 +15,9 @@ tags:
 >
 > **许可证：** GPL-2.0-or-later
 >
-> **包管理器：** `winget install BlenderFoundation.Blender` / `brew install --cask blender` / `sudo snap install blender --classic`（最新 5.2.3，截至 2026-10）
+> **最新版本：** 5.2.3（2026-10-21；5.2 为 LTS 系列，截至 2026-11，见 [Releases](https://github.com/blender/blender/releases) 与 <https://download.blender.org/release/Blender5.2/>）
 >
-> **版本：** 5.2.3（2026-10-22；5.2 为 LTS 系列，见 <https://download.blender.org/release/Blender5.2/>）
+> **包管理器：** `winget install BlenderFoundation.Blender` / `brew install --cask blender` / `sudo snap install blender --classic`
 
 ## 概述
 
@@ -271,18 +264,16 @@ bpy.ops.export_scene.gltf(filepath="city.glb", export_format='GLB')
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| snap 安装后 `blender: command not found` | snap 版路径为 `/snap/bin/blender`，确认 PATH 或使用绝对路径 |
-| 无头下 `bpy.ops` 报 `context is incorrect` | 改用 `bpy.data` 直接操作，或用 `bpy.context.temp_override(...)` 提供所需上下文 |
-| 脚本报 `ModuleNotFoundError`（第三方包） | Blender 使用内置 Python，不加载系统 site-packages；改用标准库或外部工具生成中间数据 |
-| `-P` 脚本执行完但没有输出文件 | 后台模式不自动保存；需显式调用 `wm.save_as_mainfile` 或导出操作符 |
-| 导出的 glTF 没有材质 | 材质需使用 Principled BSDF 节点；检查导出参数 `export_materials` 未被关闭 |
-| Geometry Nodes 修饰器无效果 | 确认节点组输出已连接 `Group Output`，且对象有输入几何；用 depsgraph 取评估网格验证 |
-| 脚本参数没有传入 | 参数须放在 `--` 之后（`blender -b -P s.py -- a b`），脚本内从 `sys.argv` 读取 |
-| 4.x 旧脚本在 5.x 报错 | 节点组接口：旧式 `inputs/outputs` 改为 `interface.new_socket`；导入导出核对 `wm.obj_export`/`wm.stl_export` 名称 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| snap 安装后 `blender: command not found` | snap 版可执行文件不在默认 PATH | 路径为 `/snap/bin/blender`，确认 PATH 或使用绝对路径 |
+| 无头下 `bpy.ops` 报 `context is incorrect` | 无 GUI 时没有正确的 context（无窗口、无活动区域） | 改用 `bpy.data` 直接操作，或用 `bpy.context.temp_override(...)` 提供上下文 |
+| 脚本报 `ModuleNotFoundError`（第三方包） | Blender 使用内置 Python，不加载系统 site-packages | 改用标准库，或由外部工具先生成中间数据 |
+| `-P` 脚本执行完但没有输出文件 | 后台模式不会自动保存 | 脚本内显式调用 `wm.save_as_mainfile` 或对应导出操作符 |
+| 导出的 glTF 没有材质 | 材质未用 Principled BSDF，或导出参数关闭了材质 | 改用 Principled BSDF 节点；检查 `export_materials` 未被关闭 |
+| Geometry Nodes 修改器无效果 | 节点组输出未连接，或对象缺少输入几何 | 确认节点组输出接到 `Group Output`；用 depsgraph 取评估网格验证 |
+| 脚本参数没有传入 | 参数放在了 `--` 之前，被 Blender 当作自身参数解析 | 参数须放在 `--` 之后（`blender -b -P s.py -- a b`），脚本内从 `sys.argv` 读取 |
+| 4.x 旧脚本在 5.x 报错 | 节点组接口与导入导出操作符在 5.x 更名 | 旧式 `inputs/outputs` 改为 `interface.new_socket`；导出核对 `wm.obj_export`/`wm.stl_export` |
 
 ## AI 使用建议
 

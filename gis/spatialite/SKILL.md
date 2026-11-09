@@ -1,24 +1,17 @@
 ---
 name: spatialite
 description: "Use when adding spatial SQL to a single-file SQLite database with SpatiaLite — mod_spatialite loading, InitSpatialMetaData, AddGeometryColumn, CreateSpatialIndex/MbrWithin, ST_Transform and GEOS predicates, spatialite_tool or ogr2ogr import of Shapefile, and GPKG fallback; also for 'no such module: mod_spatialite', 'no such function: InitSpatialMetaData', and 'the SPATIALITE_SECURITY environment variable' errors. libspatialite 5.1.0."
-tags:
-  - spatialite
-  - sqlite
-  - sql
-  - gis
-  - spatial
-  - geospatial
-  - python
-  - vector
-  - gpkg
-  - command-line
+license: MIT
+metadata:
+  category: gis
+  tags: "spatialite, sqlite, sql, gis, spatial, geospatial, python, vector, gpkg, command-line"
 ---
 
 > **项目地址：** <https://www.gaia-gis.it/fossil/libspatialite/index>
 >
 > **官方文档：** <https://www.gaia-gis.it/gaia-sins/spatialite-sql-latest.html>
 >
-> **当前版本：** libspatialite 5.1.0（2023-08-04）；spatialite-tools 5.1.0a（2023-08-13），截至 2026-10 仍为最新
+> **最新版本：** libspatialite 5.1.0（2023-08-04，[源码目录](https://www.gaia-gis.it/gaia-sins/libspatialite-sources/)）；spatialite-tools 5.1.0a（2023-08-13，[源码目录](https://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/)），截至 2026-11 仍为最新
 >
 > **安装包：** Debian/Ubuntu `libsqlite3-mod-spatialite` 5.1.0-3、`spatialite-bin` 5.1.0a-2；conda-forge `libspatialite` 5.1.0
 >

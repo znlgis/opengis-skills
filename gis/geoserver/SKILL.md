@@ -1,17 +1,10 @@
 ---
 name: geoserver
 description: "Use when deploying GeoServer 3.0.x to publish WMS/WFS/WMTS/WCS/MVT, or configuring SLD/CSS styles, RBAC security, and GeoWebCache seeding. Covers geoserver-3.0.2-bin.zip, docker.osgeo.org/geoserver:3.0.2 on Java 17/21, /rest/about/version.json, blank GetMap from wrong native bounds, and Shapefile charset mojibake."
-tags:
-  - java
-  - server
-  - wms
-  - wfs
-  - wmts
-  - wcs
-  - wps
-  - ogc
-  - map
-  - web
+license: MIT
+metadata:
+  category: gis
+  tags: "java, server, wms, wfs, wmts, wcs, wps, ogc, map, web"
 ---
 
 > **项目地址：** <https://github.com/geoserver/geoserver>
@@ -20,7 +13,7 @@ tags:
 >
 > **下载：** <https://geoserver.org/release/stable/>
 >
-> **最新版本：** 3.0.2（2026-10-17 发布，安全修复版，生产应优先升级；[官方下载](https://geoserver.org/release/stable/)）
+> **最新版本：** 3.0.2（2026-10-19 发布，安全修复版，生产应优先升级；截至 2026-11，[官方下载](https://geoserver.org/release/stable/)）
 >
 > **运行环境：** Java 17 或 21；3.0.2 内含 GeoTools 35.2、GeoWebCache 2.0.2
 >

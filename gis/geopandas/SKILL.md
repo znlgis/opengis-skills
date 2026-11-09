@@ -1,15 +1,10 @@
 ---
 name: geopandas
 description: "Use when doing vector spatial analysis in Python — gpd.read_file/to_file via pyogrio (GPKG, Shapefile, GeoParquet), sjoin/sjoin_nearest, overlay, clip, dissolve, to_crs vs set_crs, gdf.plot choropleth; also for CRSError from a missing PROJ data dir, area/distance computed in degrees, or GeoDataFrame geometry-column conflicts. GeoPandas 1.2.0 extends pandas DataFrames with geometry columns."
-tags:
-  - python
-  - pandas
-  - vector
-  - geometry
-  - geodataframe
-  - spatial-analysis
-  - io
-  - visualization
+license: MIT
+metadata:
+  category: gis
+  tags: "python, pandas, vector, geometry, geodataframe, spatial-analysis, io, visualization"
 ---
 
 > **项目地址：** <https://github.com/geopandas/geopandas>
@@ -18,7 +13,7 @@ tags:
 >
 > **官网：** <https://geopandas.org>
 >
-> **最新版本：** 1.2.0（截至 2026-10，PyPI）
+> **最新版本：** 1.2.0（截至 2026-11，PyPI）
 >
 > **许可证：** BSD-3-Clause
 

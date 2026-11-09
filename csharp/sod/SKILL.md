@@ -1,27 +1,19 @@
 ---
 name: sod
 description: "Use when needing a multi-paradigm .NET ORM — EntityBase + EntityQuery CRUD, OQL chain queries with oql.Limit paging, MyBatis-style SQL-MAP XML via SqlMapper, AdoHelper raw SQL, MyDB.GetDBHelperByConnectionName. Also for identity keys not written back after Insert, dirty-field updates, and provider switching across SqlServer/MySql/DaMeng/Kingbase. PDF.NET SOD: ORM + SQL-MAP + OQL."
-tags:
-  - dotnet
-  - orm
-  - database
-  - sql-mapping
-  - oql
-  - mybatis-style
-  - multi-database
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, orm, database, sql-mapping, oql, mybatis-style, multi-database"
 ---
 
-> **项目地址：** <https://github.com/znlgis/SOD>（镜像仓库，最后提交 2025-07-05；国内主仓库见 <https://gitee.com/znlgis/SOD>，截至 2026-10 仍可访问但更新缓慢）
+> **项目地址：** <https://github.com/znlgis/SOD>（镜像仓库，最后提交 2025-07-05；国内主仓库见 <https://gitee.com/znlgis/SOD>，截至 2026-11 仍可访问但更新缓慢）
 >
-> **官网：** <https://www.pwmis.com/sod/>
+> **官方文档：** <https://www.pwmis.com/sod/>
 >
-> **官方文档：** <http://www.pwmis.com/sod/>
+> **NuGet：** `PDF.NET.SOD`（.NET Framework / netstandard2.0）/ `PWMIS.SOD`（.NET 6+）
 >
-> **NuGet：** `PDF.NET.SOD`
->
-> **NuGet（.NET 6+）：** `PWMIS.SOD`
->
-> **最新版本：** PDF.NET.SOD 7.0.1 / PWMIS.SOD 6.0.3（截至 2026-10，NuGet 实测）
+> **最新版本：** PDF.NET.SOD 7.0.1 / PWMIS.SOD 6.0.3（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/PDF.NET.SOD)）
 >
 > **许可证：** Apache-2.0
 
@@ -45,15 +37,16 @@ SOD 由 PDF.NET 演化而来，主要特点：
 ### 方式一：dotnet CLI
 
 ```bash
-# .NET 6+ 用 PWMIS.SOD（新版核心库）
+# .NET 6+ 用 PWMIS.SOD（新版核心库，6.0.3）
 dotnet add package PWMIS.SOD
 
-# .NET Framework / netstandard2.0 用 PDF.NET.SOD 系列
+# .NET Framework / netstandard2.0 用 PDF.NET.SOD 系列（7.0.1）
 dotnet add package PDF.NET.SOD.Core
 
-# 对应数据库 Provider
-dotnet add package PDF.NET.SOD.MySQL.Provider
-dotnet add package PDF.NET.SOD.PostgreSQL.Provider
+# 数据库 Provider 必须单独安装，且与核心库同一包族、同一大版本
+dotnet add package PDF.NET.SOD.MySQL.Provider       # 7.0.1
+dotnet add package PDF.NET.SOD.PostgreSQL.Provider  # 7.0.1
+# .NET 6+ 对应用 PWMIS.SOD.MySQL.Provider / PWMIS.SOD.PostgreSQL.Provider
 ```
 
 ### 方式二：PackageReference
@@ -313,13 +306,15 @@ try {
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
-| 字段映射错误 | 使用 `MapField(...)` 指定列名 |
-| 自增主键未填回 | `IdentityName` 设置正确 |
-| 中文乱码 | 数据库用 utf8mb4 / NVARCHAR |
-| 事务跨连接失败 | 使用同一 `AdoHelper` 实例（事务挂在 `CommonDB` 上，换实例即换事务） |
-| 找不到 `UseTransaction` / `GetDBHelperByConnectionString` | 6.0/7.0 版没有这两个成员：事务用 `BeginTransaction()`/`Commit()`/`Rollback()`，按连接串取 helper 用 `MyDB.GetDBHelperByProviderString(cs, providerName)` |
+| 启动作业时抛 provider 相关异常（找不到 Provider 程序集） | 只装了核心包没装数据库 Provider：按包族安装 `PDF.NET.SOD.<Db>.Provider` 或 `PWMIS.SOD.<Db>.Provider`，且与核心库同大版本 |
+| `MyDB.GetDBHelperByConnectionName("local")` 返回 null | `App.config`/`appsettings.json` 里没有该 name 的连接串，或 `providerName` 拼错；先核对 `<connectionStrings>` 的 name 与 providerName |
+| 插入后 `Id` 仍为 0 / 自增主键未填回 | `IdentityName` 未指向真实自增列，或表本身没有自增；补 `IdentityName` 并确认列定义 |
+| 字段映射错误（列名对不上） | 属性用 `getProperty<T>("列名")` 绑定，或用 `MapField(...)` 显式指定；列名与属性名不同名时必须显式映射 |
+| 中文乱码 | 数据库/列用 utf8mb4 或 NVARCHAR，连接串字符集与库一致 |
+| 事务跨连接不生效 | 事务挂在 `CommonDB`（`AdoHelper`）实例上：同一实例内 `BeginTransaction()` → 操作 → `Commit()`/`Rollback()`，换实例即换事务 |
+| 找不到 `UseTransaction` / `GetDBHelperByConnectionString` | 6.0/7.0 版没有这两个成员：事务用 `BeginTransaction()`/`Commit()`/`Rollback()`；按连接串取 helper 用 `MyDB.GetDBHelperByProviderString(cs, providerName)` |
 | OQL 查全表把内存吃满 | 改用 `oql.Limit(pageSize, pageIndex)` 分页，避免 `ToList()` 全量取回 |
 
 ---

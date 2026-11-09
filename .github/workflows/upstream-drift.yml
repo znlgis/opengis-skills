@@ -1,0 +1,30 @@
+name: Upstream version drift
+
+on:
+  schedule:
+    - cron: "0 1 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Report upstream version drift
+        id: drift
+        continue-on-error: true
+        run: python scripts/check-upstream.py . --workers 12 --timeout 45 | tee drift.txt
+      - name: Upload drift report
+        uses: actions/upload-artifact@v4
+        with:
+          name: upstream-drift
+          path: drift.txt
+          if-no-files-found: ignore

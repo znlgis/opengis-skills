@@ -1,16 +1,10 @@
 ---
 name: docker-compose
-description: "Use when orchestrating multi-container Docker apps from one compose.yaml — services/networks/volumes, build vs image, ports and bind mounts, env_file and ${VAR} interpolation, depends_on with healthcheck conditions, profiles, deploy.resources limits. Docker Compose v5.6.1 CLI (docker compose up/down/ps/logs/watch). Also for \"docker: 'compose' is not a docker command\", \"ports is already allocated\", containers starting before the DB is ready, and data lost after \"down -v\"."
-tags:
-  - docker
-  - docker-compose
-  - containers
-  - orchestration
-  - yaml
-  - devops
-  - deployment
-  - healthcheck
-  - profiles
+description: "Use when orchestrating multi-container Docker apps from one compose.yaml — services/networks/volumes, build vs image, ports and bind mounts, env_file and ${VAR} interpolation, depends_on with healthcheck conditions, profiles, deploy.resources limits. Docker Compose v5.7.0 CLI (docker compose up/down/ps/logs/watch). Also for \"docker: 'compose' is not a docker command\", \"port is already allocated\", containers starting before the DB is ready, and data lost after \"down -v\"."
+license: MIT
+metadata:
+  category: others
+  tags: "docker, docker-compose, containers, orchestration, yaml, devops, deployment, healthcheck, profiles"
 ---
 
 > **项目地址：** <https://github.com/docker/compose>
@@ -19,9 +13,9 @@ tags:
 >
 > **许可证：** Apache-2.0
 >
-> **包管理器：** Docker Compose v2+ 插件（`docker-compose-plugin` / Docker Desktop 自带）/ 源码（最新 v5.6.1，截至 2026-10）
+> **包管理器：** Docker Compose v2+ 插件（`docker-compose-plugin` / Docker Desktop 自带）/ 源码（最新 v5.7.0，截至 2026-11）
 >
-> **版本：** v5.6.1（2026-10-21）
+> **版本：** v5.7.0（2026-11-02，[GitHub Releases](https://github.com/docker/compose/releases)）
 
 ## 概述
 
@@ -65,7 +59,7 @@ sudo yum install docker-compose-plugin
 
 ```bash
 docker compose version
-# 预期输出：Docker Compose version v5.6.1
+# 预期输出：Docker Compose version v5.7.0
 ```
 
 > 独立的 `docker-compose`（v1，Python 实现）已停止维护，请使用 v2+ 的 `docker compose` 子命令。
@@ -294,7 +288,7 @@ services:
 | 问题 | 解决 |
 |------|------|
 | 提示 `docker: 'compose' is not a docker command` | 安装 compose 插件（v2+），并确认使用 `docker compose`（空格）而非旧版 `docker-compose` |
-| `ports` 报端口被占用 | 修改宿主机端口，或排查占用进程后释放 |
+| `Bind for 0.0.0.0:8080 failed: port is already allocated` | 宿主端口已被其它进程/容器占用 | `docker ps` 与 `lsof -i :8080`（Windows 用 `netstat -ano`）定位占用者；改映射端口或先停占用进程 |
 | `depends_on` 后应用仍连接失败 | 短语法不等待就绪，改用 `condition: service_healthy` 并配置 `healthcheck` |
 | `down` 后数据库数据丢失 | `down -v` 会删除命名卷；日常清理不要加 `-v`，或先备份卷 |
 | 修改代码后容器未更新 | 用 `up -d --build` 重建，或使用 `docker compose watch` |

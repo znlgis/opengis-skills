@@ -1,23 +1,19 @@
 ---
 name: opengis-utils-for-java
 description: "Use when needing common GIS utilities in Java — OguLayerUtil layer read/write, GeometryUtil 60+ ops, CrsUtil CGCS2000 (EPSG:4490, 4502-4554), Shapefile/GeoJSON/FileGDB/PostGIS/land TXT I/O, topology validation; also for GDAL UnsatisfiedLinkError on gdal_jni, missing osgeo repo on GeoTools, or resolving com.znlgis.ogu4j:ogu4j:1.0.0 that is not on Maven Central. OGU4J."
-tags:
-  - java
-  - gis
-  - geotools
-  - jts
-  - gdal
-  - geometry
-  - vector
-  - crs
-  - cgcs2000
+license: MIT
+metadata:
+  category: gis
+  tags: "java, gis, geotools, jts, gdal, geometry, vector, crs, cgcs2000"
 ---
 
 > **项目地址：** <https://github.com/znlgis/opengis-utils-for-java>
 >
 > **官方文档：** <https://github.com/znlgis/opengis-utils-for-java#readme>
 >
-> **Maven 坐标：** `com.znlgis.ogu4j:ogu4j:1.0.0`（截至 2026-10 尚未发布到 Maven Central，需从源码 `mvn install` 安装到本地仓库）
+> **最新版本：** 1.0.0（截至 2026-11，[仓库 `main` 分支 `pom.xml`](https://github.com/znlgis/opengis-utils-for-java/blob/main/pom.xml)，无 Git tag；**尚未发布到 Maven Central**，需从源码 `mvn install` 安装到本地仓库）
+>
+> **Maven 坐标：** `com.znlgis.ogu4j:ogu4j`
 >
 > **许可证：** LGPL-2.1-or-later
 

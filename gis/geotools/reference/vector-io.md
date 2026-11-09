@@ -1,5 +1,12 @@
 # GeoTools Vector I/O Reference
 
+## Contents
+
+- 矢量数据读取
+- 矢量数据写入
+- GeoJSON 读写
+- WKT / WKB 格式转换
+
 > 这是 [../SKILL.md](../SKILL.md) 的补充文件，收录矢量数据读写（Shapefile / GeoPackage / PostGIS）与 GeoJSON、WKT/WKB 格式示例。
 
 ---

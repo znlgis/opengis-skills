@@ -1,15 +1,10 @@
 ---
 name: bamboobuddy
 description: "Use when building or extending BambooBuddy (A Panda's Day) — a pnpm-workspace kids habit game: Vue 3.5 shell plus Phaser 4.2 game packages, the GameModule/GameContext contract, task JSON validated by zod, 8 gameplay templates across 10 daily tasks, IndexedDB saves with four growth stages, and Vitest/Playwright gates. Also for pnpm verify stage failures, TypeScript 7 breaking vue-tsc, Phaser leaking into the first-screen chunk, and Tauri/Capacitor packaging errors."
-tags:
-  - vue
-  - typescript
-  - phaser
-  - game
-  - education
-  - pnpm
-  - vite
-  - pwa
+license: MIT
+metadata:
+  category: others
+  tags: "vue, typescript, phaser, game, education, pnpm, vite, pwa"
 ---
 
 > **项目地址：** <https://github.com/znlgis/BambooBuddy>
@@ -18,9 +13,9 @@ tags:
 >
 > **官方文档：** 17 章中文教程：<https://znlgis.github.io/others/BambooBuddy/>
 >
-> **包管理器：** pnpm 11.22.0（根 `package.json` 的 `packageManager` 字段锁版本）+ Node.js 24（截至 2026-10）
+> **包管理器：** pnpm 11.22.0（根 `package.json` 的 `packageManager` 字段锁版本）+ Node.js 24（截至 2026-11）
 >
-> **版本：** `v0.0.2`（GitHub Release，2026-10-20；仓库根 `package.json` 的 version 为 0.1.0）
+> **版本：** `v0.0.3`（2026-11-08，[GitHub Releases](https://github.com/znlgis/BambooBuddy/releases)；仓库根 `package.json` 的 version 为 0.1.0）
 >
 > **许可证：** MIT
 

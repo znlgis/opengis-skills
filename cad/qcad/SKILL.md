@@ -1,15 +1,10 @@
 ---
 name: qcad
-description: "Use when editing or batch-converting DXF/DWG drawings with QCAD 3.33 — RAddObjectsOperation scripting, dwginfo/dwg2pdf/dwg2svg console tools, or version conversion through `qcad -no-gui -autostart SaveAs.js -filter`; also when dwg2pdf/dwg2svg are missing because they ship only with QCAD Professional, when a PDF export drops white entities, or when `-no-gui` runs never exit. QCAD: 2D CAD whose native format is DXF, scriptable via ECMAScript."
-tags:
-  - 2d
-  - cad
-  - dxf
-  - dwg
-  - qt
-  - javascript
-  - ecmascript
-  - cli
+description: "Use when editing or batch-converting DXF/DWG drawings with QCAD 27.0 — RAddObjectsOperation scripting, dwginfo/dwg2pdf/dwg2svg console tools, or version conversion through `qcad -no-gui -autostart SaveAs.js -filter`; also when dwg2pdf/dwg2svg are missing because they ship only with QCAD Professional, when a PDF export drops white entities, or when `-no-gui` runs never exit. QCAD: 2D CAD whose native format is DXF, scriptable via ECMAScript."
+license: MIT
+metadata:
+  category: cad
+  tags: "2d, cad, dxf, dwg, qt, javascript, ecmascript, cli"
 ---
 
 > **项目地址：** <https://github.com/qcad/qcad>
@@ -22,7 +17,7 @@ tags:
 >
 > **许可证：** GPL-3.0（社区版）；Pro 版商业许可
 >
-> **最新稳定版：** 3.33.1（2026-09-08，GitHub tag `v3.33.1.0`；截至 2026-10 未发新版，下一版将切换到日历版本号 27.x，见 [Changelog](https://qcad.org/en/changelog) 与 <https://qcad.org/en/download>）
+> **最新版本：** 27.0.3（2026-11-02，自 27.0.0 起改用日历版本号，取代 3.33.x；见 [Changelog](https://qcad.org/en/changelog) 与 [Releases](https://github.com/qcad/qcad/releases)，截至 2026-11）
 
 ## 概述
 
@@ -259,18 +254,16 @@ doc.applyOperation(op);
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| DWG 打不开 | CE 的 DWG 支持有限：在 Preferences → File I/O 配置 ODA File Converter，或先用其把 DWG 转成 DXF 再处理 |
-| 字体缺失 | 复制 .shx/.ttf 到 `fonts/` 目录或安装到系统 |
-| 中文显示乱 | 设置图层使用支持 CJK 的字体（如 simhei） |
-| 脚本路径错 | 使用绝对路径或 `documentInterface.getDocument()` |
-| 找不到 `dwg2pdf` / `dwg2svg` | 它们是 QCAD Professional 安装自带的控制台工具，社区版没有；Windows 为安装目录下的 `.bat`，macOS 在 `QCAD-Pro.app/Contents/Resources`，Linux 为安装目录下的 shell 脚本 |
-| 导出的 PDF / SVG 里白色实体看不见 | 白底白线，用 `dwg2pdf -color-correction` / `dwg2svg -color-correction` |
-| 批量改 DXF 版本 | `qcad -no-gui -autostart scripts/File/SaveAs/SaveAs.js -filter "DXF 2000" -outfile out.dxf in.dxf` |
-| `-no-gui` 跑完不退出 | 改用 `-exec script.js`（执行完即退出），或在脚本里自行结束流程 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| DWG 打不开 | CE 的 DWG 支持有限，且依赖外部转换器 | 在 Preferences → File I/O 配置 ODA File Converter，或先转 DXF 再处理 |
+| 字体缺失 | 字体未安装也未放进 QCAD 字体目录 | 复制 .shx/.ttf 到 `fonts/` 目录或安装到系统 |
+| 中文显示乱 | 图层使用的字体不含 CJK | 设置图层使用支持 CJK 的字体（如 simhei） |
+| 脚本路径错 | 相对路径以工作目录解析，不以脚本位置为准 | 使用绝对路径，或改用 `documentInterface.getDocument()` 取文档 |
+| 找不到 `dwg2pdf` / `dwg2svg` | 这些控制台工具只在 QCAD Professional 中提供 | 装 Pro 版；Windows 为安装目录下 `.bat`，macOS 在 `QCAD-Pro.app/Contents/Resources`，Linux 为安装目录脚本 |
+| 导出的 PDF / SVG 里白色实体看不见 | 白底白线 | 加 `-color-correction`：`dwg2pdf -color-correction` / `dwg2svg -color-correction` |
+| 批量改 DXF 版本 | 需要无界面驱动 `qcad` 并指定过滤器 | `qcad -no-gui -autostart scripts/File/SaveAs/SaveAs.js -filter "DXF 2000" -outfile out.dxf in.dxf` |
+| `-no-gui` 跑完不退出 | 脚本执行完事件循环仍在跑 | 改用 `-exec script.js`（执行完即退出），或在脚本里自行结束流程 |
 
 ## AI 使用建议
 

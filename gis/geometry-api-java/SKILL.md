@@ -1,15 +1,10 @@
 ---
 name: geometry-api-java
 description: "Use when working with Esri geometry types (Point, Polyline, Polygon, Envelope) in Java — GeometryEngine, com.esri.geometry:esri-geometry-api:2.2.4, WKT/WKB/GeoJSON/Esri JSON I/O, geodesic distance; also when GeometryEngine has no intersects or WKB method and you need OperatorFactoryLocal, or when 2.3.1 coordinates fail to resolve on Maven Central. Esri Geometry API for Java."
-tags:
-  - java
-  - geometry
-  - esri
-  - spatial
-  - wkt
-  - wkb
-  - geojson
-  - geodesic
+license: MIT
+metadata:
+  category: gis
+  tags: "java, geometry, esri, spatial, wkt, wkb, geojson, geodesic"
 ---
 
 > **项目地址：** <https://github.com/Esri/geometry-api-java>
@@ -18,7 +13,7 @@ tags:
 >
 > **Maven Central：** `com.esri.geometry:esri-geometry-api`
 >
-> **最新版本：** 2.2.4（Maven Central，截至 2026-10）；上游源码 2.3.1（2026-10-09），未发布到 Central
+> **最新版本：** 2.2.4（Maven Central，截至 2026-11）；上游源码 2.3.1（2026-10-09），未发布到 Central
 >
 > **许可证：** Apache-2.0
 

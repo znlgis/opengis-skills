@@ -1,21 +1,17 @@
 ---
 name: oh-my-openagent
-description: "Use when installing or running OmO (oh-my-openagent) 5.1.48 — the standalone omo CLI built on senpi, migrating an older OpenCode-plugin install with omo setup, choosing thinking levels with /thinking, or switching native/legacy editions; also when omo --version still prints 4.19.x because a stale global omo shadows omo-ai, the curl installer falls back to GitHub Releases, or provider keys and MCP servers must come across from OpenCode. npm omo-ai, SUL-1.0."
-tags:
-  - ai
-  - agent
-  - omo
-  - opencode
-  - cli
-  - orchestration
-  - migration
+description: "Use when installing or running OmO (oh-my-openagent) 5.1.65 — the standalone omo CLI built on senpi, migrating an older OpenCode-plugin install with omo setup, choosing thinking levels with /thinking, or switching native/legacy editions; also when omo --version still prints 4.19.x because a stale global omo shadows omo-ai, the curl installer falls back to GitHub Releases, or provider keys and MCP servers must come across from OpenCode. npm omo-ai, SUL-1.0."
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, agent, omo, opencode, cli, orchestration, migration"
 ---
 
 > **项目地址：** <https://github.com/code-yeongyu/oh-my-openagent>
 >
 > **官网 / 文档：** <https://omo.dev> ｜ <https://omo.dev/docs>
 >
-> **npm 包：** `omo-ai`（5.1.48，截至 2026-10）｜ CLI 命令：`omo`
+> **最新版本：** 5.1.65（截至 2026-11，npm `omo-ai` latest 实测）｜ CLI 命令：`omo`
 >
 > **许可证：** SUL-1.0（Sustainable Use License，商用前阅读条款）
 

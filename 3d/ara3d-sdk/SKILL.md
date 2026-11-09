@@ -1,24 +1,17 @@
 ---
 name: ara3d-sdk
 description: "Use when processing AEC/BIM 3D data in .NET 8 — mesh generation and transformation, SIMD-accelerated math, IFC/STEP/PLY to glTF/GLB/VIM conversion, plugin development. Ara3D-SDK: high-performance .NET 3D geometry and BIM library suite."
-tags:
-  - 3d
-  - bim
-  - aec
-  - dotnet
-  - csharp
-  - geometry
-  - simd
-  - ifc
-  - mesh
-  - gltf
+license: MIT
+metadata:
+  category: 3d
+  tags: "3d, bim, aec, dotnet, csharp, geometry, simd, ifc, mesh, gltf"
 ---
 
 > **项目地址：** <https://github.com/ara3d/ara3d-sdk>
 >
 > **NuGet 元包：** [`Ara3D.SDK`](https://www.nuget.org/packages/Ara3D.SDK) ｜ **Ara 3D 官网：** <https://ara3d.com>
 >
-> **许可证：** MIT ｜ **最新版本：** `1.6.2`（由仓库 `Directory.Build.props` 的 `Ara3DVersion` 统一管理，所有包共享同一版本号）｜ **默认分支：** `main` ｜ **目标框架：** `net8.0` / `net8.0-windows`
+> **许可证：** MIT ｜ **最新版本：** `1.6.2`（截至 2026-11，[GitHub Releases](https://github.com/ara3d/ara3d-sdk/releases) 与 [NuGet Ara3D.SDK](https://www.nuget.org/packages/Ara3D.SDK) 一致）｜ 版本由仓库 `Directory.Build.props` 的 `Ara3DVersion` 统一管理，所有包共享同一版本号 ｜ **默认分支：** `main` ｜ **目标框架：** `net8.0` / `net8.0-windows`
 
 ## 概述
 

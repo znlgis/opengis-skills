@@ -1,15 +1,10 @@
 ---
 name: hermes-agent
 description: "Use when you want a terminal agent that learns from experience — hermes setup/model/tools/doctor, skills + persistent memory + session search, hermes gateway for Telegram/Discord/Slack/WhatsApp/Signal, hermes cron create for scheduled jobs, MCP and subagents; also for `hermes: command not found` after install.sh, Python 3.15 unsupported-engine errors, and Windows users wrongly told to use WSL2. Hermes Agent (Nous Research), Python 3.11-3.14."
-tags:
-  - ai
-  - agent
-  - self-improving
-  - memory
-  - terminal
-  - mcp
-  - python
-  - nous-research
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, agent, self-improving, memory, terminal, mcp, python, nous-research"
 ---
 
 > **项目地址：** <https://github.com/NousResearch/hermes-agent>
@@ -18,7 +13,7 @@ tags:
 >
 > **许可证：** MIT ｜ **语言：** Python（3.11 – 3.14，`requires-python = ">=3.11,<3.15"`）
 >
-> **最新版本：** v0.22.5（2026-10-23 发布，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
+> **最新版本：** v0.23.0（2026-11-05 发布，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
 
 ## 概述
 
@@ -47,7 +42,7 @@ source ~/.bashrc      # 或 source ~/.zshrc
 hermes                # 进入 TUI
 ```
 
-> Windows 自 v0.22 起**原生支持**（CLI、gateway、TUI、工具均可直接跑，无需 WSL2）；仍可用 WSL2 走 Linux 一键脚本。Termux 默认安装 `.[termux]` 子集（跳过尚未测试的浏览器与 WhatsApp 部分）。
+> Windows 自 v0.22 起**原生支持**（CLI、gateway、TUI、工具均可直接跑，无需 WSL2），v0.23 继续支持；仍可用 WSL2 走 Linux 一键脚本。Termux 默认安装 `.[termux]` 子集（跳过尚未测试的浏览器与 WhatsApp 部分）。
 
 手动 / 开发安装（uv）：
 
@@ -134,6 +129,8 @@ hermes cron list --all
 | 子代理协作 | 拆解复杂任务并行处理 |
 | 插件开发 | 扩展自定义能力与研究功能 |
 
+> **v0.23 新增（可选读）**：Webapp 把整个 Desktop 工作区搬到浏览器标签；单 gateway 拥有全部会话（CLI/TUI/Desktop/编辑器/机器人/cron 都作为客户端接入）；终端内直接显示图片；`/rewind` 回退到历史消息重发或另开分支；`hermes plugins update` 批量更新插件。
+
 ---
 
 ## 常见问题（FAQ）
@@ -141,7 +138,7 @@ hermes cron list --all
 | 问题 | 解决 |
 |------|------|
 | 安装失败 | 确认 Python ≥ 3.11；脚本依赖 `uv`，可先手动装 uv 再 `uv pip install -e ".[all]"` |
-| Windows 能跑吗 | 能，v0.22+ 原生支持（CLI/gateway/TUI/tools）；老教程要求 WSL2 已过时，WSL2 仍可选 |
+| Windows 能跑吗 | 能，v0.22+ 原生支持（CLI/gateway/TUI/tools），v0.23 继续支持；老教程要求 WSL2 已过时，WSL2 仍可选 |
 | `pip install` 报 `Requires-Python >=3.11,<3.15` | 用 Python 3.11–3.14 建 venv；3.15 尚未支持 |
 | `hermes serve --gateway` 报无法识别参数 | `serve` 只起 Web/API 服务；消息网关用 `hermes gateway` |
 | `hermes` 安装后不在 PATH | `install.sh` 会把 `~/.local/bin` 写入 shell rc；重开终端或 `source ~/.bashrc`，Termux 用 `~/bin` |

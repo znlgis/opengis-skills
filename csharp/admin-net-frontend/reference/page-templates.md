@@ -1,5 +1,11 @@
 # Admin.NET Frontend Page Templates Reference
 
+## Contents
+
+- 页面开发模板
+- 常用组件
+- 样式与主题
+
 Page templates, common components, styles and themes split from SKILL.md.
 
 ---
@@ -51,7 +57,7 @@ Page templates, common components, styles and themes split from SKILL.md.
 
       <!-- 分页 -->
       <el-pagination
-        v-model:currentPage="queryParams.page"
+        v-model:current-page="queryParams.page"
         v-model:page-size="queryParams.pageSize"
         :total="total"
         @current-change="handleQuery"

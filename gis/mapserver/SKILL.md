@@ -1,23 +1,17 @@
 ---
 name: mapserver
 description: "Use when publishing WMS/WFS/WCS/OGC API Features from a MapServer 8.6.6 .map mapfile — MAP/LAYER/CLASS/STYLE objects, STATUS/PROJECTION/EXTENT errors, WEB.METADATA wms_enable_request and wfs_enable_request, SLD binding, FastCGI plus MS_MAP_PATTERN hardening, and blank GetMap / \"No query information to decode\" symptoms."
-tags:
-  - c
-  - server
-  - wms
-  - wfs
-  - wcs
-  - ogc
-  - mapfile
-  - cgi
-  - web
+license: MIT
+metadata:
+  category: gis
+  tags: "c, server, wms, wfs, wcs, ogc, mapfile, cgi, web"
 ---
 
 > **项目地址：** <https://github.com/MapServer/MapServer>
 >
 > **官方文档：** <https://mapserver.org/>
 >
-> **最新版本：** 8.6.6（rel-8-6-6，2026-09-06 发布，截至 2026-10；[发布记录](https://github.com/MapServer/MapServer/releases)）
+> **最新版本：** 8.6.6（rel-8-6-6，2026-09-06 发布，截至 2026-11；[发布记录](https://github.com/MapServer/MapServer/releases)）
 >
 > **许可证：** MIT
 

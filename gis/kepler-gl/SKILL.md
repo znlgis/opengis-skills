@@ -1,26 +1,19 @@
 ---
 name: kepler-gl
-description: "Use when building React/Redux web apps or Jupyter notebooks for large-scale geospatial visual exploration with Kepler.gl 3.3.0-alpha.16 — @kepler.gl/components KeplerGl, @kepler.gl/actions addDataToMap, @kepler.gl/processors processGeojson/processCsvData, and the Python keplergl widget. Also for fixing blank maps from a missing reducer or wrong getState (react-redux 'Could not find ... in the context of Connect(...)'), Mapbox token basemap errors, and oversized addDataToMap payloads."
-tags:
-  - javascript
-  - react
-  - redux
-  - webgl
-  - geospatial
-  - data-visualization
-  - map-layers
-  - jupyter
-  - python
-  - maplibre
+description: "Use when building React/Redux web apps or Jupyter notebooks for large-scale geospatial visual exploration with Kepler.gl 3.3.0-alpha.20 — @kepler.gl/components KeplerGl, @kepler.gl/actions addDataToMap, @kepler.gl/processors processGeojson/processCsvData, and the Python keplergl widget. Also for fixing blank maps from a missing reducer or wrong getState (react-redux 'Could not find ... in the context of Connect(...)'), Mapbox token basemap errors, and oversized addDataToMap payloads."
+license: MIT
+metadata:
+  category: gis
+  tags: "javascript, react, redux, webgl, geospatial, data-visualization, map-layers, jupyter, python, maplibre"
 ---
 
 > **项目地址：** <https://github.com/keplergl/kepler.gl>
 >
 > **官方文档：** <https://docs.kepler.gl/>
 >
-> **npm：** `kepler.gl`（npm `latest` 标签 3.3.0-alpha.16；GitHub Release v3.3.0-alpha.18 尚未回填 `latest`，截至 2026-10）
+> **最新版本：** 3.3.0-alpha.20（2026-11-08，npm `kepler.gl` `latest` 标签与 [GitHub Release v3.3.0-alpha.20](https://github.com/keplergl/kepler.gl/releases) 一致；仍为 3.3 预发布线，4.0 尚无稳定版）
 >
-> **PyPI：** `keplergl` 0.4.0（Jupyter 小组件，版本节奏落后于前端，截至 2026-10）
+> **PyPI：** `keplergl` 0.4.0（Jupyter 小组件，版本节奏落后于前端，截至 2026-11）
 >
 > **许可证：** MIT
 
@@ -290,7 +283,7 @@ React 侧的等价流程是：`processGeojson` / `processCsvData` 解析 → `di
 ## AI 使用建议
 
 - **执行环境**：`npm install` / `pnpm install`、`pip install keplergl` 在终端中执行 或 `ops_bash`，长输出重定向到文件再分段读。
-- **先探测版本**：`npm ls kepler.gl @kepler.gl/components @kepler.gl/actions`，子包必须与主包同为 3.3.0-alpha.16；Python 侧 `python -c "import keplergl; print(keplergl.__version__)"` 应为 0.4.0。
+- **先探测版本**：`npm ls kepler.gl @kepler.gl/components @kepler.gl/actions`，子包必须与主包同为 3.3.0-alpha.20；Python 侧 `python -c "import keplergl; print(keplergl.__version__)"` 应为 0.4.0。
 - **验证产物**：前端用 `npm run build` 确认编译，再用 `npx serve dist` 起本地静态服务；是否真出图只能由浏览器确认，AI 助手通常看不到浏览器画面，请用户看画面与控制台，环境支持读图时用截图核对。
 - **无 GPU 环境**：无头环境无法验证 WebGL 渲染，构建通过不等于地图可用，此时不要报告「已渲染」。
 - **常见症状**：空白组件先查 reducer 与 `getState`；无图层查 `dataId` 与字段类型；token 报错查底图样式。

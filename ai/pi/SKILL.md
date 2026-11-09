@@ -1,24 +1,21 @@
 ---
 name: pi
-description: "Use when you need a minimal, extensible terminal AI coding agent harness in TypeScript — npm @earendil-works/pi-coding-agent 1.4.0, extensions/skills/prompt templates, multi-provider (OpenAI/Anthropic/Google) routing, container isolation (Docker/Gondolin/OpenShell); also for `pi: command not found`, Node >=22.19.0 engine errors, and EACCES on a global install. Pi: minimalist terminal coding agent."
-tags:
-  - ai
-  - agent
-  - coding-agent
-  - terminal
-  - llm
-  - typescript
-  - extension
-  - pi
+description: "Use when you need a minimal, extensible terminal AI coding agent harness in TypeScript — npm @earendil-works/pi-coding-agent 1.5.0, extensions/skills/prompt templates, multi-provider (OpenAI/Anthropic/Google) routing, container isolation (Docker/Gondolin/OpenShell); also for `pi: command not found`, Node 22.19.0 or newer engine errors, and EACCES on a global install. Pi: minimalist terminal coding agent."
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, agent, coding-agent, terminal, llm, typescript, extension, pi"
 ---
 
 > **项目地址：** <https://github.com/earendil-works/pi>
 >
 > **官网 / 文档：** <https://pi.dev> ｜ <https://pi.dev/docs/latest>
 >
-> **npm：** `@earendil-works/pi-coding-agent`（最新 1.4.0，截至 2026-10；另有 `legacy-node20` 0.74.2 通道）
+> **最新版本：** 1.5.0（截至 2026-11，npm `@earendil-works/pi-coding-agent` latest 实测；另有 `legacy-node20` 0.74.2 通道）
 >
 > **许可证：** MIT
+
+> **v1.5.0 变化（可选读）**：新增扩展更新变更日志（`collapseChangelog` 折叠提示）、大工具调用增量解析与代码/工具行渲染复用带来的流式提速、`PI_SELF_UPDATE_COMMAND` / `selfUpdateCommand` 自定义自更新命令。
 
 ## 概述
 

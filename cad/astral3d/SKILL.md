@@ -1,15 +1,10 @@
 ---
 name: astral3d
 description: "Use when building Web 3D scenes, digital twins or BIM lightweight viewers with Astral3D — @astral3d/engine Viewer/Loader/Package SDK, the Vue 3 + Three.js editor monorepo (pnpm sdk:build then editor:dev), scene pack/unpack ZIP delivery, plugin and script runtime; also for \"EUNSUPPORTEDPROTOCOL: catalog:\" when running npm i astral3d, \"Cannot find module '@astral3d/engine'\", and DXF/IFC/3D Tiles preview."
-tags:
-  - web
-  - 3d
-  - threejs
-  - vue
-  - typescript
-  - visualization
-  - digital-twin
-  - bim
+license: MIT
+metadata:
+  category: cad
+  tags: "web, 3d, threejs, vue, typescript, visualization, digital-twin, bim"
 ---
 
 > **项目地址：** <https://github.com/mlt131220/Astral3D>（Gitee 镜像 <https://gitee.com/mlt131220/Astral3D>）
@@ -20,9 +15,9 @@ tags:
 >
 > **许可证：** Apache-2.0（README 声明个人学习与二次开发免费、商业使用需授权，以仓库为准）
 >
-> **包管理器：** pnpm workspace（`packageManager: pnpm@10.8.1`）；npm 包 `astral3d` 1.0.0 因保留 `catalog:` 依赖**不能**直接 `npm install`（截至 2026-10）
+> **最新版本：** 1.0.0（GitHub Release 与 npm `astral3d` 同为 1.0.0；`@astral3d/engine` 亦为 1.0.0，截至 2026-11，见 [Releases](https://github.com/mlt131220/Astral3D/releases)）
 >
-> **版本：** SDK/编辑器 `1.0.0`（GitHub Release `1.0.0`），npm 包 `astral3d` 同为 `1.0.0`
+> **包管理器：** pnpm workspace（`packageManager: pnpm@10.8.1`）；npm 包 `astral3d` 1.0.0 因保留 `catalog:` 依赖**不能**直接 `npm install`
 >
 > **中文教程（12 章）：** <https://znlgis.github.io/cad/Astral3D/>
 
@@ -271,18 +266,16 @@ viewer.unInstallScripts();                      // 全部卸载
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| `npm i astral3d` 报 `EUNSUPPORTEDPROTOCOL: catalog:` | 发布包保留 pnpm `catalog:` 依赖；改用源码 monorepo 或引用 `sdk:build` 产物 |
-| 编辑器启动报找不到 `@astral3d/engine` | 未先构建 SDK；执行 `pnpm run sdk:build` |
-| 安装依赖提示 Node 版本不满足 | 根 `package.json` 要求 Node ≥ 23.0.0，用 nvm 切换后重装 |
-| 用 npm/yarn 装依赖失败 | 仓库是 pnpm workspace（`packageManager: pnpm@10.8.1`），必须用 pnpm |
-| STEP 文件打不开 | SDK 无 STEP loader，先用 FreeCAD/OCCT 转 glTF 或 IFC |
-| IFC/RVT 打开失败或内存暴涨 | 上游先减面与拆分，浏览器侧按楼层/子树加载 |
-| 大场景首屏很慢 | 用 `Package` 分包 + DRACO/KTX2，检查 `onProgress` 卡在哪一类资源 |
-| 页面切走后再进来画面异常 | 卸载时 `unInstallScripts()` 并移除事件监听，避免残留 WebGL 上下文 |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| `npm i astral3d` 报 `EUNSUPPORTEDPROTOCOL: catalog:` | 发布包保留了 pnpm workspace 的 `catalog:` 协议字段，npm/yarn 不认识 | 改用源码 monorepo，或 `pnpm run sdk:build` 后引用产物 |
+| 编辑器启动报找不到 `@astral3d/engine` | 直接跑 `editor:dev` 时 SDK 尚未构建 | 先执行 `pnpm run sdk:build` 再启动编辑器 |
+| 安装依赖提示 Node 版本不满足 | 根 `package.json` 要求 Node ≥ 23.0.0 | 用 nvm 切到满足要求的 Node 后重装 |
+| 用 npm/yarn 装依赖失败 | 仓库是 pnpm workspace（`packageManager: pnpm@10.8.1`） | 统一用 pnpm，不要混用 npm/yarn |
+| STEP 文件打不开 | SDK 内置 loader 不含 STEP | 先用 FreeCAD/OCCT 转 glTF 或 IFC 再加载 |
+| IFC/RVT 打开失败或内存暴涨 | 原始模型面数与构件数超出浏览器可承受范围 | 上游先减面并按楼层/子树拆分，前端按需加载 |
+| 大场景首屏很慢 | 资源未分包或压缩 | 用 `Package` 分包 + DRACO/KTX2，用 `onProgress` 定位卡住的资源类型 |
+| 页面切走后再进来画面异常 | 旧场景的脚本与事件监听未卸载，残留 WebGL 上下文 | 卸载时调用 `unInstallScripts()` 并移除监听 |
 
 ## AI 使用建议
 

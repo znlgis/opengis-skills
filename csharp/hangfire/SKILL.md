@@ -1,14 +1,10 @@
 ---
 name: hangfire
 description: "Use when running background jobs in .NET — fire-and-forget BackgroundJob.Enqueue, delayed Schedule, recurring Cron jobs via RecurringJob.AddOrUpdate, Hangfire.SqlServer/Hangfire.InMemory storage, or the Hangfire dashboard at /hangfire. Also for jobs stuck in 'Awaiting' state, dashboard returning 401/404 behind a proxy, and duplicate job execution in multi-instance deployments. Hangfire: background job processing for .NET."
-tags:
-  - dotnet
-  - csharp
-  - background-jobs
-  - hangfire
-  - scheduling
-  - recurring-jobs
-  - dashboard
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, csharp, background-jobs, hangfire, scheduling, recurring-jobs, dashboard"
 ---
 
 > **项目地址：** <https://github.com/HangfireIO/Hangfire>
@@ -17,9 +13,9 @@ tags:
 >
 > **NuGet：** `Hangfire.Core` 1.8.25（核心）、`Hangfire.AspNetCore` 1.8.25（ASP.NET Core 宿主）
 >
-> **存储/配套：** `Hangfire.SqlServer` 1.8.25、`Hangfire.PostgreSql` 1.21.1、`Hangfire.InMemory` 1.0.0、`Hangfire.Dashboard.BasicAuthorization` 1.0.2（截至 2026-10，NuGet）
+> **存储/配套：** `Hangfire.SqlServer` 1.8.25、`Hangfire.PostgreSql` 1.21.1、`Hangfire.InMemory` 1.0.0、`Hangfire.Dashboard.BasicAuthorization` 1.0.2（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Hangfire.Core)）
 >
-> **目标框架：** netstandard2.0 / netcoreapp3.0+ / .NET Framework 4.5.1+（`Hangfire.Core` 为 netstandard2.0）
+> **目标框架：** `Hangfire.Core` 提供 netstandard1.3 / netstandard2.0 与 .NET Framework 4.5.1 / 4.6 资产；.NET Core 3.0+、.NET 5-10 经 netstandard2.0 兼容（截至 2026-11 以 nuspec 实测）
 >
 > **许可证：** LGPL-3.0
 
@@ -343,7 +339,7 @@ dotnet run
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
 | 任务一直停在 `Enqueued` 不执行 | 没有启动 server：Web 里需 `AddHangfireServer()`，或独立进程 `new BackgroundJobServer()` |
 | `/hangfire` 打开 404 | `UseHangfireDashboard()` 没调用，或与路由前缀冲突；检查 `pathMatch` 与实际访问路径 |
@@ -354,6 +350,7 @@ dotnet run
 | 周期任务不触发 | Cron 时区按 UTC 解释；需要本地时间显式传 `RecurringJobOptions.TimeZone` |
 | 数据库表不存在 | `PrepareSchemaIfNecessary` 被关，或账号无建表权限；手工执行 `Hangfire.SqlServer` 附带脚本 |
 | 部署后任务重复灌入 | `RecurringJob.AddOrUpdate` 幂等没问题，但若用 `AddOrUpdate` + 随机 id 会不断新增 |
+| `JobStorage.Current property value has not been initialized` | 在 `AddHangfire` 之前就用了静态 `BackgroundJob.Enqueue`/`RecurringJob`；先在启动配置里注册存储，再入队 |
 | 想按队列隔离 worker | `AddHangfireServer(o => o.Queues = ...)` 配多组服务器，或拆分独立 Worker |
 
 ---
@@ -378,7 +375,7 @@ dotnet run
 
 ---
 
-## 相关资源
+## 参考资源
 
 - 官方文档：<https://docs.hangfire.io/>
 - GitHub 仓库：<https://github.com/HangfireIO/Hangfire>

@@ -1,15 +1,10 @@
 ---
 name: photo-sphere-viewer
 description: "Use when displaying 360-degree panoramic images (equirectangular/cubemap/dual-fisheye) in web applications, building virtual tours with markers and transitions, embedding interactive panoramas in Vue/React/vanilla JS, or creating 360-degree video players with gyroscope VR support. Photo-Sphere-Viewer v5: JavaScript panorama viewer based on Three.js. Covers Viewer class, 6 adapters, 14 plugins, and markers system."
-tags:
-  - javascript
-  - typescript
-  - threejs
-  - webgl
-  - 3d
-  - panorama
-  - 360-photo
-  - virtual-tour
+license: MIT
+metadata:
+  category: 3d
+  tags: "javascript, typescript, threejs, webgl, 3d, panorama, 360-photo, virtual-tour"
 ---
 
 > **项目地址：** <https://github.com/mistic100/Photo-Sphere-Viewer>
@@ -24,7 +19,7 @@ tags:
 >
 > **许可证：** MIT
 >
-> **最新版本：** v5.15.1（npm `@photo-sphere-viewer/core`，截至 2026-10）
+> **最新版本：** v5.15.1（截至 2026-11，npm `@photo-sphere-viewer/core` 与 [GitHub Releases](https://github.com/mistic100/Photo-Sphere-Viewer/releases) 一致）
 
 ## 概述
 

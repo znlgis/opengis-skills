@@ -1,23 +1,15 @@
 ---
 name: opengis-daf
 description: "Use when building JSON-plan GIS analysis or QC pipelines with OpenGisDAF (.NET 10 / C# 14) — daf validate/run, operators buffer/clip/intersect_check/containment_check/coordinate_transform, DAG upstream bindings, GeoJSON/Shapefile/PostGIS sinks, qcMode QC reports, AssemblyLoadContext plugins; also for \"zero tests ran\" exit code 5, missing --recurse-submodules GDAL build errors, or PostGIS Layer already exists. Plan-driven ETL."
-
-tags:
-  - gis
-  - csharp
-  - dotnet
-  - spatial-analysis
-  - data-quality
-  - geojson
-  - shapefile
-  - postgis
-  - vector
-  - pipeline
+license: MIT
+metadata:
+  category: gis
+  tags: "gis, csharp, dotnet, spatial-analysis, data-quality, geojson, shapefile, postgis, vector, pipeline"
 ---
 
 > **项目地址：** <https://github.com/znlgis/opengis-daf>
 >
-> **版本：** 仓库主线（截至 2026-10，无 Release tag、无 NuGet 包；以 `global.json` 的 .NET SDK 10.0.301 为准）
+> **最新版本：** 仓库 `main` 主线（截至 2026-11，[无 Release tag](https://github.com/znlgis/opengis-daf/releases)、无 NuGet 包；以 `global.json` 的 .NET SDK 10.0.301 为准）
 >
 > **许可证：** MIT License
 >

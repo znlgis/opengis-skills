@@ -16,6 +16,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.12"
+      - name: Byte-compile repository scripts
+        run: python -m compileall -q scripts
       - name: Validate skill files
         run: python scripts/validate-skills.py .

@@ -1,22 +1,17 @@
 ---
 name: vllm
-description: "Use when self-hosting an OpenAI-compatible LLM endpoint with vLLM 0.32 — vllm serve, offline LLM.generate / llm.chat, PagedAttention with continuous batching and prefix caching, --tensor-parallel-size / --pipeline-parallel-size, AWQ/GPTQ/FP8 quantization, or wiring LangChain/LlamaIndex clients at http://localhost:8000/v1; also when the server OOMs on long context, chat requests ignore your sampling params because generation_config.json overrides them, or engine startup dies compiling kernels."
-tags:
-  - llm
-  - inference
-  - serving
-  - openai-api
-  - gpu
-  - quantization
-  - python
-  - cli
+description: "Use when self-hosting an OpenAI-compatible LLM endpoint with vLLM 0.33 — vllm serve, offline LLM.generate / llm.chat, PagedAttention with continuous batching and prefix caching, --tensor-parallel-size / --pipeline-parallel-size, AWQ/GPTQ/FP8 quantization, or wiring LangChain/LlamaIndex clients at http://localhost:8000/v1; also when the server OOMs on long context, chat requests ignore your sampling params because generation_config.json overrides them, or engine startup dies compiling kernels."
+license: MIT
+metadata:
+  category: ai
+  tags: "llm, inference, serving, openai-api, gpu, quantization, python, cli"
 ---
 
 > **项目地址：** <https://github.com/vllm-project/vllm>
 >
 > **官方文档：** <https://docs.vllm.ai/>
 >
-> **PyPI：** `vllm`（0.32.0，截至 2026-10）
+> **最新版本：** 0.33.0（截至 2026-11，[PyPI](https://pypi.org/project/vllm/) 实测）
 >
 > **许可证：** Apache-2.0
 
@@ -54,7 +49,7 @@ uv pip install vllm --torch-backend=auto
 vllm download-kernels
 ```
 
-`--torch-backend=auto` 会按驱动版本自动选 PyTorch 源；也可写死 `--torch-backend=cu126`。`vllm download-kernels` 预编译 kernel，避免首次启动在 Hopper 及以上卡上编译几分钟。
+`--torch-backend=auto` 会按驱动版本自动选 PyTorch 源；也可写死（如 `--torch-backend=cu129`，具体可选值随版本变化，以安装时的输出为准）。`vllm download-kernels` 预编译 kernel，避免首次启动在 Hopper 及以上卡上编译几分钟。
 
 ### 方式二：pip / conda
 
@@ -299,6 +294,7 @@ with open("results.jsonl", "w", encoding="utf-8") as f:
 | 多卡起不来 | TP 数必须整除注意力头数/模型分片；先试 `--tensor-parallel-size 1` 排除模型问题 |
 | 服务被外部扫到 | 默认无鉴权；生产必须 `--api-key`（可多个轮换）+ 反代/网关 + 网络隔离 |
 | Windows/macOS 装不上 | Windows 建议 WSL2 跑 Linux 容器；macOS 用 vLLM-Metal |
+| 升级 0.33 后原来能跑的机器装不上 | 0.33.0 起官方 wheel 不再提供 CUDA 12.9（PyTorch 升到 2.14）；驱动/CUDA 较老时锁旧版 vLLM，或用 `--torch-backend` 指定可用后端 |
 | 想跑 GGUF 权重 | 支持，但走 GGUF 路径的性能与特性（如 prefix caching）不同于原生权重，先小规模验证 |
 
 ---

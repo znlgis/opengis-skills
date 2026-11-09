@@ -1,15 +1,10 @@
 ---
 name: chili3d
 description: "Use when building or extending browser-based parametric CAD in TypeScript with Chili3D — npm-workspaces rspack build, chili-wasm Open CASCADE bindings, @command/ICommand plus Plugin contracts and .chiliplugin packaging, STEP/IGES/BREP/STL exchange, ribbon and i18n contributions; also for \"SharedArrayBuffer is not defined\"/chili-wasm load failures without COOP+COEP headers, initWasm() returning nothing in Node, and plugin buttons missing after install."
-tags:
-  - web
-  - 3d
-  - typescript
-  - wasm
-  - occt
-  - parametric
-  - step
-  - stl
+license: MIT
+metadata:
+  category: cad
+  tags: "web, 3d, typescript, wasm, occt, parametric, step, stl"
 ---
 
 > **项目地址：** <https://github.com/xiangechen/chili3d>
@@ -18,9 +13,9 @@ tags:
 >
 > **许可证：** AGPL-3.0
 >
-> **包管理器：** npm workspaces（根 `package.json` 版本 `0.7.1`；npm 上仅 `@chili3d/core` 已发布 `0.7.0`，其余 `@chili3d/*` 为工作区包，截至 2026-10）
+> **最新版本：** 0.8.0（2026-10-30，GitHub Release tag `0.8.0`；npm 仅 `@chili3d/core` 发布同版 0.8.0，其余 `@chili3d/*` 为工作区包，截至 2026-11，来源 [GitHub Releases](https://github.com/xiangechen/chili3d/releases)）
 >
-> **版本：** 0.7.1（GitHub tag `0.7.1`，2026-09-19）
+> **包管理器：** npm workspaces（根 `package.json` 与 `packages/core/package.json` 版本均为 `0.8.0`）
 >
 > **中文教程：** <https://znlgis.github.io/cad/chili3d/>
 
@@ -118,7 +113,7 @@ chili3d/
 
 ### 二次开发的正确姿势
 
-Chili3D 是**应用 + 插件**模型，不是可 `npm install` 的嵌入式 SDK：`@chili3d/*` 中只有 `@chili3d/core` 发布到了 npm（0.7.0），`web/wasm/app/builder` 等仍是工作区包。因此二次开发有两条路：
+Chili3D 是**应用 + 插件**模型，不是可 `npm install` 的嵌入式 SDK：`@chili3d/*` 中只有 `@chili3d/core` 发布到了 npm（0.8.0），`web/wasm/app/builder` 等仍是工作区包。因此二次开发有两条路：
 
 1. **写插件**（推荐）：在 `plugins/` 下建包，导出 `Plugin` 对象，`npm run package` 产出 `.chiliplugin`，拖拽进应用安装。
 2. **改源码**：fork 仓库，在 `packages/*` 内扩展（`npm run build` 会同时构建应用与 `plugins/`）。
@@ -267,17 +262,15 @@ const wasm = await initWasm();
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 加载 chili-wasm 失败 | 站点未启用 COOP/COEP；确认响应头与 `cross-origin-isolated` |
-| Node 里 `initWasm()` 取不到 wasm | 浏览器外的环境需显式传 `wasmBinary`（Emscripten 无法 fetch） |
-| 无法导入 DWG | 目前不支持 DWG，先转 DXF/STEP |
-| 中文菜单 | 在语言设置中切换中文（内置 zh-CN 资源） |
-| 构建慢或内存溢出 | 用 `npm run build`（rspack 生产构建）；确认未跑 dev 模式产物 |
-| 插件不出现按钮 | 检查 `manifest.json` 的 `main` 路径、`importmap.json` 映射，以及 Ribbon `items` 是否为已注册命令 key |
-| 改 C++ 绑定后无效果 | 需要 `npm run setup:wasm` + `npm run build:wasm`，产物才会回拷到 wasm 包 lib |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 加载 chili-wasm 失败 | 站点未启用 COOP/COEP，`SharedArrayBuffer` 不可用 | 配置响应头 `Cross-Origin-Opener-Policy`/`Cross-Origin-Embedder-Policy`，确认 `cross-origin-isolated` |
+| Node 里 `initWasm()` 取不到 wasm | 浏览器外没有 fetch 与 `import.meta.url`，Emscripten 无法自动定位文件 | 显式传 `wasmBinary` |
+| 无法导入 DWG | 当前版本不支持 DWG | 先转 DXF/STEP 再导入 |
+| 中文菜单 | 默认语言跟随浏览器/首次启动为英文 | 在语言设置中切换中文（内置 zh-CN 资源） |
+| 构建慢或内存溢出 | 跑的是 dev 模式产物，或 Node 内存上限不足 | 用 `npm run build` 生成生产构建；必要时调大 `NODE_OPTIONS=--max-old-space-size` |
+| 插件不出现按钮 | `manifest.json` 的 `main` 路径错误、`importmap.json` 映射缺失，或 Ribbon `items` 不是已注册命令 key | 逐项核对三处配置 |
+| 改 C++ 绑定后无效果 | 未重新编译 WASM，或产物未回拷 | 执行 `npm run setup:wasm` + `npm run build:wasm` |
 
 ## AI 使用建议
 

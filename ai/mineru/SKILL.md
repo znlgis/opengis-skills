@@ -1,23 +1,17 @@
 ---
 name: mineru
-description: "Use when turning PDFs, scans, or Office documents into structured Markdown/JSON for RAG or translation pipelines with MinerU 4.0 — mineru parse / mineru-kit parse, quality tiers flash/basic/standard/advanced, DoclibClient Python SDK, V1 HTTP API, or Docker on NVIDIA GPUs; also when magic-pdf commands fail because 4.0 renamed the entrypoints, when a parse returns quality_tier_unavailable, or when a CI image has no GPU and you need the ONNX/llama.cpp CPU path."
-tags:
-  - pdf
-  - ocr
-  - document-parsing
-  - rag
-  - markdown
-  - python
-  - vlm
-  - cli
-  - gpu
+description: "Use when turning PDFs, scans, or Office documents into structured Markdown/JSON for RAG or translation pipelines with MinerU 4.1 — mineru parse / mineru-kit parse, quality tiers flash/basic/standard/advanced, DoclibClient Python SDK, V1 HTTP API, or Docker on NVIDIA GPUs; also when magic-pdf commands fail because 4.0 renamed the entrypoints, when a parse returns quality_tier_unavailable, or when a CI image has no GPU and you need the ONNX/llama.cpp CPU path."
+license: MIT
+metadata:
+  category: ai
+  tags: "pdf, ocr, document-parsing, rag, markdown, python, vlm, cli, gpu"
 ---
 
 > **项目地址：** <https://github.com/opendatalab/MinerU>
 >
 > **官方文档：** <https://opendatalab.github.io/MinerU/>
 >
-> **PyPI：** `mineru`（4.0.12，截至 2026-10；4.x 与 3.x 的命令行入口不同，见下文）
+> **最新版本：** 4.1.7（截至 2026-11，[PyPI](https://pypi.org/project/mineru/) 实测；4.1 相对 4.0 有破坏性接口变更，见下文）
 >
 > **许可证：** AGPL-3.0
 
@@ -40,7 +34,7 @@ MinerU 把 PDF、扫描件、图片与多种办公文档解析成**结构化 Mar
 
 | 项 | 要求 |
 |----|------|
-| Python | `>=3.10,<3.15`（推荐 3.12） |
+| Python | `>=3.11,<3.15`（4.1 起不再支持 3.10；推荐 3.12） |
 | 操作系统 | Linux / macOS / Windows；Docker 路径只覆盖 Linux + NVIDIA GPU |
 | 硬件 | CPU 可跑（ONNX 小模型 + llama.cpp Vulkan）；NVIDIA GPU 装 `mineru[full]` 吞吐最好 |
 | 磁盘 | 模型权重与文档库需要额外空间，默认在 `~/.mineru/models` |
@@ -56,23 +50,23 @@ source .mineru/bin/activate
 # Windows (PowerShell)
 .\ .mineru\Scripts\Activate.ps1
 
-uv pip install -U "mineru>=4.0,<5"
+uv pip install -U "mineru>=4.1,<5"
 ```
 
 ### 方式二：普通 pip（已有环境时）
 
 ```bash
-python -m pip install -U "mineru>=4.0,<5"
+python -m pip install -U "mineru>=4.1,<5"
 ```
 
 需要最好吞吐时装 extras：
 
 ```bash
 # NVIDIA GPU 推荐：自带匹配的 torch 与推理引擎
-uv pip install -U "mineru[full]>=4.0,<5"
+uv pip install -U "mineru[full]>=4.1,<5"
 
 # 只补 torch 侧
-uv pip install -U "mineru[torch]>=4.0,<5"
+uv pip install -U "mineru[torch]>=4.1,<5"
 ```
 
 > Windows 上 GPU 版 torch 需要单独装；macOS 默认安装即为最佳吞吐，不需要 `[full]`。
@@ -80,16 +74,17 @@ uv pip install -U "mineru[torch]>=4.0,<5"
 ### 方式三：Docker（Linux + NVIDIA）
 
 ```bash
-# 在仓库根目录（含 4.0 Dockerfile）执行
+# 在仓库根目录（含 4.x Dockerfile）执行；国内源用 docker/china/Dockerfile
 docker build -t mineru:4 -f docker/global/Dockerfile .
 ```
 
-镜像基于 vLLM 0.21.0、默认 CUDA 13.0；构建期会显式选 Torch 小模型与 vLLM 权重（可在无 GPU 的构建机上准备），运行期固定 `MINERU_MODEL_SMALL_BACKEND=torch`、`MINERU_MODEL_VLM_ENGINE=vllm`。国内版 Dockerfile 走 ModelScope，global 版走 Hugging Face。
+基础镜像保留 vLLM 0.21.0、默认 CUDA 13.0（可改用文件中注释的 cu129 基础镜像）；镜像按包索引区间 `mineru[torch]>=4.0,<5` 安装，tag 不锁定版本，需可复现时在 Dockerfile 里改成精确版本。构建期显式下载 Torch 小模型与 vLLM 权重（可在无 GPU 构建机上准备），运行期固定 `MINERU_MODEL_SMALL_BACKEND=torch`、`MINERU_MODEL_VLM_ENGINE=vllm`。国内版 Dockerfile 走 ModelScope，global 版走 Hugging Face。
 
 ### 验证
 
 ```bash
 mineru version --json          # 4.x 的版本查询；老 CLI 用 mineru --version
+mineru-kit models show         # 打印实际生效的小模型后端与 VLM 引擎
 mineru --help                  # 查看当前安装支持的子命令
 mineru-kit parse --help        # 无状态入口
 ```
@@ -217,6 +212,8 @@ mineru server status --json
 mineru server stop
 ```
 
+> 4.1 起 Doclib 首次启动自动生成本机 token（写入实际 `config.yaml` 的 `doclib.auth.token`），CLI 自动读取；**直接集成**必须带凭据：`DoclibClient(base_url=..., token=...)` 或 HTTP 头 `Authorization: Bearer <token>`，否则 UDS/TCP 接口一律拒绝。`MINERU_DOCLIB_AUTH_TOKEN` 可覆盖文件值。
+
 ```python
 import time
 
@@ -241,18 +238,30 @@ print(content.content)
 
 `DoclibClient` 还覆盖检索、受监视目录、页/块定位符续读与结果失效；`help(DoclibClient)` 可看全貌。
 
-### V1 HTTP API
+### V1 HTTP API（4.1：Tasks 是唯一异步入口）
 
 ```bash
-curl -s http://127.0.0.1:<port>/v1/health
-curl -s http://127.0.0.1:<port>/v1/tiers
-# 上传 → 建解析任务 → 取结果
-curl -s -X POST http://127.0.0.1:<port>/v1/uploads -F "file=@document.pdf"
-curl -s -X POST http://127.0.0.1:<port>/v1/parse/jobs -H 'Content-Type: application/json' -d '{"upload_id":"...","tier":"standard"}'
-curl -s http://127.0.0.1:<port>/v1/files
+# 起自部署 API 服务（/v1 前缀，浏览器 /docs 看 OpenAPI）
+mineru-kit api-server --host 127.0.0.1 --port 8000 --tier standard
+
+curl -s http://127.0.0.1:8000/v1/health
+curl -s http://127.0.0.1:8000/v1/tiers      # 只描述 PDF/图片可用档位
+# 提交 JSON 清单（files[].file_name / bytes 或 url / 可选 sha256sum/page_range）
+curl -s -X POST http://127.0.0.1:8000/v1/tasks \
+  -H 'Content-Type: application/json' \
+  -d '{"tier":"standard","files":[{"file_name":"document.pdf","bytes":123456}]}'
+# 用创建回执里的 upload（PUT 地址+请求头）上传缺失文件，然后轮询
+curl -s http://127.0.0.1:8000/v1/tasks/<task_id>
+curl -s -X POST http://127.0.0.1:8000/v1/tasks/<task_id>/cancel
 ```
 
-> 3.x 的 `/file_parse` 与 `/tasks` 在 4.0 不再提供。自建 API 服务提供 `/v1/file_parse`（同步包装）与 `/v1/tasks`（便捷提交）。解析 API 与 OpenAI 兼容的 VLM server 是两个不同接口，地址不可互换。
+要点：
+
+- **4.1 是破坏性协议升级**：独立的 `/v1/uploads` 与 `/v1/parse/jobs` 全部路由已移除（返回 404，无别名）；旧客户端必须改走 Tasks。
+- 状态：父任务 `waiting-file/pending/running/completed/partial/failed/canceled`；每个成功文件在 `files[].result_url` 单独下载，父任务没有总 ZIP。
+- `output_formats` 取 `default`（Markdown + JSON + images 的 ZIP）、`docx`、`html`、`latex`；`include_model_output` 已删除（提交即 400）。
+- 单文件同步调用另起包装服务 `mineru-kit file-parse-server`（默认 8003）；主 API Server / Router 不提供 `/v1/file_parse`。
+- 解析 API 与 OpenAI 兼容的 VLM server（`mineru-kit vlm-server`）是两个不同接口，地址不可互换。
 
 ---
 
@@ -262,7 +271,7 @@ curl -s http://127.0.0.1:<port>/v1/files
 
 输入：`docs/*.pdf`；输出：`out/*.md` + 结构化 JSON + 图片资源。
 
-1. 建环境并验证：`uv venv .mineru --python 3.12` → 激活 → `uv pip install -U "mineru>=4.0,<5"` → `mineru version --json`
+1. 建环境并验证：`uv venv .mineru --python 3.12` → 激活 → `uv pip install -U "mineru>=4.1,<5"` → `mineru version --json`
 2. 先拿一份样本试档位：`mineru-kit parse docs/sample.pdf -o out/sample.md --tier standard`，看公式/表格是否还原
 3. 抽样不合格时换档：表格密集的用 `--tier advanced`；只需文本检索的用 `--tier basic` 省算力
 4. 批量跑：`mineru-kit parse ./docs -o ./out --format zip`（无状态、默认全页）
@@ -311,6 +320,9 @@ curl -s http://127.0.0.1:<port>/v1/files
 | 显式指定后端就报错 | 显式选择但依赖缺失时框架直接失败，不会静默换后端；按「质量档位与后端」表实现装依赖 |
 | 配置改了不生效 | 4.0 读 `$MINERU_HOME/config.yaml`（`MINERU_CONFIG` 可覆盖），不读旧的 `mineru.json`；`--stack`/`MINERU_MODEL_STACK` 已移除 |
 | 旧版结果 JSON 读不进来 | 4.0 只严格读当前 schema 的结果；Doclib 缓存里的旧历史由专用 reader 转换，库外旧 JSON 不保证可用——重新解析源文档 |
+| 升级 4.1 后 Python 装不上 | 4.1 要求 `>=3.11,<3.15`，不再支持 3.10：用 Python 3.12 新建环境重装，并同步改服务启动配置的解释器路径 |
+| 旧客户端调 `/v1/uploads` 或 `/v1/parse/jobs` 返回 404 | 4.1 已删除这两组路由且不保留别名：改走 `POST /v1/tasks` 清单 + `PUT` 上传 + `GET /v1/tasks/{task_id}` 轮询，客户端与服务端一起升级 |
+| 调 Doclib 接口报 401/403 | 4.1 起需 Bearer token：CLI 会自动读取，直接集成用 `DoclibClient(base_url=..., token=...)` 或 `Authorization: Bearer <token>`；地址以 `doclib.endpoint.json` 为准 |
 | Windows 上 GPU 很慢 | 默认安装走 CPU/llama.cpp；Windows 需要单独装 GPU 版 torch，或直接用 Linux 容器 |
 | Docker 构建完推理报没有 GPU | 构建机可以无 GPU，但推理必须有匹配的 NVIDIA 硬件与驱动；非 NVIDIA 设备请用 legacy 镜像 |
 | Office/MHTML 解析报档位错误 | 这类格式只走本地 Flash 整篇解析，显式传 `tier="flash"` |
@@ -320,7 +332,7 @@ curl -s http://127.0.0.1:<port>/v1/files
 ## AI 使用建议
 
 - **推荐工作流模式**：先判入口——要交互式/增量阅读走 `mineru`（默认 10 页 + 定位续读）；要批量出文件走 `mineru-kit`；要程序化集成走 `DoclibClient` 或 V1 HTTP API。档位按文档类型定：原生文本 `flash`、扫描件 `basic`、复杂版面 `standard`、极限质量 `advanced`。
-- **关键注意事项**：① 4.x 入口与 3.x 完全不同，别混用 `magic-pdf`；② Python `>=3.10,<3.15`；③ 模型与配置在 `$MINERU_HOME`，旧 `mineru.json` 不读；④ 显式后端缺依赖会直接报错；⑤ 非 NVIDIA Docker 场景留在 3.x。
+- **关键注意事项**：① 4.x 入口与 3.x 完全不同，别混用 `magic-pdf`；② Python `>=3.11,<3.15`（4.1 起移除 3.10）；③ 模型与配置在 `$MINERU_HOME`，旧 `mineru.json` 不读；④ 显式后端缺依赖会直接报错；⑤ 非 NVIDIA Docker 场景留在 3.x。
 - **常用代码模式**：批量 = `mineru-kit parse ./docs -o ./out --format zip --tier standard`；增量 = `mineru parse x.pdf --json` → `mineru read "doc:<id>/tier:standard/page:N"`；SDK = `DoclibClient().ensure_parse(ParseRequest(path=..., tier="standard"))` → 轮询 `get_parse` → `read_content(locator)`。
 - **不要臆造**：没有 `--backend`/`--stack` 这类 4.0 已移除的参数；没有 `mineru -p input.pdf -o output` 这种 3.x 写法；解析 API 不是 OpenAI 兼容接口。
 

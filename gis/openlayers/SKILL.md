@@ -1,16 +1,10 @@
 ---
 name: openlayers
 description: "Use when adding interactive 2D maps to web apps with npm ol 10.11.0 — Map/View, fromLonLat to EPSG:3857, WMS/WMTS/XYZ sources, MVT with featureClass, Draw/Modify/Snap interactions, or debugging blank layers (missing setStyle), offset centers and ol/... module-not-found errors."
-tags:
-  - javascript
-  - web
-  - 2d
-  - map
-  - wms
-  - wmts
-  - vector-tiles
-  - geojson
-  - drawing
+license: MIT
+metadata:
+  category: gis
+  tags: "javascript, web, 2d, map, wms, wmts, vector-tiles, geojson, drawing"
 ---
 
 > **项目地址：** <https://github.com/openlayers/openlayers>
@@ -21,7 +15,7 @@ tags:
 >
 > **示例：** <https://openlayers.org/en/latest/examples/>
 >
-> **最新版本：** 10.11.0（截至 2026-10，npm `ol`）
+> **最新版本：** 10.11.0（截至 2026-11，[npm `ol`](https://www.npmjs.com/package/ol) 与 [GitHub Release](https://github.com/openlayers/openlayers/releases) 一致）
 >
 > **许可证：** BSD-2-Clause
 
@@ -305,15 +299,17 @@ drawSource.on('addfeature', () => {
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 中心点偏移 | 投影未对齐：`fromLonLat()` 转换 |
-| WMS 不显示 | 检查 CORS、`LAYERS` 名、`SRS` 参数 |
-| 字体未生效 | 加载字体后再创建 Text 样式 |
-| MVT 字段缺失 | 使用 `MVT({ featureClass: Feature })` |
-| 矢量图层完全不显示 | 图层未设置样式时默认不渲染，需为图层 `setStyle()` |
-| 点击拾取不到要素 | `map.forEachFeatureAtPixel` 设置 `hitTolerance`（触摸设备/细小要素场景） |
-| 运行时报 `ol/...` 模块找不到 | 确认使用 npm 包 `ol` 并配置打包器（或改用官方全量构建 `dist/ol.js`） |
+| 报错 / 现象 | 原因 | 处置 |
+|------|------|------|
+| 报错 `Uncaught AssertionError: Assertion failed: The view center is not defined` | `new View()` 未给 `center`，或给的是 `undefined`（坐标变量还没算出来） | 构造 View 时显式传 `center: fromLonLat([lng, lat])` 与 `zoom`；异步取数时等数据到了再 `view.setCenter()` |
+| 报错 `Assertion failed: Expected a list of style instances` | `setStyle()` 收到单个 `Style` 之外的非法值（数组里混入 `null`/`undefined`，或传了函数却返回非 Style） | 传 `new Style({...})` 或其数组；用样式函数时确保每个分支都返回 Style |
+| 中心点偏移 / 图层跑到别处 | 经纬度直接当投影坐标用，未做 `EPSG:4326 → EPSG:3857` 转换 | 所有经纬度经 `fromLonLat()` 转换；自定义投影先 `register(proj4)`；用 `map.getView().getCenter()` 回读核对 |
+| 矢量图层完全不显示 | 矢量图层未设置样式时默认不渲染 | 为图层 `setStyle(new Style({...}))`，或在构造时传 `style` |
+| WMS 返回空白或 404 | `LAYERS` 用了图层短名而非全名、`SRS`/`CRS` 与请求版本不匹配，或服务端未放行 CORS | 用 `GetCapabilities` 里的全名填 `LAYERS`；WMS 1.3.0 用 `CRS`、1.1.1 用 `SRS`；服务端补 CORS 头 |
+| MVT 要素取不到属性 | MVT 源未指定要素类，属性被丢弃 | 用 `new MVT({ featureClass: Feature })`，再通过 `feature.getProperties()` 读取 |
+| 文字标注不显示 / 字体不生效 | 字体尚未加载就创建了 Text 样式，或字体族名与服务端不一致 | 先用 `document.fonts.load()`/CSS 加载字体再建样式；确认 `font` 字符串里的字体族名可用 |
+| 点击拾取不到要素 | 要素过小或触摸设备命中容差不足 | `map.forEachFeatureAtPixel(evt.pixel, cb, { hitTolerance: 5 })` 加大容差 |
+| 运行时报 `ol/...` 模块找不到（如 `Failed to resolve module specifier "ol/Map.js"`） | 直接用 `<script>` 引 ESM 源码，或打包器未按 ESM 解析 | 用 npm 的 `ol` 包并配置打包器；不想打包就用官方全量构建 `dist/ol.js` |
 
 ---
 

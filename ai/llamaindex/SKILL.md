@@ -1,17 +1,10 @@
 ---
 name: llamaindex
 description: "Use when building RAG and agent applications over documents with LlamaIndex — SimpleDirectoryReader loading, node parsers, VectorStoreIndex with local or external vector stores (Chroma, PGVector, Qdrant), query engines and response modes, chat engines, RouterQueryEngine routing, event-driven Workflows, and FunctionAgent tool calling. Includes GIS use cases such as turning standards and GIS documents into a knowledge base. Covers llama-index 0.14.x (MIT, Python 3.10+)."
-tags:
-  - llm
-  - rag
-  - indexing
-  - query-engine
-  - chat-engine
-  - workflows
-  - agent
-  - vector-store
-  - retrieval
-  - python
+license: MIT
+metadata:
+  category: ai
+  tags: "llm, rag, indexing, query-engine, chat-engine, workflows, agent, vector-store, retrieval, python"
 ---
 
 > **项目地址：** <https://github.com/run-llama/llama_index>
@@ -20,7 +13,7 @@ tags:
 >
 > **许可证：** MIT
 >
-> **最新版本：** llama-index 0.14.25、llama-index-core 0.14.25（PyPI 实测，截至 2026-10；GitHub 最新 Release 标签为 `v0.14.25`，集成包按组件独立发版）
+> **最新版本：** llama-index 0.14.25、llama-index-core 0.14.25（截至 2026-11，PyPI 与 GitHub Release 标签 `v0.14.25` 实测，仍未发新版；集成包按组件独立发版）
 
 ## 概述
 

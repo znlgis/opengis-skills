@@ -1,24 +1,17 @@
 ---
 name: mapsui
 description: "Use when embedding interactive 2D maps in .NET desktop (WPF/WinUI/WinForms) or mobile (MAUI/Avalonia/Blazor) apps with Mapsui 5.1.0 (net8.0/net9.0) — Mapsui.Wpf/Mapsui.Maui packages, Map and Layers, OpenStreetMap.CreateTileLayer, Shapefile/GeoJSON via Mapsui.Nts, SphericalMercator.FromLonLat, or fixing a blank MapControl."
-tags:
-  - dotnet
-  - csharp
-  - map
-  - wpf
-  - maui
-  - avalonia
-  - blazor
-  - skia
-  - wms
-  - tiles
+license: MIT
+metadata:
+  category: gis
+  tags: "dotnet, csharp, map, wpf, maui, avalonia, blazor, skia, wms, tiles"
 ---
 
 > **项目地址：** <https://github.com/Mapsui/Mapsui>
 >
 > **官方文档：** <https://mapsui.com/v5/documentation/index.html>
 >
-> **最新版本：** 5.1.0（截至 2026-10，NuGet 稳定版；5.2.0-beta.1 为预发布）
+> **最新版本：** 5.1.0（截至 2026-11，[NuGet `Mapsui`](https://www.nuget.org/packages/Mapsui) 稳定版；上游 5.2.0-beta.1 为预发布，未计入）
 >
 > **许可证：** MIT
 
@@ -98,7 +91,7 @@ MapControl.Map = map;
 ```csharp
 using Mapsui.Nts;
 using Mapsui.Styles;
-using NetTopologySuite.NtsGeometryServices;
+using NetTopologySuite;
 
 // 视图坐标系为 EPSG:3857，经纬度数据必须先投影
 var factory = NtsGeometryServices.Instance.CreateGeometryFactory(3857);
@@ -151,12 +144,28 @@ map.Layers.Add(new TileLayer(mb));
 
 ## WMS
 
+WMS 支持由主包 `Mapsui` 提供，命名空间 `Mapsui.Providers.Wms`，**没有**单独的 WMS NuGet 包。5.x 起必须用异步工厂 `WmsProvider.CreateAsync` 创建（旧的同步构造函数已不可用），再挂到 `ImageLayer` 上：
+
 ```csharp
+using Mapsui.Layers;
 using Mapsui.Providers.Wms;
-var wms = new WmsProvider("https://demo.mapserver.org/cgi-bin/wms?",
-    new[] { "continents" });
-map.Layers.Add(new ImageLayer("WMS") { DataSource = wms });
+using Mapsui.Styles;
+
+var wms = await WmsProvider.CreateAsync("https://demo.mapserver.org/cgi-bin/wms?", userAgent: "MyApp");
+wms.CRS = "EPSG:3857";                    // 请求用的 CRS，需与 Map 的 CRS 一致
+wms.ContinueOnError = true;
+wms.TimeOut = 40000;
+wms.AddLayer("continents");               // 可多次调用，加多个 WMS 图层
+wms.SetImageFormat(wms.OutputFormats[0]); // 从服务端 GetCapabilities 的可用格式里选
+
+map.Layers.Add(new ImageLayer("WMS")
+{
+    DataSource = wms,
+    Style = new RasterStyle()
+});
 ```
+
+> 排错要点：`CreateAsync` 会先拉 `GetCapabilities`，服务端地址写错会在此步抛异常；`AddLayer` 的图层名必须与能力文档里完全一致；`CRS` 与 `Map.CRS` 不匹配时地图空白而非报错。
 
 ---
 

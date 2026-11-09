@@ -1,14 +1,10 @@
 ---
 name: sqlsugar
-description: "Use when doing multi-database ORM operations in .NET — SqlSugarClient/SqlSugarScope, Queryable<T> chain queries, ToPageList paging, Insertable/Updateable bulk, CodeFirst.InitTables, [SplitTable] sharding, slave connection config. Also for table-name mapping mismatches, unsafe shared SqlSugarClient across threads, and MySQL utf8mb4 mojibake. SqlSugar: .NET ORM for 10+ databases."
-tags:
-  - dotnet
-  - orm
-  - database
-  - code-first
-  - sql
-  - sqlserver
-  - multi-database
+description: "Use when doing multi-database ORM operations in .NET — SqlSugarClient/SqlSugarScope, Queryable chain queries, ToPageList paging, Insertable/Updateable bulk, CodeFirst.InitTables, [SplitTable] sharding, slave connection config. Also for table-name mapping mismatches, unsafe shared SqlSugarClient across threads, and MySQL utf8mb4 mojibake. SqlSugar: .NET ORM for 10+ databases."
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, orm, database, code-first, sql, sqlserver, multi-database"
 ---
 
 > **项目地址：** <https://github.com/DotNetNext/SqlSugar>
@@ -17,7 +13,7 @@ tags:
 >
 > **NuGet：** `SqlSugar` / `SqlSugarCore`
 >
-> **最新版本：** SqlSugarCore 5.1.4.221（.NET）/ SqlSugar 5.1.4.207（.NET Framework）（截至 2026-10，NuGet 实测）
+> **最新版本：** SqlSugarCore 5.1.4.221（.NET）/ SqlSugar 5.1.4.207（.NET Framework）（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/SqlSugarCore)；GitHub 上另有 5.9.x 标签但 NuGet 未发布对应稳定包，以 NuGet 为准）
 >
 > **许可证：** MIT
 
@@ -295,14 +291,17 @@ db.Aop.DataExecuting     = (val, e) => /* 自动填充 CreateTime */;
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
-| 表名映射不对 | `[SugarTable("name")]` 显式指定实体对应的表名 |
-| 导航属性查不到数据 | `Includes` 需要配合 `Mapper` 显式配置映射关系，否则不会自动联表 |
+| 查询报 `Invalid object name 'Users'` / 表不存在 | 实体类名与真实表名不一致：用 `[SugarTable("users")]` 显式指定，或改 `DB First` 生成实体 |
+| `ToPageList` 编译报 CS1503（参数类型不匹配） | 分页签名是 `ToPageList(pageIndex, pageSize, ref total)`，第三个参数必须带 `ref`：`int total = 0; q.ToPageList(1, 20, ref total);` |
+| 导航属性查不到数据 | `Includes` 需配合 `Mapper` 配置映射关系，否则不会自动联表 |
 | 并发下报连接已关闭 / 数据错乱 | `SqlSugarClient` 非线程安全，多线程与 DI 场景改用 `SqlSugarScope` |
-| 中文乱码 | MySQL 用 `utf8mb4`，连接字符串加 `Charset=utf8mb4`，列与库排序规则一并设为 utf8mb4 |
-| 时间精度丢失 | 列改 `datetime(3)`（MySQL）或 `datetime2`（SQL Server） |
-| Code First 报 `InitTables` 无效 | 数据库未建或用错库：先 `DbMaintenance.CreateDatabase()`，再 `CodeFirst.InitTables<T>()` |
+| 中文乱码 | MySQL 用 `utf8mb4`：连接串加 `Charset=utf8mb4`，库与列排序规则一并设 utf8mb4 |
+| 时间精度丢失 | 列改 `datetime(3)`（MySQL）或 `datetime2`（SQL Server）；写入端别用 `DateTime.Now` 截断精度 |
+| Code First 建表没反应 | 库不存在或用错库：先 `DbMaintenance.CreateDatabase()`，再 `CodeFirst.InitTables<T>()`；生产环境关掉自动建表，改用脚本迁移 |
+| `ExecuteReturnIdentity` 返回 0 | 主键没标 `IsIdentity = true`（自增），或数据库不返回自增：确认特性与表结构一致 |
+| 批量插入很慢 | 逐条 `Insertable` 每次一个往返；改 `Insertable(list).UseSqlBulkCopy()` 或分批提交 |
 
 ---
 

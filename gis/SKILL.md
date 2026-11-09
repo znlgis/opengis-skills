@@ -1,15 +1,10 @@
 ---
-name: gis-skills
+name: gis
 description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, running desktop or cloud-native GIS apps, or building web map applications. Index of 40 skills: GDAL, GeoServer, QGIS, PostGIS, DuckDB Spatial, SpatiaLite, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, Leaflet, MapServer, QGIS Server, PROJ, PDAL, GeoLibre, GeoNode, WhiteboxTools, Mapbox GL JS, deck.gl and more."
-tags:
-  - gis
-  - geospatial
-  - mapping
-  - spatial-analysis
-  - vector
-  - raster
-  - server
-  - webmapping
+license: MIT
+metadata:
+  category: gis
+  tags: "gis, geospatial, mapping, spatial-analysis, vector, raster, server, webmapping"
 ---
 
 > **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引

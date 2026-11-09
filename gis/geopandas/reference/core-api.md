@@ -1,5 +1,9 @@
 # GeoPandas Core API Reference
 
+## Contents
+
+- 核心类 API
+
 GeoSeries and GeoDataFrame core API details split from SKILL.md.
 
 ---

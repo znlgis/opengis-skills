@@ -1,5 +1,11 @@
 # FY Layout Action and Provider Patterns
 
+## Contents
+
+- Action 模式说明
+- Provider 模式说明（QdLayoutProvider）
+- 典型二次开发场景
+
 Action mode, provider mode and typical secondary development scenarios split from SKILL.md.
 
 ---

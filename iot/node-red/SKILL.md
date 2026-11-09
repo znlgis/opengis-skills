@@ -1,29 +1,23 @@
 ---
 name: node-red
 description: "Use when building IoT data flows and API integration with Node-RED low-code programming — inject/debug/function/change/switch nodes, the msg.payload message model, MQTT in/out broker configuration and pub/sub, HTTP in/out REST endpoints, context storage, subflows, node-red-dashboard panels, and settings.js configuration."
-tags:
-  - node-red
-  - iot
-  - low-code
-  - mqtt
-  - flow-programming
-  - javascript
-  - dashboard
-  - automation
-  - http-api
+license: MIT
+metadata:
+  category: iot
+  tags: "node-red, iot, low-code, mqtt, flow-programming, javascript, dashboard, automation, http-api"
 ---
 
 > **项目地址：** <https://github.com/node-red/node-red>
 >
 > **官方文档：** <https://nodered.org/docs/>
 >
-> **npm：** `node-red` 5.0.9（`latest` dist-tag，截至 2026-10）｜ **Node 要求：** `>=22.9`（`package.json` 的 `engines`）
+> **npm：** `node-red` 5.0.9（截至 2026-11，`latest` dist-tag 与 [GitHub Releases](https://github.com/node-red/node-red/releases) 一致）｜ **Node 要求：** `>=22.9`（`package.json` 的 `engines`）
 >
 > **许可证：** Apache-2.0
 
 ## 概述
 
-Node-RED 是构建在 Node.js 之上的低代码事件驱动编程工具，用于把设备、API 和在线服务以「连线」的方式编排成数据流。它最初由 IBM 新兴技术团队发起，现为 OpenJS Foundation 项目，最新版本 5.0.9。运行时以「消息在节点之间传递」为核心模型：每个节点接收一个 JavaScript 对象 `msg`，处理后交给下一个节点。流（flow）在浏览器中的编辑器里以拖拽方式搭建，保存为 JSON（默认 `flows_<hostname>.json`）。
+Node-RED 是构建在 Node.js 之上的低代码事件驱动编程工具，用于把设备、API 和在线服务以「连线」的方式编排成数据流。它最初由 IBM 新兴技术团队发起，现为 OpenJS Foundation 项目（版本以头部版本行为准）。运行时以「消息在节点之间传递」为核心模型：每个节点接收一个 JavaScript 对象 `msg`，处理后交给下一个节点。流（flow）在浏览器中的编辑器里以拖拽方式搭建，保存为 JSON（默认 `flows_<hostname>.json`）。
 
 关键概念：
 

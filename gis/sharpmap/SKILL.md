@@ -1,16 +1,10 @@
 ---
 name: sharpmap
 description: "Use when rendering 2D maps in legacy .NET Framework 4.7.2 WinForms or ASP.NET WebForms apps with SharpMap 1.2.0 — Map.GetMap() to PNG, ShapeFile/PostGIS providers, VectorLayer with CustomTheme, TileAsyncLayer via BruTile, ProjNet4GeoAPI transforms, or debugging blank output and GDI+ handle leaks. New projects should use Mapsui."
-tags:
-  - dotnet
-  - csharp
-  - 2d
-  - map
-  - rendering
-  - wms
-  - shapefile
-  - postgis
-  - winforms
+license: MIT
+metadata:
+  category: gis
+  tags: "dotnet, csharp, 2d, map, rendering, wms, shapefile, postgis, winforms"
 ---
 
 > **项目地址：** <https://github.com/SharpMap/SharpMap>
@@ -19,7 +13,7 @@ tags:
 >
 > **NuGet：** `SharpMap`、`SharpMap.UI`、`SharpMap.Extensions`、`SharpMap.Web`、`SharpMap.Layers.BruTile`
 >
-> **最新版本：** 1.2.0（截至 2026-10，NuGet；发布于 2021-03，仓库未归档但维护低频）
+> **最新版本：** 1.2.0（截至 2026-11，[NuGet `SharpMap`](https://www.nuget.org/packages/SharpMap)；发布于 2021-03，仓库未归档但维护低频）
 >
 > **许可证：** LGPL-2.1-or-later
 

@@ -1,15 +1,10 @@
 ---
 name: librecad
 description: "Use when editing 2D DXF/DWG drawings with LibreCAD 2.2.1 — floor plans, mechanical drawings, laser-cut layouts — or scripting conversions with the librecad dxf2pdf / dxf2svg / dxf2png / dwg2dxf command line; also when CJK text renders as boxes (missing TTF/SHX fonts), a DWG will not open without ODA File Converter or LibreDWG dwg2dxf, or dimensions are too small to read. LibreCAD: Qt/C++ open-source 2D CAD, community fork of QCAD."
-tags:
-  - 2d
-  - cad
-  - dxf
-  - dwg
-  - qt
-  - cpp
-  - drafting
-  - cli
+license: MIT
+metadata:
+  category: cad
+  tags: "2d, cad, dxf, dwg, qt, cpp, drafting, cli"
 ---
 
 > **项目地址：** <https://github.com/LibreCAD/LibreCAD>
@@ -20,7 +15,7 @@ tags:
 >
 > **许可证：** GPL-2.0
 >
-> **最新稳定版：** v2.2.1.6（2026-10-17 发布，截至 2026-10，见 [GitHub Releases](https://github.com/LibreCAD/LibreCAD/releases)）
+> **最新版本：** v2.2.1.6（2026-10-17 发布，截至 2026-11，见 [GitHub Releases](https://github.com/LibreCAD/LibreCAD/releases)；`2.2.1-latest` 为更新中的候选线）
 
 ## 概述
 
@@ -239,19 +234,17 @@ doc.saveas('out.dxf')   # LibreCAD 可直接打开
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 中文乱码 / 显示方框 | 改用 TTF 字体（`SimHei`、`Noto Sans CJK SC`）；仍用 SHX 时把字体文件放进 `fonts/` 目录 |
-| 打不开 DWG | LibreCAD 的 DWG 支持依赖构建选项与 ODA/libdxfrw；用 ODA File Converter 或 `dwg2dxf` 先转 DXF |
-| 标注比例小、看不见 | Drawing Preferences → Dimensions → General Scale，改全局比例与字高 |
-| 启动即崩溃 | 删除配置 `~/.config/LibreCAD/LibreCAD.conf`（Windows 为安装目录/用户配置下同名文件）重置 |
-| 无法填充（hatch 失败） | 先闭合边界；多段线要首尾相接，检查孔/外边界顺序 |
-| `librecad dxf2pdf` 提示未知命令 | 该安装包未带转换子命令（不同构建/版本子命令集不同）；用 `librecad -h` 看可用项，或升级到带转换器的构建 |
-| Windows bat 里转换"瞬间返回"、后续步骤拿不到文件 | `LibreCAD.exe` 是 GUI 程序，脚本不会等待；改用 `start /wait "" LibreCAD.exe dxf2pdf ...`（cmd）或 `Start-Process -Wait -PassThru` |
-| 无显示器环境报 Qt 平台插件错误 | 设 `QT_QPA_PLATFORM=offscreen` 再跑 PDF/PNG/SVG 转换 |
-| 导出的 PDF 里白色实体消失 | 白底白线的正常现象；出图前把白色图层临时改为深色，或换用带颜色校正选项的构建（先 `-h` 确认） |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 中文乱码 / 显示方框 | 使用 SHX 字体且字体文件缺失，或不含 CJK | 改用 TTF 字体（`SimHei`、`Noto Sans CJK SC`）；仍用 SHX 时把字体文件放进 `fonts/` 目录 |
+| 打不开 DWG | LibreCAD 的 DWG 支持依赖构建选项与 ODA/libdxfrw | 用 ODA File Converter 或 `dwg2dxf` 先转 DXF |
+| 标注比例小、看不见 | 标注全局比例与字高不匹配图纸单位 | Drawing Preferences → Dimensions → General Scale，改全局比例与字高 |
+| 启动即崩溃 | 配置文件损坏 | 删除配置 `~/.config/LibreCAD/LibreCAD.conf`（Windows 为安装目录/用户配置下同名文件）后重置 |
+| 无法填充（hatch 失败） | 边界未闭合，或孔/外边界顺序错误 | 先闭合边界；多段线要首尾相接，检查孔与外边界顺序 |
+| `librecad dxf2pdf` 提示未知命令 | 该安装包未带转换子命令（不同构建/版本子命令集不同） | 用 `librecad -h` 看可用项，或升级到带转换器的构建 |
+| Windows bat 里转换"瞬间返回"、后续步骤拿不到文件 | `LibreCAD.exe` 是 GUI 程序，脚本不会等待其结束 | 改用 `start /wait "" LibreCAD.exe dxf2pdf ...`（cmd）或 `Start-Process -Wait -PassThru` |
+| 无显示器环境报 Qt 平台插件错误 | 无 X/Wayland 显示，Qt 无法初始化平台插件 | 设 `QT_QPA_PLATFORM=offscreen` 再跑 PDF/PNG/SVG 转换 |
+| 导出的 PDF 里白色实体消失 | 白底白线，肉眼不可见 | 出图前把白色图层临时改为深色，或换用带颜色校正选项的构建（先 `-h` 确认） |
 
 ## AI 使用建议
 

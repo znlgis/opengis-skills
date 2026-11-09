@@ -1,14 +1,10 @@
 ---
 name: furion
 description: "Use when building .NET Web API apps with minimal boilerplate — IDynamicApiController dynamic controllers, ITransient/IScoped/ISingleton auto DI, JWT, Swagger. Also for endpoints missing from Swagger, DI not resolving because the marker interface is missing, and App not initialized. Furion: convention-over-configuration .NET web framework."
-tags:
-  - dotnet
-  - webapi
-  - framework
-  - dynamic-api
-  - jwt
-  - swagger
-  - dependency-injection
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, webapi, framework, dynamic-api, jwt, swagger, dependency-injection"
 ---
 
 > **项目地址：** <https://gitee.com/dotnetchina/Furion>
@@ -19,7 +15,7 @@ tags:
 >
 > **NuGet：** `Furion`、`Furion.Pure`
 >
-> **最新版本：** `Furion` 4.9.9.98 / `Furion.Pure` 4.9.9.10（截至 2026-10，NuGet 实测；`5.0.0-preview.*` 为预览线，未转正）
+> **最新版本：** `Furion` 4.9.9.99 / `Furion.Pure` 4.9.9.10（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Furion)；`5.0.0-preview.*` 为预览线，未转正）
 >
 > **许可证：** MIT + Apache-2.0
 
@@ -56,14 +52,14 @@ dotnet add package Furion.Pure
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Furion" Version="4.9.9.98" />
+  <PackageReference Include="Furion" Version="4.9.9.99" />
 </ItemGroup>
 ```
 
 ### 方式三：包管理器控制台
 
 ```powershell
-Install-Package Furion -Version 4.9.9.98
+Install-Package Furion -Version 4.9.9.99
 ```
 
 ### 验证安装
@@ -161,7 +157,8 @@ public class HelloService(IUserService userSvc) : IDynamicApiController { ... }
 ## 数据库（SqlSugar 集成）
 
 ```bash
-dotnet add package Furion.Extras.DatabaseAccessor.SqlSugar
+# 扩展包单独编号（与主包 4.9.9.x 不同号属正常）
+dotnet add package Furion.Extras.DatabaseAccessor.SqlSugar --version 4.9.9.11
 ```
 
 ```json
@@ -324,13 +321,16 @@ var jwt = App.GetConfig<JwtSettings>("JWTSettings");
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
-| 接口未暴露 | 服务实现 `IDynamicApiController` 并 `AddInject()` |
-| Swagger 不显示 | 启用 `app.UseInject()`；检查 `SpecificationDocumentSettings.GroupOpenApiInfos` |
-| DI 不生效 | 实现类需带 `ITransient/IScoped/ISingleton` 之一 |
-| 单元测试 | 使用 `Furion.UnitTesting` 包，或调用 `App.Initialize()` |
-| `App` 未初始化 | 异步入口需 `Inject()` 完成后 |
+| 接口未暴露（404） | 服务未实现 `IDynamicApiController`，或只调了 `AddInject()` 没调 `app.UseInject()`；两处都补上 |
+| Swagger 不显示 | 启用 `app.UseInject()`；检查 `SpecificationDocumentSettings.GroupOpenApiInfos` 是否把该分组过滤掉 |
+| DI 不生效（`InvalidOperationException: Unable to resolve service for type ...`） | 实现类需带 `ITransient/IScoped/ISingleton` 之一；抽象类不会被扫描 |
+| 注入 `IHttpDispatchProxy` 接口报未注册 | 只声明了接口没注册：`builder.Services.AddRemoteRequest(o => o.AddHttpProxy<IGithub>())` |
+| 定时任务不触发 | 实现了 `IJob` 但没 `AddSchedule(o => o.AddJob<HelloJob>())`；确认 `[JobDetail]`/`[PeriodSeconds]` 同时存在 |
+| `App` 未初始化（`NullReferenceException`） | 在 `builder.Inject()` 之前访问 `App.Configuration`/`App.GetConfig`；移到构建 `builder` 之后再读 |
+| `App.GetConfig<T>("Section")` 返回 null | `appsettings.json` 里节名大小写不匹配，或该文件的 `CopyToOutputDirectory` 没设；核对节名并确认配置随输出目录发布 |
+| 单元测试里 `App` 不可用 | 用 `Furion.UnitTesting` 包，或在测试启动时调用 `App.Initialize()` |
 
 ---
 

@@ -1,17 +1,10 @@
 ---
 name: home-assistant
-description: "Use when automating a smart home with Home Assistant 2026.10 — configuration.yaml and automations.yaml, triggers/conditions/actions YAML, REST API /api/states and /api/services, WebSocket subscribe_events, long-lived access tokens, Docker container installs; also for 'Configuration invalid' after a YAML edit, 401 from the API, template errors, and entities stuck 'unavailable'. Open-source home automation that runs locally."
-tags:
-  - home-assistant
-  - iot
-  - automation
-  - smart-home
-  - yaml
-  - rest-api
-  - websocket
-  - docker
-  - python
-  - mqtt
+description: "Use when automating a smart home with Home Assistant 2026.11 — configuration.yaml and automations.yaml, triggers/conditions/actions YAML, REST API /api/states and /api/services, WebSocket subscribe_events, long-lived access tokens, Docker container installs; also for 'Configuration invalid' after a YAML edit, 401 from the API, template errors, and entities stuck 'unavailable'. Open-source home automation that runs locally."
+license: MIT
+metadata:
+  category: iot
+  tags: "home-assistant, iot, automation, smart-home, yaml, rest-api, websocket, docker, python, mqtt"
 ---
 
 > **项目地址：** <https://github.com/home-assistant/core>
@@ -20,7 +13,7 @@ tags:
 >
 > **开发者文档：** <https://developers.home-assistant.io/>
 >
-> **最新版本：** 2026.10.4（GitHub Releases 与 Docker 镜像 tag 一致，截至 2026-10）
+> **最新版本：** 2026.11.0（截至 2026-11，[GitHub Releases](https://github.com/home-assistant/core/releases) 与 Docker 镜像 tag 一致）
 >
 > **安装形态：** Home Assistant OS / Supervised / Container / Core（pip）
 >
@@ -88,7 +81,7 @@ services:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install homeassistant==2026.10.4
+pip install homeassistant==2026.11.0
 hass --config ./config --debug
 ```
 
@@ -366,6 +359,7 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 6. **自动化设 `mode`**：`single`（默认，丢弃重叠）、`restart`（取消旧跑新的）、`queued`（排队）、`parallel`（并行），按语义选。
 7. **密钥走 `secrets.yaml`**：用 `!secret` 引用，避免把令牌写进配置或截图。
 8. **容器务必持久化 `/config` 并设置停容器超时**：`--stop-timeout 60` / `stop_grace_period: 60s`，否则 SQLite 可能损坏。
+9. **2026.11 起 HACS 已内置为 Marketplace**：入口在 **设置 → Marketplace**，原 HACS 安装的集成/卡片继续可用；自定义仓库的安装来源改为在 Marketplace 里添加，不要再装独立 HACS。
 
 ## 常见问题
 
@@ -377,7 +371,8 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 | 实体显示 **unavailable** | 集成未加载、设备离线或重启中 | 看 `home-assistant.log`；在 **设置 → 设备与服务** 里重载对应集成 |
 | 自动化不触发 | 触发器条件不满足，或自动化被关闭 | 打开自动化的 **追踪（Traces）** 看每一步；确认 `initial_state` 与 UI 上的开关状态 |
 | 模板报 `TypeError` / `ValueError` | 实体不存在或值不是数字 | 用 `| float(0)`、`| int(0)`、`| default(...)` 兜底；先用 `/api/template` 单独试算 |
-| 升级后集成报错 | 破坏性变更或自定义集成不兼容 | 先读版本发布说明的 Breaking Changes；回滚镜像 tag 到上一个版本 |
+| 升级后集成报错 | 破坏性变更或自定义集成不兼容 | 先读版本发布说明的 Breaking Changes；回滚镜像 tag 到上一个版本。2026.11 的实体命名重构属于官方声明的破坏性变更，升级前先备份 `.storage/` |
+| 升级 2026.11 后仪表盘上的实体名变了 | 该版对实体命名做了重构：名称只写一次，由 HA 补充上下文 | 属预期变更；在 **设置 → 实体** 里核对新 `entity_id`，同步改自动化与仪表盘引用，或先用 `entity_registry` 快照比对再升级 |
 | 容器重启后配置全没了 | 没挂载 `/config` 卷 | 停容器，重新以 `-v <host>:/config` 启动；以后先确认卷再升级 |
 
 ## AI 使用建议
@@ -395,7 +390,7 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 - **ke3036-keyes-pico** — 用 MicroPython 直接产出传感器数据：[../ke3036-keyes-pico/SKILL.md](../ke3036-keyes-pico/SKILL.md)
 - **ollama** — 本地大模型，可被 HA 的对话助手调用：[../../ai/ollama/SKILL.md](../../ai/ollama/SKILL.md)
 
-## 相关资源
+## 参考资源
 
 - 官方文档：<https://www.home-assistant.io/docs/>
 - 开发者文档（REST / WebSocket / 集成开发）：<https://developers.home-assistant.io/>

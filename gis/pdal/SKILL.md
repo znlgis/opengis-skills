@@ -1,25 +1,19 @@
 ---
 name: pdal
 description: "Use when processing point cloud data (LAS/LAZ/BPF/EPT/COPC) via CLI or Python — pipeline JSON workflows, format conversion, reprojection, cropping, outlier removal, ground classification (SMRF), and DEM generation from LiDAR. PDAL (Point Data Abstraction Library) is the point cloud equivalent of GDAL: pdal info/translate/pipeline commands plus pdal.Pipeline Python bindings."
-tags:
-  - pdal
-  - point-cloud
-  - lidar
-  - las
-  - laz
-  - pipeline
-  - dem
-  - gis
-  - geospatial
+license: MIT
+metadata:
+  category: gis
+  tags: "pdal, point-cloud, lidar, las, laz, pipeline, dem, gis, geospatial"
 ---
 
 > **项目地址：** <https://github.com/PDAL/PDAL>
 >
 > **官方文档：** <https://pdal.io/>
 >
-> **Conda：** `pdal` / `python-pdal`（conda-forge，最新 2.10.2，截至 2026-10）
+> **最新版本：** 2.10.2（截至 2026-11，[GitHub Release](https://github.com/PDAL/PDAL/releases)；conda-forge `pdal` / `python-pdal` 同版）
 >
-> **PyPI：** `pdal`（Python 绑定，最新 3.5.5，截至 2026-10；版本号与主库独立）
+> **PyPI：** `pdal`（Python 绑定，最新 3.5.5，截至 2026-11；版本号与主库独立）
 >
 > **许可证：** BSD-3-Clause
 

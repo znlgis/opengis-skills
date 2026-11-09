@@ -1,13 +1,10 @@
 ---
 name: reogrid
 description: "Use when embedding an Excel-like spreadsheet control in .NET WinForms/WPF — ReoGridControl, CurrentWorksheet, SetRangeData, SetRangeStyles, MergeRange, FreezeToCell, CreateColumnFilter, Save to xlsx/CSV/RGF. Also for formulas not recalculating until Recalculate(), slow per-cell writes, grid.RunScript not compiling (EX_SCRIPT), and WPF blurry rendering on high-DPI. ReoGrid: MIT spreadsheet component (V3 community; V4 commercial)."
-tags:
-  - dotnet
-  - spreadsheet
-  - winforms
-  - wpf
-  - excel
-  - spreadsheet-control
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, spreadsheet, winforms, wpf, excel, spreadsheet-control"
 ---
 
 > **项目地址：** <https://github.com/unvell/ReoGrid>
@@ -16,9 +13,9 @@ tags:
 >
 > **NuGet：** `unvell.ReoGrid.DLL`（WinForms，net48 / net8.0-windows）、`unvell.ReoGridWPF.dll`（WPF）、`unvell.ReoGrid8.dll`（.NET 8 重打包，作者 Jingwood）
 >
-> **最新版本：** unvell.ReoGrid.dll 3.3.1 / unvell.ReoGridWPF.dll 3.3.0 / unvell.ReoGrid8.dll 8.1.0（截至 2026-10，NuGet 实测；GitHub 最新 tag v3.3.0）
+> **最新版本：** unvell.ReoGrid.dll 3.3.1 / unvell.ReoGridWPF.dll 3.3.0 / unvell.ReoGrid8.dll 8.1.0（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/unvell.ReoGrid.dll)；GitHub 最新 tag v3.3.0）
 >
-> **许可证：** MIT（V3 社区版，即本仓库）；V4 商业版特性另售，V5 以 Avalonia 为核心（截至 2026-10）
+> **许可证：** MIT（V3 社区版，即本仓库）；V4 商业版特性另售，V5 以 Avalonia 为核心（截至 2026-11）
 
 ## 概述
 
@@ -382,15 +379,18 @@ btnSave.Click += (s, e) => grid.Save("data.xlsx", FileFormat.Excel2007);
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
-| 需要数据验证 / 条件样式 / 懒加载百万行 | 这些是 V4 商业版特性，V3 社区版没有；V3 用单元格类型 + `CellDataChanged` 事件兜底 |
-| `grid.RunScript(...)` 编译不过 | 脚本引擎受 `EX_SCRIPT` 条件编译控制，官方 3.3.1 包默认不含；如需脚本自行带符号编译 |
-| 想导出 PDF | `FileFormat` 只有 `ReoGridFormat` / `CSV` / `Excel2007`，没有 PDF；先导出 xlsx 再外部转换 |
-| WPF 高 DPI 模糊 | 启用 `PerMonitorV2` DPI |
-| 公式不计算 | 调用 `sh.Recalculate()` |
-| Excel 打开样式丢失 | 仅支持核心样式，复杂样式建议用 NPOI 单独生成 |
-| 写入几万行卡顿 | 用 `SetRangeData(...)` 批量赋值替代逐格赋值，并减少 `Recalculate()` 的调用次数 |
+| `grid.RunScript(...)` 编译不过，或运行报 `EX_SCRIPT` 相关错误 | ReoScript 引擎由 `EX_SCRIPT` 条件编译符号控制，官方 3.3.1 包不带该符号；需要脚本就自行带符号重编译，否则改用 C# 代码填表 |
+| 设置公式后单元格还是旧值 | V3 不保证自动重算：改完公式/数据显式调 `sh.Recalculate()`，或由 `CellDataChanged` 里触发 |
+| 公式结果一直是 0 | `Recalculate()` 在表格尚未加入控件 / 未挂载时执行；等控件加载完再算，或检查引用的区域地址拼写 |
+| 合并区域后写入报越界 / 数据错位 | 合并后只有左上角单元格可写；其余位置先 `UnmergeRange` 或用区域 API 整体写 |
+| 想导出 PDF | `FileFormat` 只有 `ReoGridFormat` / `CSV` / `Excel2007`，没有 PDF；先导 xlsx 再外部转换 |
+| GDI+ 报 `A generic error occurred in GDI+`（保存图片/打印） | 目标路径无写权限或目录不存在，`Save` 前先 `Directory.CreateDirectory` |
+| WPF 高 DPI 模糊 | 启用 `PerMonitorV2` DPI 感知，使用 WPF 包而非 WinForms 控件 |
+| Excel 打开后复杂样式丢失 | 仅支持核心样式（条件格式、数据透视等是 V4 商业版能力）；复杂格式用 NPOI 生成后再导入 |
+| 写入几万行卡顿 | 用 `SetRangeData(...)` 批量赋值替代逐格赋值，配合 `SuspendUIUpdates()`/`ResumeUIUpdates()`，并减少 `Recalculate()` 次数 |
+| 需要数据验证 / 条件样式 / 懒加载百万行 | V4 商业版特性，V3 社区版没有；V3 用单元格类型（如下拉 `DropdownListCell`）+ `CellDataChanged` 兜底 |
 
 ---
 

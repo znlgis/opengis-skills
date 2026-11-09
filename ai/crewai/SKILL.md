@@ -1,22 +1,17 @@
 ---
 name: crewai
 description: "Use when orchestrating multi-agent work with crewAI 1.15 — Agent/Task/Crew, Process.sequential vs hierarchical, @tool / BaseTool custom tools, or event-driven Flows with @start/@listen/@router and or_/and_ for branching and state; also when tasks ignore their expected_output, tools never fire because the agent lacks them, or a JSON-first project (agents/*.jsonc + crew.jsonc) needs the YAML scaffold via --classic. Includes wiring GIS analysis as tools."
-tags:
-  - ai
-  - agent
-  - multi-agent
-  - orchestration
-  - python
-  - llm
-  - workflow
-  - gis
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, agent, multi-agent, orchestration, python, llm, workflow, gis"
 ---
 
 > **项目地址：** <https://github.com/crewAIInc/crewAI>
 >
 > **官方文档：** <https://docs.crewai.com/>
 >
-> **PyPI：** `crewai`（1.15.30，截至 2026-10）｜ 工具包：`crewai-tools`（同版号）
+> **PyPI：** `crewai`（1.15.39，截至 2026-11）｜ 工具包：`crewai-tools`（随 `crewai` 发布）
 >
 > **许可证：** MIT
 
@@ -41,7 +36,7 @@ crewAI 用两层抽象组织多智能体系统，边界很清楚：
 |----|------|
 | Python | `>=3.10,<3.14` |
 | 包管理 | 官方推荐 [uv](https://docs.astral.sh/uv/)（CLI 也用它装） |
-| 模型 | 任一经 LiteLLM 支持的 provider（OpenAI、Anthropic、DeepSeek、本地 vLLM/Ollama 均可） |
+| 模型 | 任一经 LiteLLM 支持的 provider（OpenAI、Anthropic、DeepSeek、本地 vLLM/Ollama 均可；1.15.38 起默认模型为 `gpt-6-luna`，可在 agent/LLM 配置里覆盖） |
 
 ### 方式一：uv tool（官方推荐，装 CLI）
 

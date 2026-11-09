@@ -1,16 +1,10 @@
 ---
-name: fy_layout
+name: fy-layout
 description: "Use when writing C# plugins for the FeiYang LightCAD/LightBIM platform (construction site layout) — ILcPlugin registration, ElementType with fixed GUID, [CommandClass]/[CommandMethod] commands, TabItem ribbon menus, 2D Action plus Shape/Solid Provider pairs for fence, lawn, foundation pit, road, prefab house. Also for \"LightCAD.Core reference not found\" build errors, plugins that load but show no commands, and 2D shapes rendering with empty 3D solids."
-tags:
-  - 2d
-  - 3d
-  - cad
-  - dotnet
-  - csharp
-  - bim
-  - construction
-  - dwg
-  - dxf
+license: MIT
+metadata:
+  category: cad
+  tags: "2d, 3d, cad, dotnet, csharp, bim, construction, dwg, dxf"
 ---
 
 > **项目地址：** <https://github.com/znlgis/FY_Layout>
@@ -21,7 +15,7 @@ tags:
 >
 > **包管理器：** 无 NuGet 包——直接引用仓库内 `Libs/` 下的飞扬平台 DLL + 主程序 `飞扬主程序/lightcad.EXE`
 >
-> **版本：** 仓库无公开 Release/Tag，以 `master` 为准（最后推送 2026-03-16，截至 2026-10）；插件工程（`QdLayout`）与平台目标为 `net8.0-windows`，引用平台 DLL 时保持同一 TFM，不要混用其它 .NET 版本的 SDK DLL
+> **最新版本：** 无 Release/Tag，以 `master` 为准（最后提交 2026-01-27，见 [commits](https://github.com/znlgis/FY_Layout/commits/master)，截至 2026-11）；插件工程（`QdLayout`）与平台目标为 `net8.0-windows`，引用平台 DLL 时保持同一 TFM，不要混用其它 .NET 版本的 SDK DLL
 >
 > **配套教程：** <https://znlgis.github.io/cad/LightCAD/>（飞扬平台 20 章）
 
@@ -408,18 +402,16 @@ public static TabItem LayoutItem = new TabItem
 
 ## 常见问题
 
-| 问题 | 解决 |
-|------|------|
-| 找不到 `LightCAD.Core` 等引用 | 示例工程引用 `Libs/` 目录内的飞扬主体 DLL，需保留仓库原始结构；不要把 SDK 换成 NuGet 包 |
-| 插件加载但命令不出现 | 命令需 `[CommandClass]` 标注类 + `[CommandMethod]` 标注方法；确认输出 DLL 与 `plugins.json` 指向同一目录 |
-| 输入 `W` 出来的不是围栏 | `W` 被 `Fence`/`PlateBuilding`/`SetBuildGroup`/`PlateUBuild`/`jisuang` 共用，别名解析结果取决于注册顺序；给新命令换唯一别名，别沿用 `W` |
-| 二维有线、三维空白 | Shape Provider 与 Solid Provider 是两处注册，检查 `QdLayoutProvider` 是否输出到 `Build/Providers` 且被主程序扫到 |
-| 元素位置越改越乱 | 对 `Vector3`/曲线对象做变换前必须 `Clone()`，直接改会污染源数据 |
-| 菜单没挂上 | `TabItem` 只能在 `Completed()` 注册，`Loaded()` 阶段 UI 系统尚未就绪 |
-| 主程序闪退且日志提到序列化 | `ElementType` GUID 被改动导致老图纸读不出；GUID 一经发布不可变 |
-| 附加进程断不住点 | 需先启动 `lightcad.EXE` 再附加；插件 DLL 要以 Debug 配置生成并携带 pdb |
-
----
+| 报错 / 现象 | 原因 | 处置 |
+|------------|------|------|
+| 找不到 `LightCAD.Core` 等引用 | 示例工程引用 `Libs/` 内的飞扬主体 DLL，不走 NuGet | 保留仓库原始目录结构，不要把 SDK 换成 NuGet 包 |
+| 插件加载但命令不出现 | 缺少 `[CommandClass]`/`[CommandMethod]` 标注，或输出 DLL 与 `plugins.json` 指向不同目录 | 补齐标注，并确认 DLL 落在 `plugins.json` 扫描的目录 |
+| 输入 `W` 出来的不是围栏 | `W` 被 `Fence`/`PlateBuilding`/`SetBuildGroup`/`PlateUBuild`/`jisuang` 共用，别名解析取决于注册顺序 | 新命令换唯一别名，不要沿用 `W` |
+| 二维有线、三维空白 | Shape Provider 与 Solid Provider 是两处注册 | 检查 `QdLayoutProvider` 是否输出到 `Build/Providers` 且被主程序扫到 |
+| 元素位置越改越乱 | 对 `Vector3`/曲线对象直接做变换，污染了源数据 | 变换前必须 `Clone()` |
+| 菜单没挂上 | `TabItem` 在 `Loaded()` 阶段注册，此时 UI 系统尚未就绪 | 只在 `Completed()` 注册 |
+| 主程序闪退且日志提到序列化 | `ElementType` GUID 被改动，老图纸读不出 | GUID 一经发布不可变，改回原 GUID |
+| 附加进程断不住点 | 附加顺序或 Debug 配置不对 | 先启动 `lightcad.EXE` 再附加；插件 DLL 以 Debug 配置生成并携带 pdb |
 
 ## AI 使用建议
 

@@ -1,14 +1,10 @@
 ---
 name: openclaw
-description: "Use when setting up a multi-channel personal AI assistant gateway bridging chat platforms (Telegram, Discord, WhatsApp, WeChat) with LLM backends. OpenClaw: multi-channel AI assistant gateway for unified personal AI access."
-tags:
-  - ai
-  - assistant
-  - gateway
-  - self-hosted
-  - multi-channel
-  - typescript
-  - agent
+description: "Use when setting up a multi-channel personal AI assistant gateway that bridges Telegram, Discord, WhatsApp, Slack, Matrix or WebChat to an LLM backend — openclaw onboard --install-daemon, openclaw gateway status, ~/.openclaw/openclaw.json agent.model, tool sandbox allow/ask/deny, pairing approve, Docker/Nix installs; also for npm lifecycle scripts blocked by npm 12, `command not found` after a global install, unsupported Node version at startup, and gateway port conflicts."
+license: MIT
+metadata:
+  category: ai
+  tags: "ai, assistant, gateway, self-hosted, multi-channel, typescript, agent"
 ---
 
 > **项目地址：** <https://github.com/openclaw/openclaw>
@@ -17,9 +13,9 @@ tags:
 >
 > **许可证：** MIT ｜ **语言：** TypeScript
 >
-> **最新版本：** v2026.10.8（日历版本号，截至 2026-10，见 [Releases](https://github.com/openclaw/openclaw/releases)）
+> **最新版本：** v2026.11.2（日历版本号，截至 2026-11，见 [Releases](https://github.com/openclaw/openclaw/releases)）
 >
-> **运行时：** Node 24.22.1+ 或 26.12.1+（推荐 Node 26）
+> **运行时：** Node 24.16.0+（24.x 线）或 26.1.0+，推荐 24.22.1+ / 26.12.1+（安全补丁版本）；Node 22/23/25 与低于 24.16.0 的 24.x、低于 26.1.0 的 26.x 均不支持
 > **发布频道：** latest / beta / dev（参见 [GitHub Releases](https://github.com/openclaw/openclaw/releases)）
 
 > **注意：** OpenClaw 的助手可以执行命令、读写文件、控制设备并接入你的私人聊天账号。**对外暴露前**务必阅读官方 [Security](https://docs.openclaw.ai/gateway/security)、[Exposure runbook](https://docs.openclaw.ai/gateway/security/exposure-runbook) 与 [Sandboxing](https://docs.openclaw.ai/gateway/sandboxing)，并配置沙箱与访问控制。默认情况下主会话的工具直接在宿主机上执行。
@@ -62,7 +58,7 @@ openclaw dashboard                        # 打开 Control UI，发一条消息�
 验证安装：
 
 ```bash
-node -v                # 需要 24.22.1+ 或 26.12.1+
+node -v                # 需要 24.16.0+（24.x 线）或 26.1.0+，推荐 24.22.1+/26.12.1+
 openclaw --version
 openclaw gateway status
 ```
@@ -133,7 +129,7 @@ pnpm gateway:watch           # 开发期按需重建运行时
 | 想远程访问 | 优先 Tailscale 等私网；公网暴露前按 Security + Exposure runbook 加固 |
 | 端口冲突 | `openclaw gateway --port <port>`（默认 18789） |
 | `npm install -g openclaw` 装完命令没了或没跑起来 | npm 12 / 11.16+ 必须带 `--allow-scripts=openclaw` 才会执行安装脚本；早期 npm 则不能带该参数 |
-| 启动报 Node 版本不符 | OpenClaw 要求 Node 24.22.1+ 或 26.12.1+；`node -v` 确认后升级 |
+| 启动报 Node 版本不符 | OpenClaw 硬性要求 Node 24.16.0+（24.x 线）或 26.1.0+，推荐 24.22.1+/26.12.1+ 安全补丁版；Node 22/23/25 不支持，`node -v` 确认后升级 |
 | 多账号互相串话 | 用多智能体路由，把通道/账号映射到隔离 agent（独立 workspace） |
 
 ---

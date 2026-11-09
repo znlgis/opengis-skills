@@ -1,15 +1,10 @@
 ---
 name: dify
-description: "Use when self-hosting an LLM app platform with visual orchestration — docker compose up in dify/docker, knowledge bases with hybrid retrieval + rerank, Chatflow/Workflow nodes (Knowledge Retrieval, Code, HTTP Request, Iteration), custom tools from OpenAPI schema, /v1/chat-messages and /v1/workflows/run API keys; also for `host.docker.internal` Ollama unreachable in Docker, embedding model errors, empty retrieval from bad chunking, and SSE streaming vs blocking. Dify 1.18.0."
-tags:
-  - llm
-  - workflow
-  - rag
-  - agent
-  - platform
-  - docker
-  - self-hosted
-  - chatbot
+description: "Use when self-hosting an LLM app platform with visual orchestration — docker compose up in dify/docker, knowledge bases with hybrid retrieval + rerank, Chatflow/Workflow nodes (Knowledge Retrieval, Code, HTTP Request, Iteration), custom tools from OpenAPI schema, /v1/chat-messages and /v1/workflows/run API keys; also for `host.docker.internal` Ollama unreachable in Docker, embedding model errors, empty retrieval from bad chunking, and SSE streaming vs blocking. Dify 1.19.0."
+license: MIT
+metadata:
+  category: ai
+  tags: "llm, workflow, rag, agent, platform, docker, self-hosted, chatbot"
 ---
 
 > **项目地址：** <https://github.com/langgenius/dify>
@@ -20,7 +15,9 @@ tags:
 >
 > **许可证：** Dify Open Source License（修改版 Apache-2.0，含附加条款）
 >
-> **最新版本：** 1.18.0（截至 2026-10，实测 `releases/latest` 重定向；Helm chart 最新 3.13.1）
+> **最新版本：** 1.19.0（截至 2026-11，实测 `releases/latest` 重定向；Helm chart 与应用版本不同号，以仓库实际 chart 为准）
+
+> **v1.19 变化（可选读）**：新增嵌套工作流追踪（Workflow Tools 的调用链与 LLM 调用可进入外部可观测工具）、Workflow Tools 随 App 包移植、Skill Hub 自动化；内置插件守护进程升到 `0.6.14-local`。从 1.18 升级时注意官方 upgrade guide：API、worker、Agent Backend 与 Agent runtime 镜像需一起升级，源码安装要求 Python 3.13，并保留 `PASSWORD_PEPPER`。
 
 ## 概述
 
@@ -56,7 +53,7 @@ docker compose up -d
 ```bash
 helm repo add dify https://langgenius.github.io/dify-helm
 helm repo update
-# chart 名是 dify/dify，版本与 Dify 应用版本不同号（截至 2026-10 最新 chart 3.13.1）
+# chart 名是 dify/dify，版本与 Dify 应用版本不同号（appVersion 与应用版本对应，chart 版本号独立递进）
 helm install dify dify/dify -n dify --create-namespace
 ```
 

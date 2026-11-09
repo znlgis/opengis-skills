@@ -1,17 +1,10 @@
 ---
 name: robotgo-flow
-description: "Use when building YAML-driven Windows desktop RPA in Go — robotgo-flow run/record/capture/serve CLI, image template matching under a window then full-screen fallback, $input.<name> variable injection, on_error abort/skip/retry, human-like mouse and typing. Also for templates that never match, \"Unsupported class file\" / MinGW build failures, slow first compile, and resuming a workflow with run --from N."
-tags:
-  - go
-  - golang
-  - rpa
-  - automation
-  - desktop
-  - windows
-  - yaml
-  - image-matching
-  - workflow
-  - wpf
+description: "Use when building YAML-driven Windows desktop RPA in Go — robotgo-flow run/record/capture/serve CLI, image template matching under a window then full-screen fallback, $input variable injection, on_error abort/skip/retry, human-like mouse and typing. Also for templates that never match, \"MinGW-w64 GCC\" / \"Go not found\" build failures, slow first compile, and resuming a workflow with run --from N."
+license: MIT
+metadata:
+  category: others
+  tags: "go, golang, rpa, automation, desktop, windows, yaml, image-matching, workflow, wpf"
 ---
 
 > **项目地址：** <https://github.com/znlgis/robotgo-flow>
@@ -26,7 +19,7 @@ tags:
 >
 > **包管理器：** 源码构建（`scripts/build.ps1`，无可安装包）
 >
-> **版本：** v1.0.2（2026-09-11）
+> **版本：** v1.0.2（2026-09-11，截至 2026-11，[GitHub Releases](https://github.com/znlgis/robotgo-flow/releases)）
 
 ## 概述
 
@@ -249,7 +242,11 @@ go test ./internal/action/ -v
 | 中文路径乱码？ | `internal/encoding` 自动处理 GBK↔UTF-8，无需手动干预。 |
 | 一定要 WPF 应用吗？ | 不需要；Go CLI 可独立使用，不依赖 .NET/WPF。 |
 | 如何从中途恢复执行？ | `run --from N`（1-indexed）；只有步骤可重入时才安全（例如已提交的表单不要重放）。 |
-| 电子从 YAML 里读到的中文变成乱码？ | 工作流文件用 UTF-8 保存；Windows 记事本另存为 UTF-8（非 ANSI），路径含中文时交给内置 `internal/encoding` 处理，不要自己转码。 |
+| YAML 里读到的中文变成乱码？ | 工作流文件用 UTF-8 保存；Windows 记事本另存为 UTF-8（非 ANSI），路径含中文时交给内置 `internal/encoding` 处理，不要自己转码。 |
+| `错误: 未找到 MinGW-w64 GCC，请安装后重试`（`build.ps1`） | 只装了 MSYS2 没装 GCC，或 `C:\msys64\mingw64\bin` 不在 `PATH` | `pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-zlib` 安装后把 bin 目录加入 `PATH`，用 `gcc --version` 自检，再跑 `build.ps1` |
+| `ERROR: Go not found. Please install Go 1.26+` / `需要 Go 1.26+，当前版本: 1.x` | `PATH` 里没有 `go`，或 Go 低于脚本要求 | 装 go1.26+ 并重开终端；`go version` 确认后重跑 `build.ps1` |
+| 模板匹配不到元素，但截图里目标清晰可见 | 模板与运行时 DPI/缩放/主题不一致，或目标被其它窗口遮挡 | 在**同一台机器、同一显示缩放比**下用 `capture` 重新截模板；执行前先激活目标窗口，再确认 `--tpl-dir` 指向模板目录 |
+| `capture` 生成的模板不在预期目录 | `--out-dir`（默认 `templates`）与工作流里的模板相对路径不是同一目录 | 保持 `capture --out-dir` 与 YAML 里 `templates/xxx.png` 的相对基准一致，或统一改用绝对路径 |
 | `serve` 模式被 WPF 调用但没反应？ | JSON-Line 协议要求逐行 flush；检查 stdout 是否被其它日志污染（日志必须走 stderr）。 |
 
 ---

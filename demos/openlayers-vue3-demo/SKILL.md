@@ -1,24 +1,17 @@
 ---
 name: openlayers-vue3-demo
 description: "Use when building a declarative OpenLayers map in Vue 3 with vue3-openlayers — WMS tile layers, a layer tree loaded from the GeoServer REST API, layer switcher / zoom / scale line / context menu controls, and a Vite dev proxy that injects Basic auth; also for an empty layer tree (401 on /rest/layers.json), blank WMS tiles from a flipped bbox or wrong CRS, and "Failed to resolve component: ol-map". Demo pairs Docker GeoServer + PostGIS + Nginx."
-tags:
-  - vue
-  - typescript
-  - javascript
-  - vite
-  - openlayers
-  - vue3-openlayers
-  - webmapping
-  - geoserver
-  - wms
-  - demo
+license: MIT
+metadata:
+  category: demos
+  tags: "vue, typescript, javascript, vite, openlayers, vue3-openlayers, webmapping, geoserver, wms, demo"
 ---
 
 > **项目地址：** <https://github.com/znlgis/openlayers-vue3-demo>
 >
 > **教程：** <https://znlgis.github.io/demos/vue3-openlayers/>
 >
-> **依赖版本：** Vue 3.5 / vue3-openlayers 11.2 / Vite 5（取自仓库 `package.json`，截至 2026-10）
+> **最新版本：** 无发布版本（快照工程，`package.json` 为 0.0.0）；依赖 Vue 3.5 / vue3-openlayers 11.2 / Vite 5.4 / axios 1.7（截至 2026-11，取自 [`package.json`](https://github.com/znlgis/openlayers-vue3-demo/blob/main/package.json)）
 >
 > **许可证：** LGPL-2.1（以仓库为准）
 
@@ -307,7 +300,7 @@ export default defineConfig({
 
 ## 常见问题
 
-| 问题 | 解决方案 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|---------|
 | 图层树为空 | 确认 GeoServer 已启动、代理 `target` 端口（8765）正确；查看 `/geoserver/rest/layers` 返回状态 |
 | 控制台 CORS 报错 | 不要直连 `http://localhost:8765`，统一走 `/geoserver` 代理 |
@@ -317,15 +310,18 @@ export default defineConfig({
 | npm 安装缓慢 | 切换镜像 `npm config set registry http://registry.npmmirror.com` |
 | 端口冲突（8080 / 8765 / 5432） | 修改 `docker run -p` 映射，并同步调整代理 target |
 | 接口 200 但地图空白 | 确认 `#map` 容器有宽高（DemoMap.vue 中 `width/height: 100%`） |
+| 控制台报 `Failed to resolve component: ol-map` | 组件库没注册：`main.js` 里必须 `app.use(OpenLayersMap)`；模板用的是命名空间组件 `<Map.OlMap>`，不是 `<ol-map>` |
+| `/geoserver/rest/layers` 返回 401，图层树空 | 代理注入的 Basic 凭据与 GeoServer 管理员密码不一致（默认 `admin`/`geoserver`），或目标端口不是 8765 |
 
 ## AI 使用建议
 
-1. **两个核心文件**：`src/components/DemoMap.vue`（声明式地图 + 动态图层树 + 控件）与 `src/geoserver/Layers.js`（REST 封装，`GeoServerRestApi.js` 为聚合入口）；`main.js` 只做组件库注册。
-2. **常见改造点**：换 GeoServer 地址 / 端口改 `vite.config.js` 代理的 `target` 并同步认证头；调整默认可见图层改 `DemoMap.vue` 中 `visible` 初值（示例为 `ne:countries` 默认可见）。
-3. **命名空间别混淆**：`Map` / `Layers` / `Sources` / `MapControls` 是 vue3-openlayers 的组件命名空间而非 ol 类，与原生 ol API（参见 `gis/openlayers` 技能）混用时注意对象类型不同。
-4. **数据清洗**：`getLayerGroup(name)` 返回的 `publishables.published` 可能混入非图层对象，必须过滤 `@type !== 'layer'`；图层默认 `visible: false` 惰性加载，不要改成全部可见。
-5. **代理约定**：前端只用相对路径 `/geoserver/...`，Basic 认证由 Vite 代理注入；生产部署换 Nginx 反向代理并同样注入 `Authorization`。
-6. **扩展方向**：沿用 `src/geoserver/` 的封装模式继续实现工作区 / 图层增删改查，即可达成教程规划的「树状服务管理」。
+- **执行环境**：Node.js 18+ + npm；要看到图层树必须先起 GeoServer（默认 `http://127.0.0.1:8765/geoserver`），只看地图壳子可跳过。
+- **版本探测**：`node -v` + `npm ls vue3-openlayers vue vite`；本项目用 vue3-openlayers ^11.2 + Vite 5，v12 的组件命名有调整，升级前先对照官方迁移说明。
+- **产物验证**：`npm run build` 通过；浏览器 Network 里 `/geoserver/rest/layers` 返回 200 JSON，勾选图层后出现 WMS 瓦片请求。
+- **两个核心文件**：`src/components/DemoMap.vue`（声明式地图 + 动态图层树 + 控件）与 `src/geoserver/Layers.js`（REST 封装，`GeoServerRestApi.js` 是聚合入口）；`main.js` 只负责 `app.use(OpenLayersMap)`。
+- **改造点**：换 GeoServer 地址/端口改 `vite.config.js` 的代理 `target` 并同步认证头；默认可见图层改 `DemoMap.vue` 的 `visible` 初值（示例是 `ne:countries`）。
+- **易错点**：命名空间组件（`Map.OlMap`/`Layers.OlTileLayer`）不是 ol 类；`publishables.published` 会混入样式等非图层对象，必须过滤 `@type !== 'layer'`。
+- **安全与权限**：前端坚持相对路径 `/geoserver/...`，Basic 凭据只进代理配置；生产部署改 Nginx 注入 `Authorization`，不要把账号写进前端代码。
 
 ## 相关技能
 

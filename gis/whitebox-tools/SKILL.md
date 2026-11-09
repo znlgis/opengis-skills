@@ -1,24 +1,17 @@
 ---
 name: whitebox-tools
 description: "Use when doing advanced raster, terrain or LiDAR geoprocessing with WhiteboxTools v2.4.0 — whitebox_tools --run=Slope/FillDepressions/BreachDepressions/FlowAccumulationFullWorkflow/Watershed/ExtractStreams, lidar_* tools for LAS point clouds, or the whitebox (whitebox-python 2.3.6) WhiteboxTools wrapper in Python. Also for 'whitebox_tools: command not found', mismatched Python frontend versions, and missing DEM/flow-accumulation intermediate outputs."
-tags:
-  - geospatial
-  - raster
-  - terrain-analysis
-  - hydrology
-  - lidar
-  - dem
-  - command-line
-  - python
-  - rust
-  - geoprocessing
+license: MIT
+metadata:
+  category: gis
+  tags: "geospatial, raster, terrain-analysis, hydrology, lidar, dem, command-line, python, rust, geoprocessing"
 ---
 
 > **项目地址：** <https://github.com/jblindsay/whitebox-tools>
 >
-> **官方文档：** 用户手册站 <https://www.whiteboxgeo.com/manual/wbt_book/preface.html>（2026-10 实测返回 404，暂以仓库 README 与 `UserManual.txt` 为可访问入口）
+> **官方文档：** 用户手册 <https://jblindsay.github.io/wbt_book/intro.html>（GHRG 手册站镜像；上游 README 里的 `www.whiteboxgeo.com/manual/wbt_book/preface.html` 实测 404，改用本地址）
 >
-> **最新版本：** 2.4.0（GitHub Release，截至 2026-10）
+> **最新版本：** 2.4.0（截至 2026-11，[GitHub Release](https://github.com/jblindsay/whitebox-tools/releases)；conda-forge `whitebox_tools` 亦为 2.4.0）
 >
 > **PyPI 前端：** `whitebox` 2.3.6（whitebox-python 封装，仅负责下载与调用二进制，版本号落后于核心库）
 >
@@ -244,7 +237,7 @@ wbt.watershed(d8_pntr="flow_pntr.tif", pour_pts="pour_pts_snapped.shp", output="
 
 ## AI 使用建议
 
-- **执行环境**：`python build.py` 编译耗时可达数分钟，放后台任务；`pip install whitebox` 首次调用会联网下载二进制，离线环境需先手动放置 WBT。
+- **执行环境**：`python build.py` 编译耗时可达数分钟，放后台任务；`pip install whitebox` 首次调用会联网下载二进制，离线环境需先手动放置 WBT。命令行优先用预编译二进制（[GitHub Releases](https://github.com/jblindsay/whitebox-tools/releases)；`whiteboxgeo.com` 的下载页已 404，以 Releases 为准），源码编译只作无二进制平台的兜底。
 - **先探测版本**：`whitebox_tools --version` 确认核心版本（本文基准 2.4.0）；`python -c "import whitebox; print(whitebox.__version__)"` 确认前端（2.3.6）。两者不一致时以二进制为准并明确告知用户。
 - **验证产物**：用 `ls -l` 检查输出文件是否生成，再用 GDAL（`gdalinfo` / `python -c "import rasterio..."`）读取数值范围做断言；只看命令退出码不足以证明分析正确。
 - **失败信号**：无输出且无报错几乎都是工作目录或路径问题；参数被忽略多为参数名拼错，用 `--toolparameters` 核对。
@@ -261,8 +254,8 @@ wbt.watershed(d8_pntr="flow_pntr.tif", pour_pts="pour_pts_snapped.shp", output="
 
 ## 参考资源
 
-- 用户手册（上游 README 标注的地址，2026-10 实测 404）：<https://www.whiteboxgeo.com/manual/wbt_book/preface.html>
-- 可访问的用法说明：仓库 README 与 `UserManual.txt` <https://github.com/jblindsay/whitebox-tools>
+- 用户手册：<https://jblindsay.github.io/wbt_book/intro.html>（含全部工具的参数与示例）
+- 仓库 README 与 `UserManual.txt`：<https://github.com/jblindsay/whitebox-tools>（README 内指向的 `whiteboxgeo.com` 手册地址已失效，以上面的镜像为准）
 - 源码与 Issue：<https://github.com/jblindsay/whitebox-tools>
 - 后继项目：<https://github.com/jblindsay/whitebox_next_gen>
 - Python 封装：<https://github.com/opengeos/whitebox-python>

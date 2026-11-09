@@ -1,15 +1,10 @@
 ---
 name: ruoyi-cloud
 description: "Use when scaffolding a Java Spring Cloud microservice backend — Nacos discovery and config, Spring Cloud Gateway auth filter, Sentinel rate limiting, Seata distributed transactions, RBAC menus, code generator for CRUD plus Vue pages. RuoYi-Cloud v3.6.8 (Spring Boot 4.0.3, Spring Cloud 2025.1.0, JDK 17). Also for services not registering in Nacos, 401 loops from token TTL drift, Seata rollback not firing on tx-service-group mismatch, and RuoYi UI vs Vue3 repo confusion."
-tags:
-  - java
-  - spring-cloud
-  - microservices
-  - rbac
-  - nacos
-  - sentinel
-  - seata
-  - vue
+license: MIT
+metadata:
+  category: others
+  tags: "java, spring-cloud, microservices, rbac, nacos, sentinel, seata, vue"
 ---
 
 > **项目地址：** <https://gitee.com/y_project/RuoYi-Cloud>
@@ -24,7 +19,7 @@ tags:
 >
 > **包管理器：** Maven（后端）+ npm（`ruoyi-ui` 前端）/ Docker Compose（`docker/docker-compose.yml`）
 >
-> **版本：** v3.6.8（2026-03-29；Spring Boot 4.0.3、Spring Cloud 2025.1.0、Spring Cloud Alibaba 2025.1.0.0、JDK 17）
+> **版本：** v3.6.8（发布于 2026-03-29，`master` 上的 `pom.xml` 仍为该版本，截至 2026-11；Spring Boot 4.0.3、Spring Cloud 2025.1.0、Spring Cloud Alibaba 2025.1.0.0、JDK 17）
 
 ## 概述
 

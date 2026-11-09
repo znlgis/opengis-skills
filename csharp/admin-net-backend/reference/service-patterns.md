@@ -1,5 +1,10 @@
 # Admin.NET Backend Service Patterns
 
+## Contents
+
+- 服务开发模式
+- 关键模式与约定
+
 Service development patterns and key conventions split from SKILL.md.
 
 ---
@@ -21,7 +26,7 @@ public class MyBusinessService : BaseService<MyEntity>
 
 ```csharp
 /// <summary>
-/// 自定义业务服务 🏷️
+/// 自定义业务服务
 /// </summary>
 [ApiDescriptionSettings(Order = 200)]
 public class MyCustomService : IDynamicApiController, ITransient
@@ -34,7 +39,7 @@ public class MyCustomService : IDynamicApiController, ITransient
     }
 
     /// <summary>
-    /// 分页查询 🔖
+    /// 分页查询
     /// </summary>
     [DisplayName("分页查询")]
     public async Task<SqlSugarPagedList<MyEntityOutput>> Page(MyEntityInput input)
@@ -47,7 +52,7 @@ public class MyCustomService : IDynamicApiController, ITransient
     }
 
     /// <summary>
-    /// 新增 🔖
+    /// 新增
     /// </summary>
     [ApiDescriptionSettings(Name = "Add"), HttpPost]
     [DisplayName("新增")]
@@ -59,7 +64,7 @@ public class MyCustomService : IDynamicApiController, ITransient
     }
 
     /// <summary>
-    /// 更新 🔖
+    /// 更新
     /// </summary>
     [ApiDescriptionSettings(Name = "Update"), HttpPost]
     [DisplayName("更新")]
@@ -70,7 +75,7 @@ public class MyCustomService : IDynamicApiController, ITransient
     }
 
     /// <summary>
-    /// 删除 🔖
+    /// 删除
     /// </summary>
     [ApiDescriptionSettings(Name = "Delete"), HttpPost]
     [DisplayName("删除")]

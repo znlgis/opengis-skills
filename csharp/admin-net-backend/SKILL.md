@@ -1,13 +1,10 @@
 ---
 name: admin-net-backend
 description: "Use when building or extending a Furion + SqlSugar admin backend — SysUserService/SysRoleService/SysMenuService RBAC, EntityBase/EntityBaseData/EntityTenant inheritance, Yitter snowflake ids, soft delete, code generator, plugin projects. Also for duplicate-key errors after enabling DB identity on Id, deleted rows still visible, and APIs missing from the Swagger group. Admin.NET: enterprise admin scaffold."
-tags:
-  - dotnet
-  - webapi
-  - rbac
-  - multitenant
-  - furion
-  - sqlsugar
+license: MIT
+metadata:
+  category: csharp
+  tags: "dotnet, webapi, rbac, multitenant, furion, sqlsugar"
 ---
 
 > **项目地址（上游）：** <https://github.com/zuohuaijun/Admin.NET>
@@ -16,7 +13,7 @@ tags:
 >
 > **后端代码目录：** `Admin.NET/`（.NET 解决方案）
 >
-> **当前版本：** v2.4.x（`Web/package.json` 为 2.4.33；upstream `v2` 分支最后提交 2026-01-30，znlgis 维护 `v2` 分支最后提交 2026-03-26；后端 TFM `net8.0;net10.0`，截至 2026-10 实测）
+> **最新版本：** v2.4.x（`Web/package.json` 为 2.4.33；后端 `*.csproj` 的 TFM 为 `net8.0;net10.0`；取自[上游](https://github.com/zuohuaijun/Admin.NET)与 [znlgis 维护分支](https://github.com/znlgis/Admin.NET)的 `v2`，截至 2026-11 实测）
 >
 > **在线文档：** <https://adminnet.top/>
 >
@@ -123,6 +120,8 @@ dotnet run --project Admin.NET.Web.Entry
 # 验证：SDK 版本与还原结果
 dotnet --version
 dotnet list package | grep -iE 'furion|sqlsugar'
+# Windows PowerShell 等价写法
+# dotnet list package | Select-String -Pattern 'Furion|SqlSugar'
 ```
 
 启动后默认访问 `https://localhost:5005`，Swagger 文档地址：`https://localhost:5005/api`
@@ -344,23 +343,18 @@ public class MyPluginService : IDynamicApiController, ITransient
 2. `dotnet publish` 产出发布包
 3. 用仓库自带的 Dockerfile 容器化，或部署到 IIS / Nginx
 
----
+### 工作流四：自建业务工程（不 fork 核心库）
 
-## 开发流程最佳实践
-
-```text
-1. 建议每个业务系统单独创建一个工程（参考 Admin.NET.Application 层的结构）
-2. 自建应用层引用 Admin.NET.Core 层（不修改核心工程名）
-3. Admin.NET.Web.Entry 引用新建的应用层工程
-4. 接口 / 服务 / 控制器采用合并模式，不影响自建应用层的使用
-5. 可随主仓库升级而升级，避免冲突
-```
+1. 新建类库作为业务应用层，结构参考 `Admin.NET.Application`
+2. 业务层引用 `Admin.NET.Core`，**不要改核心工程名**
+3. `Admin.NET.Web.Entry` 引用新建的业务层，服务/控制器按合并模式自动注册
+4. 以后拉取主仓库更新时冲突面最小，业务代码可独立演进
 
 ---
 
 ## 常见问题
 
-| 问题 | 解决 |
+| 报错 / 现象 | 原因 → 处置 |
 |------|------|
 | 首次启动要不要手工建库 | 不需要：启动时自动建库建表并注入种子数据，只要连接串有建库权限 |
 | 主键设了数据库自增导致冲突 | Admin.NET 主键用 `Yitter.IdGenerator` 雪花 ID，实体主键不要配自增列 |
@@ -368,6 +362,8 @@ public class MyPluginService : IDynamicApiController, ITransient
 | 接口没进 Swagger 分组 | 服务/方法上补 `[ApiDescriptionSettings("GroupName", Order = 100)]` |
 | 前端按钮权限不生效 | 后端方法上要有 `[DisplayName("操作名")]`，前端配合 `v-auth` 指令使用 |
 | 多租户数据串了 | 实体需继承 `EntityTenant`，才会按 `TenantId` 自动隔离 |
+| 调接口返回 `401` / `succeeded: false` | 请求未带或带了过期 token：先调 `/api/sysAuth/login` 换 `accessToken`，再以 `Authorization: Bearer {accessToken}` 访问 |
+| 后端起不来，日志报数据库连接失败 | `appsettings.json` 的 `DbConnection` 与实际库不一致（默认 Sqlite 文件没写权限也会失败）；先确认 `DbType` 与连接串匹配、库/文件可写，再重启 |
 
 ---
 
@@ -401,16 +397,13 @@ public class MyPluginService : IDynamicApiController, ITransient
 
 ---
 
-## 注意事项
+## 部署与安全补充
 
-1. **数据库自动迁移**：首次启动会自动创建数据库和种子数据，无需手动执行 SQL
-2. **雪花 ID**：主键使用 `Yitter.IdGenerator` 生成雪花 ID（long 类型）
-3. **软删除**：继承 `EntityBaseData` 的实体默认使用软删除（`IsDelete` 字段）
-4. **多租户**：实体继承 `EntityTenant` 自动按 `TenantId` 隔离数据
-5. **API 分组**：通过 `[ApiDescriptionSettings("GroupName")]` 对 Swagger 接口分组
-6. **权限控制**：方法上 `[DisplayName("操作名")]` 会注册为权限标识，搭配 `[Authorize]` 使用
-7. **国密支持**：通过 `BouncyCastle.Cryptography` 和 `sm-crypto` 实现 SM2/SM3/SM4 算法
-8. **Docker 部署**：后端目录包含 `.dockerignore`，可直接用 Dockerfile 容器化部署
+以下三条不属于业务代码，但上线前必须处理，其余约定见「AI 使用建议」与各工作流：
+
+1. **发布前先关种子数据重复写入**：首次启动的建库 + 种子数据只在空库执行，生产环境不要反复清库重跑
+2. **JWT 签名密钥必须替换**：`appsettings.json` 里的 `IssuerSigningKey` 是示例值，生产用环境变量或密钥管理服务注入
+3. **容器化**：后端目录自带 `.dockerignore` 与 Dockerfile，注意把 `appsettings.json` 的数据库连接串改为环境变量，避免镜像里带明文口令
 
 ---
 

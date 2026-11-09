@@ -1,12 +1,10 @@
 ---
 name: ke3036-keyes-pico
 description: "Use when programming the Keyes Raspberry Pi Pico (RP2040) learning kit with MicroPython — GPIO LED/button control, I2C/SPI/UART sensor integration, servo/motor/relay driving, Wi-Fi MQTT, 0.96 inch OLED display, ultrasonic ranging. KE3036 Keyes Pico: 42-in-1 sensor STEM learning kit for RP2040."
-tags:
-  - micropython
-  - rp2040
-  - sensor
-  - iot
-  - pico
+license: MIT
+metadata:
+  category: iot
+  tags: "micropython, rp2040, sensor, iot, pico"
 ---
 
 > **项目地址（资料/示例）：** <https://github.com/keyeswiki/KE3036-Keyes-Pico-42-1->（Keyes Wiki 镜像仓库；原 keyestudio/ke3036 仓库已下线）
@@ -14,6 +12,8 @@ tags:
 > **Pico 官方文档：** <https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html>
 >
 > **MicroPython for RP2040：** <https://docs.micropython.org/en/latest/rp2/quickref.html>
+>
+> **最新版本：** MicroPython v1.29.0（截至 2026-11，[GitHub Releases](https://github.com/micropython/micropython/releases)；套件本身无独立版本号，固件随 MicroPython 主线更新）
 >
 > **许可证：** 配套示例多为 MIT / GPL（视具体文件）
 
@@ -31,12 +31,15 @@ KE3036 套件常见组成：
 ## 环境准备：烧录 MicroPython 固件
 
 ```bash
-# 1. 下载固件：
-#    https://micropython.org/download/RPI_PICO/  → .uf2
+# 1. 下载固件（.uf2）：
+#    Pico   → https://micropython.org/download/RPI_PICO/
+#    Pico W → https://micropython.org/download/RPI_PICO_W/
 
 # 2. 按住 Pico 上的 BOOTSEL 键插入 USB → 出现 RPI-RP2 磁盘
 # 3. 拷贝 .uf2 到该磁盘 → 自动重启进入 MicroPython
 ```
+
+> 板子若是 **Pico W** 必须下载 `RPI_PICO_W` 固件，否则 `import network` 失败、Wi-Fi 段代码全部不可用。烧录后用 Thonny 的 REPL 执行 `import os; print(os.uname())` 自检。
 
 ---
 
@@ -311,6 +314,11 @@ while True:
 | I²C 找不到设备 | `i2c.scan()` 查看；上拉电阻 4.7kΩ |
 | Wi-Fi 不连 | 仅支持 2.4 GHz；密码与国别码（`network.country('CN')`） |
 | 串口在 Linux 需要权限 | `sudo usermod -aG dialout $USER` |
+| `OSError: [Errno 5] EIO`（初始化 I²C 外设时） | I²C 接线错、设备地址不对，或上拉电阻缺失 | `i2c.scan()` 打印实际地址；确认 SDA/SCL 与代码里 `Pin()` 编号一致，再按扫描结果改 `SSD1306_I2C(..., addr=0x3c)` |
+| `OSError: [Errno 110] ETIMEDOUT`（`wlan.connect` 后） | Wi-Fi 连不上：SSID/密码错、只有 5 GHz 频段、或国别码未设 | 用手机热点 2.4 GHz 复测；连接前执行 `network.country('CN')`；`wlan.status()` 打印失败码对照 MicroPython 文档 |
+| `ImportError: no module named 'ssd1306'` / `umqtt` | 库没装进 Pico 文件系统（REPL 里能 import 不代表入库） | 用 Thonny「文件 → 保存到 Pico」或 `mpremote cp`，或在 Pico W 上 `import mip; mip.install('umqtt.simple')` |
+| `Guru Meditation Error` / 看门狗复位循环 | `main.py` 死循环里没让出 CPU，或引脚电平冲突 | 循环内加 `time.sleep_ms(10)`；用 `Thonny → Stop` 进 REPL 后逐段注释定位冲突引脚 |
+| 烧录 `.uf2` 后电脑不出现 `RPI-RP2` 盘 | 没按住 BOOTSEL 再插线，或 USB 线只供电不通数据 | 按住 BOOTSEL 重新插线；换一根确认能传数据的 USB 线；也可用 `mpremote` 直接连 |
 
 ---
 
