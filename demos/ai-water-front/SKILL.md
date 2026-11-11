@@ -336,7 +336,7 @@ window.clearGeoJsonLayers()                   // 清除高亮图层
 ## AI 使用建议
 
 - **执行环境**：Node.js ≥16 + npm；需要真实 AI 回复时还要能访问 Dify（或自建）与 GeoServer；只验证地图渲染不必起后端。
-- **版本探测**：`node -v` + `npm ls ol vite vue`；本项目锁定 ol 8 / Vite 4，升级到 ol 10 会改动 `Map`/`VectorLayer` 的导入路径，先确认再动。
+- **版本探测**：`node -v` + `npm ls ol vite vue`；本项目锁定 ol 8.1 / Vite 4（仓库快照，未跟随上游升级；npm 上 ol 最新为 10.x、Vite 为 8.x），升级 ol 大版本要改动 `Map`/`VectorLayer` 的导入路径与部分 API 签名，先确认再动。
 - **产物验证**：`npm run build` 必须无报错；DEV 下用 `window.testGeoJson(window.testData.polygon)` 验证渲染链路，用 Network 面板确认 `/geoserver/rest/layers` 返回 200。
 - **入口文件**：`src/App.vue`（布局装配与面板尺寸持久化）、`src/components/DemoMap.vue`（地图）、`src/mapInstance.js`（全局地图单例）；AI 对话在 `src/services/difyClient.js`，GeoJSON 提取渲染在 `src/services/geoJsonService.js`。
 - **改造点**：换底图/初始视野改 `DemoMap.vue` 的 OSM 与 View；换 LLM 供应商时保持 `onMessage`/`onCompleted`/`onGeoJsonDetected` 回调契约；图层数据源改 `src/geoserver/`。

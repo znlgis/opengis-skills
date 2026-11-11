@@ -344,6 +344,7 @@ python -c "import json;d=json.load(open('beijing.geolibre.json'));print(len(d.ge
 ## 相关技能
 
 - **duckdb-spatial** — SQL 工作区背后的空间分析引擎：[../duckdb-spatial/SKILL.md](../duckdb-spatial/SKILL.md)
+- **maplibre-gl-js** — GeoLibre 默认的矢量瓦片渲染引擎：[../maplibre-gl-js/SKILL.md](../maplibre-gl-js/SKILL.md)
 - **openlayers** — 自建 Web 地图前端时的核心库：[../openlayers/SKILL.md](../openlayers/SKILL.md)
 - **cesiumjs** — GeoLibre 的 3D 球渲染引擎之一：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)
 - **qgis-process** — 桌面 GIS 的另一种无头批处理路径：[../qgis-process/SKILL.md](../qgis-process/SKILL.md)

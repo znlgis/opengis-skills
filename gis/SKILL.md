@@ -1,17 +1,17 @@
 ---
 name: gis
-description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, running desktop or cloud-native GIS apps, or building web map applications. Index of 40 skills: GDAL, GeoServer, QGIS, PostGIS, DuckDB Spatial, SpatiaLite, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, Leaflet, MapServer, QGIS Server, PROJ, PDAL, GeoLibre, GeoNode, WhiteboxTools, Mapbox GL JS, deck.gl and more."
+description: "Use when processing geospatial data, publishing map services, querying spatial databases, performing geometry operations, running desktop or cloud-native GIS apps, or building web map applications. Index of 45 skills: GDAL, GeoServer, QGIS, PostGIS, DuckDB Spatial, SpatiaLite, JTS, GeoPandas, Shapely, CesiumJS, OpenLayers, Leaflet, MapServer, QGIS Server, PROJ, PDAL, GeoLibre, GeoNode, WhiteboxTools, Mapbox GL JS, deck.gl and more."
 license: MIT
 metadata:
   category: gis
   tags: "gis, geospatial, mapping, spatial-analysis, vector, raster, server, webmapping"
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 120 技能总索引
 
 ## 概述
 
-本分类涵盖 **40 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务与桌面应用的完整链路：
+本分类涵盖 **45 个 GIS 开源项目**的技能文件，覆盖从底层数据处理到上层地图服务与桌面应用的完整链路：
 
 ```text
 数据源 → 命令行处理 → 编程分析 → 空间数据库 → 地图服务 → 前端可视化
@@ -39,6 +39,8 @@ metadata:
 | [proj](./proj/SKILL.md) | 坐标转换与投影库（CRS/EPSG，GDAL 底层引擎） | `crs` `reprojection` `cli` `epsg` |
 | [grass-gis](./grass-gis/SKILL.md) | 模块化 GIS 栅格/矢量分析套件 | `gis` `raster` `vector` `python` |
 | [pdal](./pdal/SKILL.md) | 点云数据处理库（LAS/LAZ，点云界 GDAL） | `point-cloud` `lidar` `pipeline` `cli` |
+| [opendronemap](./opendronemap/SKILL.md) | 无人机影像摄影测量全流程：正射/DSM/点云/3D Tiles | `photogrammetry` `drone` `orthophoto` `webodm` |
+| [stac-cog-titiler](./stac-cog-titiler/SKILL.md) | 影像云原生全链路：STAC 编目 + COG 存储 + TiTiler 出图 | `raster` `cloud-native` `cog` `stac` |
 | [whitebox-tools](./whitebox-tools/SKILL.md) | Rust 地形/水文/LiDAR 分析引擎（CLI + Python） | `cli` `hydrology` `terrain-analysis` `python` |
 
 ### 🗄️ 空间数据库
@@ -57,6 +59,7 @@ metadata:
 | [geometry-api-java](./geometry-api-java/SKILL.md) | Esri Geometry API for Java | `java` `esri` `geometry` |
 | [geometry-api-net](./geometry-api-net/SKILL.md) | Esri Geometry API for .NET | `dotnet` `esri` `geometry` |
 | [shapely](./shapely/SKILL.md) | Python 几何对象与运算 | `python` `geometry` `geos` `wkt` |
+| [geos](./geos/SKILL.md) | C/C++ 几何引擎：PostGIS/QGIS/Shapely 的几何内核 | `c` `cpp` `geometry` `overlay` |
 | [geopandas](./geopandas/SKILL.md) | Python 矢量空间数据处理 | `python` `pandas` `vector` |
 
 ### 🌐 地图服务器
@@ -83,6 +86,8 @@ metadata:
 | [openlayers](./openlayers/SKILL.md) | 高性能 Web 2D 地图库 | `javascript` `2d` `web` `map` |
 | [leaflet](./leaflet/SKILL.md) | 轻量级移动端 Web 2D 地图库 | `javascript` `web` `2d` `map` |
 | [mapbox-gl-js](./mapbox-gl-js/SKILL.md) | WebGL 矢量瓦片地图库（需 access token） | `javascript` `webgl` `vector-tiles` `map` |
+| [maplibre-gl-js](./maplibre-gl-js/SKILL.md) | 开源矢量瓦片 WebGL 地图（Mapbox GL JS 的 BSD 分支，免 token） | `javascript` `webgl` `vector-tiles` `style-spec` |
+| [maplibre-native](./maplibre-native/SKILL.md) | C++ 跨平台原生矢量渲染引擎（Android/iOS/桌面/Node） | `cpp` `android` `ios` `offline` |
 | [deck-gl](./deck-gl/SKILL.md) | GPU 大规模地理数据可视化框架 | `javascript` `webgl` `visualization` `geo` |
 | [kepler-gl](./kepler-gl/SKILL.md) | React/Redux 地理数据可视化应用与组件库 | `react` `redux` `visualization` `jupyter` |
 
@@ -135,6 +140,11 @@ metadata:
 | "地形/水文/LiDAR 批量分析" | `whitebox-tools/SKILL.md` |
 | "方案驱动的分析/质检流水线" | `opengis-daf/SKILL.md` |
 | "完整 GIS 处理链路" | `opengis-all/SKILL.md` |
+| "开源矢量瓦片 Web 地图" | `maplibre-gl-js/SKILL.md` |
+| "移动端/桌面端原生矢量地图" | `maplibre-native/SKILL.md` |
+| "C/C++ 几何运算与 OverlayNG 鲁棒性" | `geos/SKILL.md` |
+| "无人机影像做正射/点云/3D Tiles" | `opendronemap/SKILL.md` |
+| "影像云原生：STAC + COG + TiTiler" | `stac-cog-titiler/SKILL.md` |
 
 ---
 

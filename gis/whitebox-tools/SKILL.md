@@ -9,7 +9,7 @@ metadata:
 
 > **项目地址：** <https://github.com/jblindsay/whitebox-tools>
 >
-> **官方文档：** 用户手册 <https://jblindsay.github.io/wbt_book/intro.html>（GHRG 手册站镜像；上游 README 里的 `www.whiteboxgeo.com/manual/wbt_book/preface.html` 实测 404，改用本地址）
+> **官方文档：** 用户手册 <https://jblindsay.github.io/wbt_book/intro.html>（GHRG 手册站镜像，实测可用；上游 README 指向的 `www.whiteboxgeo.com/manual/wbt_book/preface.html` 与 `www.whiteboxgeo.com/download-whiteboxtools/` 均实测 404，以本地址和 GitHub Releases 为准）
 >
 > **最新版本：** 2.4.0（截至 2026-11，[GitHub Release](https://github.com/jblindsay/whitebox-tools/releases)；conda-forge `whitebox_tools` 亦为 2.4.0）
 >
@@ -17,7 +17,7 @@ metadata:
 >
 > **许可证：** MIT
 >
-> **注意：** 上游仓库 README 已标记为 legacy，新开发转向 <https://github.com/jblindsay/whitebox_next_gen>；但 2.4.0 仍是当前稳定可用的开源版本，本文以其为基准。
+> **注意：** 上游仓库 README 已标记为 legacy，新开发转向 <https://github.com/jblindsay/whitebox_next_gen>（Whitebox Workflows，Rust 全栈重写，仓库目前没有公开 release）；WhiteboxTools Open Core 2.4.0 仍是当前可用的稳定开源版本，本文以其为基准。
 
 ## 概述
 
@@ -35,7 +35,7 @@ WhiteboxTools 是圭尔夫大学 GHRG 实验室（John Lindsay）用 Rust 编写
 
 ### 方式一：下载预编译二进制（推荐）
 
-到 <https://github.com/jblindsay/whitebox-tools/releases> 下载对应平台的预编译压缩包，解压后目录内含 `whitebox_tools`（Windows 为 `whitebox_tools.exe`）与 `WBT` 插件目录。
+到 <https://github.com/jblindsay/whitebox-tools/releases> 下载对应平台的预编译压缩包（Open Core 2.4.0），解压后目录内含 `whitebox_tools`（Windows 为 `whitebox_tools.exe`）与 `WBT/` 插件目录。上游 README 里给出的 `whiteboxgeo.com/download-whiteboxtools/` 实测已 404，不要再去那里下载。
 
 ```bash
 cd /opt/WBT          # 解压后的 WBT 目录
@@ -99,7 +99,9 @@ whitebox_tools --wd="data/" --run=Slope --dem=input.tif --output=slope.tif --uni
 | `-v` | 详细模式，打印进度与耗时；`-v=false` 关闭 |
 | `--listtools [关键词]` | 列出工具及描述，可按关键词过滤 |
 | `--toolhelp=<Tool>` | 打印某工具的使用帮助 |
-| `--toolparameters=<Tool>` | 以 JSON 输出参数定义，适合脚本动态组装参数 |
+| `--toolparameters=<Tool>` | 输出该工具的参数定义（Python 封装里对应 `wbt.tool_parameters("Slope")`） |
+| `--toolbox=<Tool>` | 输出该工具所属的工具箱 |
+| `--viewcode=<Tool>` | 在浏览器打开该工具的源码页 |
 | `--version` | 版本信息 |
 
 **不要凭记忆写参数名**：不同工具的参数差异很大（例如坡度用 `--units`，流量累积工作流用五个 `--out_*` 参数）。写脚本前先 `--toolparameters` 取 JSON，再据此拼参数。
@@ -145,6 +147,20 @@ wbt.run_tool("FillDepressions", ["--dem=dem.tif", "--output=dem_filled.tif", "--
 ```
 
 `run_tool(tool_name, args)` 的 `args` 是 `--flag=value` 字符串列表，适合官方封装尚未覆盖的新工具；两种方式可混用。
+
+查工具与参数用这三个方法，不要凭记忆写参数：
+
+```python
+print(wbt.list_tools())                  # 全部工具名与描述
+print(wbt.list_tools(["lidar", "LAS"])) # 按关键词过滤
+print(wbt.tool_help("Slope"))            # 单个工具的帮助（描述、参数、示例）
+print(wbt.tool_parameters("Slope"))      # 参数定义（脚本动态组装参数用）
+print(wbt.version())                     # 底层二进制版本
+```
+
+工具名在 CLI/帮助里是 CamelCase（`Slope`、`FillDepressions`），Python 便捷方法用 snake_case（`wbt.slope()`、`wbt.fill_depressions()`）；`run_tool` 的 `tool_name` 同样接受 snake_case 并由封装转成 CamelCase。
+
+完整工具清单（按主题分组，含每个工具的参数）见手册的工具索引：<https://jblindsay.github.io/wbt_book/tool_index.html>。
 
 ---
 

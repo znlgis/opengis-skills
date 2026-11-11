@@ -42,7 +42,9 @@ sudo a2enmod authnz_fcgi cgi
 sudo systemctl restart apache2
 ```
 
-`cgi-mapserver` 提供 CGI 可执行程序，`mapserver-bin` 提供 `mapserv`、`map2img`、`shp2img`、`legend` 等命令行工具。
+`cgi-mapserver` 提供 CGI 可执行程序，`mapserver-bin` 提供 `mapserv`、`map2img`、`legend`、`shptree` 等命令行工具。
+
+> **注意：** 旧版教程常用的 `shp2img` 在 MapServer 8.0 起已更名为 `map2img`，8.x 上直接调 `shp2img` 会报命令不存在；详见 [MIGRATION_GUIDE](https://mapserver.org/MIGRATION_GUIDE.html)。
 
 ### 方式二：源码编译（CMake）
 
@@ -216,7 +218,7 @@ ogr2ogr -f GPKG clip.gpkg countries.gpkg -clipsrc 100 20 130 50
 
 1. 确认图层 `NAME` 以字母开头且 `TYPE` 为矢量类型。
 2. 在 `WEB/METADATA` 写入 `wfs_title`、`wfs_onlineresource`、`wfs_enable_request`、`wfs_srs`。
-3. 图层级补充 `wfs_title`、`wfs_srs`、`gml_featureid`；如需输出属性，设置 `gml_include_items`（8.x 默认不暴露任何属性）。
+3. 图层级补充 `wfs_title`、`wfs_srs`、`gml_featureid`；如需输出属性，设置 `gml_include_items`（默认不暴露任何属性）。
 4. 用 `GetFeature` 请求并指定 `OUTPUTFORMAT`（如 `application/json`）取回要素。
 5. 用 `GetCapabilities` 核对服务声明的图层与格式是否与预期一致。
 
@@ -235,7 +237,7 @@ ogr2ogr -f GPKG clip.gpkg countries.gpkg -clipsrc 100 20 130 50
 - **用 FastCGI 而非纯 CGI**：FastCGI 常驻进程避免每次请求重复初始化，显著降低延迟。
 - **锁定 mapfile 路径**：设置 `MS_MAP_PATTERN`、`MS_MAP_NO_PATH` 或包装脚本，避免任意 `map=` 路径被利用。
 - **显式声明 `wms_enable_request` / `wfs_enable_request`**：不设置时不会启用任何请求，用 `!` 前缀可禁用单个请求。
-- **显式设置 `gml_include_items`**：MapServer 8.x 默认不输出要素属性，需按需开放字段。
+- **显式设置 `gml_include_items`**：默认不输出要素属性（自 MapServer 4.6 起），需按需开放字段。
 - **PostGIS 图层建空间索引**，并在 mapfile 中正确设置 `PROJECTION` 与 `EXTENT`。
 - **图像格式按需选择**：`image/png` 适合线面，`image/jpeg` 适合影像，`image/png; mode=8bit` 可减小体积。
 - **配合 MapCache** 缓存瓦片，或在前端做预切片以承接高并发。
@@ -253,7 +255,7 @@ ogr2ogr -f GPKG clip.gpkg countries.gpkg -clipsrc 100 20 130 50
 | GetMap 返回空白图像 | 检查 `EXTENT` 与请求 `BBOX` 是否匹配、`PROJECTION` 是否与数据一致、图层 `STATUS` 是否为 `ON` |
 | WMS 提示未启用请求 | `wms_enable_request` 未设置或未包含该请求类型；设为 `*` 或列出具体请求 |
 | GetFeatureInfo 无返回 | 图层缺少 `TEMPLATE`（如 `empty`）或 `wms_include_items` 未配置 |
-| WFS 返回结果不含属性字段 | 8.x 默认不暴露属性，设置 `gml_include_items "all"` 或列出字段名 |
+| WFS 返回结果不含属性字段 | 默认不暴露属性（MapServer 4.6 起的默认行为），设置 `gml_include_items "all"` 或列出字段名 |
 | 中文注记显示为方框 | mapfile 需 UTF-8 编码，且 `FONT` 指向包含中文字形的字体集 |
 | 图层名不符合 WFS 发布要求 | `NAME` 必须以字母开头，且 `TYPE` 为 POINT/LINE/POLYGON |
 | SLD 未生效 | `NamedLayer/Name` 与图层 `NAME` 不匹配，或 `CLASSITEM` 字段名错误 |
@@ -265,7 +267,7 @@ ogr2ogr -f GPKG clip.gpkg countries.gpkg -clipsrc 100 20 130 50
 - **执行环境**：命令在终端 / shell 中执行（Windows 用 OSGeo4W 的 `mapserv.exe`）；`sudo apt`、`tar -zxvf` 不跨平台，Windows 改 `Expand-Archive`，装包或改系统目录前先问用户。
 - **先探测版本**：`mapserv -v`，确认输出含 `MapServer version 8.6.6` 且 `SUPPORTS=` 里有需要的 `WMS_SERVER`/`WFS_SERVER`；缺项说明该构建没编进对应库，改 mapfile 无用。
 - **验证产物**：先离线 `map2img -m demo.map -o out.png -s 600 400` 看渲染，再 `mapserv -nh "QUERY_STRING=map=/abs/demo.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities"` 抓能力文档，最后才 `curl -sI "http://host/cgi-bin/mapserv?map=...&REQUEST=GetMap..."` 确认 200 与 `Content-Type: image/png`。
-- **排障分流**：空白图查 `EXTENT`/`BBOX`/`PROJECTION`/`STATUS ON`；能力文档缺图层查 `wms_enable_request`、`wfs_enable_request` 与 `NAME` 是否字母开头；WFS 无属性字段是 8.x 默认行为，补 `gml_include_items`。
+- **排障分流**：空白图查 `EXTENT`/`BBOX`/`PROJECTION`/`STATUS ON`；能力文档缺图层查 `wms_enable_request`、`wfs_enable_request` 与 `NAME` 是否字母开头；WFS 无属性字段是默认行为（4.6 起），补 `gml_include_items`。
 - **安全与权限**：`map=` 可读任意路径是 MapServer 最典型误配置，生产必须设 `MS_MAP_PATTERN`/`MS_MAP_NO_PATH`；重启 Apache/nginx 或改 CGI 权限前先向用户确认。
 - **改一处验一处**：改 `WEB.METADATA` 后只重跑 `GetCapabilities`，改 `LAYER` 样式后只重跑 `map2img`，缩小排查范围。
 

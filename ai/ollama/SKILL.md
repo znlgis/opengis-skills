@@ -1,6 +1,6 @@
 ---
 name: ollama
-description: "Use when running local LLMs — ollama pull/run/ps, Modelfile templates, /api/generate|chat|embed NDJSON streaming, OpenAI-compatible /v1/chat/completions and /v1/responses, tuning num_ctx/num_gpu/keep_alive and OLLAMA_* env vars; also for `connection refused` on 127.0.0.1:11434, OOM on a model that does not fit VRAM, CPU-only inference despite a GPU, and pull timeouts behind a proxy. Ollama v0.40.15."
+description: "Use when running local LLMs — ollama pull/run/ps, Modelfile templates, /api/generate|chat|embed NDJSON streaming, OpenAI-compatible /v1/chat/completions and /v1/responses, tuning num_ctx/num_gpu/keep_alive and OLLAMA_* env vars; also for `connection refused` on 127.0.0.1:11434, OOM on a model that does not fit VRAM, CPU-only inference despite a GPU, and pull timeouts behind a proxy. Ollama v0.40.16."
 license: MIT
 metadata:
   category: ai
@@ -15,9 +15,11 @@ metadata:
 >
 > **许可证：** MIT
 >
-> **最新版本：** v0.40.15（截至 2026-11，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/ollama/ollama/releases)）
+> **最新版本：** v0.40.16（截至 2026-11，实测 `releases/latest` 重定向；2026-11-09 发布，v0.40.17 仍为 `-rc0` 预发布；见 [GitHub Releases](https://github.com/ollama/ollama/releases)）
 >
 > **npm SDK：** `ollama`（0.6.4，实测 npm registry）
+
+> **v0.40.16 变化（可选读）**：新增 Ripple Preview（65B 稠密模型，面向 agentic coding，`ollama run ripple-preview`）；Qwen3.8 Flash Next 在 Apple silicon 上少占约 27 GiB 内存；`ollama launch claude` 总是把 Claude Code 路由到所选模型；`/v1/responses` 遵守 truncation、不再静默截断；`/v1/models` 无模型时返回空数组而非 null；支持 Windows on ARM 的 CUDA 13.5。
 
 ## 概述
 
@@ -391,6 +393,9 @@ curl http://localhost:11434/api/embed -d '{
 | OpenAI SDK 调用报错 | `base_url` 必须带 `/v1/` 后缀；`api_key` 填任意非空值（如 `ollama`）；模型需先 `ollama pull` |
 | Docker 容器访问宿主机 Ollama | macOS / Windows 用 `http://host.docker.internal:11434`；Linux 可用 `--network=host` |
 | 如何确认模型用了 GPU | `ollama ps` 的 PROCESSOR 列：`100% GPU` / `100% CPU` / 混合分摊比例 |
+| `/v1/models` 返回 null 导致客户端报错 | v0.40.16 起无本地模型时返回空数组 `[]`；更早版本会返回 `null`，升级或用原生 `/api/tags` |
+| `/v1/responses` 长上下文被静默截断 | v0.40.16 起遵守 truncation 参数、不再默认静默截断；显式传 `truncation` 控制策略 |
+| Windows on ARM 上 GPU 用不起来 | v0.40.16 起支持 CUDA 13.5（Windows on ARM）；确认驱动版本与 Ollama 版本匹配 |
 
 ---
 
@@ -402,7 +407,7 @@ curl http://localhost:11434/api/embed -d '{
 2. **模型先拉后用**：任何 API / SDK 调用前先 `ollama pull <model>`，避免运行时才暴露模型缺失
 3. **调试用 CLI，集成交付用 API**：交互调试用 `ollama run`，代码集成用 `/api/chat` 或 OpenAI 兼容层
 4. **参数改动小步走**：每次只调一个参数（num_ctx / num_gpu / keep_alive），用 `eval_count` 与 `eval_duration` 量化对比
-5. **版本敏感**：Ollama 迭代快（当前 v0.40.15），API 字段与 CLI 命令以当前版本的 `--help` 与官方文档为准
+5. **版本敏感**：Ollama 迭代快（当前 v0.40.16），API 字段与 CLI 命令以当前版本的 `--help` 与官方文档为准
 
 ### 关键模式与常见陷阱
 

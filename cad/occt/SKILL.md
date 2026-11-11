@@ -47,8 +47,8 @@ brew install opencascade
 # Conda（含 PythonOCC）
 conda install -c conda-forge pythonocc-core
 
-# 源码：CMake 构建（CMake ≥ 3.10；C++ 标准缺省 C++17，可用 -DBUILD_CPP_STANDARD=C++20 调高；
-# VTK 默认关闭，需 -DUSE_VTK=ON 开启）
+# 源码：CMake 构建（CMake ≥ 3.10；C++ 标准缺省 C++17，可用
+# -DBUILD_CPP_STANDARD=C++20/C++23/C++26 调高；VTK 默认关闭，需 -DUSE_VTK=ON 开启）
 ```
 
 验证安装（头文件与库是否就位）：

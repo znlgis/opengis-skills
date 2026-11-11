@@ -11,6 +11,7 @@
 - Affine Transforms
 - Coordinate Transforms
 - Linear Referencing
+- Coordinate Extraction & Segments (2.2)
 
 Constructive operations, predicates, set operations, measurements, indexing and coordinate operations split from SKILL.md.
 
@@ -209,3 +210,32 @@ shapely.shortest_line(a, b)
 shapely.get_segments(geom)   # 提取 LineString/LinearRing 的逐段线段（2.2 新增）
 ```
 
+## Coordinate Extraction & Segments (2.2)
+
+Added in Shapely 2.2.0.
+
+| Function | Description |
+|----------|-------------|
+| `get_segments(geometry, include_z=False, return_index=False)` | Split each LineString/LinearRing into individual pairwise-vertex segments (returns ndarray of LINESTRINGs). Multi\* geometries are not supported. |
+| `minimum_width(geometry)` | Minimum width (minimum diameter) as a LineString; degenerate inputs (Point/LineString) return a zero-length LineString. |
+| `transform_coordseq(geometry, function)` | Apply a function per coordinate sequence (faster than the deprecated `shapely.ops.transform`). |
+| `split(geometry, splitter)` | Split a geometry by another one (uses GEOS >= 3.15 when available, otherwise falls back to `shapely.ops.split`). Splitting a (Multi)Polygon by another (Multi)Polygon uses its boundary. |
+| `coverage_clean(geometries, gap_width=0.0, snapping_distance=-1, merge_strategy="longest_border")` | Clean a polygonal coverage, closing gaps/overlaps (requires GEOS >= 3.14). |
+
+```python
+import shapely
+from shapely import LineString, Polygon
+
+shapely.get_segments(LineString([(0, 0), (1, 1), (2, 2)]))
+# array([<LINESTRING (0 0, 1 1)>, <LINESTRING (1 1, 2 2)>], dtype=object)
+
+shapely.minimum_width(Polygon([(0, 0), (1, 0), (1, 1), (0, 1)]))
+# <LINESTRING (0 0, 1 0)>
+
+shapely.split(LineString([(0, 0), (2, 0)]), shapely.Point(1, 0))
+# GEOMETRYCOLLECTION (LINESTRING (0 0, 1 0), LINESTRING (1 0, 2 0))
+```
+
+### prepare()/relate() interplay
+
+Since 2.2, `relate()` and `relate_pattern()` accept prepared geometries on the left input and then use a faster implementation. `prepare()` and `destroy_prepared()` return whether they changed anything.

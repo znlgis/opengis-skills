@@ -240,8 +240,6 @@ auto inflated = InflatePaths(u, 10.0, JoinType::Round, EndType::Polygon);
 
 ---
 
----
-
 ## 常见问题
 
 | 报错 / 现象 | 原因 | 处置 |

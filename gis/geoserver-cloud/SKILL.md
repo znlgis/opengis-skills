@@ -191,8 +191,6 @@ docker run -e SPRING_PROFILES_ACTIVE=datadir \
 
 ---
 
----
-
 ## 典型工作流
 
 ### 工作流 1：从零部署高可用 GeoServer Cloud

@@ -266,8 +266,10 @@ using Mapsui.Providers.Wms;
 var shpProvider = new ShapeFile("data/china.shp", true);
 map.Layers.Add(new Layer("China") { DataSource = shpProvider });
 
-// 2. WMS 栅格层：构造参数依次为服务地址，图层名数组
-var wmsProvider = new WmsProvider("https://geo.example.com/wms?", new[] { "rivers" });
+// 2. WMS 栅格层：5.x 起同步构造已移除，必须用异步工厂 CreateAsync（会先拉 GetCapabilities）
+var wmsProvider = await WmsProvider.CreateAsync("https://geo.example.com/wms?", userAgent: "MyApp");
+wmsProvider.CRS = "EPSG:3857";        // 需与 Map.CRS 一致，否则地图空白而非报错
+wmsProvider.AddLayer("rivers");       // 图层名必须与能力文档完全一致
 map.Layers.Add(new ImageLayer("Rivers") { DataSource = wmsProvider });
 
 map.ZoomToExtents();

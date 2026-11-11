@@ -11,6 +11,8 @@ metadata:
 >
 > **官网：** <https://librecad.org/>
 >
+> **官方文档：** <https://librecad.readthedocs.io/>
+>
 > **Wiki：** <https://github.com/LibreCAD/LibreCAD/wiki>
 >
 > **许可证：** GPL-2.0
@@ -259,7 +261,7 @@ doc.saveas('out.dxf')   # LibreCAD 可直接打开
 
 - **qcad** — 2D CAD 软件，ECMAScript 脚本扩展与 DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
 - **libredwg** — DWG/DXF 文件格式读写库（C 语言）：[../libredwg/SKILL.md](../libredwg/SKILL.md)
-- **lightcad** — Web 2D CAD 框架，DXF 导入导出：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **lightcad** — 飞扬集成设计平台（C#/.NET 8 桌面 CAD/BIM）；DWG/DXF 经 ODA SDK 与 netDxf 读写，适合在 .NET 侧做图纸二次开发：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 - **ifoxcad** — AutoCAD .NET 二次开发框架：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 
 ---

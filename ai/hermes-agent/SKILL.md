@@ -13,7 +13,7 @@ metadata:
 >
 > **许可证：** MIT ｜ **语言：** Python（3.11 – 3.14，`requires-python = ">=3.11,<3.15"`）
 >
-> **最新版本：** v0.23.0（截至 2026-11，2026-11-05 发布，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）
+> **最新版本：** v0.23.1（截至 2026-11，2026-11-09 发布，实测 `releases/latest` 重定向；见 [GitHub Releases](https://github.com/NousResearch/hermes-agent/releases)）｜ 注意 PyPI 上的 `hermes-agent` 停在 0.19.0，不是本项目发布渠道，勿据其判断版本
 
 ## 概述
 
@@ -129,7 +129,9 @@ hermes cron list --all
 | 子代理协作 | 拆解复杂任务并行处理 |
 | 插件开发 | 扩展自定义能力与研究功能 |
 
-> **v0.23 新增（可选读）**：Webapp 把整个 Desktop 工作区搬到浏览器标签；单 gateway 拥有全部会话（CLI/TUI/Desktop/编辑器/机器人/cron 都作为客户端接入）；终端内直接显示图片；`/rewind` 回退到历史消息重发或另开分支；`hermes plugins update` 批量更新插件。
+> **v0.23 新增（可选读）**：Webapp 把整个 Desktop 工作区搬到浏览器标签；单 gateway 拥有全部会话（CLI/TUI/Desktop/编辑器/机器人/cron 都作为客户端接入）；终端内直接显示图片；`/rewind` 回退到历史消息重发或另开分支（v0.23.1 起 TUI/CLI 用 `Esc` 回退替代列表选择器）；`hermes plugins update` 批量更新插件。
+>
+> **v0.23.1 修复（重要）**：插件目录 `plugin-catalog.json` 超过客户端 2 MiB 上限导致 `hermes plugins install <name>` 静默回退到旧内置目录、装不到新插件/装了旧 pin。v0.23.1 把上限提到 16 MiB 恢复实时目录；停留在 v0.23.0 及更早的安装会持续回退，需 `hermes update` 或重跑安装脚本升级。
 
 ---
 
@@ -146,6 +148,8 @@ hermes cron list --all
 | 选不到模型 | 先 `hermes model` 配置 Provider 与 API Key；`hermes doctor` 排错 |
 | 它“记住”的东西在哪 | 持久化记忆/技能存于 Hermes 主目录（`~/.hermes/` 或 `$HERMES_HOME`） |
 | 想接私有工具 | 通过 MCP 集成接入，并在 `hermes tools` 中启用 |
+| `hermes plugins install <name>` 装不到新插件 | v0.23.0 及更早受 2 MiB 目录上限影响会静默回退内置目录；升级到 v0.23.1（`hermes update` / 重跑安装脚本）后上限为 16 MiB |
+| 更新方式怎么选 | CLI 用 `hermes update` 或重跑安装脚本；Microsoft Store 版走商店更新；Docker / Hermes Cloud 拉 `nousresearch/hermes-agent:stable`（或 `:latest`） |
 
 ---
 

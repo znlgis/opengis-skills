@@ -264,7 +264,7 @@ dwgread -O GeoJSON input.dwg -o out.geojson
 - **librecad** — 开源 2D CAD，DXF 编辑与 LibreDWG 协同使用：[../librecad/SKILL.md](../librecad/SKILL.md)
 - **qcad** — 2D CAD 软件，DXF/DWG 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
 - **ifoxcad** — AutoCAD .NET 二次开发框架（DWG 读写高层封装）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
-- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **lightcad** — 飞扬集成设计平台（C#/.NET 8 桌面 CAD/BIM）——通过 ODA SDK 与 netDxf 处理 DWG/DXF，可与 LibreDWG 的转换链路对照：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 
 ---
 

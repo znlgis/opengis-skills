@@ -237,7 +237,7 @@ const wasm = await initWasm();
 1. 复制 `plugins/helloworld-ts` 作骨架（`manifest.json` + `importmap.json` + `src/index.ts` + `src/commands/`）
 2. 用 `@command({ key, icon, helpText })` 定义命令类，实现 `ICommand.execute(application)`
 3. 在 `Plugin` 对象里声明 `commands` / `ribbons` / `i18nResources` / `guide`
-4. `npm install && npm run build && npm run package` 产出 `.chiliplugin`
+4. 进入插件包目录（如 `cd plugins/helloworld-ts`）后 `npm install && npm run build && npm run package` 产出 `.chiliplugin`（根目录没有 `package` 脚本）
 5. 打开 Chili3D，把 `.chiliplugin` 拖进窗口 → Ribbon 出现按钮，点击执行
 6. `npm run test` 与 `npm run check` 通过后提交（Biome：4 空格、110 列、双引号）
 

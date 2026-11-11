@@ -109,6 +109,10 @@ L3 技能按以下顺序组织（标题措辞可微调，语义必须齐备，�
 python scripts/validate-skills.py .        # 结构/frontmatter/索引/链接，CI 同款
 python scripts/check-upstream.py .         # 上游最新版本漂移（需联网）
 python scripts/check-links.py .            # 外部链接连通性（可选，需联网）
+
+# 只改了一两个技能时的快速自查（跳过分仓库索引检查，越多 --only 越省时）
+python scripts/validate-skills.py . --only gis/gdal --only cad/qcad
+python scripts/check-upstream.py . --only gis/gdal
 ```
 
 校验器覆盖：六字段白名单、**frontmatter 严格 YAML 合法**（双引号标量内不得出现未转义 `"`）、name 与目录一致、description 全英文且 ≤500 且唯一、无尖括号、metadata 完整、L2/L3 必备章节（含 `## AI 使用建议`）、头部「截至 YYYY-MM」时效标记、FAQ ≥5 行、无 emoji、代码围栏带语言、无 `@@` 占位符残留、≤500 行、reference 目录 TOC/孤儿/一层深、相对链接可达、Windows 反斜杠路径、根标签索引与 `metadata.tags` 一致、索引与 README 覆盖及数量一致。

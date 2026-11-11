@@ -11,13 +11,13 @@ metadata:
 >
 > **官网：** <https://qcad.org/>
 >
-> **官方文档：** <https://qcad.org/en/qcad-documentation>
+> **官方文档：** <https://qcad.org/en/manual/>
 >
 > **API 参考：** <https://api.qcad.org/>
 >
 > **许可证：** GPL-3.0（社区版）；Pro 版商业许可
 >
-> **最新版本：** 27.0.3（2026-11-02，自 27.0.0 起改用日历版本号，取代 3.33.x；见 [Changelog](https://qcad.org/en/changelog) 与 [Releases](https://github.com/qcad/qcad/releases)，截至 2026-11）
+> **最新版本：** 27.0.4（2026-11-10，自 27.0.0 起改用日历版本号，取代 3.33.x；见 [Changelog](https://qcad.org/en/changelog) 与 [Releases](https://github.com/qcad/qcad/releases)，截至 2026-11）
 
 ## 概述
 
@@ -30,7 +30,7 @@ QCAD 由两部分组成：
 
 - 2D 绘图：线/弧/圆/多段线/样条/标注/填充/文本
 - 图层、块、视图、布局、打印
-- DXF/DWG/PDF/SVG 输入输出
+- DXF/DWG/PDF/SVG 输入输出；27.0 起新增 EPS / HPGL(PLT) 导入、Gerber 导入（自 QCAD/CAM 移入 Professional）并大幅改进 SVG 导入；27.0.4 起新增 Visual CADD（`.vbk`/`.vcd`）与 CadStd（`.cad`）图纸导入，位图导出可写入物理分辨率
 - ECMAScript（QtScript / V8）脚本扩展
 - 脚本接口：QCAD 提供 ECMAScript（JavaScript）脚本接口用于二次开发，相关仓库为 [qcad/qtjsapi](https://github.com/qcad/qtjsapi) 与 [qcad/qcadjsapi](https://github.com/qcad/qcadjsapi)
 - 命令行：`qcad` 本体 + Pro 版附带的控制台工具（`dwginfo`、`dwg2pdf`、`dwg2svg`、`dwg2bmp` 等，见「命令行批处理」）
@@ -278,14 +278,14 @@ doc.applyOperation(op);
 
 - **librecad** — 开源 2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
 - **libredwg** — DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
-- **lightcad** — Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **lightcad** — 飞扬集成设计平台（C#/.NET 8 桌面 CAD/BIM，`ILcPlugin` 插件体系与 DWG 读写）——同为 2D 图纸场景的 .NET 侧二次开发底座：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 - **ifoxcad** — AutoCAD .NET 二次开发框架（类似的插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 
 ---
 
 ## 参考资源
 
-- 文档：<https://qcad.org/en/qcad-documentation>
+- 文档（用户手册）：<https://qcad.org/en/manual/>
 - API：<https://api.qcad.org/>
 - 控制台工具：<https://qcad.org/en/qcad-command-line-tools>
 - 论坛：<https://qcad.org/rsforum/>

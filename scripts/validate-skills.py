@@ -19,10 +19,16 @@ version claims are visible.
 
 Indexes: root SKILL.md, category indexes and README.md cover every skill
 exactly once and advertised skill counts match reality.
+
+Usage:
+    python scripts/validate-skills.py .                     # full repository (CI)
+    python scripts/validate-skills.py . --only gis/gdal     # one skill, skips index checks
+    python scripts/validate-skills.py . --only gis          # one category, skips index checks
 """
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -465,14 +471,46 @@ def validate_count(description, expected, relative, report):
                 report.error(relative, "description advertises " + match.group(1) + " skills but repository has " + str(expected))
 
 
+def select_files(root, all_files, only):
+    """Limit validation to the given <category> or <category>/<skill> prefixes."""
+    wanted = []
+    for prefix in only:
+        prefix = prefix.replace(chr(92), "/").strip("/")
+        match = [
+            path
+            for path in all_files
+            if path.relative_to(root).as_posix() == prefix + "/SKILL.md"
+            or path.relative_to(root).as_posix().startswith(prefix + "/")
+        ]
+        if not match:
+            print("warning: --only filter matched no files: " + prefix, file=sys.stderr)
+        for path in match:
+            if path not in wanted:
+                wanted.append(path)
+    return sorted(wanted)
+
+
 def main():
-    root = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
+    parser = argparse.ArgumentParser(description="Validate opengis-skills structure, metadata and indexes.")
+    parser.add_argument("root", nargs="?", default=".")
+    parser.add_argument(
+        "--only",
+        action="append",
+        default=[],
+        metavar="PREFIX",
+        help="validate only skills under this <category> or <category>/<skill> prefix "
+        "(repeatable); cross-repository index and count checks are skipped",
+    )
+    args = parser.parse_args()
+    root = Path(args.root).resolve()
     report = Report()
     skill_files = sorted(root.rglob("SKILL.md"))
     skill_files = [path for path in skill_files if ".git" not in path.parts]
     if not skill_files:
         print("No SKILL.md files found", file=sys.stderr)
         return 1
+    if args.only:
+        skill_files = select_files(root, skill_files, args.only)
 
     skills = {}
     category_skills = {category: [] for category in CATEGORIES}
@@ -514,6 +552,19 @@ def main():
             root_description = meta["fields"].get("description", "")
         else:
             report.error(relative, "SKILL.md must live at <root>/, <category>/ or <category>/<skill>/")
+
+    if args.only:
+        for warning in report.warnings:
+            print("warning: " + warning)
+        if report.errors:
+            print("Skill validation failed:")
+            print("\n".join("- " + error for error in report.errors))
+            return 1
+        print(
+            "Skill validation passed (--only " + ", ".join(args.only) + "): "
+            + str(len(skill_files)) + " SKILL.md files checked, cross-repository index checks skipped"
+        )
+        return 0
 
     total = len(skills)
     if root_description:

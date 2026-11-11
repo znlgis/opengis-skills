@@ -427,6 +427,7 @@ map.addControl(overlay);
 
 ## 相关技能
 
+- **maplibre-gl-js** — 开源免 token 的矢量瓦片底图，`MapboxOverlay` 的默认搭档：[../maplibre-gl-js/SKILL.md](../maplibre-gl-js/SKILL.md)
 - **mapbox-gl-js** — 矢量瓦片底图与 Style Spec，deck.gl 的常见底图搭档：[../mapbox-gl-js/SKILL.md](../mapbox-gl-js/SKILL.md)
 - **openlayers** — 开源 2D WebGIS 库，投影、MVT 与高级交互：[../openlayers/SKILL.md](../openlayers/SKILL.md)
 - **leaflet** — 轻量 2D 瓦片地图，适合中小数据量与简单场景：[../leaflet/SKILL.md](../leaflet/SKILL.md)

@@ -11,7 +11,7 @@ metadata:
 >
 > **官方文档：** <https://docs.vllm.ai/>
 >
-> **最新版本：** 0.33.0（截至 2026-11，[PyPI](https://pypi.org/project/vllm/) 实测）
+> **最新版本：** 0.33.0（截至 2026-11，[PyPI](https://pypi.org/project/vllm/) 实测为最新稳定版；GitHub 上另有 `v0.34.0rc0` 预发布，不作为稳定版本依据）
 >
 > **许可证：** Apache-2.0
 

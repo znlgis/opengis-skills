@@ -138,7 +138,7 @@ IList<double[]> projectedPoints = mt.TransformList(points);
 | `MathTransform.Transform(double[])` | 单点转换，输入 `[x, y]` 或 `[x, y, z]`，维度由变换决定 |
 | `MathTransform.Transform(double x, double y)` | 元组重载，返回 `(x, y)` |
 | `MathTransform.TransformList(IList<double[]>)` | 批量转换，返回转换后的点数组列表 |
-| `MathTransform.Transform(Span<double> xs, Span<double> ys)` | 分离数组的 SOA 批量转换，适合大数组 |
+| `MathTransform.Transform(Span<double> xs, Span<double> ys, int strideX = 1, int strideY = 1)` | 分离数组的 SOA 批量转换，适合大数组；数组有交错间隔时用 `strideX`/`strideY` 指定步长 |
 | `MathTransform.Inverse()` | 取逆变换，用于反向换算 |
 
 坐标按 `x, y` 顺序解释（经度/东坐标在前，纬度/北坐标在后），ProjNet **不做轴序交换**；若拿到的 WKT 声明了 `AXIS["Latitude", NORTH]` 之类的轴序，需要调用方自行判断是否交换。

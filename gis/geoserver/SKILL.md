@@ -199,7 +199,7 @@ curl -u admin:geoserver -XPOST \
 | WFS-T 403 | Data 规则允许 `w` 权限 |
 | 跨域 | 配置 CORS 过滤器 |
 | 改了 SLD 但预览不变 | 图层被 GeoWebCache 缓存：Tile Caching 里 Truncate 该图层，或给 GetMap 加 `&tiled=false` |
-| 忘记管理员密码 | 数据目录 `security/users.properties` 里恢复，改完重启；GeoServer 3.x 默认改由 security 配置文件管理 |
+| 忘记管理员密码 | 默认 XML 用户/组服务的用户在数据目录 `security/usergroup/<name>/users.xml`（默认服务名 `default`）；改完重启，或用 Docker 的 `GEOSERVER_ADMIN_PASSWORD` 重置 |
 | 启动报 `UnsupportedClassVersionError` | JVM 版本低于 17：换成 JDK 17 或 21 再启动 3.0.x 分发包 |
 
 ---

@@ -13,6 +13,8 @@ metadata:
 >
 > **最新版本：** 2.10.2（截至 2026-11，[GitHub Release](https://github.com/PDAL/PDAL/releases)；conda-forge `pdal` 同为 2.10.2）
 >
+> **构建依赖：** 最低要求 GDAL 3.8（`cmake/gdal.cmake` 里硬校验；发行版二进制包已自带匹配的 GDAL，无需自己编）
+>
 > **PyPI：** `pdal`（Python 绑定，最新 3.5.5，截至 2026-11；版本号与主库独立）
 >
 > **许可证：** BSD-3-Clause
@@ -25,6 +27,7 @@ PDAL（Point Data Abstraction Library）是处理点云数据的开源库与命�
 - **流式优先**：默认尽量使用 stream mode，大文件不必整体载入
 - **格式广泛**：内置 LazPerf，LAZ 压缩读写开箱即用
 - **生态衔接**：writers.gdal 直接输出 GeoTIFF DEM，Python 绑定返回 NumPy 数组
+- **2.10 新增 stage**：`filters.m3c2`（3D 变化检测，带四叉树 PointGrid 索引）、`filters.radiusassign`（按半径条件赋值）；writers.gdal 支持 `p<percentile>` 百分位波段，filters.hag_dem 新增 `min_clamp` / `max_clamp` / `nodata`
 
 ## 环境准备
 
@@ -208,7 +211,8 @@ pdal pipeline pipeline.json --stage.points.filename=data.laz # 按 tag 覆盖
 ```
 
 - `resolution` 必需（格网边长）；`dimension` 默认 `Z`
-- `output_type` 可选 `min/max/mean/idw/count/stdev/all`（默认 `all`，输出多波段）
+- `output_type` 可选 `min/max/mean/idw/count/stdev/all`（默认 `all`，输出多波段）；2.10 起还支持 `p<percentile>` 百分位波段（如 `p95`），百分位波段不计入 `all`
+- `binmode`（默认 false）为 true 时只统计落在像元内的点，不做距离插值
 - `gdalopts` 透传 GDAL 驱动参数；`override_srs` 指定输出栅格坐标系
 
 ### Python 绑定
@@ -308,6 +312,8 @@ for las_file in glob.glob("tiles/*.las"):
 - 输出统一用 LAZ（`compression: "true"`）减小体积，GDAL/QGIS 可直接读取
 - 用 `tag` + `inputs` 构建分支与合并（filters.merge），tag 必须先定义
 - `pdal ground` 自 2.6.0 标记 DEPRECATED，2.7 从默认安装移除、2.8 完全移除；一律改用 `filters.smrf` 的 pipeline 写法
+- `readers.spz` / `writers.spz` 在 2.10 变成插件：标准安装里 `pdal --drivers` 看不到它们，需要 SPZ 支持时另装对应插件
+- 2.10 起 `filters.georeference` 输出 ECEF（EPSG:4978），要经纬度结果需再接 `filters.reprojection`
 - SMRF 参数需按数据调整：window 参考最大建筑物尺寸，slope/threshold 可参考 SMRF 论文的参数组合
 
 ## 常见问题
@@ -323,6 +329,8 @@ for las_file in glob.glob("tiles/*.las"):
 | 重投影后坐标精度变差 | 在 writer 中设置 `scale_x/y/z` 与 `offset_x/y/z: "auto"` |
 | 地面分类效果不佳 | 调整 smrf 的 window/slope/threshold/scalar，先检查数据坐标系与高程单位 |
 | 报 `Couldn't create <cls> stage of type '<type>'.` | stage 名拼错或该版本没有此 stage：先 `pdal --drivers` 确认存在，再核对 `readers.*`/`filters.*`/`writers.*` 前缀 |
+| 编译报 `Could not find GDAL` / `Required at least GDAL version 3.8` | PDAL 当前最低要求 GDAL 3.8，版本低于它 CMake 直接报错 | 升级 GDAL，或直接用 conda-forge / Docker 二进制包省去编译 |
+| 用 `filters.range` 时收到建议迁移的提示 | 官方建议 2.5.x+ 新代码用 `filters.expression`，`filters.range` 自 PDAL 3.0 起弃用 | 新 pipeline 一律写 `{"type": "filters.expression", "expression": "..."}` |
 
 ## AI 使用建议
 

@@ -13,7 +13,7 @@ metadata:
 >
 > **最新版本：** `Polly.Core` / `Polly.Extensions` / `Polly.RateLimiting` / `Polly` 同为 8.9.1（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Polly.Core)；8.9.0 起提供 net10.0 目标）
 >
-> **配套：** `Microsoft.Extensions.Http.Resilience` 10.11.0（`IHttpClientFactory` 标准弹性 handler，版本跟随 Microsoft.Extensions.*）
+> **配套：** `Microsoft.Extensions.Http.Resilience` 11.0.0（2026-11-10 发布，`IHttpClientFactory` 标准弹性 handler，版本跟随 Microsoft.Extensions.* 的 .NET 11 波次；包内同时提供 net8.0 / net9.0 / net10.0 / net11.0 / netstandard2.0 资产，非 .NET 11 项目也可用，锁定 10.x 亦无不兼容变更）
 >
 > **目标框架：** net10.0 / net8.0 / net6.0 / netstandard2.0 / .NET Framework 4.6.2+（以包内 `lib/` 实测）
 >
@@ -68,7 +68,7 @@ dotnet add package Microsoft.Extensions.Http.Resilience
 <ItemGroup>
   <PackageReference Include="Polly.Core" Version="8.9.1" />
   <PackageReference Include="Polly.Extensions" Version="8.9.1" />
-  <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.11.0" />
+  <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="11.0.0" />
 </ItemGroup>
 ```
 
@@ -411,7 +411,7 @@ for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://localhos
 | `ValueTask` 不能直接 await 两次 | v8 的 `ExecuteAsync` 返回 `ValueTask<T>`，需要 await 两次时先 `.AsTask()` |
 | 按状态码重试完全不触发 `OnRetry` | 用了非泛型管道：结果判定要 `ResiliencePipelineBuilder<HttpResponseMessage>` + `RetryStrategyOptions<HttpResponseMessage>` + `PredicateBuilder<HttpResponseMessage>.HandleResult(...)`，三步缺一不可 |
 | 泛型管道注册后 `GetPipeline("name")` 报找不到管道 | 注册用了 `AddResiliencePipeline<TKey,TResult>`，取回也必须泛型：`GetPipeline<HttpResponseMessage>("name")` |
-| `Microsoft.Extensions.Http.Resilience` 版本冲突 | 该包版本跟随 `Microsoft.Extensions.*`（.NET 10 用 10.x），与项目 TFM 对齐 |
+| `Microsoft.Extensions.Http.Resilience` 版本冲突 | 该包版本跟随 `Microsoft.Extensions.*`（.NET 10 用 10.x，.NET 11 用 11.x），与项目 TFM 对齐；11.0.0 仍带 net8.0 / net10.0 资产 |
 | 管道里超时和重试谁耗时更长 | 顺序决定语义：`AddTimeout` 在外层就是"总时长上限"，在内层就是"单次尝试上限" |
 
 ---

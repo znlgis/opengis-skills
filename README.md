@@ -30,7 +30,7 @@
 
 | 层级 | 文件 | 内容 | 适用场景 |
 |------|------|------|---------|
-| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 115 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
+| **L1 全局入口** | [`SKILL.md`](./SKILL.md)（根目录） | 120 个技能的全量索引、标签搜索、按场景推荐 | 不确定具体工具时，先加载此文件获取全貌 |
 | **L2 分类索引** | `gis/SKILL.md`、`cad/SKILL.md`、`csharp/SKILL.md`、`ai/SKILL.md`、`iot/SKILL.md`、`3d/SKILL.md`、`demos/SKILL.md`、`others/SKILL.md` | 某个分类下的技能列表与领域概述 | 明确大类（如 GIS、CAD）但不确定具体工具 |
 | **L3 项目技能** | `<category>/<project>/SKILL.md` | 单个开源项目的深度知识（API、工作流、FAQ） | 已确定使用哪个工具，需要精准的编码指导 |
 
@@ -79,7 +79,7 @@ opengis-skills/
 ├── SKILL.md         # 🌐 根入口：全局索引 + 标签搜索 + 使用指南
 ├── AUTHORING.md     # 📐 技能书写规范（唯一权威，CI 校验依据）
 ├── scripts/         # 校验与版本漂移脚本
-├── gis/             # GIS 类（40 个）
+├── gis/             # GIS 类（45 个）
 │   └── SKILL.md     # GIS 分类索引
 ├── cad/             # CAD 类（21 个）
 │   └── SKILL.md     # CAD 分类索引
@@ -107,7 +107,7 @@ opengis-skills/
 
 | 分类索引 | 涵盖内容 | 适用场景 |
 |---------|---------|---------|
-| [`gis/SKILL.md`](./gis/SKILL.md) | 40 个 GIS 技能概要（GDAL、QGIS、GeoServer、PostGIS、JTS、OpenGisDAF 等） | 空间数据处理、地图服务、Web GIS |
+| [`gis/SKILL.md`](./gis/SKILL.md) | 45 个 GIS 技能概要（GDAL、QGIS、GeoServer、PostGIS、JTS、OpenGisDAF 等） | 空间数据处理、地图服务、Web GIS |
 | [`cad/SKILL.md`](./cad/SKILL.md) | 21 个 CAD 技能概要（FreeCAD、OCCT、OpenSCAD、KiCad 等） | 参数化建模、几何运算、BIM/PCB |
 | [`csharp/SKILL.md`](./csharp/SKILL.md) | 12 个 C#/.NET 技能概要（Furion、NPOI、SqlSugar、Sentry、Serilog、Polly、Hangfire 等） | .NET Web 开发、ORM、Office 操作、错误追踪 |
 | [`ai/SKILL.md`](./ai/SKILL.md) | 17 个 AI 技能概要（Dify、LangChain、LlamaIndex、Ollama、vLLM、CrewAI、MinerU、Pi、OpenCode、DeepSeek Harness、DocuTranslate 等） | LLM 应用、智能体、文档解析、推理服务 |
@@ -116,7 +116,7 @@ opengis-skills/
 | [`others/SKILL.md`](./others/SKILL.md) | 11 个其它技能概要（Go 语言、RobotGo、robotgo-flow、邮件平台、Java 脚手架、acme.sh、CHAGS 儿童游戏合集、Docker Compose、BambooBuddy 儿童养成游戏、MathMindForge 数学思维闯关、FFmpeg） | 通用工具、Go 开发、自动化、SSL 证书、H5 游戏 |
 | [`demos/SKILL.md`](./demos/SKILL.md) | 4 个演示项目技能概要（map-360-demo 全景地图联动、vue3-map-dashboard 可视化大屏、ai-water-front 智慧水务前端、openlayers-vue3-demo 图层树） | Vue3 演示工程、地图可视化、学习参考 |
 
-> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 115 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
+> **设计理念：** 分类索引文件让 AI 工具在**已知用户需求领域**时，无需加载 120 个技能的全量索引（根 `SKILL.md`），只需加载对应分类索引即可快速定位目标技能。如果用户跨领域提问，再回退到根 `SKILL.md`。
 
 ---
 
@@ -166,6 +166,11 @@ opengis-skills/
 | [kepler-gl](./gis/kepler-gl/SKILL.md) | React/Redux 地理数据可视化应用与组件库 |
 | [projnet4geoapi](./gis/projnet4geoapi/SKILL.md) | .NET 坐标参考系与投影引擎（NuGet ProjNet 2.x） |
 | [brutile](./gis/brutile/SKILL.md) | .NET 瓦片访问库（HTTP 瓦片源 + MBTiles 离线） |
+| [maplibre-gl-js](./gis/maplibre-gl-js/SKILL.md) | MapLibre GL JS：开源矢量瓦片 WebGL 地图 |
+| [maplibre-native](./gis/maplibre-native/SKILL.md) | MapLibre Native：C++ 跨平台原生矢量渲染引擎 |
+| [stac-cog-titiler](./gis/stac-cog-titiler/SKILL.md) | 影像云原生：STAC + COG + TiTiler |
+| [geos](./gis/geos/SKILL.md) | GEOS：C/C++ 几何引擎（PostGIS/QGIS/Shapely 内核） |
+| [opendronemap](./gis/opendronemap/SKILL.md) | OpenDroneMap/WebODM：无人机影像摄影测量全流程 |
 
 ## 📐 CAD 类（cad/）
 

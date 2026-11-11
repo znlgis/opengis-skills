@@ -218,7 +218,7 @@ var lcDocument = DwgReader.Import(filePath);   // 读入 DWG → LcDocument
 ## AI 使用建议
 
 - **推荐工作流模式**：先按「工作流一」用 .NET 8 SDK + VS2022 从源码构建并跑通平台（`LINE`/`LoadDwg`/`SaveDwg` 验证链路），再按「工作流二」以 `ILcPlugin` + `ElementType` + `[CommandMethod]` 开发行业插件；插件 DLL 放入插件目录或配置 `plugins.json` 的 `folders`。
-- **关键注意事项**：① 分层依赖要守——业务代码只引用 `LightCAD.Core`/`LightCAD.MathLib`，UI 与交互放 Action 层；② `ElementType.Guid` 是序列化标识，发布后不可更改，且 SDK 属性拼写为 `DispalyName`（非 DisplayName）；③ 命令薄、Action 厚，`[CommandMethod]` 只做参数解析与转发；④ 仓库体积大，开发机建议 `--depth 1` 浅克隆。
+- **关键注意事项**：① 分层依赖要守——业务代码只引用 `LightCAD.Core`/`LightCAD.MathLib`，UI 与交互放 Action 层；② `ElementType.Guid` 是序列化标识，发布后不可更改，且 SDK 属性拼写为 `DispalyName`（非 DisplayName）；③ 命令薄、Action 厚，`[CommandMethod]` 只做参数解析与转发；④ 源码包体积大（含大量 DLL 与字体资源），从官方渠道取得后先校验解压完整性再编译。
 - **常用代码模式**：插件入口 = 实现 `ILcPlugin` → `Loaded()` 注册 `ElementType` 与 2D/3D Action → `Completed()` 挂接菜单 Tab；命令 = `[CommandClass]` 类 + `[CommandMethod(Name=..., ShortCuts=...)]` 方法；文件读写 = `DwgReader.Import(filePath)` 读入 → 改 `ModelSpace.Elements` → `SaveDwg` 写回。
 - **调试与验证**：用 VS「附加到进程」绑定 `lightcad` 进程下断点（参考 FY_Layout 插件示例）；2D 与 3D 渲染路径（ThreeJs4Net/OpenTK）分别验证，避免把 2D 交互问题误判为渲染问题。
 - **不要臆造**：命令框架、`ILcPlugin`、`ElementType`、`plugins.json` 均以仓库源码为准，不要假设存在 AutoCAD 风格的未公开 API。

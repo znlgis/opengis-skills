@@ -1,6 +1,6 @@
 ---
 name: geopandas
-description: "Use when doing vector spatial analysis in Python — gpd.read_file/to_file via pyogrio (GPKG, Shapefile, GeoParquet), sjoin/sjoin_nearest, overlay, clip, dissolve, to_crs vs set_crs, gdf.plot choropleth; also for CRSError from a missing PROJ data dir, area/distance computed in degrees, or GeoDataFrame geometry-column conflicts. GeoPandas 1.2.0 extends pandas DataFrames with geometry columns."
+description: "Use when doing vector spatial analysis in Python — gpd.read_file/to_file via pyogrio (GPKG, Shapefile, GeoParquet 2.0), sjoin/sjoin_nearest, overlay, clip, dissolve, make_grid, to_crs vs set_crs, gdf.plot choropleth; also for CRSError from a missing PROJ data dir, area/distance computed in degrees, or GeoDataFrame geometry-column conflicts. GeoPandas 1.2.0 extends pandas DataFrames with geometry columns."
 license: MIT
 metadata:
   category: gis
@@ -13,7 +13,7 @@ metadata:
 >
 > **官网：** <https://geopandas.org>
 >
-> **最新版本：** 1.2.0（截至 2026-11，PyPI）
+> **最新版本：** 1.2.0（截至 2026-11，[PyPI](https://pypi.org/project/geopandas/) / [Release notes](https://geopandas.org/en/stable/docs/changelog.html)）
 >
 > **许可证：** BSD-3-Clause
 
@@ -34,7 +34,8 @@ pip install geopandas
 # 可选依赖（绘图/交互地图/分类/Parquet 等）
 pip install "geopandas[all]"
 
-# 验证
+# 验证（版本 + 默认 IO 引擎）
+python -c "import geopandas as gpd; print(gpd.__version__, gpd.options.io_engine)"
 python -c "import geopandas as gpd; gpd.show_versions()"
 ```
 
@@ -44,11 +45,14 @@ python -c "import geopandas as gpd; gpd.show_versions()"
 
 | 核心依赖 | 最低版本 | 用途 |
 |----------|---------|------|
-| `pandas` | >= 2.2.0 | DataFrame 基类 |
+| `pandas` | >= 2.2.0 | DataFrame 基类（1.2） |
 | `shapely` | >= 2.1.0 | 几何对象与运算 (GEOS) |
 | `pyproj` | >= 3.7.0 | CRS 处理与坐标变换 |
-| `pyogrio` | >= 0.8 | 默认文件 IO 引擎 (GDAL/OGR) |
+| `pyogrio` | >= 0.8 | 默认文件 IO 引擎 (GDAL/OGR)；`read_file_info` 与 `fid_as_index` 也由它提供 |
 | `numpy` | >= 2 | 数组运算 |
+| `packaging` | — | 版本解析 |
+
+以上为 1.2.0 `pyproject.toml` 的实测下限。
 
 | 可选依赖 | 用途 |
 |----------|------|
@@ -60,6 +64,7 @@ python -c "import geopandas as gpd; gpd.show_versions()"
 | `geopy` | 地理编码 |
 | `SQLAlchemy` >= 2.0 + `GeoAlchemy2` | PostGIS 读写 |
 | `xyzservices` | 瓦片底图服务 |
+| `contextily` | `plot(tiles=...)` 叠加在线底图（1.2 新增用法） |
 
 ## 全局配置
 
@@ -80,8 +85,13 @@ gpd.options.io_engine          # None|"pyogrio"|"fiona"
 ```python
 gpd.read_file(filename, bbox=None, mask=None, columns=None, rows=None, engine=None, **kwargs)
 gdf.to_file(filename, driver=None, schema=None, index=None, **kwargs)
-gpd.list_layers(filename)  # → DataFrame (layer_name, geometry_type)
+gpd.list_layers(filename)       # → DataFrame (layer_name, geometry_type)
+gpd.read_file_info(filename, layer=None)  # → dict（1.2 新增，pyogrio.read_info 的别名）
 ```
+
+- `engine="pyogrio"`（默认，装了就用）或 `"fiona"`；可用 `gpd.options.io_engine` 全局指定
+- `read_file(..., fid_as_index=True)`（pyogrio）把文件内的 feature id 用作索引 —— GeoPackage 的 fid 默认不在列里
+- `read_file(..., use_arrow=True)`（pyogrio + pyarrow）走 Arrow 通道，官方称读速可提升 2–4 倍
 
 **支持的文件格式（扩展名 → 驱动）：**
 
@@ -110,7 +120,9 @@ gdf.to_parquet(path, compression="snappy", geometry_encoding="WKB",
 gdf.to_feather(path, compression=None, schema_version=None, **kwargs)
 ```
 
-GeoParquet 规范版本：`"1.0.0"`, `"1.1.0"` 等。几何编码：`"WKB"`（默认）、`"geoarrow"`。
+GeoParquet 规范版本：`schema_version` 可取 `"0.1.0"`、`"0.4.0"`、`"1.0.0"`、`"1.1.0"`、`"2.0.0"`，不传时默认写最新的稳定版 1.1.0。几何编码：`"WKB"`（默认）、`"geoarrow"`（GeoParquet 1.1 起，实验性）。
+
+1.2 的变化：`read_parquet` / `to_parquet` 支持（当时定义中的）GeoParquet 2.0 规范；`read_parquet` 可直接读 HTTP/HTTPS 上的文件（`storage_options` 透传给 urllib）；`to_parquet` 写入的 `attrs` 会在 `read_parquet` 时读回；`write_covering_bbox=True` 写出的 `bbox` 列可让后续 `read_parquet(bbox=...)` 做过滤读取。
 
 ### Arrow (GeoArrow)
 
@@ -175,7 +187,7 @@ gpd.overlay(df1, df2, how="intersection", keep_geom_type=None, make_valid=True)
 gpd.clip(gdf, mask, keep_geom_type=False, sort=False)
 ```
 
-- `mask`: GeoDataFrame、GeoSeries、(Multi)Polygon 或 `(minx, miny, maxx, maxy)` 元组
+- `mask`: GeoDataFrame、GeoSeries、(Multi)Polygon 或 `(minx, miny, maxx, maxy)` 元组；传入四元素列表时走更快的矩形裁剪（`clip_by_rect()`），结果不保证拓扑有效，边角情形可能与多边形裁剪略有差异
 
 ### 地理编码
 
@@ -185,6 +197,25 @@ gpd.tools.reverse_geocode(points, provider=None, **kwargs)   # → GeoDataFrame
 ```
 
 需要 `geopy`。默认 provider: `"photon"`。返回含 `geometry` 和 `address` 列的 GeoDataFrame。
+
+### 网格与聚合
+
+```python
+# 1.2 新增：按输入范围生成正方形或蜂窝网格（返回 GeoSeries）
+gpd.make_grid(input_geometry, cell_size=1000, grid_type="square",
+              feature_type="polygons", offset=None, intersect=True, flat_topped=False)
+gs.make_grid(...)          # GeoSeries 上的同名方法
+
+# 1.2 起 GeoSeries 的二元集合运算新增 grid_size（精度栅格，顶点吸附到该格网）
+gs_left.union(gs_right, grid_size=1e-6)
+gs_left.intersection(gs_right, grid_size=1e-6)
+gs_left.difference(gs_right, grid_size=1e-6)
+gs_left.symmetric_difference(gs_right, grid_size=1e-6)
+```
+
+- `grid_type`：`"square"` 或 `"hexagon"`
+- `feature_type`：`"polygons"`（面）、`"centers"`（点）、`"corners"`（顶点）
+- `intersect=True` 只保留与输入几何相交的网格单元；要整块外接矩形填满网格传 `False`
 
 ### 其他工具
 
@@ -362,6 +393,9 @@ m = gdf.explore(column="population", cmap="viridis",
 | `buffer(resolution=...)` 出现弃用警告 | 1.2 起 `resolution` 被弃用，向 shapely 命名惯例对齐 | 改用 `quad_segs` 参数 |
 | `DriverError` 无法写入 | 驱动不支持或文件被占用 | 检查驱动名拼写、关闭已打开的文件 |
 | `align=True` 导致意外 NaN | 二元操作默认按索引对齐 | 传入 `align=False` 或重置索引 |
+| `AttributeError: module 'geopandas' has no attribute 'make_grid'` / `read_file_info` | 装的是 1.2 之前的版本（`make_grid`、`read_file_info` 均为 1.2 新增） | `python -c "import geopandas; print(geopandas.__version__)"` 确认，升级到 1.2.0+ |
+| `CRSError: Invalid projection` / PROJ 数据目录缺失 | pyproj 自带 PROJ data 未生效，或混用了 conda/pip 两套环境 | `pyproj.datadir.get_data_dir()` 查目录；重装 pyproj/pyogrio 或统一用 conda-forge 环境 |
+| `to_parquet` 写了 `schema_version="2.0.0"` 但下游读不了 | GeoParquet 2.0 仍新，部分读者只认 1.0/1.1 | 不传 `schema_version` 用默认 1.1.0，或显式写 `"1.0.0"` 兼容老读者 |
 
 ## AI 使用建议
 

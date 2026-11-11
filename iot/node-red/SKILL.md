@@ -208,12 +208,12 @@ contextStorage: {
 ### 命令行选项
 
 ```bash
-node-red -p 1881                # 指定端口
-node-red -u /path/to/userdir    # 指定用户目录
-node-red -s /path/to/settings.js
+node-red -p 1881                # 指定端口（--port）
+node-red -u /path/to/userdir    # 指定用户目录（--userDir）
+node-red -s /path/to/settings.js # 指定 settings.js（--settings）
 node-red --safe                 # 安全模式启动，不加载流
-node-red -D key=value           # 覆盖单个设置项
-node-red -v                     # 显示版本
+node-red -D key=value           # 覆盖单个设置项（--define X=Y）
+node-red --version              # 显示 Node-RED 与 Node.js 版本（-v 是 --verbose，不是版本）
 ```
 
 ---
@@ -271,7 +271,7 @@ npm i node-red-dashboard
 
 常用节点：`ui_base`（页面与站点配置）、`ui_tab`、`ui_group`（布局容器）、`ui_text`、`ui_gauge`、`ui_chart`、`ui_button`、`ui_template`。布局按网格排布，组默认 6 单位宽，控件默认 `auto` 宽；控件可通过 `msg.enabled=false` 禁用，用 `msg.ui_control` 运行时配置。
 
-> 注意：`node-red-dashboard` 已于 2024-06-27 标记弃用，官方推荐改用 FlowFuse Dashboard（`@flowfuse/node-red-dashboard`）或 UIBUILDER。
+> 注意：`node-red-dashboard`（最后版本 3.6.6，2025-08-07）已停止维护——npm 上各版本均带 deprecated 标记，官方推荐改用 FlowFuse Dashboard（`@flowfuse/node-red-dashboard`，当前 1.36.1）或 UIBUILDER（`node-red-contrib-uibuilder`）。
 
 ### 场景四：子流程与流导入导出
 

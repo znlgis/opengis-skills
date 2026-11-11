@@ -1,6 +1,6 @@
 ---
 name: duckdb-spatial
-description: "Use when doing spatial analysis inside a DuckDB database or SQL pipeline — INSTALL spatial / LOAD spatial, ST_Read over Shapefile/GeoPackage/GeoJSON, ST_Point/ST_GeomFromText, ST_Intersects/ST_Contains/ST_Buffer joins, ST_Area_Spheroid, ST_AsMVT tiles, DuckDB-WASM in the browser; also for 'Extension spatial is not installed' or spatial function does not exist, GEOMETRY vs WKB_BLOB friction, and exporting query results to GeoParquet. DuckDB 2.0 built-in spatial extension."
+description: "Use when doing spatial analysis inside a DuckDB database or SQL pipeline — INSTALL spatial / LOAD spatial, ST_Read over Shapefile/GeoPackage/GeoJSON, ST_Point/ST_GeomFromText, ST_Intersects/ST_Contains/ST_Buffer joins, ST_Area_Spheroid, ST_AsMVT tiles, DuckDB-WASM; also for 'Extension spatial is not installed' or spatial function does not exist, GEOMETRY vs WKB_BLOB friction, CRS type modifiers, and exporting query results to GeoParquet. GEOMETRY became a built-in type in DuckDB 1.5."
 license: MIT
 metadata:
   category: gis
@@ -13,15 +13,17 @@ metadata:
 >
 > **函数参考：** <https://duckdb.org/docs/stable/core_extensions/spatial/functions>
 >
+> **GEOMETRY 类型：** <https://duckdb.org/docs/stable/sql/data_types/geometry>
+>
 > **最新版本：** DuckDB 2.0.0（截至 2026-11，[PyPI](https://pypi.org/project/duckdb/) / [GitHub Releases](https://github.com/duckdb/duckdb/releases)）
 >
-> **扩展分发：** 随 DuckDB 版本自动匹配，INSTALL spatial 从 extensions.duckdb.org 拉取（无独立版本号）
+> **扩展分发：** 随 DuckDB 版本自动匹配，INSTALL spatial 从 extensions.duckdb.org 拉取（无独立版本号）；GEOMETRY 类型自 DuckDB 1.5 起内置，空间函数仍由 spatial 扩展提供
 >
 > **许可证：** MIT
 
 ## 概述
 
-DuckDB Spatial 是 DuckDB 官方的核心扩展，把列式分析数据库变成可读写地理数据的空间分析工具。它基于 OGC Simple Features 模型增加 GEOMETRY 类型，底层用 GEOS 做拓扑运算、用 PROJ 做坐标转换、用 GDAL 读文件。
+DuckDB Spatial 是 DuckDB 官方的核心扩展（core extension），把列式分析数据库变成可读写地理数据的空间分析工具。它按 OGC Simple Features 模型提供空间函数，底层用 GEOS 做拓扑运算、用 PROJ 做坐标转换、用 GDAL 读文件；GEOMETRY 数据类型自 DuckDB 1.5 起已是内置类型，但**绝大多数空间函数（ST_Area、ST_Buffer、ST_Intersects 等）仍然装在 spatial 扩展里**，装扩展这一步不能省。
 
 - **零服务依赖**：进程内运行，扩展按需安装，无需 PostGIS 或服务器
 - **轻量几何类型**：POINT_2D / LINESTRING_2D / POLYGON_2D / BOX_2D 有原生函数重载，比通用 GEOMETRY 路径快
@@ -29,8 +31,9 @@ DuckDB Spatial 是 DuckDB 官方的核心扩展，把列式分析数据库变成
 - **SQL 即分析**：空间谓词、聚合（ST_Union_Agg、ST_Extent_Agg）、瓦片编码（ST_AsMVT）
 - **与 Parquet/CSV/JSON 同库联查**：空间表可直接 JOIN 普通表，无须导入导出
 - **WASM 可用**：同一扩展编译为 WebAssembly，GeoLibre 与 DuckDB-WASM 前端都靠它
+- **内建与扩展分层**：内置的只有 ST_GeomFromWKB、ST_AsWKB、ST_AsWKT（别名 ST_AsText）、ST_Intersects_Extent（别名 `&&`）、ST_CRS、ST_SetCRS 这少数几个；其余 ST_* 函数要 LOAD spatial 才有
 
-扩展自带 GEOS/PROJ/GDAL 静态链接版本，机器上不需要另外安装 GDAL。
+官方发布的扩展二进制（`INSTALL spatial` 拉的那种）已经把 GEOS、PROJ、GDAL 等依赖静态链接进扩展，机器上不需要另外安装 GDAL；只有从源码自建时才需要系统里备好这些库（`vcpkg.json` 里声明了 geos、proj、gdal>=3.12.4 等）。
 
 ## 环境准备
 
@@ -51,18 +54,22 @@ conda install -c conda-forge duckdb
 ### 安装 spatial 扩展
 
 ```sql
+-- DuckDB 2.0 起可用一条语句完成安装 + 加载
+INSTALL AND LOAD spatial;
+
+-- 等价的分两步写法（旧版本也支持）
 INSTALL spatial;
 LOAD spatial;
 ```
 
-INSTALL 会把扩展写入用户目录（~/.duckdb/extensions/<version>/<platform>/），只需一次；之后每次会话 LOAD spatial 即可。spatial 不属于 autoloadable 扩展，忘记 LOAD 时所有 ST_* 函数都会报"不存在"。
+INSTALL 会把扩展写入用户目录（~/.duckdb/extensions/<version>/<platform>/），只需一次；之后每次会话 LOAD spatial 即可。spatial 不属于 autoloadable 扩展，忘记 LOAD 时空函数都会报"不存在"（内置的 ST_CRS / ST_SetCRS / ST_AsWKT 等除外）。
 
 ### 验证
 
 ```python
 import duckdb
 con = duckdb.connect()
-con.execute("INSTALL spatial; LOAD spatial;")
+con.execute("INSTALL AND LOAD spatial;")  # 2.0 一条语句；旧版可拆成 INSTALL + LOAD
 print(con.execute("SELECT duckdb_version()").fetchone())
 print(con.execute("SELECT ST_AsText(ST_Point(116.39, 39.90))").fetchone())
 print(con.execute("SELECT extension_version FROM duckdb_extensions() WHERE extension_name='spatial'").fetchone())
@@ -83,7 +90,8 @@ print(con.execute("SELECT duckdb_proj_version()").fetchone())
 | ST_GeomFromWKB(blob) / ST_AsWKB(geom) | WKB 互转 | GEOMETRY / WKB_BLOB |
 | ST_MakeEnvelope(minx, miny, maxx, maxy) | 矩形面 | GEOMETRY |
 | ST_MakeLine(list_of_points) / ST_MakePolygon(ring) | 线/面构造 | GEOMETRY |
-| ST_AsText(geom) | 输出 WKT | VARCHAR |
+| ST_AsText(geom) / ST_AsWKT(geom) | 输出 WKT（ST_AsText 是 ST_AsWKT 的别名，两者内置） | VARCHAR |
+| ST_CRS(geom) / ST_SetCRS(geom, crs) | 读取 / 设置几何的 CRS 标识（内置，DuckDB 1.5+） | VARCHAR / GEOMETRY |
 
 ```sql
 SELECT ST_AsText(ST_Point(116.39, 39.90))                          AS pt,
@@ -91,7 +99,14 @@ SELECT ST_AsText(ST_Point(116.39, 39.90))                          AS pt,
        ST_AsWKB('POINT(1 2)'::GEOMETRY)::BLOB                      AS wkb;
 ```
 
-字符串可以直接带类型转换写成 'POINT(...)'::GEOMETRY，这是最短路径。DuckDB Spatial 的 GEOMETRY 不保存 SRID，因此没有 ST_SetSRID 这类函数。
+字符串可以直接带类型转换写成 'POINT(...)'::GEOMETRY，这是最短路径。CRS 在 DuckDB 里是**类型的一部分**而不是行内隐藏属性：`GEOMETRY('OGC:CRS84')`、`GEOMETRY('EPSG:4326')` 声明列的 CRS，用 ST_CRS / ST_SetCRS 读写，没有 PostGIS 那种 ST_SRID / ST_SetSRID 函数名。
+
+```sql
+SELECT ST_CRS('POINT(1 2)'::GEOMETRY('OGC:CRS84'));   -- OGC:CRS84
+SELECT typeof(ST_SetCRS('POINT(1 2)'::GEOMETRY, 'OGC:CRS84'));  -- GEOMETRY('OGC:CRS84')
+```
+
+CRS 标识必须已在系统目录注册：内置只注册少数常见 CRS（如 OGC:CRS84、OGC:CRS83），加载 spatial 后才会注册 EPSG 全量 7000+ 套，可用 `SELECT * FROM duckdb_coordinate_systems();` 查看。带 CRS 的 GEOMETRY 列要求存储版本 v1.5.0 及以上（DuckDB 2.0 的默认存储版本已满足）。
 
 ### 空间关系谓词
 
@@ -226,7 +241,7 @@ SELECT * FROM 'data/roads.shp' LIMIT 5;
 import duckdb
 
 con = duckdb.connect("analysis.duckdb")
-con.execute("INSTALL spatial; LOAD spatial;")
+con.execute("INSTALL AND LOAD spatial;")  # 2.0 一条语句；旧版可拆成 INSTALL + LOAD
 
 # 1) 读入并落到持久表（避免每次查询重复解析 Shapefile）
 con.execute("CREATE OR REPLACE TABLE roads AS SELECT * FROM ST_Read('data/roads.shp');")
@@ -282,7 +297,7 @@ print(con.execute("SELECT * FROM road_length_by_district LIMIT 10").fetchall())
 import duckdb, geopandas as gpd
 
 con = duckdb.connect()
-con.execute("INSTALL spatial; LOAD spatial;")
+con.execute("INSTALL AND LOAD spatial;")  # 2.0 一条语句；旧版可拆成 INSTALL + LOAD
 
 # 查询结果直接转 DataFrame
 rows = con.execute("SELECT name, ST_AsText(geom) FROM ST_Read('data/cities.shp')").fetchdf()
@@ -320,7 +335,7 @@ SELECT ST_AsMVT(tile, 'cities', 4096, 'geom') FROM tile;
 ## 性能优化
 
 1. **落表再查**：对同一文件重复 ST_Read 会反复走 GDAL 解析，先 CREATE TABLE AS 物化。GDAL 是单线程的，ST_Read 无法并行。
-2. **没有空间索引，先做包围盒粗筛**：DuckDB Spatial 不提供 R-Tree 索引，join 前用 ST_Intersects_Extent 缩小候选集，再用 ST_Intersects 精确判断。
+2. **先做包围盒粗筛，再看要不要空间索引**：join 前用 ST_Intersects_Extent（或等价的 `&&` 运算符）缩小候选集，再用 ST_Intersects 精确判断 —— 这一步在任何版本都有效，而且 `&&` 在 2.0 里还能吃到 GEOMETRY 列的 row-group 统计信息。DuckDB 2.0 的索引文档写明「spatial 扩展可为空间列提供 R-tree」，`CREATE INDEX` 也支持可选的 index type；但具体能否建、建了是否被选中，取决于扩展版本与查询形态，落地前先 `EXPLAIN ANALYZE` 实测对比，别假设它一定生效。
 3. **优先用轻量类型**：能落成 POINT_2D / POLYGON_2D 的列走原生实现，必要时用 ST_Force2D 去掉 Z/M。
 4. **面积/长度单位要有依据**：经纬度下 ST_Area 的单位是平方度，应改用 ST_Area_Spheroid 或先投影。
 5. **投影一次即可**：ST_Transform 是 CPU 热点，放在建表阶段，不要写在 WHERE 里逐行算。
@@ -337,14 +352,19 @@ SELECT ST_AsMVT(tile, 'cities', 4096, 'geom') FROM tile;
 | ST_Transform 报 CRS 解析失败 | 源/目标 CRS 字符串拼错或 PROJ 未识别 | 用 'EPSG:4326' 这类标准写法；SELECT duckdb_proj_version() 确认 PROJ 可用 |
 | 读 GeoPackage 只拿到第一个图层 | 多图层文件未指定 layer | 用 ST_Read_Meta 先看 layers，再 ST_Read(..., layer := '...') |
 | Shapefile 中文属性乱码 | DBF 编码与默认 UTF-8 不一致 | 用 ST_ReadSHP(path, encoding := 'GBK')，或在 open_options 里给驱动指定编码 |
-| 空间 join 极慢 | 没有空间索引，也没做包围盒粗筛 | 先 ST_Intersects_Extent 粗筛，再 ST_Intersects 精筛 |
+| 空间 join 极慢 | 没做包围盒粗筛，也没利用任何索引 | 先 ST_Intersects_Extent（`&&`）粗筛再 ST_Intersects 精筛；仍慢再试 `CREATE INDEX` 并 `EXPLAIN ANALYZE` 核对是否真的用上 |
 | 写出的 Parquet 没有 CRS | ST_AsWKB 只写几何，不写 CRS 元数据 | 落盘后用 GeoPandas/GDAL 补写 crs，或用 ogr2ogr 转出 |
 | ST_ReadOSM 只返回 node/way 原始表 | 该函数不做几何装配 | 需要成品几何时改用 ST_Read 的 OSM 驱动 |
+| Unknown coordinate system / unrecognized coordinate system | CRS 标识未注册：EPSG 全集由 spatial 扩展注册，只装了 DuckDB 没 LOAD spatial 时只剩少数内置 CRS | 先 LOAD spatial 再写 `GEOMETRY('EPSG:4326')`；仍失败则 `SELECT * FROM duckdb_coordinate_systems()` 核对标识，必要时 `SET ignore_unknown_crs = true` 显式丢弃未知 CRS |
+| GEOMETRY columns with coordinate reference system identifiers are not supported in storage versions prior v1.5.0 | 带 CRS 的 GEOMETRY 列要求存储版本 v1.5.0+，旧库文件读不了 | 用 `ATTACH 'file.db' (STORAGE_VERSION 'v1.5.0')` 重建库，或先用 EXPORT DATABASE / IMPORT DATABASE 迁移存储格式 |
+| pip install duckdb 装到 1.x、没有 2.0 的新行为 | DuckDB 2.0 要求 Python 3.11+，3.10 上 pip 只会解析到 1.x | 升级 Python 到 3.11+ 后重装；`python -c "import duckdb; print(duckdb.__version__)"` 确认 |
 
 ## AI 使用建议
 
 - **先验扩展再写 SQL**：执行前跑 SELECT extension_name, loaded FROM duckdb_extensions() WHERE extension_name='spatial'; 确认 loaded=true；未加载就先 LOAD，不要把"函数不存在"当语法错误去改。
-- **版本敏感**：2.0.0 与旧版函数集合有差异（ST_Area_Spheroid、ST_CoverageUnion_Agg 属较新函数）。写示例前用 SELECT function_name FROM duckdb_functions() WHERE function_name LIKE 'ST_%'; 探测实际可用函数。
+- **版本敏感**：2.0.0 与旧版函数集合有差异（ST_Area_Spheroid、ST_CoverageUnion_Agg 属较新函数；GEOMETRY 类型自 1.5 起内置，ST_CRS / ST_SetCRS 也随之内置）。写示例前用 SELECT function_name FROM duckdb_functions() WHERE function_name LIKE 'ST_%'; 探测实际可用函数。
+- **2.0 迁移要先看存储格式**：DuckDB 2.0 默认写 storage version 69，旧版本（如 1.5.x）读不了；跨版本共享库文件前先用 `duckdb my.db -storage-version v1.5.6` 或 `config={"storage_compatibility_version": "v1.5.0"}` 指定存储版本，迁移方法见官方 Migrating to DuckDB 2.0。
+- **CRS 是类型的一部分**：`GEOMETRY('EPSG:4326')` 与无 CRS 的 GEOMETRY 是不同的类型，多数二元空间函数要求两侧 CRS 一致；跨 CRS 先 ST_Transform，不要只靠 SET 全局开关去改轴序。
 - **大文件不要整读进内存**：优先用 ST_Read 的 spatial_filter_box / layer 参数与 Parquet 列裁剪；反复查询时先落表。
 - **验证产物**：写完 Parquet/MVT 后回读核对 count、ST_IsValid、ST_GeometryType 分布，以及坐标范围是否落在预期 CRS 内。
 - **写操作确认**：COPY ... TO、CREATE OR REPLACE TABLE、DROP TABLE 会覆盖文件或表；执行前确认目标路径已被授权覆盖。
@@ -360,4 +380,7 @@ SELECT ST_AsMVT(tile, 'cities', 4096, 'geom') FROM tile;
 ## 参考资源
 - 扩展仓库：<https://github.com/duckdb/duckdb-spatial>
 - 函数总表：<https://duckdb.org/docs/stable/core_extensions/spatial/functions>
+- GEOMETRY 数据类型：<https://duckdb.org/docs/stable/sql/data_types/geometry>
+- 内置几何函数：<https://duckdb.org/docs/stable/sql/functions/geometry>
+- DuckDB 2.0 迁移指南：<https://duckdb.org/docs/stable/operations_manual/migration>
 - DuckDB 文档：<https://duckdb.org/docs/stable/>

@@ -1,6 +1,6 @@
 ---
 name: oh-my-openagent
-description: "Use when installing or running OmO (oh-my-openagent) 5.1.65 — the standalone omo CLI built on senpi, migrating an older OpenCode-plugin install with omo setup, choosing thinking levels with /thinking, or switching native/legacy editions; also when omo --version still prints 4.19.x because a stale global omo shadows omo-ai, the curl installer falls back to GitHub Releases, or provider keys and MCP servers must come across from OpenCode. npm omo-ai, SUL-1.0."
+description: "Use when installing or running OmO (oh-my-openagent) 5.1.69 — the standalone omo CLI built on senpi, migrating an older OpenCode-plugin install with omo setup, choosing thinking levels with /thinking, or switching native/legacy editions; also when omo --version still prints 4.19.x because a stale global omo shadows omo-ai, the curl installer falls back to GitHub Releases, or provider keys and MCP servers must come across from OpenCode. npm omo-ai, SUL-1.0."
 license: MIT
 metadata:
   category: ai
@@ -11,9 +11,11 @@ metadata:
 >
 > **官网 / 文档：** <https://omo.dev> ｜ <https://omo.dev/docs>
 >
-> **最新版本：** 5.1.65（截至 2026-11，npm `omo-ai` latest 实测）｜ CLI 命令：`omo`
+> **最新版本：** 5.1.69（截至 2026-11，npm `omo-ai` latest 实测，2026-11-11 发布）｜ CLI 命令：`omo`
 >
 > **许可证：** SUL-1.0（Sustainable Use License，商用前阅读条款）
+
+> **5.1.6x 变化（可选读）：** 5.1.66–5.1.69 集中在多设备能力：`omo thread` 在安装损坏时明确提示仅本机可用、跨设备消息标注来源设备与 `delivery_id`/`effective_mode`、`thread_*` 工具改为 eval-only（有 eval 时经 `tool.thread_*()` 调用，行为与权限不变）、设备服务升级到 0.1.27；不含安装/迁移/思考档位的用法变更。详见 [CHANGELOG](https://github.com/code-yeongyu/oh-my-openagent/blob/dev/CHANGELOG.md)。
 
 > **版本关键变化：** OmO 5.0 起是**独立应用**（"OmO Native"），跑在作者维护的 senpi（[pi](https://github.com/badlogic/pi-mono) 的 fork）上，**不再需要 OpenCode**。4.x 及更早才是 OpenCode 插件（`oh-my-opencode`），旧装可用 `omo setup` 迁移。
 

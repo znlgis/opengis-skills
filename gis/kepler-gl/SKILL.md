@@ -292,6 +292,7 @@ React 侧的等价流程是：`processGeojson` / `processCsvData` 解析 → `di
 ## 相关技能
 
 - **deck-gl** — Kepler.gl 的渲染底座，自定义图层与拾取需直接操作 deck.gl：[../deck-gl/SKILL.md](../deck-gl/SKILL.md)
+- **maplibre-gl-js** — Kepler.gl 默认底图所用的开源渲染库（免 token）：[../maplibre-gl-js/SKILL.md](../maplibre-gl-js/SKILL.md)
 - **mapbox-gl-js** — 使用 Mapbox 官方样式与 token 时的对应技能：[../mapbox-gl-js/SKILL.md](../mapbox-gl-js/SKILL.md)
 - **openlayers** — 传统 2D WebGIS 方案，适合与 Kepler.gl 做能力对比：[../openlayers/SKILL.md](../openlayers/SKILL.md)
 - **geopandas** — Python 侧数据预处理与投影转换：[../geopandas/SKILL.md](../geopandas/SKILL.md)

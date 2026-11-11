@@ -314,11 +314,11 @@ while True:
 | I²C 找不到设备 | `i2c.scan()` 查看；上拉电阻 4.7kΩ |
 | Wi-Fi 不连 | 仅支持 2.4 GHz；密码与国别码（`network.country('CN')`） |
 | 串口在 Linux 需要权限 | `sudo usermod -aG dialout $USER` |
-| `OSError: [Errno 5] EIO`（初始化 I²C 外设时） | I²C 接线错、设备地址不对，或上拉电阻缺失 | `i2c.scan()` 打印实际地址；确认 SDA/SCL 与代码里 `Pin()` 编号一致，再按扫描结果改 `SSD1306_I2C(..., addr=0x3c)` |
-| `OSError: [Errno 110] ETIMEDOUT`（`wlan.connect` 后） | Wi-Fi 连不上：SSID/密码错、只有 5 GHz 频段、或国别码未设 | 用手机热点 2.4 GHz 复测；连接前执行 `network.country('CN')`；`wlan.status()` 打印失败码对照 MicroPython 文档 |
-| `ImportError: no module named 'ssd1306'` / `umqtt` | 库没装进 Pico 文件系统（REPL 里能 import 不代表入库） | 用 Thonny「文件 → 保存到 Pico」或 `mpremote cp`，或在 Pico W 上 `import mip; mip.install('umqtt.simple')` |
-| `Guru Meditation Error` / 看门狗复位循环 | `main.py` 死循环里没让出 CPU，或引脚电平冲突 | 循环内加 `time.sleep_ms(10)`；用 `Thonny → Stop` 进 REPL 后逐段注释定位冲突引脚 |
-| 烧录 `.uf2` 后电脑不出现 `RPI-RP2` 盘 | 没按住 BOOTSEL 再插线，或 USB 线只供电不通数据 | 按住 BOOTSEL 重新插线；换一根确认能传数据的 USB 线；也可用 `mpremote` 直接连 |
+| `OSError: [Errno 5] EIO`（初始化 I²C 外设时） | I²C 接线错、设备地址不对或上拉缺失：`i2c.scan()` 打印实际地址，确认 SDA/SCL 与 `Pin()` 编号一致，再按扫描结果改 `SSD1306_I2C(..., addr=0x3c)` |
+| `OSError: [Errno 110] ETIMEDOUT`（`wlan.connect` 后） | Wi-Fi 连不上：SSID/密码错、只有 5 GHz 频段或国别码未设；用手机热点 2.4 GHz 复测，连接前执行 `network.country('CN')`，用 `wlan.status()` 打印失败码对照 MicroPython 文档 |
+| `ImportError: no module named 'ssd1306'` / `umqtt` | 库没装进 Pico 文件系统（REPL 里能 import 不代表已入库）；用 Thonny「文件 → 保存到 Pico」或 `mpremote cp`，或在 Pico W 上 `import mip; mip.install('umqtt.simple')` |
+| 看门狗复位循环（`WDT` / 反复重启） | `main.py` 死循环里没让出 CPU，或引脚电平冲突；循环内加 `time.sleep_ms(10)`，用 `Thonny → Stop` 进 REPL 后逐段注释定位冲突引脚 |
+| 烧录 `.uf2` 后电脑不出现 `RPI-RP2` 盘 | 没按住 BOOTSEL 再插线，或 USB 线只供电不通数据；按住 BOOTSEL 重新插线，换一根能传数据的 USB 线，也可用 `mpremote` 直接连 |
 
 ---
 

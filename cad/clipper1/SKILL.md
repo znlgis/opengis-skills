@@ -37,7 +37,7 @@ Clipper1 主要特征：
 dotnet add package Clipper
 
 # JavaScript
-npm install js-clipper          # 1.0.1，或 clipper-lib
+npm install js-clipper          # 1.0.1；或 clipper-lib（6.4.2，与 C++ V6 末版同版号）
 
 # Python
 pip install pyclipper           # 1.4.0，内嵌 Clipper 6.4.2

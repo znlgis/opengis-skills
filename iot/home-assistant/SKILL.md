@@ -13,7 +13,7 @@ metadata:
 >
 > **开发者文档：** <https://developers.home-assistant.io/>
 >
-> **最新版本：** 2026.11.0（截至 2026-11，[GitHub Releases](https://github.com/home-assistant/core/releases) 与 Docker 镜像 tag 一致）
+> **最新版本：** 2026.11.1（2026-11-09；截至 2026-11，[GitHub Releases](https://github.com/home-assistant/core/releases) 与 [PyPI](https://pypi.org/project/homeassistant/) 均为 2026.11.1，2026.11 为月度发布主线）
 >
 > **安装形态：** Home Assistant OS / Supervised / Container / Core（pip）
 >
@@ -81,7 +81,7 @@ services:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install homeassistant==2026.11.0
+pip install homeassistant==2026.11.1
 hass --config ./config --debug
 ```
 
@@ -118,7 +118,7 @@ curl -s -H "Authorization: Bearer $TOKEN" http://localhost:8123/api/
 ### configuration.yaml 基础
 
 ```yaml
-# 基础配置
+# 基础配置（homeassistant: 块只能出现一次，packages 并进同一块）
 homeassistant:
   name: Home
   unit_system: metric
@@ -126,15 +126,13 @@ homeassistant:
   country: CN
   currency: CNY
   language: zh-Hans
+  # 拆分配置（推荐：按功能放到 packages/）
+  packages: !include_dir_named packages
 
 # UI 管理的自动化以 include 方式接入
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-
-# 拆分配置（推荐：按功能放到 packages/）
-homeassistant:
-  packages: !include_dir_named packages
 ```
 
 ```yaml
@@ -199,7 +197,7 @@ automation:
 自动化内联写在 `configuration.yaml` 时用带标签的块（可多组）：
 
 ```yaml
-automation: !include automations.yaml
+# 带标签的 automation 块可与 automation: !include 并存，但不要重复 include 同一文件
 automation kitchen:
   - triggers:
       - trigger: time
@@ -370,7 +368,7 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 | 调用服务返回 400 | 请求体字段名与服务不匹配 | 先 GET `/api/services` 看该服务的字段，再按示例 POST；注意 `entity_id` 与 `target` 的区别 |
 | 实体显示 **unavailable** | 集成未加载、设备离线或重启中 | 看 `home-assistant.log`；在 **设置 → 设备与服务** 里重载对应集成 |
 | 自动化不触发 | 触发器条件不满足，或自动化被关闭 | 打开自动化的 **追踪（Traces）** 看每一步；确认 `initial_state` 与 UI 上的开关状态 |
-| 模板报 `TypeError` / `ValueError` | 实体不存在或值不是数字 | 用 `| float(0)`、`| int(0)`、`| default(...)` 兜底；先用 `/api/template` 单独试算 |
+| 模板报 `TypeError` / `ValueError` | 实体不存在或值不是数字 | 用 `\| float(0)`、`\| int(0)`、`\| default(...)` 兜底（表格内竖线需转义）；先用 `/api/template` 单独试算 |
 | 升级后集成报错 | 破坏性变更或自定义集成不兼容 | 先读版本发布说明的 Breaking Changes；回滚镜像 tag 到上一个版本。2026.11 的实体命名重构属于官方声明的破坏性变更，升级前先备份 `.storage/` |
 | 升级 2026.11 后仪表盘上的实体名变了 | 该版对实体命名做了重构：名称只写一次，由 HA 补充上下文 | 属预期变更；在 **设置 → 实体** 里核对新 `entity_id`，同步改自动化与仪表盘引用，或先用 `entity_registry` 快照比对再升级 |
 | 容器重启后配置全没了 | 没挂载 `/config` 卷 | 停容器，重新以 `-v <host>:/config` 启动；以后先确认卷再升级 |

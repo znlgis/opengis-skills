@@ -1,6 +1,6 @@
 ---
 name: opengis-skills
-description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise. Index of 115 skills across 8 categories: gis (40), cad (21), csharp (12), ai (17), iot (4), 3d (6), demos (4), others (11). Tag-based search and on-demand loading for GDAL, GeoServer, MapServer, Leaflet, PROJ, PostGIS, DuckDB Spatial, GeoLibre, JTS, CesiumJS, FreeCAD, Blender, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Serilog, Dify, Ollama, LangChain, vLLM, MinerU, SuperSplat, Home Assistant, CHAGS, MathMindForge and more."
+description: "Use when AI coding assistant needs GIS/CAD/C#/AI/IoT/3D domain expertise. Index of 120 skills across 8 categories: gis (45), cad (21), csharp (12), ai (17), iot (4), 3d (6), demos (4), others (11). Tag-based search and on-demand loading for GDAL, GeoServer, MapServer, Leaflet, PROJ, PostGIS, DuckDB Spatial, GeoLibre, JTS, CesiumJS, FreeCAD, Blender, OpenSCAD, OCCT, NPOI, SqlSugar, Furion, Serilog, Dify, Ollama, LangChain, vLLM, MinerU, SuperSplat, Home Assistant, CHAGS, MathMindForge and more."
 license: MIT
 metadata:
   tags: "gis, cad, csharp, ai, iot, 3d, geospatial, spatial-analysis, dotnet, opensource"
@@ -14,7 +14,7 @@ metadata:
 
 ## 概述
 
-本仓库是一个面向 **AI 编程助手 / Agent** 的技能（Skill）集合，与任何特定 Agent 产品解耦：Claude Code / Claude、Cursor、Cline / Roo Code、GitHub Copilot、Codex、Gemini CLI、OpenCode、DeepSeek Harness 等凡是能按需读取 Markdown 的工具都可直接使用。内容涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域，以及通用工具（others）与项目演示（demos），共 8 个分类、115 个技能文件。
+本仓库是一个面向 **AI 编程助手 / Agent** 的技能（Skill）集合，与任何特定 Agent 产品解耦：Claude Code / Claude、Cursor、Cline / Roo Code、GitHub Copilot、Codex、Gemini CLI、OpenCode、DeepSeek Harness 等凡是能按需读取 Markdown 的工具都可直接使用。内容涵盖开源 GIS、CAD、C#、AI、IoT、3D 六大领域，以及通用工具（others）与项目演示（demos），共 8 个分类、120 个技能文件。
 
 每个技能以独立的 `SKILL.md` 文件组织，AI 工具可按需加载，作为「领域知识」注入到对话上下文，从而获得更准确的 API 调用、代码生成、错误排查和最佳实践建议。
 
@@ -46,7 +46,7 @@ metadata:
 
 ## 技能索引
 
-### 🌍 GIS — 地理信息系统（40 个）
+### 🌍 GIS — 地理信息系统（45 个）
 
 | 技能 | 简介 | 关键标签 |
 |------|------|---------|
@@ -90,6 +90,11 @@ metadata:
 | [kepler-gl](./gis/kepler-gl/SKILL.md) | React/Redux 地理数据可视化应用与组件库 | `react` `redux` `visualization` `jupyter` |
 | [projnet4geoapi](./gis/projnet4geoapi/SKILL.md) | .NET 坐标参考系与投影引擎（NuGet ProjNet 2.x） | `dotnet` `projection` `coordinate-systems` `wkt` |
 | [brutile](./gis/brutile/SKILL.md) | .NET 瓦片访问库（HTTP 瓦片源 + MBTiles 离线） | `dotnet` `tiles` `mbtiles` `tms` |
+| [maplibre-gl-js](./gis/maplibre-gl-js/SKILL.md) | MapLibre GL JS：开源矢量瓦片 WebGL 地图（Mapbox GL 分支） | `javascript` `vector-tiles` `webgl` `style-spec` |
+| [maplibre-native](./gis/maplibre-native/SKILL.md) | MapLibre Native：C++ 跨平台原生矢量渲染引擎 | `cpp` `android` `ios` `offline` |
+| [stac-cog-titiler](./gis/stac-cog-titiler/SKILL.md) | 影像云原生全链路：STAC + COG + TiTiler | `raster` `cloud-native` `cog` `stac` |
+| [geos](./gis/geos/SKILL.md) | GEOS：C/C++ 几何引擎（PostGIS/QGIS/Shapely 内核） | `geometry` `cpp` `overlay` `topology` |
+| [opendronemap](./gis/opendronemap/SKILL.md) | OpenDroneMap/WebODM：无人机影像摄影测量全流程 | `photogrammetry` `drone` `orthophoto` `3d-tiles` |
 
 ### 📐 CAD — 计算机辅助设计（21 个）
 
@@ -214,8 +219,8 @@ metadata:
 | `python` | open3d, crewai, deepseek-harness, docutranslate, hermes-agent, langchain, llamaindex, mineru, vllm, blender, cadquery, clipper1, freecad, kicad, libredwg, solvespace, duckdb-spatial, gdal-api, geolibre, geonode, geopandas, geopipe-agent, grass-gis, kepler-gl, pyqgis, shapely, spatialite, whitebox-tools, home-assistant |
 | `java` | gdal-api, geometry-api-java, geoserver, geoserver-cloud, geotools, jts, opengis-utils-for-java, ruoyi-cloud |
 | `dotnet` / `csharp` | ara3d-sdk, elements, opencsg-net, clipper1, clipper2, fy-layout, ifoxcad, lightcad, lightningcad, tongwen, xbim, admin-net-backend, dotnet-reactor, furion, hangfire, npoi, polly, reogrid, sentry, serilog, sod, sqlsugar, brutile, gdal-api, geometry-api-net, mapsui, nettopologysuite, opengis-daf, opengis-utils-for-net, projnet4geoapi, sharpmap |
-| `javascript` / `typescript` | photo-sphere-viewer, supersplat, deepseek-harness, openclaw, pi, astral3d, chili3d, qcad, admin-net-frontend, ai-water-front, map-360-demo, openlayers-vue3-demo, vue3-map-dashboard, cesiumjs, deck-gl, kepler-gl, leaflet, mapbox-gl-js, openlayers, node-red, bamboobuddy, chags, mathmindforge |
-| `cpp` / `c` | open3d, clipper1, clipper2, librecad, libredwg, occt, gdal-api, mapserver |
+| `javascript` / `typescript` | photo-sphere-viewer, supersplat, deepseek-harness, openclaw, pi, astral3d, chili3d, qcad, admin-net-frontend, ai-water-front, map-360-demo, openlayers-vue3-demo, vue3-map-dashboard, cesiumjs, deck-gl, kepler-gl, leaflet, mapbox-gl-js, openlayers, node-red, bamboobuddy, chags, mathmindforge, maplibre-gl-js |
+| `cpp` / `c` | open3d, clipper1, clipper2, librecad, libredwg, occt, gdal-api, mapserver, geos, maplibre-native |
 | `go` / `golang` | go, robotgo, robotgo-flow |
 | `shell` | qgis-process, acme-sh |
 | `vue` | astral3d, admin-net-frontend, ai-water-front, map-360-demo, openlayers-vue3-demo, vue3-map-dashboard, leaflet, bamboobuddy, chags, mathmindforge, ruoyi-cloud |
@@ -226,8 +231,8 @@ metadata:
 
 | 标签 | 相关技能 |
 |------|---------|
-| `geometry` | ara3d-sdk, elements, opencsg-net, clipper1, clipper2, occt, xbim, geometry-api-java, geometry-api-net, geopandas, jts, nettopologysuite, opengis-utils-for-java, opengis-utils-for-net, postgis, shapely |
-| `raster` | gdal, gdal-api, geopipe-agent, geotools, grass-gis, postgis, pyqgis, qgis-process, whitebox-tools |
+| `geometry` | ara3d-sdk, elements, opencsg-net, clipper1, clipper2, occt, xbim, geometry-api-java, geometry-api-net, geopandas, jts, nettopologysuite, opengis-utils-for-java, opengis-utils-for-net, postgis, shapely, geos |
+| `raster` | gdal, gdal-api, geopipe-agent, geotools, grass-gis, postgis, pyqgis, qgis-process, whitebox-tools, stac-cog-titiler |
 | `vector` | duckdb-spatial, gdal, gdal-api, geopandas, geopipe-agent, geotools, grass-gis, opengis-daf, opengis-utils-for-java, opengis-utils-for-net, postgis, pyqgis, spatialite |
 | `server` / `wms` / `wfs` | openlayers-vue3-demo, geoserver, geoserver-cloud, geoserver-rest-api, geotools, mapserver, mapsui, openlayers, qgis-server, sharpmap, go |
 | `3d` | ara3d-sdk, elements, open3d, opencsg-net, photo-sphere-viewer, supersplat, astral3d, blender, cadquery, chili3d, freecad, fy-layout, lightcad, occt, openscad, solvespace, cesiumjs |
@@ -236,9 +241,9 @@ metadata:
 | `agent` / `llm` | crewai, deepseek-harness, dify, docutranslate, hermes-agent, huggingface-transformers, langchain, llamaindex, my-opencode-deepseek-config, oh-my-openagent, ollama, openclaw, opencode, pi, vllm, design-drawing-svg-md, geopipe-agent |
 | `pipeline` / `workflow` | crewai, dify, design-drawing-svg-md, geopipe-agent, opengis-all, opengis-daf, pdal, qgis-process, robotgo-flow |
 | `automation` / `rpa` | geoserver-rest-api, grass-gis, qgis-process, home-assistant, node-red, acme-sh, robotgo, robotgo-flow |
-| `lidar` / `point-cloud` | open3d, pdal, whitebox-tools |
-| `vector-tiles` / `webgl` / `webgpu` | photo-sphere-viewer, supersplat, cesiumjs, deck-gl, kepler-gl, mapbox-gl-js, openlayers |
-| `docker` / `containers` | dify, geolibre, geonode, geoserver-cloud, home-assistant, billionmail, docker-compose |
+| `lidar` / `point-cloud` | open3d, pdal, whitebox-tools, opendronemap |
+| `vector-tiles` / `webgl` / `webgpu` | photo-sphere-viewer, supersplat, cesiumjs, deck-gl, kepler-gl, mapbox-gl-js, openlayers, maplibre-gl-js, maplibre-native |
+| `docker` / `containers` | dify, geolibre, geonode, geoserver-cloud, home-assistant, billionmail, docker-compose, opendronemap |
 | `iot` / `mqtt` | esphome, home-assistant, ke3036-keyes-pico, node-red |
 | `autocad` | ifoxcad, lightningcad, tongwen |
 | `svg` / `markdown` / `pdf` | docutranslate, mineru, design-drawing-svg-md |

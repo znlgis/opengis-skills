@@ -13,13 +13,15 @@ metadata:
 >
 > **手册入口：** <https://grass.osgeo.org/grass-stable/manuals/>
 >
-> **最新版本：** 8.5.0（截至 2026-11，GitHub Releases；8.4 系列最新补丁 8.4.2）
+> **最新版本：** 8.5.0（截至 2026-11，[GitHub Releases](https://github.com/OSGeo/grass/releases/tag/8.5.0)；8.4 系列最新补丁 8.4.2）
 >
-> **许可证：** GPL-2.0
+> **运行要求：** 8.5 起要求 GDAL 3.7+、PROJ 9.0+、Python 3.10+、C++17（conda-forge 包已自带这些依赖）
+>
+> **许可证：** GPL-2.0-or-later
 
 ## 概述
 
-GRASS GIS（Geographic Resources Analysis and Support System）是 OSGeo 创始项目之一，提供栅格、拓扑矢量、三维栅格、影像与时序数据的分析能力。它以模块化命令体系为核心：每个功能是一个独立命令（模块），既可交互使用，也可通过 `grass --exec` 在无头会话中执行。计算区域（computational region）与地图数据范围分离管理，是理解其行为的关键概念。Python 生态（`grass.script`、PyGRASS、`grass.jupyter`）使其适合脚本化与自动化。
+GRASS（Geographic Resources Analysis Support System，8.5 起官方品牌名从 "GRASS GIS" 简化为 "GRASS"）是 OSGeo 创始项目之一，提供栅格、拓扑矢量、三维栅格、影像与时序数据的分析能力。它以模块化命令体系为核心：每个功能是一个独立命令（模块），既可交互使用，也可通过 `grass --exec` 在无头会话中执行。计算区域（computational region）与地图数据范围分离管理，是理解其行为的关键概念。Python 生态（`grass.script`、PyGRASS、`grass.jupyter`）使其适合脚本化与自动化。
 
 核心特点：
 
@@ -27,7 +29,8 @@ GRASS GIS（Geographic Resources Analysis and Support System）是 OSGeo 创始�
 - **计算区域独立管理**：栅格模块在 `g.region` 定义的窗口上运算，与地图本身范围解耦。
 - **无头执行**：`grass --exec` / `--tmp-project` / `--tmp-mapset` 支持服务器与 CI 场景。
 - **时空框架**：`t.*` 模块管理 strds / str3ds / stvds 时空数据集。
-- **Python 接口**：`grass.script`（命令封装）、`grass.script.array`（NumPy 读写栅格）、`grass.tools`（8.5+ 面向对象工具调用）、`grass.jupyter`（笔记本集成）。
+- **Python 接口**：`grass.script`（命令封装）、`grass.script.array`（NumPy 读写栅格）、`grass.tools`（8.5 新增的面向对象工具调用）、`grass.jupyter`（笔记本集成）。
+- **8.5 亮点**：`grass.tools` 新 Python API；`g.list`、`g.region`、`r.info`、`r.univar`、`r.stats`、`r.report`、`v.info`、`v.what`、`v.db.connect` 等几十个模块支持 JSON 输出；`r.mapcalc`、`r.texture`、`r.horizon` 支持 `nprocs` 并行；同一地图集可存多份掩膜（`r.mask.status` 查看）；新增 `r.smooth.edgepreserve`。
 
 ## 环境准备
 
@@ -225,7 +228,7 @@ elev_ft.write(mapname="elev_ft", overwrite=True)
 elev3d = garray.array3d(mapname="elev3d")
 ```
 
-8.5+ 提供面向对象的工具调用接口 `grass.tools`（模块名中的点替换为下划线，支持 numpy 输入输出）；8.4.x 及更早版本没有该模块，只能用 `grass.script`：
+8.5 新增面向对象的工具调用接口 `grass.tools`（模块名中的点替换为下划线，支持 NumPy 输入输出，官方说明 8.5 中仍是实验性、预计 8.6 稳定）；8.4.x 及更早版本没有该模块，只能用 `grass.script`：
 
 ```python
 from grass.tools import Tools
@@ -236,7 +239,28 @@ tools.r_random_surface(output="surface", seed=42)
 print(tools.g_region(flags="p", format="json")["cells"])
 ```
 
-`grass.jupyter` 提供 Jupyter 集成（`init`、`Map`、`Map3D`、`InteractiveMap`、`SeriesMap`、`TimeSeriesMap` 等）。
+`grass.jupyter` 提供 Jupyter 集成（`init`、`Map`、`Map3D`、`InteractiveMap`、`SeriesMap`、`TimeSeriesMap` 等）。8.5 起 `InteractiveMap` 增加查询按钮与简单几何绘制，`Map3D` 增加 `save()`，`SeriesMap` / `TimeSeriesMap` 支持并行。
+
+8.5 的 8 个模块支持 JSON 输出，脚本里优先用 `format="json"` 拿结构化结果，不要解析人类可读文本：
+
+```bash
+# 8.5 新增 JSON 输出的代表模块
+g.list type=raster format=json
+g.region -p format=json
+r.univar map=elevation format=json
+r.stats input=elevation format=json
+v.info map=roads format=json
+```
+
+8.5 起一个地图集可存多份掩膜，`r.mask.status` 报告当前掩膜状态；Python 里用 `grass.script` 的 `RegionManager` / `MaskManager` 上下文管理器做作用域内的区域/掩膜切换：
+
+```python
+import grass.script as gs
+
+with gs.RegionManager(raster="elevation"), gs.MaskManager(mask_name="mask"):
+    gs.parse_command("r.univar", map="elevation", format="json")
+# 退出上下文后区域与掩膜自动还原
+```
 
 ### 与 QGIS 集成
 
@@ -284,7 +308,7 @@ grass $HOME/grassdata/ndvi_project/PERMANENT --exec sh -c '
 2. **无头场景用 `--exec` 单行执行**：避免交互式会话依赖；CI 优先使用 `--tmp-project` 保持幂等。
 3. **临时项目内先导出结果**：`--tmp-project` / `--tmp-mapset` 结束时目录被删除。
 4. **覆盖已有地图加 `--overwrite`**：否则模块报地图已存在并退出非零。
-5. **Python 中结构化解析**：用 `gs.parse_command(..., format="json")` 或 `flags="g"` 获取 dict，不要手工解析人类可读输出。
+5. **Python 中结构化解析**：用 `gs.parse_command(..., format="json")` 或 `flags="g"` 获取 dict，不要手工解析人类可读输出；8.5 起 `g.list`、`g.region`、`r.info`、`r.univar`、`r.stats`、`r.report`、`v.info`、`v.what`、`v.db.connect` 等几十个模块都支持 `format="json"`。
 6. **Python 会话内改动区域用 `gs.use_temp_region()`**：临时区域随会话结束自动还原。
 7. **导入优先用 `r.import` / `v.import`**：自动重投影到项目 CRS，避免 CRS 不一致导致的分析错误。
 8. **`--exec` 脚本加 shebang**：缺失 shebang 会报 `Exec format error`。

@@ -1,6 +1,6 @@
 ---
 name: docker-compose
-description: "Use when orchestrating multi-container Docker apps from one compose.yaml — services/networks/volumes, build vs image, ports and bind mounts, env_file and ${VAR} interpolation, depends_on with healthcheck conditions, profiles, deploy.resources limits. Docker Compose v5.7.0 CLI (docker compose up/down/ps/logs/watch). Also for \"docker: 'compose' is not a docker command\", \"port is already allocated\", containers starting before the DB is ready, and data lost after \"down -v\"."
+description: "Use when orchestrating multi-container Docker apps from one compose.yaml — services/networks/volumes, build vs image, ports and bind mounts, env_file and ${VAR} interpolation, depends_on with healthcheck conditions, profiles, deploy.resources limits. Docker Compose v5.7.1 CLI (docker compose up/down/ps/logs/watch). Also for \"docker: 'compose' is not a docker command\", \"port is already allocated\", containers starting before the DB is ready, and data lost after \"down -v\"."
 license: MIT
 metadata:
   category: others
@@ -13,9 +13,9 @@ metadata:
 >
 > **许可证：** Apache-2.0
 >
-> **包管理器：** Docker Compose v2+ 插件（`docker-compose-plugin` / Docker Desktop 自带）/ 源码（最新 v5.7.0，截至 2026-11）
+> **包管理器：** Docker Compose v2+ 插件（`docker-compose-plugin` / Docker Desktop 自带）/ 源码（最新 v5.7.1，截至 2026-11）
 >
-> **版本：** v5.7.0（2026-11-02，[GitHub Releases](https://github.com/docker/compose/releases)）
+> **版本：** v5.7.1（2026-11-11，[GitHub Releases](https://github.com/docker/compose/releases)；上一版 v5.7.0 为 2026-11-02 的功能版，v5.7.1 是紧随其后的补丁修复）
 
 ## 概述
 
@@ -59,7 +59,7 @@ sudo yum install docker-compose-plugin
 
 ```bash
 docker compose version
-# 预期输出：Docker Compose version v5.7.0
+# 预期输出：Docker Compose version v5.7.1
 ```
 
 > 独立的 `docker-compose`（v1，Python 实现）已停止维护，请使用 v2+ 的 `docker compose` 子命令。

@@ -15,7 +15,7 @@ metadata:
 >
 > **NuGet：** `Furion`、`Furion.Pure`
 >
-> **最新版本：** `Furion` 4.9.9.99 / `Furion.Pure` 4.9.9.10（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Furion)；`5.0.0-preview.*` 为预览线，未转正）
+> **最新版本：** `Furion` 4.9.9.100（2026-11-11 发布）/ `Furion.Pure` 4.9.9.10（截至 2026-11，[NuGet 实测](https://www.nuget.org/packages/Furion)、[官网更新日志](https://furion.net/docs/upgrade/)；`5.0.0-preview.*` 为预览线，未转正）
 >
 > **许可证：** MIT + Apache-2.0
 
@@ -52,14 +52,14 @@ dotnet add package Furion.Pure
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Furion" Version="4.9.9.99" />
+  <PackageReference Include="Furion" Version="4.9.9.100" />
 </ItemGroup>
 ```
 
 ### 方式三：包管理器控制台
 
 ```powershell
-Install-Package Furion -Version 4.9.9.99
+Install-Package Furion -Version 4.9.9.100
 ```
 
 ### 验证安装

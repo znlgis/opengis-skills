@@ -13,10 +13,12 @@ metadata:
 >
 > **许可证：** MIT ｜ **语言：** TypeScript
 >
-> **最新版本：** v2026.11.2（日历版本号，截至 2026-11，见 [Releases](https://github.com/openclaw/openclaw/releases)）
+> **最新版本：** v2026.11.3（日历版本号，截至 2026-11，npm `openclaw` latest 与仓库 tag 一致；见 [Releases](https://github.com/openclaw/openclaw/releases)）
 >
 > **运行时：** Node 24.16.0+（24.x 线）或 26.1.0+，推荐 24.22.1+ / 26.12.1+（安全补丁版本）；Node 22/23/25 与低于 24.16.0 的 24.x、低于 26.1.0 的 26.x 均不支持
-> **发布频道：** latest / beta / dev（参见 [GitHub Releases](https://github.com/openclaw/openclaw/releases)）
+> **发布频道：** npm dist-tags 为 `latest`（2026.11.3）、`beta`（2026.11.5-beta.1）、`extended-stable`（2026.9.37，长期稳定线）；参见 [GitHub Releases](https://github.com/openclaw/openclaw/releases)
+
+> **2026.11.3 变化（可选读）：** 安全补丁版，无新功能。修复 worker 传输空白指纹时的证书校验、把 required-sandbox 镜像预览限制在允许目录内、减少凭据暴露；另修 Windows Gateway 更新后锁丢失、大备份在慢存储上超时、部分中断更新误报成功（详见 [release notes](https://docs.openclaw.ai/releases/2026.11.3)）。
 
 > **注意：** OpenClaw 的助手可以执行命令、读写文件、控制设备并接入你的私人聊天账号。**对外暴露前**务必阅读官方 [Security](https://docs.openclaw.ai/gateway/security)、[Exposure runbook](https://docs.openclaw.ai/gateway/security/exposure-runbook) 与 [Sandboxing](https://docs.openclaw.ai/gateway/sandboxing)，并配置沙箱与访问控制。默认情况下主会话的工具直接在宿主机上执行。
 
@@ -131,6 +133,9 @@ pnpm gateway:watch           # 开发期按需重建运行时
 | `npm install -g openclaw` 装完命令没了或没跑起来 | npm 12 / 11.16+ 必须带 `--allow-scripts=openclaw` 才会执行安装脚本；早期 npm 则不能带该参数 |
 | 启动报 Node 版本不符 | OpenClaw 硬性要求 Node 24.16.0+（24.x 线）或 26.1.0+，推荐 24.22.1+/26.12.1+ 安全补丁版；Node 22/23/25 不支持，`node -v` 确认后升级 |
 | 多账号互相串话 | 用多智能体路由，把通道/账号映射到隔离 agent（独立 workspace） |
+| 更新后 Gateway 没起来 | 2026.11.3 起修复了"更新/修复后 Gateway 仍停止"；若是从 2026.9.3/2026.9.4 或 2026.10.10/2026.11.1 升级被超时挡住，按官方 [update recovery](https://docs.openclaw.ai/install/updating) 处理——选更新的版本修不好已装的 updater |
+| 大备份在慢存储上卡住 | 已修：备份的 SQLite 探测改为小批量重试；单个文件自身超时仍会阻塞该次备份，先排除异常大文件或换更快的卷 |
+| 升级后需要重置配置吗 | 不需要。2026.11.3 是补丁版，配置与通道兼容；升级后跑 `openclaw gateway status` 与 `openclaw --version` 确认 |
 
 ---
 

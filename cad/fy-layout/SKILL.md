@@ -35,7 +35,7 @@ FY_Layout 是飞扬集成设计平台（LightCAD）的 **场地布置二次开�
 - 开发语言：C#
 - 目标框架：.NET 8.0（net8.0-windows）
 - 开发环境：Visual Studio 2022 社区版（17.5.5+）
-- UI 框架：WinForms
+- UI 框架：WinForms（示例插件为 `net8.0-windows` + WinForms；平台本体 README 称 Avalonia / WinForms 双框架，Provider 工程为 `net8.0`）
 - 图形引擎：SkiaSharp（2D）、ThreeJs4Net / OpenTK（3D）
 - 数据格式：兼容 DWG/DXF
 
@@ -423,7 +423,7 @@ public static TabItem LayoutItem = new TabItem
 
 ## 相关技能
 
-- **lightcad** — 飞扬基础平台（LightCAD）的 Web 2D CAD 框架：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **lightcad** — 飞扬基础平台（LightCAD）的 C#/.NET 8 平台架构、插件体系与 DWG 读写：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 - **ifoxcad** — AutoCAD .NET 二次开发框架（类似的 CAD 插件开发模式）：[../ifoxcad/SKILL.md](../ifoxcad/SKILL.md)
 - **xbim** — .NET BIM/IFC 框架（与建筑场布互补）：[../xbim/SKILL.md](../xbim/SKILL.md)
 

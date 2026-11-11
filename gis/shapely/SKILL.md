@@ -15,6 +15,8 @@ metadata:
 >
 > **最新版本：** 2.2.0（截至 2026-11，[PyPI](https://pypi.org/project/shapely/)；[GitHub Release](https://github.com/shapely/shapely/releases)）
 >
+> **版本判定：** 上游 main 分支已打 `2.3.0.dev0` 开发版标签，属于未发布开发版，PyPI 稳定版仍是 2.2.0，本文按 2.2.0 写
+>
 > **许可证：** BSD-3-Clause
 
 ## 概述
@@ -29,8 +31,9 @@ Shapely 是 Python 计算几何的核心库，基于 GEOS（Geometry Engine - Op
 - **空间索引**：STRtree，加速批量空间查询
 - **格式读写**：WKT、WKB、GeoJSON
 - **双重 API**：函数式（向量化，支持 NumPy 广播）+ OOP（标量便捷）
+- **2.2 新增**：`minimum_width`、`get_segments`、`transform_coordseq`、`split`、`coverage_clean`；标量属性/方法的调用开销大幅下降（`p.x` 从 2-3 微秒降到约 50-100 纳秒）
 
-**环境要求：** Python 3.11+（Shapely 2.2 起；2.1 为 3.10+），NumPy >= 1.26，GEOS >= 3.10。PyPI 二进制 wheel 内含 GEOS 3.14。
+**环境要求：** Python 3.11+（Shapely 2.2 起；2.1 为 3.10+），NumPy >= 1.26，GEOS >= 3.10。PyPI 二进制 wheel 内含 GEOS 3.14.1（2.2.0 起；2.1.2 的 wheel 是 3.13.1），Windows ARM64 wheel 自 2.2.0 起提供。
 
 ---
 
@@ -173,6 +176,18 @@ geom = shape({"type": "Point", "coordinates": [0, 0]})
 d = mapping(geom)  # {"type": "Point", "coordinates": (0.0, 0.0)}
 ```
 
+常用 2.2 新增函数：
+
+```python
+import shapely
+
+shapely.minimum_width(polygon)       # → LineString，最小宽度（最小直径）那条线段
+shapely.get_segments(line)           # → 每个 Linestring/LinearRing 拆成成对相邻顶点线段
+shapely.transform_coordseq(geom, fn) # 按坐标序列做变换，性能优于已弃用的 shapely.ops.transform
+shapely.split(geom, splitter)        # 顶层 split（GEOS >= 3.15 用原生实现，否则回退 shapely.ops.split）
+shapely.coverage_clean(geoms)        # 清理多边形覆盖（缝隙/重叠），需 GEOS >= 3.14
+```
+
 > 构造操作、空间谓词、集合运算、测量、空间索引、仿射与坐标变换及线性参考的完整 API 见 [reference/operations-reference.md](reference/operations-reference.md)
 
 ## 有效性校验
@@ -188,10 +203,12 @@ shapely.make_valid(geom, method="linework")   # or "structure"
 为同一几何的重复谓词判断缓存空间索引。
 
 ```python
-shapely.prepare(geom)            # in-place, returns True if newly prepared
-shapely.destroy_prepared(geom)   # free cache
+shapely.prepare(geom)            # in-place, returns True if newly prepared, False if already prepared
+shapely.destroy_prepared(geom)   # free cache, returns whether something was destroyed
 shapely.is_prepared(geom)
 ```
+
+2.2 起 `relate()` / `relate_pattern()` 也能利用已预处理的左输入几何，对同一几何反复做谓词判断时先 `prepare()` 更快。
 
 ## 缺失值
 
@@ -338,6 +355,9 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 | WKB 序列化丢失 LinearRing | WKB 规范不支持 LinearRing，会自动转为 LineString |
 | `to_geojson` 丢失 Z 坐标 | GeoJSON 标准不支持 Z，改用 WKB 或自定义序列化 |
 | `shapely.ops.transform` 弃用警告 | 2.2 起弃用，改用 `shapely.transform` 或 `shapely.transform_coordseq` |
+| `AttributeError: module 'shapely' has no attribute 'minimum_width'` / `get_segments` | 装的是 2.2 之前的版本，这两个函数 2.2.0 才加入顶层命名空间 | `python -c "import shapely; print(shapely.__version__)"` 确认 >= 2.2.0 |
+| `UnsupportedGEOSVersionError` 调 `coverage_clean` / `coverage_simplify` | 底层 GEOS 太旧（`coverage_clean` 需 GEOS >= 3.14、coverage 系列多数需 >= 3.12） | `shapely.geos_version` 核对；升级 shapely wheel（自带 GEOS 3.14.1）而不是只升级系统 GEOS |
+| `multithreading_enabled` 装饰器告警 | 2.2 起弃用且不再内部使用，线程安全需自行保证不并发改同一批几何 | 去掉装饰器；多线程只读同一不可变几何数组时用 `shapely` 函数即可，需写时按线程切分数组 |
 
 ---
 
@@ -345,7 +365,7 @@ left_idx, right_idx = tree.query(left_geoms, predicate="intersects")
 
 - **本技能的组织**：主文件给高频用法，完整参数表与高级示例在 `reference/operations-reference.md`，需要时再展开；示例工程与生成的数据写到工作目录，不要改动技能目录本身。
 - **执行环境**：命令在终端 / shell 中执行（Windows 用 PowerShell）；`python` 不一定是 QGIS/GDAL 自带环境，先 `python -c "import sys; print(sys.executable, sys.version)"`。
-- **先探测版本**：`python -c "import shapely; print(shapely.__version__, shapely.geos_version)"`；本技能按 2.2.0 编写，PyPI wheel 内含 GEOS 3.14。GEOS 低版本请按第 11 条降级（如 `coverage_clean` 需 3.14、`shapely.split` 需 3.15）。
+- **先探测版本**：`python -c "import shapely; print(shapely.__version__, shapely.geos_version)"`；本技能按 2.2.0 编写，PyPI wheel 内含 GEOS 3.14.1。GEOS 低版本请按第 11 条降级（如 `coverage_clean` 需 3.14、`shapely.split` 需 3.15，低版本自动回退 `shapely.ops.split`）。
 - **验证产物（必做）**：`print(shapely.is_valid(g), shapely.is_valid_reason(g))` 报无效原因；面积/长度做量级断言；序列化回读 `shapely.from_wkt(shapely.to_wkt(g, rounding_precision=-1)).equals(g)`，改过几何后再核对一次 `geom_type` 与 `get_num_geometries()`。
 - **报错先查有效性**：`TopologyException: side location conflict` 基本都是输入几何自相交，先 `shapely.make_valid(g)`（可指定 `method="structure"`）再算，不要直接加 `buffer(0)`。
 - **性能与内存**：批量操作走向量化函数（`shapely.union_all`、`shapely.buffer(geoms, r)`），别逐条 OOP 循环；十万级以上几何先 `STRtree(geoms)` 过滤，再对小集合做精确谓词。

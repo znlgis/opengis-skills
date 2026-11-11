@@ -412,6 +412,7 @@ map.on('load', () => {
 
 ## 相关技能
 
+- **maplibre-gl-js** — 本库 v1 的开源分支，免 token、BSD-3-Clause，API 高度兼容：[../maplibre-gl-js/SKILL.md](../maplibre-gl-js/SKILL.md)
 - **leaflet** — 轻量 2D 瓦片地图，无需 token，适合简单场景：[../leaflet/SKILL.md](../leaflet/SKILL.md)
 - **openlayers** — 功能全面的开源 2D WebGIS 库（投影、MVT、高级交互）：[../openlayers/SKILL.md](../openlayers/SKILL.md)
 - **cesiumjs** — 三维地球与 3D Tiles 可视化：[../cesiumjs/SKILL.md](../cesiumjs/SKILL.md)

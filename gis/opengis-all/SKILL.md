@@ -244,6 +244,7 @@ new Map({
 - **geolibre** — 浏览器/桌面里做 GIS，无需服务端：[../geolibre/SKILL.md](../geolibre/SKILL.md)
 - **whitebox-tools** — 地形/水文/LiDAR 批量分析：[../whitebox-tools/SKILL.md](../whitebox-tools/SKILL.md)
 - **pdal** — 点云 LAS/LAZ 处理与 DEM 生成：[../pdal/SKILL.md](../pdal/SKILL.md)
+- **stac-cog-titiler** — 影像云原生链路：COG 出图、STAC 编目与 TiTiler 动态切片：[../stac-cog-titiler/SKILL.md](../stac-cog-titiler/SKILL.md)
 
 ## 参考资源
 

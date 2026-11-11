@@ -57,6 +57,8 @@ brew install --cask freecad
 
 # Windows：安装包 / Conda
 conda install -c conda-forge freecad
+# 注意：conda-forge 的 freecad 用日期式版本号（如 2026.09.16），与官网 1.1.x 版本号不是同一套
+# 对应关系；脚本里别拿 conda 版本号去比对 FreeCAD 1.1.4
 ```
 
 FreeCAD 1.x 起合并了大量长期分支（如 PartDesign Toponaming 修复）。当前稳定版 **1.1.4**（2026-09-28 发布，官方说明这是 1.1.x 系列最后一个维护版本；该版包含两处「打开恶意构造的 FCStd 文件」相关的文件处理安全修复，旧版均受影响，建议升级，参见 [FreeCAD Releases](https://github.com/FreeCAD/FreeCAD/releases)）。
@@ -117,7 +119,7 @@ Part.show(solid)
 ```python
 import Sketcher
 sk = doc.addObject('Sketcher::SketchObject', 'Sketch')
-sk.Support = (doc.XY_Plane, [''])
+# 不设 Support 时草图默认落在全局 XY 平面；要贴在已有面/平面上再设 sk.Support = (文档对象, [''])
 sk.addGeometry(Part.LineSegment(Vector(0,0,0), Vector(50,0,0)))
 sk.addConstraint(Sketcher.Constraint('Distance', 0, 50))
 doc.recompute()
@@ -152,8 +154,13 @@ page = doc.addObject('TechDraw::DrawPage', 'Page')
 template = doc.addObject('TechDraw::DrawSVGTemplate', 'Template')
 template.Template = '/usr/share/freecad/Mod/TechDraw/Templates/A4_LandscapeTD.svg'
 page.Template = template
+
+# DrawViewPart.Source 要的是文档对象，不是裸 Shape：先建 Part::Feature 承载几何
+part = doc.addObject('Part::Feature', 'Part')
+part.Shape = solid
+
 view = doc.addObject('TechDraw::DrawViewPart', 'View')
-view.Source = [solid]
+view.Source = [part]
 page.addView(view)
 doc.recompute()
 ```

@@ -1,6 +1,6 @@
 ---
 name: mineru
-description: "Use when turning PDFs, scans, or Office documents into structured Markdown/JSON for RAG or translation pipelines with MinerU 4.1 — mineru parse / mineru-kit parse, quality tiers flash/basic/standard/advanced, DoclibClient Python SDK, V1 HTTP API, or Docker on NVIDIA GPUs; also when magic-pdf commands fail because 4.0 renamed the entrypoints, when a parse returns quality_tier_unavailable, or when a CI image has no GPU and you need the ONNX/llama.cpp CPU path."
+description: "Use when turning PDFs, scans, or Office documents into structured Markdown/JSON for RAG or translation pipelines with MinerU 4.2 — mineru parse / mineru-kit parse, quality tiers flash/basic/standard/advanced, DoclibClient Python SDK, V1 HTTP API, or Docker on NVIDIA GPUs; also when magic-pdf commands fail because 4.0 renamed the entrypoints, when a parse returns quality_tier_unavailable, or when a CI image has no GPU and you need the ONNX/llama.cpp CPU path."
 license: MIT
 metadata:
   category: ai
@@ -11,9 +11,11 @@ metadata:
 >
 > **官方文档：** <https://opendatalab.github.io/MinerU/>
 >
-> **最新版本：** 4.1.7（截至 2026-11，[PyPI](https://pypi.org/project/mineru/) 实测；4.1 相对 4.0 有破坏性接口变更，见下文）
+> **最新版本：** 4.2.0（截至 2026-11，[PyPI](https://pypi.org/project/mineru/) 实测，2026-11-10 发布；4.1 相对 4.0 有破坏性接口变更，4.2 保持 4.1 的 Tasks/Doclib 契约，见下文）
 >
 > **许可证：** AGPL-3.0
+
+> **v4.2 变化（可选读）**：WebUI 增加原文↔结果双向定位、布局连线与结果目录导航；Standard/Advanced 在原生文本路径用 VLM 识别表外行内公式；自动档位推荐改为按实际运行设备（CPU ≥4 核开 Basic、≥12 核开 Standard；ONNX 独显按总显存 ≥6 GiB 判断）；解析服务健康接口可查 CPU/GPU 状态；Router 支持运行时动态增删上游节点（独立管理凭证）与级联；模型缓存引入文件清单做离线校验与增量修复；URL 输入加 SSRF 防护（仅直连、不跟随重定向、不读代理）；超预算文档以 `resource_limit` 报错。升级注意：直接调 Doclib HTTP 的客户端需适配 Bearer Token（4.1.7 起），依赖内网 URL/重定向/代理取输入的部署需改上传方式，设备配置变更后要重启进程。
 
 ## 概述
 
@@ -50,23 +52,23 @@ source .mineru/bin/activate
 # Windows (PowerShell)
 .\ .mineru\Scripts\Activate.ps1
 
-uv pip install -U "mineru>=4.1,<5"
+uv pip install -U "mineru>=4.2,<5"
 ```
 
 ### 方式二：普通 pip（已有环境时）
 
 ```bash
-python -m pip install -U "mineru>=4.1,<5"
+python -m pip install -U "mineru>=4.2,<5"
 ```
 
 需要最好吞吐时装 extras：
 
 ```bash
 # NVIDIA GPU 推荐：自带匹配的 torch 与推理引擎
-uv pip install -U "mineru[full]>=4.1,<5"
+uv pip install -U "mineru[full]>=4.2,<5"
 
 # 只补 torch 侧
-uv pip install -U "mineru[torch]>=4.1,<5"
+uv pip install -U "mineru[torch]>=4.2,<5"
 ```
 
 > Windows 上 GPU 版 torch 需要单独装；macOS 默认安装即为最佳吞吐，不需要 `[full]`。
@@ -200,6 +202,18 @@ model:
 
 改配置后要重启相关服务，并按后端选择重新下载/校验模型——旧的模型目录存在不等于就绪。
 
+### 4.2 的设备、缓存与输入安全
+
+- **自动档位看实际设备**：4.2 起档位推荐与模型加载共用同一个已确定的运行设备。CPU 侧逻辑核 ≥4 才开放 `basic`、≥12 才开放 `standard`；ONNX 自动模式在 Windows/Linux 额外检查独显总显存（按 GiB 四舍五入 ≥6 才直接选 GPU，不足或无法确认则回落 CPU）。
+- **模型缓存有清单校验**：整仓/目录/单文件资源记录预期文件与大小，复用前检查缺失、截断、失效链接；正常缓存可离线校验，缺失或大小不符的文件在下次下载时增量修复，不必重下全部权重。
+- **URL 输入是受限通道**：4.2 对 URL 输入做 SSRF 防护（连接前校验解析出的全部地址、固定已校验公网 IP，拒绝内网/回环/链路本地/云元数据地址），且直连、不跟随重定向、不读环境代理。内网文档改由客户端上传。
+- **资源预算兜底**：文档解压或结构展开超出预算时终止处理（覆盖 OOXML 解压、XLSX 合并区域展开），返回 `resource_limit` 错误并在 Tasks 保留逐文件失败信息。
+- **设备状态可查**：解析服务健康接口返回已初始化的 CPU/GPU 运行状态，查询本身不触发设备选择。
+
+### Router 动态上游
+
+4.2 的 Router 支持运行时查询、注册、移除远程解析节点，无需重启；移除时先停止派发新任务，待已有任务与结果引用释放后完成。节点管理使用**独立管理凭证**（与解析请求认证分离），并支持把下层 Router 作为上游节点级联，复用 V1 协议与结果租约。
+
 ---
 
 ## Python SDK 与 HTTP API
@@ -271,7 +285,7 @@ curl -s -X POST http://127.0.0.1:8000/v1/tasks/<task_id>/cancel
 
 输入：`docs/*.pdf`；输出：`out/*.md` + 结构化 JSON + 图片资源。
 
-1. 建环境并验证：`uv venv .mineru --python 3.12` → 激活 → `uv pip install -U "mineru>=4.1,<5"` → `mineru version --json`
+1. 建环境并验证：`uv venv .mineru --python 3.12` → 激活 → `uv pip install -U "mineru>=4.2,<5"` → `mineru version --json`
 2. 先拿一份样本试档位：`mineru-kit parse docs/sample.pdf -o out/sample.md --tier standard`，看公式/表格是否还原
 3. 抽样不合格时换档：表格密集的用 `--tier advanced`；只需文本检索的用 `--tier basic` 省算力
 4. 批量跑：`mineru-kit parse ./docs -o ./out --format zip`（无状态、默认全页）
@@ -326,6 +340,11 @@ curl -s -X POST http://127.0.0.1:8000/v1/tasks/<task_id>/cancel
 | Windows 上 GPU 很慢 | 默认安装走 CPU/llama.cpp；Windows 需要单独装 GPU 版 torch，或直接用 Linux 容器 |
 | Docker 构建完推理报没有 GPU | 构建机可以无 GPU，但推理必须有匹配的 NVIDIA 硬件与驱动；非 NVIDIA 设备请用 legacy 镜像 |
 | Office/MHTML 解析报档位错误 | 这类格式只走本地 Flash 整篇解析，显式传 `tier="flash"` |
+| 4.2 起 URL 输入的文档被拒绝 | SSRF 防护只允许直连公网地址，不跟随重定向、不读环境代理；内网/跳转链接改成本地上传或 `files[].bytes` 提交 |
+| 解析报 `resource_limit` | 文档解压或结构展开超出预算（如超大 XLSX 合并区域）；拆小输入或改用单文件同步接口，Tasks 的 `files[]` 里有逐文件失败原因 |
+| 复用的模型缓存被判定不可用 | 4.2 引入文件清单校验：缺失/截断/大小不符的文件会在下载时增量修复；离线环境确认清单与版本匹配即可复用 |
+| CPU 机器只给 flash/basic 档 | 4.2 的自动档位推荐按逻辑核数开放：≥4 核开 basic、≥12 核开 standard（GPU 可开全部档）。核数不足时自动推荐不会给高档；显式指定高档仍要过依赖与设备检查，不满足会报 `quality_tier_unavailable` |
+| 想不重启 Router 就加/撤解析节点 | 4.2 支持动态上游节点管理，需用独立管理凭证调用管理接口；移除是平滑的，等旧任务释放后才下线 |
 
 ---
 

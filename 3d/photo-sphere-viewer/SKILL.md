@@ -330,8 +330,6 @@ const viewer = new Viewer({
 
 ---
 
----
-
 ## 相关技能
 
 - **cesiumjs** — 3D 地球与大规模场景可视化：[../../gis/cesiumjs/SKILL.md](../../gis/cesiumjs/SKILL.md)

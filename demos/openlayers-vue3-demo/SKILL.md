@@ -316,7 +316,7 @@ export default defineConfig({
 ## AI 使用建议
 
 - **执行环境**：Node.js 18+ + npm；要看到图层树必须先起 GeoServer（默认 `http://127.0.0.1:8765/geoserver`），只看地图壳子可跳过。
-- **版本探测**：`node -v` + `npm ls vue3-openlayers vue vite`；本项目用 vue3-openlayers ^11.2 + Vite 5。v12.0.0（2025-08-30）的破坏性变更在 peer 依赖（Node 22+、ol ^10.6、vue 3.5+）与 `ol-swipe-control` 的 `layerList` 拆分为 `layers`/`rightLayers`，升级前先对照官方 release notes。
+- **版本探测**：`node -v` + `npm ls vue3-openlayers vue vite`；本项目锁定 vue3-openlayers ^11.2 + Vite 5，而组件库 v12 线已到 12.2.2（2026-02-24，`engines: node >=22`，peer 为 `ol ^10.6` / `vue ^3.5`）。v12.0.0（2025-08-30）的破坏性变更集中在 peer 依赖（Node 22+、ol ^10.6、vue 3.5+）与 `ol-swipe-control` 的 `layerList` 拆分为 `layers`/`rightLayers`，升级前先对照官方 release notes。
 - **产物验证**：`npm run build` 通过；浏览器 Network 里 `/geoserver/rest/layers` 返回 200 JSON，勾选图层后出现 WMS 瓦片请求。
 - **两个核心文件**：`src/components/DemoMap.vue`（声明式地图 + 动态图层树 + 控件）与 `src/geoserver/Layers.js`（REST 封装，`GeoServerRestApi.js` 是聚合入口）；`main.js` 只负责 `app.use(OpenLayersMap)`。
 - **改造点**：换 GeoServer 地址/端口改 `vite.config.js` 的代理 `target` 并同步认证头；默认可见图层改 `DemoMap.vue` 的 `visible` 初值（示例是 `ne:countries`）。

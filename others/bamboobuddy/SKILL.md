@@ -15,7 +15,7 @@ metadata:
 >
 > **包管理器：** pnpm 11.22.0（根 `package.json` 的 `packageManager` 字段锁版本）+ Node.js 24（截至 2026-11）
 >
-> **版本：** `v0.0.3`（2026-11-08，[GitHub Releases](https://github.com/znlgis/BambooBuddy/releases)；仓库根 `package.json` 的 version 为 0.1.0）
+> **版本：** `v1.0.0`（2026-11-10，[GitHub Releases](https://github.com/znlgis/BambooBuddy/releases)；首个正式版，附 Windows 便携 exe 与 Android APK；仓库根 `package.json` 的 version 仍为 0.1.0，以 Release tag 为准）
 >
 > **许可证：** MIT
 
@@ -85,7 +85,7 @@ pnpm dev     # http://127.0.0.1:5190（strictPort，端口被占用会直接退�
 | `pnpm pack:check` | Tauri/Capacitor 配置体检（不装 Rust/JDK 也能跑） |
 | `pnpm size` | 体积预算（读 `dist`，必须先 build） |
 | `pnpm verify` | 七阶段总门禁（见下节） |
-| `pnpm dist:win` / `pnpm dist:apk` | 桌面 exe / 安卓 apk |
+| `pnpm dist:win` / `pnpm dist:apk` | 桌面 exe / 安卓 apk（v1.0.0 起官方 Release 也直接提供这两类产物） |
 
 ## 核心 API
 

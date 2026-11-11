@@ -19,7 +19,7 @@ metadata:
 >
 > **包管理器：** NuGet `IFox.CAD.ACAD` / `IFox.CAD.ZCAD` / `IFox.CAD.GCAD`
 >
-> **版本线说明：** 仓库默认分支为 `v0.9`（`src/Directory.Build.props` 里 `<Version>0.9.9.1</Version>`），旧包 `IFoxCAD.Cad` 停在 0.4.0、GitHub tag 只到 `v0.7.3-beta8`——**tag 不是 v0.9 线的发布信号，以默认分支与 NuGet 版本为准**
+> **版本线说明：** 仓库默认分支为 `v0.9`（`src/Directory.Build.props` 里 `<Version>0.9.9.1</Version>`），旧包 `IFoxCAD.Cad` 停在 0.4.0、GitHub tag 只到 `v0.7.3-beta8`——**tag 不是 v0.9 线的发布信号，以默认分支与 NuGet 版本为准**。三个平台包版本并不同步：`IFox.CAD.ACAD` / `IFox.CAD.ZCAD` 稳定版 0.9.12，而 `IFox.CAD.GCAD` 停在 0.9.9（仓库 `PackageReleaseNotes` 写明「暂时屏蔽浩辰的打包，保留浩辰的项目」），浩辰平台按 0.9.9 的能力评估
 
 ## 概述
 
@@ -345,7 +345,7 @@ v0.9 线把平台差异拆到各自工程里（`src/IFoxCAD.AutoCad`、`src/IFox
 - **qcad** — 2D CAD 软件，ECMAScript 扩展与 DWG/DXF 处理：[../qcad/SKILL.md](../qcad/SKILL.md)
 - **librecad** — 开源 2D CAD，DXF 编辑：[../librecad/SKILL.md](../librecad/SKILL.md)
 - **libredwg** — DWG/DXF 文件格式读写库：[../libredwg/SKILL.md](../libredwg/SKILL.md)
-- **lightcad** — Web 2D CAD 框架（类似二次开发场景）：[../lightcad/SKILL.md](../lightcad/SKILL.md)
+- **lightcad** — 飞扬集成设计平台（C#/.NET 8 桌面 CAD/BIM，`ILcPlugin` 插件体系）：[../lightcad/SKILL.md](../lightcad/SKILL.md)
 
 ---
 

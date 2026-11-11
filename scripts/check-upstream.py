@@ -131,6 +131,8 @@ KNOWN_BENIGN = {
     "cad/kicad": "10.99.x is the development series for the next major release; 10.0.8 is the shipped stable build",
     "csharp/sqlsugar": "5.9.x git tags were never published to NuGet; the newest stable package is 5.1.4.221",
     "gis/geometry-api-java": "v2.3.1 is a GitHub release only; Maven Central stops at 2.2.4",
+    "ai/hermes-agent": "releases use date-style tags (v2026.9.24) while the package line is 0.23.x; the skill head tracks the release channel",
+    "gis/maplibre-native": "the repo ships per-platform release lines (android-/ios-/android-*-globe); the skill head lists Android/iOS/Node versions separately",
 }
 
 
@@ -287,6 +289,13 @@ def main():
     parser.add_argument("--timeout", type=float, default=40.0)
     parser.add_argument("--json", action="store_true", dest="as_json")
     parser.add_argument(
+        "--only",
+        action="append",
+        default=[],
+        metavar="PREFIX",
+        help="check only skills under this <category> or <category>/<skill> prefix (repeatable)",
+    )
+    parser.add_argument(
         "--releases",
         action="store_true",
         help="also resolve the canonical /releases/latest tag for repositories whose git tags are ambiguous",
@@ -295,6 +304,16 @@ def main():
 
     root = Path(args.root).resolve()
     skills = collect(root)
+    if args.only:
+        prefixes = [prefix.replace(chr(92), "/").strip("/") for prefix in args.only]
+        skills = [
+            skill
+            for skill in skills
+            if any(skill["skill"] == prefix or skill["skill"].startswith(prefix + "/") for prefix in prefixes)
+        ]
+        if not skills:
+            print("no skills matched --only filters: " + ", ".join(args.only), file=sys.stderr)
+            return 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = [pool.submit(check_one, skill, args.timeout, args.releases) for skill in skills]
         results = [future.result() for future in concurrent.futures.as_completed(futures)]

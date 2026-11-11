@@ -45,10 +45,10 @@ metadata:
 
 | AutoCAD 版本 | 插件框架 |
 |--------------|----------|
-| AutoCAD 2019 | .NET Framework 4.7+ |
-| AutoCAD 2021 | .NET 6.0 |
-| AutoCAD 2025 | .NET 8.0 |
-| AutoCAD 2026 | .NET 8.0 |
+| AutoCAD 2019 | .NET Framework 4.7.2+ |
+| AutoCAD 2021 | .NET Framework 4.8（Win10/11 已内置） |
+| AutoCAD 2025 | .NET 8.0 桌面运行时 |
+| AutoCAD 2026 | .NET 8.0 桌面运行时 |
 
 装其中任一即可；同时装多版时启动器会自动检测并让用户选择启动哪个。**AutoCAD LT 完全不支持**——核心功能依赖完整 .NET API，LT 不提供。
 
@@ -62,7 +62,7 @@ metadata:
 |----|------|
 | 操作系统 | 仅 64 位 Windows：Win10 版本 1809（Build 17763）及以上、Win11 21H2 及以上；不支持 Win7/8/8.1、32 位系统，无 macOS/Linux 原生版 |
 | CAD | 上表任一受支持 AutoCAD（非 LT） |
-| 运行时 | AutoCAD 2019 插件需 .NET Framework 4.7.2+；2021 插件需 .NET 6.0 桌面运行时；2025/2026 插件与 Studio 主程序需 .NET 8.0 桌面运行时 |
+| 运行时 | AutoCAD 2019 插件需 .NET Framework 4.7.2+；2021 插件需 .NET Framework 4.8；2025/2026 插件与 Studio 主程序需 .NET 8.0 桌面运行时 |
 | 权限 | 本地管理员权限（企业受控机器可能需 IT 协助） |
 
 ### 检查与安装
@@ -81,7 +81,7 @@ reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" /v Release
 Get-FileHash -Path ".\Tongwen_Setup_vX.X.X.msi" -Algorithm SHA256
 ```
 
-缺 .NET 6.0 / 8.0 桌面运行时时从微软官网下载 "Windows → Desktop Runtime → x64"，两者安装顺序不限。安装为 WixSharp 构建的 MSI，支持静默安装与日志，便于企业批量部署；安装向导中需接受 EULA，安装完成后再配置 AutoCAD 插件并首次启动验证。
+缺 .NET 8.0 桌面运行时时从微软官网下载 "Windows → Desktop Runtime → x64"；.NET Framework 4.8 一般随 Windows 10/11 内置。安装顺序不限。安装为 WixSharp 构建的 MSI，支持静默安装与日志，便于企业批量部署；安装向导中需接受 EULA，安装完成后再配置 AutoCAD 插件并首次启动验证。
 
 ---
 
@@ -91,7 +91,7 @@ Get-FileHash -Path ".\Tongwen_Setup_vX.X.X.msi" -Algorithm SHA256
 
 | 层面 | 技术选型 |
 |------|---------|
-| 运行时 | .NET Framework 4.7.2（ACAD 2019 插件）/ .NET 6.0（ACAD 2021 插件）/ .NET 8.0（ACAD 2025·2026 插件与 Studio） |
+| 运行时 | .NET Framework 4.7.2（ACAD 2019 插件）/ .NET Framework 4.8（ACAD 2021 插件）/ .NET 8.0（ACAD 2025·2026 插件与 Studio） |
 | 语言 | C# |
 | UI | WPF + MVVM |
 | CAD 互操作 | AutoCAD .NET API（ObjectARX） |
@@ -204,7 +204,7 @@ Tongwen.Server --port 5000
 | 诊断 | `TW_STATUS` / `TW_CHECK_META` | 状态与命令清单 / 扫描 DWG 的 Xrecord 元数据 |
 | 报告 | `TW_REPORT` | 当前图纸翻译状态报告 |
 | 图层 | `TWLAYERVIS` | 交互式图层可见性控制 |
-| 批量测试 | `TW_BATCH_SMOKE_ENV` / `TW_BATCH_RUN_ENV` / `TW_BATCH_VERIFY_ENV` / `TW_CREATE_SMOKE_FIXTURE_ENV` / `TW_CREATE_TEST_FIXTURE_ENV` | 环境冒烟 / 批量运行 / 结果验证 / 两类夹具创建（通常管理员使用） |
+| 批量测试 | `TW_BATCH_SMOKE_ENV` / `TW_BATCH_RUN_ENV` / `TW_BATCH_VERIFY_ENV` / `TW_VERIFY_SMOKE_ENV` / `TW_CREATE_SMOKE_FIXTURE_ENV` / `TW_CREATE_TEST_FIXTURE_ENV` | 环境冒烟 / 批量运行 / 结果验证 / 冒烟结果复核 / 两类夹具创建（通常管理员使用） |
 
 
 ---

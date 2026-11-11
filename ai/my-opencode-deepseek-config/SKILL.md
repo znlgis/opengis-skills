@@ -1,6 +1,6 @@
 ---
 name: my-opencode-deepseek-config
-description: "Use when deploying or tuning the znlgis OpenCode v2 × DeepSeek Flash config — orchestrator routing, 12 agents, thinking tiers via model variants (#low/#high), prompt-cache prefix discipline, limit.input compaction, permission baseline, 23 skills; also when a change has no effect because OpenCode fell back to v1 key names (providers/permissions/media.image), background delegation errors without OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS, or ~/.config/opencode needs sync-config.ps1."
+description: "Use when deploying or tuning the znlgis OpenCode v2 × DeepSeek Flash config — orchestrator routing, 12 agents, thinking tiers via model variants (#low/#high/#max), prompt-cache prefix discipline, limit.input compaction, permission baseline, 23 skills; also when a change has no effect because OpenCode fell back to v1 key names (providers/permissions/media.image), background delegation errors without OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS, or ~/.config/opencode needs sync-config.ps1."
 license: MIT
 metadata:
   category: ai
@@ -9,20 +9,20 @@ metadata:
 
 > **项目地址：** <https://github.com/znlgis/my-opencode-deepseek-config>
 >
-> **最新版本：** v5.0.0（仓库最新 tag，截至 2026-11，[Releases](https://github.com/znlgis/my-opencode-deepseek-config/releases)）
+> **最新版本：** v5.0.0（仓库最新 tag，截至 2026-11，[Releases](https://github.com/znlgis/my-opencode-deepseek-config/releases)）｜ **代码基线：** `main`（截至 2026-11，v5.0.0 之后新增 `#max` thinking 档并重平衡 Agent 档位，见 commit `feat(config): add max thinking tier, rebalance agent tiers`）
 >
 > **许可证：** MIT
 >
 > **文档：** <https://github.com/znlgis/my-opencode-deepseek-config/blob/main/README.md>（中英双语）
 >
-> **前置条件：** OpenCode **v2**（桌面版自带 CLI 实测 2.2.6，截至 2026-11；1.18.x 及更早不再支持）、DeepSeek API Key（<https://platform.deepseek.com/api_keys>）
+> **前置条件：** OpenCode **v2**（npm `@opencode/cli` 最新 2.2.7，截至 2026-11；以本机 `opencode --version` 为准；1.18.x 及更早不再支持）、DeepSeek API Key（<https://platform.deepseek.com/api_keys>）
 
 ## 概述
 
 在 OpenCode v2 多 Agent 框架下，只用 `deepseek/deepseek-flash` **一个模型**、用 thinking 档位区分 Agent 分工的纯配置方案——零额外依赖，能力全部由 `opencode.jsonc` + `agents/*.md` + `skills/*/SKILL.md` + `AGENTS.md` 实现。核心理念：**Token 效率优先，用最小的上下文成本达到最好的开发效果**。
 
 - 默认主 Agent `orchestrator`（意图门控 + 路由 + 后备链）；第二 primary `solo`（单模型内联执行、零委派）
-- 单模型三档：`deepseek/deepseek-flash`（thinking 关 + `temperature: 0`）、`#low`、`#high`，三档同价，差别只在 reasoning token 数量
+- 单模型四档：`deepseek/deepseek-flash`（thinking 关 + `temperature: 0`）、`#low`、`#high`、`#max`，四档同价，差别只在 reasoning token 数量
 - 12 个 Agent、23 个技能、18 个 slash 命令；`experimental.subagent_depth: 2`；`share: "disabled"`
 - 权限基线：`read` 放行、`shell` 默认 `ask`、`.env` 类 `deny`、外部目录 `ask`
 - 上下文压缩只用内置 compaction：`limit.input` 显式声明工作窗口，触发点 = `limit.input − compaction.buffer`
@@ -79,15 +79,16 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
 
 ---
 
-## 单模型与三档 thinking
+## 单模型与四档 thinking
 
 本仓库只使用 **一个模型** `deepseek/deepseek-flash`（V4.1 Flash，原生多模态），不引入任何其他模型。Agent 之间的差异只有一个维度——**思考档位**，用模型 variant 表达：
 
 | 档位 | 模型引用 | 机制 | 典型 Agent |
 |------|----------|------|------------|
-| 省（trivial） | `deepseek/deepseek-flash` | body `{"thinking":{"type":"disabled"}}` + `temperature: 0` | `orchestrator`/`explore`/`librarian`/`consultant`/`ui-builder`/`vision` |
-| 中（routine） | `deepseek/deepseek-flash#low` | thinking 开 + `settings.reasoningEffort: low` | `planner`/`light-orchestrator` |
-| 高（deep） | `deepseek/deepseek-flash#high` | thinking 开 + `settings.reasoningEffort: high` | `deep-worker`/`oracle`/`reviewer`/`solo` |
+| 省（trivial） | `deepseek/deepseek-flash` | body `{"thinking":{"type":"disabled"}}` + `temperature: 0` | `orchestrator`/`explore`/`librarian`/`vision` |
+| 低（routine） | `deepseek/deepseek-flash#low` | thinking 开 + `settings.reasoningEffort: low` | `light-orchestrator`/`consultant`/`ui-builder` |
+| 高（deep） | `deepseek/deepseek-flash#high` | thinking 开 + `settings.reasoningEffort: high`（上游默认档） | `planner`/`deep-worker`/`solo` |
+| 顶（escalation） | `deepseek/deepseek-flash#max` | thinking 开 + `settings.reasoningEffort: max` | `oracle`/`reviewer`（仅升级、只读） |
 
 思考强度由两个**请求参数**控制，且都声明在 `opencode.jsonc` 的**模型层**：
 
@@ -110,7 +111,8 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
         },
         "variants": [
           { "id": "low",  "settings": { "reasoningEffort": "low" },  "body": { "thinking": { "type": "enabled" } } },
-          { "id": "high", "settings": { "reasoningEffort": "high" }, "body": { "thinking": { "type": "enabled" } } }
+          { "id": "high", "settings": { "reasoningEffort": "high" }, "body": { "thinking": { "type": "enabled" } } },
+          { "id": "max",  "settings": { "reasoningEffort": "max" },  "body": { "thinking": { "type": "enabled" } } }
         ]
       }
     }
@@ -120,9 +122,9 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
 
 > **写法陷阱：** `thinking`/`temperature` 写进 `settings` 不生效（openai-chat 协议不实现该 option）；`reasoningEffort` 写进 Agent 的 `options` 也不生效（`options` 只落到 `request.body`）。两者都必须写在模型层：toggle 进 `body`、effort 进 `settings`。Agent frontmatter 里不再出现任何思考参数。
 
-模型 ID 命名规则是 `provider_id/model_id`，variant 用 `#` 后缀——本仓库只有 `deepseek/deepseek-flash`、`#low`、`#high` 三个引用。
+模型 ID 命名规则是 `provider_id/model_id`，variant 用 `#` 后缀——本仓库只有 `deepseek/deepseek-flash`、`#low`、`#high`、`#max` 四个引用。
 
-**官方语义要点**（以 OpenCode v2 thinking_mode 文档为准）：思考模式默认打开、effort 默认 `high`，所以只有默认档（显式 `disabled`）真能省 reasoning token；`#high` 只是把默认值写明，`#low` 是唯一存在的中间档。思考模式**不支持** `temperature`/`presence_penalty`/`frequency_penalty`（传入不报错也不生效）；`top_p` 只在思考模式下生效（有效范围 0.95–1.0），所以本配置不设 `top_p`。
+**官方语义要点**（以 OpenCode v2 thinking_mode 文档为准）：思考模式默认打开、effort 默认 `high`，所以只有默认档（显式 `disabled`）真能省 reasoning token；`#high` 只是把默认值写明，`#low` 是唯一的低档，`#max` 是唯一高于默认的档位。思考模式**不支持** `temperature`/`presence_penalty`/`frequency_penalty`（传入不报错也不生效）；`top_p` 只在思考模式下生效（有效范围 0.95–1.0），所以本配置不设 `top_p`。
 
 ---
 
@@ -157,14 +159,14 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
 
 | Agent | 模型 | 权限 | 作用 |
 |-------|------|------|------|
-| `planner` | `#low` | 读写 | 规划、架构、拆解任务 |
+| `planner` | `#high` | 读写 | 规划、架构、拆解任务 |
 | `deep-worker` | `#high` | 读写 | 重型实现、多文件改动、复杂调试 |
-| `oracle` | `#high` | **只读** | 根因分析、深度理解代码 |
-| `reviewer` | `#high` | **只读** | 代码审查升级层 |
+| `oracle` | `#max` | **只读** | 根因分析、深度理解代码（仅升级路径） |
+| `reviewer` | `#max` | **只读** | 代码审查升级层（仅升级路径） |
 | `light-orchestrator` | `#low` | 读写 | 轻量任务、单文件编辑 |
 | `explore` | flash | **只读**（仅可写 `.opencode/codemap.md`） | 代码库搜索、并行探索 |
 | `librarian` | flash | **只读**（无任何 shell 白名单） | 文档检索、Web 搜索 |
-| `ui-builder` / `consultant` | flash | 读写 | 前端 UI / 方案建议 |
+| `ui-builder` / `consultant` | `#low` | 读写 | 前端 UI / 方案建议 |
 | `vision` | flash | 读写（shell 仅限 `ask` 门控脚本） | 图像/截图/图表理解 |
 
 只读 Agent 真只读化：`edit: deny` + shell 白名单（默认 deny 全部，仅放行 `git status/diff/log/show/blame/grep`、`rg` 等只读子命令；`oracle`/`reviewer` 另允许 `gh pr view/diff`、`gh api` 以支持回帖）。
@@ -175,11 +177,12 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
 
 ## 路由策略与成本
 
-- **Trivial → thinking off**：搜索、查询、咨询、UI、探索、文档检索
-- **Routine → `#low`**：规划、常规多文件实现
-- **Deep/uncertain → `#high`**：深度推理、根因分析、重型多文件实现
-- **代码审查两级**：`/review` 默认 thinking off 初检（≤8 个逻辑文件且 ≤300 有效行、无高风险触发），命中升级条件才委派 `reviewer`（`#high`）；`/deep-review` 强制全量
-- **自动升级**：便宜档无法胜任时升级到 `#high`（带完整上下文，并说明升级理由）
+- **Trivial → thinking off**：搜索、查询、探索、文档检索
+- **Routine-nontrivial → `#low`**：轻量多文件 / 单文件编辑、方案讨论与 UI（`light-orchestrator`/`consultant`/`ui-builder`）
+- **Deep/uncertain → `#high`**：规划、深度推理、重型多文件实现（`planner`/`deep-worker`/`solo`，上游默认档）
+- **Escalation-only → `#max`**：只给两个只读升级 Agent——`oracle`（根因分析）与 `reviewer`（critical/security 审查）
+- **代码审查两级**：`/review` 默认 `#low` 初检（≤8 个逻辑文件且 ≤300 有效行、无高风险触发），命中升级条件才委派 `reviewer`（`#max`）；`/deep-review` 强制 `#max` 全量
+- **自动升级**：升级永远是“换 Agent”而不是抬同一 Agent 的 effort——写作类转 `#high`，根因/审查类转 `#max`（带完整上下文并说明升级理由）
 
 价格（USD / 1M tokens，off-peak；peak = ×2，北京时间周一至周五 09:00–12:00 与 14:00–18:00）：
 
@@ -189,7 +192,7 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
 
 两个成本杠杆：
 
-1. **思考档位**：三档同一单价，差别只在 reasoning token 数量（按输出价计费）——升档是多花输出 token，不是换更贵的单价
+1. **思考档位**：四档同一单价，差别只在 reasoning token 数量（按输出价计费）——升档是多花输出 token，不是换更贵的单价；`#max` 只给步数少、输出短的只读升级 Agent（`oracle`/`reviewer`），写作类停在 `#high`
 2. **提示词缓存**：`cache_read` 比输入价便宜 **50×**（0.003 vs 0.15），保住字节稳定前缀就是省钱
 
 ```bash
@@ -210,8 +213,8 @@ node scripts/estimate-cost.js     # 按实际 token 数估算
 | 命令 | Agent | 用途 |
 |------|-------|------|
 | `/deep` `/quick` `/ui` `/vision` `/plan` `/oracle` | 对应 Agent | 直达路由：重型实现 / 轻量编辑 / 前端 / 图像 / 规划 / 溯源 |
-| `/review [PR]` | `light-orchestrator`（code-review）→ 按需升级 `reviewer` | flash 初检；带 PR ref/URL 时回帖 GitHub |
-| `/deep-review [PR]` | `reviewer` | 强制 `#high` 全量审查，跳过低档初检 |
+| `/review [PR]` | `light-orchestrator`（code-review）→ 按需升级 `reviewer` | `#low` 初检；带 PR ref/URL 时回帖 GitHub |
+| `/deep-review [PR]` | `reviewer` | 强制 `#max` 全量审查，跳过 `#low` 初检 |
 | `/commit` | `light-orchestrator` | Conventional Commits 提交信息 |
 | `/release` | `deep-worker`（git-release） | Tag 发布准备 |
 | `/reflect` | `oracle`（reflect） | 发现摩擦 → 配置优化建议 |
@@ -232,7 +235,7 @@ node scripts/estimate-cost.js     # 按实际 token 数估算
 
 ### 工作流二：排障与清理
 
-1. `/oracle` 只读根因分析（`#high`）
+1. `/oracle` 只读根因分析（`#max`）
 2. `/deep` 让 `deep-worker` 落地修复
 3. `/rmslop` 清死代码，`/simplify` 做行为保持的简化
 4. `/commit` 收尾；摩擦较大时 `/reflect` 让 oracle 给出配置优化建议
@@ -275,7 +278,7 @@ node scripts/estimate-cost.js     # 按实际 token 数估算
 ## 最佳实践
 
 1. **保住提示缓存前缀**：agent 提示词、`AGENTS.md`、规则顺序字节稳定；易变内容放尾部；插件锁版本
-2. **按成本分档**：三档同价，cost 只随 reasoning token 增长——默认档关 thinking 才是真省
+2. **按成本分档**：四档同价，cost 只随 reasoning token 增长——默认档关 thinking 才是真省，`#max` 只用于只读升级
 3. **压缩窗口算出来**：`limit.input` 显式声明，触发点 = `limit.input − compaction.buffer`，不要继承默认
 4. **只读 Agent 真只读**：`edit: deny` + shell 白名单；skills 白名单默认 deny 按职责放行
 5. **名册即预算**：skill 的 name+description 每轮常驻；不用就删，别留"备用"
@@ -290,8 +293,9 @@ node scripts/estimate-cost.js     # 按实际 token 数估算
 | 改动 `~/.config/opencode` 后不生效 | 它是独立副本（非符号链接）时须运行 `scripts\sync-config.ps1` 从仓库源同步 |
 | 配置看似生效但路由/压缩行为不对 | 可能混入了 v1 键名，OpenCode 改走 V1→V2 迁移路径；按「v2 原生键名」表逐项核对 |
 | 后台委派报 `background: true` 错误 | 未设 `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true`；设置后重启，或退回前台串行 |
-| 成本突然翻倍 | 检查是否 peak 时段（×2）；确认 trivial 任务没落到 `#high`；确认前缀没被动态内容打散（`cache_read` 便宜 50×） |
+| 成本突然翻倍 | 检查是否 peak 时段（×2）；确认 trivial 任务没落到 `#high`/`#max`（`#max` 只该出现在 `oracle`/`reviewer`）；确认前缀没被动态内容打散（`cache_read` 便宜 50×） |
 | thinking 关了但账单仍高 | `thinking` 写在了 `settings` 或 agent `options` 里（不生效）；必须写在模型层 `body` |
+| 为什么有些任务明显更贵 | 先看路由是否把写作/常规实现落到了 `#max`：`#max` 只给 `oracle`/`reviewer` 的只读升级路径，写作类应停在 `#high`、轻量任务在 `#low` |
 | flash 设置 `temperature` 没效果 | 思考模式下不支持 `temperature`；只有默认档（thinking 关）真正生效 |
 | 用 PATH 上的 opencode 启动后一切都不对 | 那是旧版（1.18.4），走的是迁移路径；用桌面版 v2 自带 CLI 或升级到 v2 |
 | 新模型/新 provider 想加 | 本仓库约束：只用 `deepseek/deepseek-flash`，不引入其他模型 |
@@ -301,17 +305,17 @@ node scripts/estimate-cost.js     # 按实际 token 数估算
 
 ## AI 使用建议
 
-- **推荐工作流模式**：先确认运行时是 OpenCode v2，再谈行为。路由按三档：trivial → thinking off、routine → `#low`、deep/uncertain → `#high`；改配置走「变更点速查」定位文件，改完 `sync-config.ps1` 同步并用 `validate-jsonc.js` 校验。
-- **关键注意事项**：① 只写 v2 原生键，混入 v1 键会触发迁移路径；② 思考参数只在模型层（toggle 进 `body`、effort 进 `settings`）；③ 三档同价，省的是 reasoning token；④ skill 白名单决定名册大小，也就是每轮常驻成本；⑤ 后台委派要环境变量。
+- **推荐工作流模式**：先确认运行时是 OpenCode v2，再谈行为。路由按四档：trivial → thinking off、routine → `#low`、deep/uncertain → `#high`、只读升级 → `#max`；改配置走「变更点速查」定位文件，改完 `sync-config.ps1` 同步并用 `validate-jsonc.js` 校验。
+- **关键注意事项**：① 只写 v2 原生键，混入 v1 键会触发迁移路径；② 思考参数只在模型层（toggle 进 `body`、effort 进 `settings`）；③ 四档同价，省的是 reasoning token，`#max` 只给 `oracle`/`reviewer`；④ skill 白名单决定名册大小，也就是每轮常驻成本；⑤ 后台委派要环境变量。
 - **常用代码模式**：模型定义 = `providers.deepseek.models["deepseek-flash"]` 的 `body` + `variants`；权限 = `permissions` 有序规则 `{action, resource, effect}`；压缩 = `limit.input` + `compaction: {auto, keep: {tokens}, buffer}`。
-- **不要臆造**：本仓库已从三模型矩阵（pro/flash/vision）收敛为单模型 + 思考档，不要再写 `deepseek-v4-pro` 或"pro = 3× flash"；没有 `dcp.jsonc` 这类第三方压缩插件配置；`subagent_depth` 已迁到 `experimental` 下。字段语义以仓库 `README.md`、`docs/UPGRADE.md` 与 OpenCode v2 文档为准。
+- **不要臆造**：本仓库已从三模型矩阵（pro/flash/vision）收敛为单模型 + 四档思考档，不要再写 `deepseek-v4-pro` 或"pro = 3× flash"；没有 `dcp.jsonc` 这类第三方压缩插件配置；`subagent_depth` 已迁到 `experimental` 下。字段语义以仓库 `README.md`、`docs/UPGRADE.md` 与 OpenCode v2 文档为准。
 
 ---
 
 ## 相关技能
 
 - **opencode** — 本配置方案的宿主客户端，配置字段以它为准：[../opencode/SKILL.md](../opencode/SKILL.md)
-- **oh-my-openagent** — 另一套主打多模型协同的 Agent 方案：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
+- **oh-my-openagent** — 另一套多模型协同方案；5.x 起是独立终端应用（不依赖 OpenCode），与本配置的可比点是"如何用有限模型覆盖多角色"：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
 - **superpowers-zh** — 中文方法论 Skill 集，与本仓库的 superpowers 插件同源：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 - **deepseek-harness** — DeepSeek 官方 Agent 框架（另一套模型/工具编排形态）：[../deepseek-harness/SKILL.md](../deepseek-harness/SKILL.md)
 

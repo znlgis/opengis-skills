@@ -15,7 +15,7 @@ metadata:
 >
 > **下载：** <https://www.eziriz.com/downloads.htm>
 >
-> **最新版本：** 7.5.0.0（Release date 2025-11-12；商业闭源、不在 NuGet 分发；截至 2026-11 实测，[官网下载页](https://www.eziriz.com/downloads.htm)）
+> **最新版本：** 7.7.0.0（Release date 2026-11-10；商业闭源、不在 NuGet 分发；截至 2026-11 实测，[官网下载页](https://www.eziriz.com/downloads.htm)、[版本历史](https://www.eziriz.com/reactor_history.htm)）
 >
 > **许可证：** 商业（提供个人/企业/全球许可证）
 
@@ -26,13 +26,15 @@ metadata:
 .NET Reactor 主要功能：
 
 - **代码加密**：将 IL 编译为本机受保护代码（Necrobit）
-- **混淆**：方法名/类名/字段名重命名、控制流模糊
-- **字符串加密**：常量字符串运行时解密
+- **代码虚拟化**：7.7 起提供带 **AOT 支持**的 Code Virtualization Engine，把关键方法编译为虚拟指令解释执行
+- **完整性保护**：7.7 新增 Integrity Virtualization，Anti Tampering 不再只是签名/Hash 校验
+- **混淆**：方法名/类名/字段名重命名、控制流模糊、跨程序集混淆（7.7 起支持合并程序集与 ReadyToRun）
+- **字符串加密**：常量字符串运行时解密（7.7 起运行时开销降低约 40%）
 - **资源加密 / 压缩**
 - **反调试 / 反篡改 / Anti-ILdasm**
-- **许可证系统**：序列号 / 硬件绑定 / 试用期 / 黑名单
+- **许可证系统**：序列号 / 硬件绑定 / 试用期 / 黑名单；7.7 起签发密钥默认升级为 **RSA 3072**
 - **合并程序集**：将依赖 dll 合并入主可执行文件
-- **支持目标**：.NET Framework、.NET Core / .NET 5.0-10.0、ASP.NET Core，以及 Xamarin、Unity、Blazor 程序集（以官网支持列表为准）
+- **支持目标**：.NET Framework、.NET Core / .NET 5.0-11.0、ASP.NET Core，以及 Xamarin、Unity、Blazor 程序集（以官网支持列表为准）
 
 ---
 
@@ -42,7 +44,7 @@ metadata:
 
 ### 方式一：官网安装包（推荐）
 
-1. 打开 <https://www.eziriz.com/downloads.htm>，下载 .NET Reactor 7.5.0.0（Demo 版可先试用）
+1. 打开 <https://www.eziriz.com/downloads.htm>，下载 .NET Reactor 7.7.0.0（Demo 版可先试用）
 2. 安装后启动，输入购买的 License 完成激活
 3. 主界面：左侧选项卡（Files / Protection / Native EXE File / License Manager / ...）
 
@@ -68,9 +70,10 @@ metadata:
 2. **Protection** 选项卡：
    - **Necrobit Protection**（IL 加密，推荐必开）
    - **Anti ILDASM**
-   - **Anti Tampering**
+   - **Anti Tampering** / **Integrity Virtualization**（7.7 新增，更强的完整性校验）
    - **Obfuscation** → 重命名
    - **Control Flow Obfuscation**
+   - **Code Virtualization**（7.7 新增引擎，支持 AOT；只对热点/关键方法开启，解释执行有性能成本）
    - **String Encryption**
    - **Resource Encryption / Compression**（按需）
    - **Anti Debug**
@@ -199,7 +202,8 @@ GUI → Advanced：
 ## .NET Core / .NET 5+ 注意事项
 
 - 选择对应运行时（CoreCLR）
-- NativeAOT 产物是原生机器码、没有可加密的 IL，Necrobit 无从生效：受保护程序按 JIT/CoreCLR 模式发布；必须 AOT 时改用代码签名 + 服务端授权校验
+- NativeAOT 产物是原生机器码、没有可加密的 IL，Necrobit 无从生效；7.7 起可用 **Code Virtualization Engine（带 AOT 支持）** 覆盖 AOT 场景，其余情况仍建议按 JIT/CoreCLR 模式发布，或改用代码签名 + 服务端授权校验
+- 7.7 起 ReadyToRun 程序的跨程序集混淆需通过 **Build Integration Manager** 接入，直接放 dll 进 Files 列表不会自动串联
 - `dotnet publish -c Release` 后再保护，对 self-contained 多文件目录可批量保护
 - 单文件发布：先生成单文件，再保护其外层 EXE 可能受限；建议保护 framework-dependent dll
 
@@ -244,6 +248,8 @@ GUI → Advanced：
 | WPF XAML 绑定失败 | 排除被 XAML 引用的类型与属性 |
 | 启动慢 | Necrobit 解密成本；可关闭部分保护项 |
 | 被 AV 误报 | 联系杀软厂商加白；选择「Anti Debug = Mild」 |
+| 升级到 7.7 后旧许可证/序列号校验失效 | 7.7 把主密钥升级为 RSA 3072，签发侧需换用新版 LicenseGenerator NuGet 包重新生成，旧密钥签发的授权不再匹配 |
+| 7.7 保护后启动变慢 | Code Virtualization 是解释执行，按方法粒度只对关键方法开启；Necrobit 本身在 7.7 已优化 .NET 8+ 启动性能 |
 | Linux / macOS 上运行保护后的程序报错 | 官方宣称 Necrobit 覆盖 Windows / Linux / OS X，但仍与目标 .NET 运行时版本相关：先用 Demo 版对同一构建产物复现，确认失败再退回 Windows 构建 agent 或调整保护项 |
 | AOT 发布后再保护，程序行为异常 | 原生 AOT 产物没有 IL 可加密，保护器会跳过或破坏启动；受保护版本改用 `dotnet publish` 的 JIT 模式 |
 

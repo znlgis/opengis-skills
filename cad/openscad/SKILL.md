@@ -1,6 +1,6 @@
 ---
 name: openscad
-description: "Use when generating 3D models from code with OpenSCAD — CSG scripts for parametric parts, 3D-printable fixtures, or CI batch export; also when renders are painfully slow and you need --backend Manifold, an exported STL is not manifold / slice software rejects it, or import() of an STL or SVG is the bottleneck. Covers cube/sphere/cylinder, difference/union/intersection, linear_extrude/rotate_extrude, hull/minkowski, Customizer annotations, and openscad -o out.stl -D var=value automation."
+description: "Use when generating 3D models from code with OpenSCAD — CSG scripts for parametric parts, 3D-printable fixtures, or CI batch export; also when renders are painfully slow and you must choose a render backend, an exported STL is not manifold / slice software rejects it, or import() of an STL or SVG is the bottleneck. Covers cube/sphere/cylinder, difference/union/intersection, linear_extrude/rotate_extrude, hull/minkowski, Customizer annotations, and openscad -o out.stl -D var=value automation."
 license: MIT
 metadata:
   category: cad
@@ -24,7 +24,7 @@ metadata:
 OpenSCAD 与传统 GUI CAD 的区别：
 
 - **代码即模型**：所有几何由 .scad 脚本生成
-- **CSG 内核**：基于 CGAL（精确）或新版 Manifold（更快）
+- **CSG 内核**：基于 CGAL（精确）或新版 Manifold（更快）；2026.11 系列的 `--backend` 缺省已是 Manifold，CGAL 需显式 `--backend CGAL`
 - **三大基础**：原语 + 变换 + 布尔
 - **强参数化**：变量、模块、函数、循环、列表推导
 - **导入导出**：STL、OFF、DXF、SVG、AMF、3MF；可导入 STL 做处理
@@ -205,8 +205,8 @@ openscad -o out.stl --export-format binstl part.scad
 # 传参覆盖（-D 可重复）
 openscad -D 'length=80' -D 'width=40' -o out.stl part.scad
 
-# 改用 Manifold 后端（需该构建编入了 Manifold，先 openscad --info 确认）
-openscad --backend Manifold -o out.stl part.scad
+# 2026.11 系列缺省即 Manifold；真要退回精确的 CGAL 才显式指定
+openscad --backend CGAL -o out.stl part.scad
 
 # 一次性多格式导出：-o 可重复
 openscad -o out.stl -o out.3mf part.scad
@@ -225,7 +225,7 @@ openscad -o out.csg part.scad
 | `-D, --D var=val` | 预定义变量，可重复 |
 | `-p / -P` | 载入 Customizer 参数文件 / 参数集 |
 | `-O <section/key=value>` | 传导出设置，如 `export-pdf/paper-size=a3`；`--help-export` 列出全部 |
-| `--backend <CGAL\|Manifold>` | 3D 渲染后端；Manifold 快很多 |
+| `--backend <CGAL\|Manifold>` | 3D 渲染后端；2026.11 系列缺省 Manifold（快一个数量级），CGAL 留给需要精确结果的场景 |
 | `--render` | PNG 导出时做完整几何求值（否则是预览渲染） |
 | `--camera / --imgsize / --viewall / --autocenter` | PNG 相机与画布 |
 | `--enable <feature>` | 打开实验特性（`roof`、`lazy-union`、`textmetrics`…，`all` 全开） |
@@ -238,7 +238,7 @@ openscad -o out.csg part.scad
 ## 性能优化
 
 1. `$fn` 不要全局设过高，需要圆滑的对象再设
-2. **Manifold 后端**：CLI 加 `--backend Manifold`，GUI 在 Preferences → Features 启用，比 CGAL 快一个数量级
+2. **Manifold 后端**：2026.11 系列缺省已启用（CLI `--backend` 缺省 Manifold），比 CGAL 快一个数量级；只有在发行版仓库的 2021.01 老构建上才需要自己换
 3. **避免大量布尔嵌套**：使用 `hull()` 或 `minkowski()` 后立即缓存为模块
 4. **复用模块**优于复制粘贴
 5. **`use <lib.scad>`** 引入库不递归求值
@@ -278,7 +278,7 @@ openscad -o out.csg part.scad
 5. 命令行出件（建议显式二进制 STL）：
    ```bash
    mkdir -p build
-   openscad --backend Manifold -o build/part.stl --export-format binstl part.scad
+   openscad -o build/part.stl --export-format binstl part.scad   # 2026.11 系列缺省 Manifold
    ```
 6. 打印前自检：切片软件能正常读入且没有"非流形/未闭合"提示；有提示就回去查布尔输入
 
@@ -293,7 +293,7 @@ openscad -o out.csg part.scad
    done < variants.csv
    ```
 3. 需要缩略图时加一次 PNG 导出（`--camera` + `--imgsize` + `--render`）
-4. 把 `build/` 作为 CI artifact 上传；渲染耗时高时开 `--backend Manifold`
+4. 把 `build/` 作为 CI artifact 上传；渲染耗时高时先降 `$fn` 与布尔层数，2026.11 系列已缺省 Manifold，不必再手动指定
 5. 失败排查：`openscad` 非零退出码 + 终端里的 WARNING/ERROR 行，先单独重跑该变体
 
 ---
@@ -302,12 +302,12 @@ openscad -o out.csg part.scad
 
 | 报错 / 现象 | 原因 | 处置 |
 |------------|------|------|
-| 渲染极慢（几分钟以上） | CGAL 后端开销大，`$fn` 过高，布尔嵌套层数多 | 换 `--backend Manifold`；降低 `$fn`；减少布尔嵌套层数 |
+| 渲染极慢（几分钟以上） | `$fn` 过高、布尔嵌套层数多；老构建或显式 `--backend CGAL` 时 CGAL 开销大 | 降 `$fn`、减少布尔层数；2026.11 系列缺省 Manifold，老构建升级到快照版 |
 | 导出 STL 不闭合 / 切片报非流形 | 布尔输入不是流形实体，或 2D 轮廓未闭合 | 布尔输入必须是流形实体；`linear_extrude` 的 2D 轮廓要闭合，避免零厚度壁与自相交 |
 | 中文显示为方块或乱码 | 字体名不存在，或字体不含 CJK | 用系统已安装的 CJK 字体：`font = "Noto Sans CJK SC"`（Linux/Windows 字体名不同，先 `fc-list` 查） |
 | `import("a.stl")` 很慢 | STL 三角面太多 | 先减面或转 OFF，并把导入结果缓存成模块只算一次 |
 | 线性挤出后表面有杂线/失真 | `convexity` 不足，渲染器误判遮挡 | 提高 `convexity`（`linear_extrude(height=10, convexity=10)`） |
-| `--backend Manifold` 报未知参数 | 该构建未编入 Manifold（发行版仓库版常见） | 用官网 Snapshots 构建，`--info` 可确认 |
+| `--backend Manifold` 报未知参数 | 该构建未编入 Manifold（发行版仓库的 2021.01 常见） | 换官网 Snapshots 构建，`--info` 可确认后端与依赖；2026.11 系列缺省即 Manifold |
 | 导出的 STL 比预期大很多 | 缺省是 ASCII STL | 加 `--export-format binstl` |
 | `-D` 传带引号或空格的值被 shell 吃掉 | shell 分词与引号层级冲突 | 整体包在单引号里、内部用双引号：`-D 'quality="production"'`（Windows cmd 用双引号包裹并转义） |
 | `-O` 设置报错 | 该键在当前构建不存在 | 先 `--help-export` 看可用键 |
@@ -315,7 +315,7 @@ openscad -o out.csg part.scad
 ## AI 使用建议
 
 - **推荐工作流模式**：AI 助手应将 OpenSCAD 模型组织为「全局参数 → 模块定义 → 主模型组合」的结构，利用 `module` 封装可复用组件。参数化面板用 `/* [ParamGroup] */` 注释格式暴露变量给 GUI Customizer。批处理使用 CLI `openscad -o out.stl model.scad -D 'param=value'`。
-- **关键注意事项**：① `$fn` 不要全局设过高，仅对需要圆滑的对象单独设置；② Manifold 后端 CLI 用 `--backend Manifold`、GUI 在 Preferences → Features 启用（需安装带 Manifold 的构建）；③ `import("a.stl")` 场景避免频繁重导入，应缓存为模块；④ 中文字体使用 `font = "Noto Sans CJK SC"`；⑤ 缺省导出 ASCII STL，脚本里显式写 `--export-format binstl` 以免未来默认值变更时产出漂移。
+- **关键注意事项**：① `$fn` 不要全局设过高，仅对需要圆滑的对象单独设置；② 2026.11 系列 `--backend` 缺省 Manifold，只有发行版仓库的 2021.01 老构建才需要手动换后端；③ `import("a.stl")` 场景避免频繁重导入，应缓存为模块；④ 中文字体使用 `font = "Noto Sans CJK SC"`；⑤ 缺省导出 ASCII STL，脚本里显式写 `--export-format binstl` 以免未来默认值变更时产出漂移。
 - **不要臆造**：OpenSCAD 没有 `--headless` 参数（无 GUI 时用 `-o` 即可）；没有 `--script`/`--python` 之类内嵌脚本入口；`import()` 只吃 stl/off/svg/dxf 等有限格式，不要假设它能读 STEP。
 - **常用代码模式**：基础体：`cube([l,w,h])` / `cylinder(h, r, $fn=N)` / `sphere(r, $fn=N)`。布尔：`difference() { ... }`。变换：`translate([x,y,z]) rotate([ax,ay,az])`。参数暴露：`/* [Section] */ variable = default; // [min:step:max]`。
 

@@ -13,7 +13,7 @@ metadata:
 >
 > **GUI：** CQ-editor（<https://github.com/CadQuery/CQ-editor>）
 >
-> **最新版本：** 2.8.0（截至 2026-11，PyPI 与 conda-forge 同步，见 [PyPI](https://pypi.org/project/cadquery/)；要求 Python ≥ 3.11，几何依赖 `cadquery-ocp` 7.9.x）
+> **最新版本：** 2.8.0（2026-06-21 上传 PyPI，conda-forge 同步，截至 2026-11，见 [PyPI](https://pypi.org/project/cadquery/)；要求 Python ≥ 3.11，几何依赖 `cadquery-ocp>=7.9.3.1,<8.0`——即便 PyPI 上独立发布的 `cadquery-ocp` 已到 8.0.x，cadquery 2.8.0 的依赖上限仍锁在 7.9.x）
 >
 > **包管理器：** `pip install cadquery` / `conda install -c conda-forge cadquery`
 >

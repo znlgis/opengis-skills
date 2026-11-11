@@ -3,6 +3,7 @@
 ## Contents
 
 - 核心类 API
+- 1.2 新增接口（make_grid、read_file_info、grid_size）
 
 GeoSeries and GeoDataFrame core API details split from SKILL.md.
 
@@ -223,3 +224,53 @@ sindex.is_empty                # 是否为空
 
 ---
 
+---
+
+## 1.2 新增接口（make_grid、read_file_info、grid_size）
+
+以上内容以 GeoPandas 1.2.0 为基准。1.2 新增或变更的接口如下。
+
+### gpd.read_file_info()
+
+```python
+gpd.read_file_info(filename, layer=None)  # -> dict，1.2 新增
+```
+
+返回单个图层的元数据字典（pyogrio.read_info 的别名，需装 pyogrio）。与 `gpd.list_layers()` 的分工：`list_layers()` 列出所有图层（name/geometry_type），`read_file_info()` 给某一层的完整信息（CRS、字段、要素数等）。
+
+### gpd.make_grid()
+
+```python
+gpd.make_grid(input_geometry, /, cell_size, grid_type="square",
+              feature_type="polygons", offset=None, intersect=True, flat_topped=False)
+GeoSeries.make_grid(...)   # 同名方法
+```
+
+| 参数 | 取值 | 说明 |
+|------|------|------|
+| `cell_size` | float | 正方形边长；六边形时为对边距离（边长 = cell_size / sqrt(3)） |
+| `grid_type` | `"square"` / `"hexagon"` | 平面网格，不是 H3/S2 那种球面网格 |
+| `feature_type` | `"polygons"` / `"centers"` / `"corners"` | 返回面、中心点或顶点 |
+| `offset` | (x, y) | 网格左下角，默认取输入范围左下角 |
+| `intersect` | bool | True 只保留与输入几何相交的单元；False 返回覆盖外接矩形的完整网格 |
+| `flat_topped` | bool | 六边形是否平顶（默认尖顶朝上） |
+
+返回 GeoSeries（1.2 新增）。
+
+### 集合运算的 grid_size
+
+1.2 起以下 GeoSeries 方法新增 `grid_size` 参数，用于固定精度栅格（顶点吸附到指定格网，可改善拓扑鲁棒性）：
+
+```text
+union(other, align=None, grid_size=None)
+intersection(other, align=None, grid_size=None)
+difference(other, align=None, grid_size=None)
+symmetric_difference(other, align=None, grid_size=None)
+union_all(method="unary", grid_size=None)
+```
+
+`gpd.overlay()` 没有 `grid_size` 参数，需要固定精度时先对各 GeoSeries 做 `set_precision()` 或用上述方法。
+
+### GeoParquet 规范版本
+
+`to_parquet(schema_version=...)` 支持 `"0.1.0"`、`"0.4.0"`、`"1.0.0"`、`"1.1.0"`、`"2.0.0"`；不传时默认写 1.1.0。1.2 起 GeoParquet 2.0 可读写。

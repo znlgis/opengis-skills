@@ -103,12 +103,12 @@ gdal <command> <subcommand> [options] <inputs>
 
 ```bash
 # 矢量重投影 + 格式转换（等价 ogr2ogr -t_srs ... -f GPKG）
-gdal vector reproject --output-crs EPSG:3857 -o out.gpkg in.shp
+gdal vector reproject --output-crs EPSG:3857 in.shp out.gpkg --overwrite
 
 # 栅格镶嵌（等价 gdal_merge.py / gdalwarp 多输入）
-gdal raster mosaic -o mosaic.tif tile1.tif tile2.tif tile3.tif
+gdal raster mosaic tile1.tif tile2.tif tile3.tif mosaic.tif --overwrite
 
-# 数据集体检（3.13+）
+# 数据集体检（3.13+，有错时退出码为 1）
 gdal dataset check data.gpkg
 ```
 
@@ -162,8 +162,8 @@ ogr2ogr -t_srs EPSG:3857 output.shp input.shp
 # 属性过滤
 ogr2ogr output.shp input.shp -where "area > 1000"
 
-# 选择特定字段
-ogr2ogr output.shp input.shp -select "id,name,geometry"
+# 选择特定字段（几何默认保留；列表里写 geometry 只在几何被登记为字段名时有效）
+ogr2ogr output.shp input.shp -select "id,name"
 ```
 
 ---
@@ -210,7 +210,7 @@ COG 是带内部金字塔和分块的 GeoTIFF，便于 HTTP Range 按需读取�
 gdal_translate -of COG -co COMPRESS=DEFLATE -co OVERVIEWS=AUTO input.tif output_cog.tif
 
 # 3.11+ 新式 CLI 等价写法
-gdal raster convert --of COG -o output_cog.tif input.tif
+gdal raster convert --of COG -co COMPRESS=DEFLATE input.tif output_cog.tif --overwrite
 
 # 校验：分块、金字塔、是否被识别为 COG
 gdalinfo -json output_cog.tif | grep -E 'COMPRESSION|LAYOUT|BLOCK'

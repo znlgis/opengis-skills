@@ -27,8 +27,8 @@ metadata:
 
 GDAL 是地理空间数据处理的事实标准库，由 OSGeo 基金会维护。它提供：
 
-- **200+ 栅格驱动**：GeoTIFF、NetCDF、HDF5、COG、JPEG2000 等
-- **100+ 矢量驱动**：Shapefile、GeoJSON、GeoPackage、PostGIS、FlatGeobuf 等
+- **上百个栅格驱动**：GeoTIFF、NetCDF、HDF5、COG、JPEG2000 等（完整清单见 [Raster drivers](https://gdal.org/en/stable/drivers/raster/index.html)）
+- **近百个矢量驱动**：Shapefile、GeoJSON、GeoPackage、PostGIS、FlatGeobuf 等（完整清单见 [Vector drivers](https://gdal.org/en/stable/drivers/vector/index.html)）
 - **坐标参考系统**：基于 PROJ 的坐标变换与投影转换
 - **栅格分析**：重采样、镶嵌、裁剪、波段运算、DEM 分析等
 - **矢量操作**：空间过滤、属性查询、要素创建与编辑等

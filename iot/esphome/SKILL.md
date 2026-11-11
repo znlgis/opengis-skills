@@ -57,7 +57,14 @@ docker run --rm -it \
 
 ### 方式三：ESPHome Device Builder（图形界面）
 
-官方容器也能以 dashboard 形态运行（暴露 6052 端口），在浏览器里点选配置。命令行仍是理解配置与做自动化的主路径，本技能以 CLI 为准。
+ESPHome 2026.10（当前稳定版）已**移除内置 dashboard**（执行 `esphome dashboard` 会提示迁移），图形界面改用独立包：
+
+```bash
+pip install esphome-device-builder
+esphome-device-builder
+```
+
+也可用官方 Device Builder 容器，在浏览器里点选配置。命令行仍是理解配置与做自动化的主路径，本技能以 CLI 为准；详见 <https://github.com/esphome/device-builder>。
 
 ### 验证
 
@@ -165,8 +172,8 @@ packages:
 | `api` | `port` | 默认 6053 |
 | `api` | `encryption.key` | 加密密钥；写入后 HA 需填同一把 base64 密钥 |
 | `api` | `batch_delay` | 默认 100ms；实时性要求高时降到 `50ms` |
-| `ota` | `platform: esphome` + `password` | 无加密密钥时的退路：只认证上传方，不保密镜像 |
-| `ota` | `platform: esphome` + `encryption:` | 复用 api 加密（推荐） |
+| `ota` | `platform: esphome` + `encryption:` | 复用 api 加密密钥（推荐；`password` 与 `encryption` 互斥） |
+| `ota` | `platform: esphome` + `password` | 旧式退路：只认证上传方、不保密镜像，官方已标注不推荐新设备使用 |
 | `wifi` | `manual_ip` | 固定 IP，显著改善连接时间 |
 | `esp32` | `flash_size` | `2MB`–`32MB`；写超过实际容量会导致无法启动 |
 
@@ -182,8 +189,11 @@ packages:
 | `compile <CONFIG>` | 只编译（`--only-generate` 仅生成 C++ 不编译） |
 | `upload <CONFIG>` | 上传最近一次构建的固件 |
 | `logs <CONFIG>` | 只看日志 |
-| `clean` / `clean-mqtt` | 清理构建目录 / 清除 MQTT 保留的发现消息 |
+| `clean` / `clean-all` | 清理当前构建目录 / 清理全部构建目录 |
+| `clean-mqtt` | 清除 MQTT 保留的发现消息 |
+| `bundle` / `analyze-memory` | 打出可离线构建的配置包 / 分析内存占用 |
 | `wizard <CONFIG>` | 交互式生成配置骨架 |
+| `dashboard`（已移除） | 旧内置面板；现在会报错并提示改用 `esphome-device-builder` |
 
 常用选项：
 
@@ -193,9 +203,11 @@ packages:
 | `--upload_speed <baud>` | 串口上传速率，默认 460800 |
 | `--no-logs` | 上传完不打开日志（CI 里必加） |
 | `-s / --substitution KEY VALUE` | 覆盖 substitution，可多次 |
-| `--error-format line` | 错误按 `file:line:col: error: ...` 输出，便于编辑器与 CI 链接 |
+| `--only-generate` | 只生成 C++ 源码、不编译（`compile` 子命令） |
 | `--toolchain <T>` | `esp-idf`（ESP32 默认）/ `arduino`（ESP8266 默认）/ `sdk-nrf` / `host` / `platformio` |
-| `-v / --verbose` | 打开 ESPHome 自身的详细日志 |
+| `-v / --verbose` / `-q / --quiet` | 打开 / 关闭 ESPHome 自身的日志 |
+
+> 选项以本机 `esphome <command> --help` 为准：ESPHome 2026.10 的 CLI 已没有 `--error-format`，旧教程里的该参数会直接报错。
 
 ```bash
 # 首次：USB 烧写并进日志
@@ -204,8 +216,8 @@ esphome run livingroom.yaml --device /dev/ttyUSB0
 # 之后：走 OTA 更新
 esphome run livingroom.yaml --device 192.168.1.50
 
-# CI：只校验，不编译不上传
-esphome config livingroom.yaml --error-format line
+# CI：只校验，不编译不上传（config 子命令本身即退出码化校验）
+esphome config livingroom.yaml
 ```
 
 ## 典型工作流：新设备 → 配置 → USB 首刷 → OTA 更新 → HA 接入
@@ -268,7 +280,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 4. **密钥复用**：`api.encryption.key` 与 `ota.encryption` 共用一把，减少漏配。
 5. **改配置必跑 `esphome config`**：比直接 `run` 快得多，且不碰硬件就能抓出拼写与缩进错误。
 6. **公共片段用 `packages`**：WiFi、OTA、基础诊断抽到 `common/*.yaml`，避免逐台复制。
-7. **CI 用 `--no-logs` 加 `--error-format line`**：否则会挂在日志视图上，错误也难以定位。
+7. **CI 用 `--no-logs`**：否则会挂在日志视图上；校验是否通过看 `esphome config` 的退出码与报错行。
 8. **OTA 翻车留后路**：保留可插 USB 的物理通道，并开启 safe mode（OTA 平台默认启用），否则配置写错可能只能拆机重刷。
 
 ## 常见问题
@@ -287,7 +299,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ## AI 使用建议
 
 - **先探版本**：`esphome version` 确认与文档一致（2026.10.2）；CLI 选项随版本改名，旧教程里的参数可能已失效。
-- **不碰硬件也能验证**：改完先 `esphome config --error-format line`，过了校验再谈烧写，能省大量插拔。
+- **不碰硬件也能验证**：改完先跑 `esphome config <yaml>`，过了校验再谈烧写，能省大量插拔。
 - **写盘前确认设备目标**：`run` / `upload` 会覆盖设备固件，`--device` 指错可能刷到别的设备；执行前向用户确认端口或 IP。
 - **验证产物**：烧写后用 `esphome logs` 看启动日志与读数，并用 `config-hash` 与设备上报值比对，确认刷进去的是这次构建。
 - **密钥不入库**：`secrets.yaml` 与示例里的 `!secret` 占位符不要换成真实值提交，报告里也不要粘贴加密密钥。

@@ -1,6 +1,6 @@
 ---
 name: go
-description: "Use when writing or debugging Go (go1.27.3) — goroutines/channels and context cancellation, net/http and ServeMux patterns, database/sql with MySQL/Postgres drivers, generics, go mod tidy / go work, table-driven tests and -race. Also for \"all goroutines are asleep - deadlock!\", data races on map writes, \"missing go.sum entry\", and slice aliasing surprises."
+description: "Use when writing or debugging Go (go1.27.4) — goroutines/channels and context cancellation, net/http and ServeMux patterns, database/sql with MySQL/Postgres drivers, generics, go mod tidy / go work, table-driven tests and -race. Also for \"all goroutines are asleep - deadlock!\", data races on map writes, \"missing go.sum entry\", and slice aliasing surprises."
 license: MIT
 metadata:
   category: others
@@ -19,9 +19,9 @@ metadata:
 >
 > **许可证：** BSD-3-Clause
 >
-> **包管理器：** 官方二进制 tar.gz / `brew install go` / `winget install Golang.go`（最新 go1.27.3，截至 2026-11）
+> **包管理器：** 官方二进制 tar.gz / `brew install go` / `winget install Golang.go`（最新 go1.27.4，截至 2026-11）
 >
-> **版本：** go1.27.3（截至 2026-11，以 [go.dev/dl](https://go.dev/dl/) 的 `?mode=json` 返回为准）
+> **版本：** go1.27.4（2026-11-02 发布，截至 2026-11，以 <https://go.dev/dl/?mode=json> 返回为准；<https://go.dev/doc/devel/release> 记录 1.27.0 起各补丁版）
 
 ## 概述
 

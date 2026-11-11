@@ -99,8 +99,14 @@ python -c "import sqlite3; c=sqlite3.connect(':memory:'); c.enable_load_extensio
 spatialite mydb.sqlite
 spatialite> .load mod_spatialite
 
-# CLI：一次性执行（把扩展加载与 SQL 放在同一次调用里）
-spatialite mydb.sqlite -cmd ".load mod_spatialite" "SELECT spatialite_version();"
+# CLI：一次性执行（选项须放在数据库文件之前，与 sqlite3 CLI 的 [OPTIONS] FILENAME [SQL] 顺序一致）
+spatialite -cmd ".load mod_spatialite" mydb.sqlite "SELECT spatialite_version();"
+
+# CLI：更稳妥的写法是用 heredoc 把 dot-command 与 SQL 一起从 stdin 送入
+spatialite mydb.sqlite <<'EOF'
+.load mod_spatialite
+SELECT spatialite_version();
+EOF
 ```
 
 ```python

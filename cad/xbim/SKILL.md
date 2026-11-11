@@ -17,7 +17,7 @@ metadata:
 >
 > **许可证：** CDDL-1.0
 >
-> **最新版本：** Xbim.Essentials 6.1.605（NuGet 当前稳定版，截至 2026-11，见 [NuGet](https://www.nuget.org/packages/Xbim.Essentials)）；Xbim.Geometry 6.x 只有带 `-netcore` 后缀的包（如 6.3.891-netcore），不加版本时 `dotnet add package` 会装稳定通道最高版 5.1.820
+> **最新版本：** Xbim.Essentials 6.1.605（NuGet 当前稳定版，截至 2026-11，见 [NuGet](https://www.nuget.org/packages/Xbim.Essentials)）；Xbim.Geometry 6.x 只有带 `-netcore` 后缀的包（如 6.3.891-netcore），不加版本时 `dotnet add package` 会装稳定通道最高版 5.1.820。仓库 tag 已推进到 `XbimEssentials_merge_6.1.610`（见 [tags](https://github.com/xBimTeam/XbimEssentials/tags)），但**合并 tag 不等于 NuGet 发布**——用 NuGet 上实际存在的最新稳定版 6.1.605
 
 ## 概述
 

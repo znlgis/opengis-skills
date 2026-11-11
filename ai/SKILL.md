@@ -7,7 +7,7 @@ metadata:
   tags: "ai, llm, agent, rag, workflow, prompt, chatbot, opensource"
 ---
 
-> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 114 技能总索引
+> **父级入口：** [../SKILL.md](../SKILL.md) — 全仓 120 技能总索引
 
 ## 概述
 

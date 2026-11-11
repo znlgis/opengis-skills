@@ -13,9 +13,11 @@ metadata:
 >
 > **许可证：** MIT
 >
-> **最新版本：** v2.2.6（截至 2026-11，npm `@opencode/cli` latest 与仓库 tag `v2.2.6` 一致；GitHub `releases/latest` 指向的仍是 `v1.19.5`）；迭代快，以本机 `opencode --version` 为准
+> **最新版本：** v2.2.7（截至 2026-11，npm `@opencode/cli` latest 与仓库 tag `v2.2.7` 一致，2026-11-10 发布；GitHub `releases/latest` 指向的仍是 V1 线 `v1.19.5`，不要据此判断 V2 版本）；迭代快，以本机 `opencode --version` 为准
 
 > **注意：** OpenCode 迭代非常快，命令、配置字段与模型名称请以你当前版本的 `opencode --help`、TUI 内 `/help` 及在线 JSON Schema 为准。
+
+> **v2.2.7 变化（可选读）**：新增 GitHub Copilot Auto 模型路由、侧边栏标签快捷键与会话已读/未读标记；`read` 支持负 offset（如 `-50` 读末 50 行）并在找不到文件时提示相近路径；shell 结果以 `Exit code: N` 结尾；MCP 远程登录刷新更稳。**破坏性变更**：`@opencode/ai` 移除 `ImageResponse.image`（改用 `response.images[0]`）；SDK 在插件仍加载时 `agent.list` 只返回已加载 Agent，`integration.list`/`usage.limits`/`vcs.init`/`rpc.call`/`artifact.*` 不再等待最多 5 秒，需监听对应 `*.updated` 事件刷新。
 
 ## 概述
 
@@ -210,6 +212,9 @@ opencode run "升级依赖并修复由此产生的编译错误"
 | 想接公司内部工具 | 通过 `mcp`（local/remote）接入，或用 `opencode mcp add <name> --url ...` 写入配置；再在 Agent 权限内开放 |
 | 从 V1 升级后权限/主题失效 | V2 三项破坏性变更：插件 API、Server API、终端配置改 `cli.json`；`permission` 对象改写 `permissions` 数组，其余受支持的 V1 字段会被归一化读取 |
 | 升级后命令变了 | 以 `opencode --help` / `/help` 与官网 Schema 为准（迭代快） |
+| 直接 import `@opencode/ai` 的代码升级后拿不到图片 | 2.2.7 移除了 `ImageResponse.image`，改用 `response.images[0]` |
+| SDK 的 `agent.list` / `vcs.init` 返回不完整 | 2.2.7 起在插件加载期间这些端点不再阻塞等待：先监听 `*.updated` 事件，拿到变更后再取 |
+| 想快速读文件尾部 | 2.2.7 起 `read` 支持负 offset，如 `-50` 读最后 50 行；offset 超界返回末尾内容与总行数而不是报错 |
 
 ---
 
@@ -225,7 +230,7 @@ opencode run "升级依赖并修复由此产生的编译错误"
 
 ## 相关技能
 
-- **oh-my-openagent** — 基于 OpenCode 的多模型协同配置方案：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
+- **oh-my-openagent** — 多模型协同的终端 Agent；5.x 起是独立应用（OmO Native），不再作为 OpenCode 插件运行：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
 - **my-opencode-deepseek-config** — OpenCode + DeepSeek 的纯配置实践（Agent/技能/命令清单）：[../my-opencode-deepseek-config/SKILL.md](../my-opencode-deepseek-config/SKILL.md)
 - **superpowers-zh** — 中文方法论 Skill 层，可在 OpenCode 中加载：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 - **deepseek-harness** — DeepSeek 官方智能体框架（对比另一类 Agent 设计）：[../deepseek-harness/SKILL.md](../deepseek-harness/SKILL.md)
@@ -237,4 +242,5 @@ opencode run "升级依赖并修复由此产生的编译错误"
 - 官方文档：<https://opencode.ai/docs>
 - 配置 JSON Schema：<https://opencode.ai/config.json>
 - Models.dev（模型/提供商目录）：<https://models.dev>
+- 变更日志：<https://github.com/anomalyco/opencode/releases>（V2 版本看 npm/tag，V1 仍在 GitHub latest）
 - 上游中文教程：<https://znlgis.github.io/>（ai/opencode 系列）

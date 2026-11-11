@@ -129,8 +129,8 @@ python manage.py runserver 0.0.0.0:8000
 ### 验证
 
 ```bash
-# 版本
-curl -s http://localhost/version.txt
+# 版本：容器内读 Django 应用版本（Docker 部署最可靠）
+docker compose exec django python -c "import geonode; print(geonode.get_version())"
 
 # API 是否可用（公开资源无需认证）
 curl -s "http://localhost/api/v2/resources?page_size=1" | head -c 300
@@ -318,7 +318,7 @@ print(requests.get(wms, params={
 
 ## AI 使用建议
 
-- **先确认版本与入口**：`curl -s http://localhost/version.txt` 确认 5.1.1；Docker 部署优先用 `docker compose exec` 而不是宿主机的 `manage.py`，避免环境错位。
+- **先确认版本与入口**：Docker 部署用 `docker compose exec django python -c "import geonode; print(geonode.get_version())"` 确认 5.1.1；优先用 `docker compose exec` 而不是宿主机的 `manage.py`，避免环境错位。
 - **API 用 `/api/v2/`**：旧 Tastypie 的 `/api/*` 仍在，但新代码一律用 `/api/v2/resources` 与 `/api/v2/uploads/upload`；两者返回结构不同，不要混用。
 - **认证信息不要进日志**：用环境变量传 `Authorization`，示例里出现的 `<base64>` 必须替换，不要把真实凭据写进脚本或报告。
 - **验证产物**：上传后回读资源详情，核对 `subtype`、`alternate`、`links[]` 与 `download_url`，再对 WMS 发一次 `GetMap`；只看 201 响应不构成"发布成功"。

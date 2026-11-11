@@ -285,7 +285,7 @@ Start → 用户提交申请
 ## 相关技能
 
 - **hermes-agent** — 自学习通用型 AI 智能体，适合需要自建后端 Agent 的场景：[../hermes-agent/SKILL.md](../hermes-agent/SKILL.md)
-- **oh-my-openagent** — OpenCode 多模型编排插件，提供并行 Agent 与 AST/LSP 工具：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
+- **oh-my-openagent** — 独立终端 Agent（OmO 5.x 自带 senpi 引擎，已不依赖 OpenCode），多模型编排与并行后台 Agent：[../oh-my-openagent/SKILL.md](../oh-my-openagent/SKILL.md)
 - **superpowers-zh** — 中文提示词/Skill 工程库，可与 Dify 的提示词编排结合使用：[../superpowers-zh/SKILL.md](../superpowers-zh/SKILL.md)
 
 ---

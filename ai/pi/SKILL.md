@@ -1,6 +1,6 @@
 ---
 name: pi
-description: "Use when you need a minimal, extensible terminal AI coding agent harness in TypeScript — npm @earendil-works/pi-coding-agent 1.5.0, extensions/skills/prompt templates, multi-provider (OpenAI/Anthropic/Google) routing, container isolation (Docker/Gondolin/OpenShell); also for `pi: command not found`, Node 22.19.0 or newer engine errors, and EACCES on a global install. Pi: minimalist terminal coding agent."
+description: "Use when you need a minimal, extensible terminal AI coding agent harness in TypeScript — npm @earendil-works/pi-coding-agent 1.5.2, extensions/skills/prompt templates, multi-provider (OpenAI/Anthropic/Google) routing, container isolation (Docker/Gondolin/OpenShell); also for `pi: command not found`, Node 22.19.0 or newer engine errors, and EACCES on a global install. Pi: minimalist terminal coding agent."
 license: MIT
 metadata:
   category: ai
@@ -11,11 +11,11 @@ metadata:
 >
 > **官网 / 文档：** <https://pi.dev> ｜ <https://pi.dev/docs/latest>
 >
-> **最新版本：** 1.5.0（截至 2026-11，npm `@earendil-works/pi-coding-agent` latest 实测；另有 `legacy-node20` 0.74.2 通道）
+> **最新版本：** 1.5.2（截至 2026-11，npm `@earendil-works/pi-coding-agent` latest 实测，2026-11-10 发布；另有 `legacy-node20` 0.74.2 通道）
 >
 > **许可证：** MIT
 
-> **v1.5.0 变化（可选读）**：新增扩展更新变更日志（`collapseChangelog` 折叠提示）、大工具调用增量解析与代码/工具行渲染复用带来的流式提速、`PI_SELF_UPDATE_COMMAND` / `selfUpdateCommand` 自定义自更新命令。
+> **v1.5.x 变化（可选读）**：1.5.1 新增 `pi auth login|logout <provider>`（不启动会话即可登录/登出）、空闲提示缓存保温（最长 30 分钟）、Anthropic 消息线程化、更丰富的 Mermaid 图，以及 `pi update --extensions` 逐包报告更新结果；1.5.2 支持会话原目录已删除时 `Fork` 到当前目录（启动、`/resume`、`/import`、`ctx.switchSession()` 都适用），并修复 `/import` 残留副本。注意 1.5.1 的兼容性变化：Grep 工具的 `GrepOperations.readFile` 不再为上下文行回调；OpenAI 兼容模型在禁用全部工具时不再发送空 `"tools": []`（修 vLLM 0.20+ 的 400 错误）。
 
 ## 概述
 
@@ -84,6 +84,10 @@ npm run build
 ```bash
 pi --help
 pi --version
+pi auth login <provider>     # 1.5.1+：只登录，不启动会话（支持 API Key / 无浏览器登录）
+pi auth logout <provider>
+pi update                    # 自更新 Pi
+pi update --extensions       # 逐包报告扩展更新（npm 版本或 git commit 变化）
 ```
 
 开发仓库常用校验命令（在 `pi` 源码目录）：
@@ -142,6 +146,9 @@ Pi 默认继承启动进程权限，不自带强制权限沙箱。生产建议�
 | 安装报 `EBADENGINE` / `Unsupported engine` | Node 版本低于 22.19.0：升级 Node，或改用 `legacy-node20` 通道的 0.74.2 |
 | 全局安装报 `EACCES` | 不要用 `sudo npm i -g`：改 `npm config set prefix ~/.npm-global` 后重装，或改用 nvm/npx |
 | `npm install` 在源码里跑构建脚本失败 | monorepo 用官方流程：`npm install --ignore-scripts && npm run build` |
+| 会话目录被移动/删除后无法继续 | 1.5.2 起在启动、`/resume`、`/import` 时可选 `Fork`，把会话复制到当前目录作为新会话（新 ID），之后不再追问 |
+| 直连 vLLM/LiteLLM 的模型报 `tools must not be an empty array` | 1.5.1 起 OpenAI 兼容模型禁用全部工具时不再发 `"tools": []`；若代理仍要求带工具历史，在 models.json 里设 `compat.requiresToolsWithToolHistory: true` |
+| `pi update --extensions` 显示无更新但我预期有 | 输出会区分 unchanged / skipped / warned；离线模式打印 `Skipped package updates (offline mode)`；有告警但无变更时看告警内容而非版本号 |
 
 ---
 

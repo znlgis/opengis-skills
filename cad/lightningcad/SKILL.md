@@ -7,7 +7,7 @@ metadata:
   tags: "autocad, zwcad, cad, dotnet, wpf, panel-layout, bim, envelope, commercial, plugin"
 ---
 
-> **产品定位：** 商业软件（非开源），面向装配式建筑围护结构深化设计的 CAD 插件，支持 AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）等平台
+> **产品定位：** 商业软件（非开源），面向装配式建筑围护结构深化设计的 CAD 插件，支持 AutoCAD 2019/2021/2025/2027、中望 CAD（ZWCAD）2022 及以上、浩辰 CAD（GstarCAD）对应版本
 >
 > **项目主页/官网：** <https://shandianweihu.com/>
 >
@@ -15,7 +15,7 @@ metadata:
 >
 > **许可证：** 专有商业软件（30 天试用授权，含 SM2 国密加密认证）
 >
-> **运行时：** .NET Framework 4.8 ｜ **CAD 平台：** AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）
+> **运行时：** .NET Framework 4.8（AutoCAD 2025 及以上插件按 .NET 8.0 运行，安装程序自动处理）｜ **CAD 平台：** AutoCAD 2019/2021/2025/2027、ZWCAD 2022+、GstarCAD
 >
 > **最新版本：** 商业闭源，不发布公开版本号；安装包与更新由桌面客户端下发（AutoUpdater.NET + 阿里云 OSS），以官网 <https://shandianweihu.com/> 与客户端显示为准（截至 2026-11）
 
@@ -42,8 +42,8 @@ LightningCAD 是一套面向装配式建筑围护结构深化设计的 CAD 插�
 | 项 | 要求 |
 |----|------|
 | 操作系统 | 64 位 Windows |
-| 运行时 | .NET Framework 4.8 |
-| CAD 平台 | 支持 AutoCAD、中望 CAD（ZWCAD）、浩辰 CAD（GstarCAD）等平台（具体受支持版本以官网为准） |
+| 运行时 | .NET Framework 4.8（AutoCAD 2025/2027 插件为 .NET 8.0，安装程序按平台自动选择） |
+| CAD 平台 | AutoCAD 2019/2021/2025/2027、中望 CAD（ZWCAD）2022 及以上、浩辰 CAD（GstarCAD）对应版本；均仅 64 位 |
 | 授权 | 30 天试用，注册登录后由桌面客户端管理（SM2 国密加密认证，5 分钟心跳校验） |
 | 安装包 | WixSharp 打包的 MSI，随桌面客户端分发（非开源，无公开仓库与 NuGet 包） |
 
@@ -77,7 +77,9 @@ LightningCAD 是一套面向装配式建筑围护结构深化设计的 CAD 插�
 
 ```text
 AC_2019/    → AutoCAD R23.0 (2019)
-AC_2020/    → AutoCAD R23.1 (2020)
+AC_2021/    → AutoCAD 2021
+AC_2025/    → AutoCAD 2025（.NET 8.0 运行时）
+AC_2027/    → AutoCAD 2027
 ZW_2022/    → ZWCAD 2022+
 ```
 

@@ -15,13 +15,13 @@ metadata:
 >
 > **许可证：** GPL-2.0-or-later
 >
-> **最新版本：** 5.2.3（2026-10-21；5.2 为 LTS 系列，截至 2026-11，见 [Releases](https://github.com/blender/blender/releases) 与 <https://download.blender.org/release/Blender5.2/>）
+> **最新版本：** 5.3.0（2026-11-10 发布构建；GitHub tag 为 2026-11-09，时区差异所致）；**LTS：** 5.2.4（同日发布，5.2 为 LTS 系列，生命周期内只修 bug），截至 2026-11，见 [Releases](https://github.com/blender/blender/releases)、<https://download.blender.org/release/Blender5.3/>（5.3）与 <https://download.blender.org/release/Blender5.2/>（5.2 LTS）
 >
 > **包管理器：** `winget install BlenderFoundation.Blender` / `brew install --cask blender` / `sudo snap install blender --classic`
 
 ## 概述
 
-Blender 是开源 3D 创作套件，通过内置 Python 解释器暴露完整的 `bpy` API：脚本可读写全部场景数据、调用几乎全部界面功能，适合程序化建模、GIS 数据三维化与无头批处理。Python API 随 Blender 版本发布（当前 5.2.3，5.2 为 LTS 系列），无需单独安装。
+Blender 是开源 3D 创作套件，通过内置 Python 解释器暴露完整的 `bpy` API：脚本可读写全部场景数据、调用几乎全部界面功能，适合程序化建模、GIS 数据三维化与无头批处理。Python API 随 Blender 版本发布，无需单独安装：当前稳定版是 **5.3**（5.3.0，2026-11-10 构建发布），追求长期稳定则用 **5.2 LTS**（5.2.4，同日发布）；文中用到的 `bpy` 接口在 5.2/5.3 上一致。
 
 核心模块：
 
@@ -129,7 +129,7 @@ bpy.ops.export_scene.gltf(filepath="out.glb", export_format='GLB', use_selection
 # OBJ（4.0 起为新的导入导出器）
 bpy.ops.wm.obj_export(filepath="out.obj", export_selected_objects=False)
 
-# STL（4.1 起为新的导入导出器）
+# STL（4.0 起内置新导入导出器，4.1 起转正）
 bpy.ops.wm.stl_export(filepath="out.stl", export_selected_objects=False)
 
 # 保存 .blend
@@ -175,7 +175,7 @@ bl_info = {
     "name": "My GIS Tool",
     "author": "you",
     "version": (1, 0, 0),
-    "blender": (5, 2, 0),
+    "blender": (5, 3, 0),   # 最低支持版本；5.2 LTS 上同样可运行
     "category": "Object",
 }
 
@@ -273,7 +273,7 @@ bpy.ops.export_scene.gltf(filepath="city.glb", export_format='GLB')
 | 导出的 glTF 没有材质 | 材质未用 Principled BSDF，或导出参数关闭了材质 | 改用 Principled BSDF 节点；检查 `export_materials` 未被关闭 |
 | Geometry Nodes 修改器无效果 | 节点组输出未连接，或对象缺少输入几何 | 确认节点组输出接到 `Group Output`；用 depsgraph 取评估网格验证 |
 | 脚本参数没有传入 | 参数放在了 `--` 之前，被 Blender 当作自身参数解析 | 参数须放在 `--` 之后（`blender -b -P s.py -- a b`），脚本内从 `sys.argv` 读取 |
-| 4.x 旧脚本在 5.x 报错 | 节点组接口与导入导出操作符在 5.x 更名 | 旧式 `inputs/outputs` 改为 `interface.new_socket`；导出核对 `wm.obj_export`/`wm.stl_export` |
+| 4.0 之前的老脚本在新版报错 | 接口改名早于 5.x：`interface.new_socket`、`wm.obj_export`/`wm.obj_import` 自 4.0 起，内置 STL 导入导出器 4.0 为实验性、4.1 起转正，旧插件式操作符已移除 | 节点组改用 `interface.new_socket`；导出改用 `wm.obj_export`/`wm.stl_export`，不要再找 `export_scene.obj`/`export_mesh.stl` |
 
 ## AI 使用建议
 
